@@ -1,5 +1,24 @@
 # Everything Agentic Engineering
 
+IDEA
+  ↓
+PRD + ACCEPTANCE CRITERIA
+  ↓
+TASK DAG
+  ↓
+ORCHESTRATOR
+  ↓
+┌────────────┬────────────┬────────────┐
+│ FRONTEND   │ BACKEND    │ MOBILE     │
+│ AGENT      │ AGENT      │ AGENT      │
+└────────────┴────────────┴────────────┘
+  ↓
+RESEARCH • QA • SECURITY
+  ↓
+ISSUE → BRANCH → PR → REVIEW → MERGE
+  ↓
+DURABLE MEMORY → NEXT LOOP
+
 ### Stop giving coding agents prompts. Give them an engineering system.
 
 A production-grade, ready-to-clone operating system for building and
