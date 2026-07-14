@@ -1,6 +1,36 @@
-# Agentic Product Starter
+# Everything Agentic Engineering
 
-A repo-first starter for building serious web, mobile, backend, and research products with Claude Code, durable Markdown context, specialized agents, bounded loops, evidence-based verification, and a curated MCP stack.
+### Stop giving coding agents prompts. Give them an engineering system.
+
+A production-grade, ready-to-clone operating system for building and
+shipping software with AI coding agents.
+
+Turn an idea into:
+
+**Research → PRD → Architecture → Task DAG → Parallel Agents → Code →
+QA → Security → Pull Request → Review → Merge → Durable Memory**
+
+Built for Claude Code, compatible by design with Codex and other
+agentic coding tools.
+
+---
+
+## Why this exists
+
+AI coding agents are incredibly capable.
+
+But raw agent workflows still fail in predictable ways:
+
+- Context disappears between sessions.
+- PRDs drift away from implementation.
+- Multiple agents edit the same files.
+- The builder evaluates its own work.
+- Skills and MCPs become an unmanageable pile.
+- Security is treated as a prompt instead of an enforced gate.
+- Git branches, issues, PRs, and human collaboration are afterthoughts.
+- "Done" means the agent said it was done.
+
+Everything Agentic Engineering replaces that with one opinionated system.
 
 ## Core idea
 
