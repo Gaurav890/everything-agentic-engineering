@@ -1,0 +1,48 @@
+name: Feature request
+description: Propose a product capability or meaningful enhancement.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user or business problem exists today?
+    validations:
+      required: true
+  - type: textarea
+    id: user
+    attributes:
+      label: User / persona
+      description: Who experiences the problem?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the result, not only a proposed implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current workaround
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What observable evidence would prove this is complete?
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-goals
+      description: What is explicitly out of scope?
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks, dependencies, or open questions

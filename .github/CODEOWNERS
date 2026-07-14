@@ -1,0 +1,28 @@
+# CODEOWNERS TEMPLATE
+#
+# Replace the commented examples below with real GitHub usernames or organization teams.
+# Keep this file on the base branch so GitHub can request reviews from actual owners.
+#
+# Default owner for everything:
+# *                         @your-org/core-maintainers
+#
+# Web:
+# /apps/web/                @your-org/frontend
+# /packages/ui/             @your-org/frontend
+#
+# Mobile:
+# /apps/mobile/             @your-org/mobile
+#
+# Backend and data:
+# /packages/api/            @your-org/backend
+# /packages/database/       @your-org/backend @your-org/data
+#
+# Architecture and security:
+# /docs/30-engineering/     @your-org/architecture
+# /docs/30-engineering/SECURITY_MODEL.md @your-org/security
+# /.claude/hooks/           @your-org/security @your-org/agent-platform
+#
+# Repository operations:
+# /.github/                 @your-org/repo-maintainers
+# /scripts/                 @your-org/repo-maintainers
+# /.claude/                 @your-org/agent-platform

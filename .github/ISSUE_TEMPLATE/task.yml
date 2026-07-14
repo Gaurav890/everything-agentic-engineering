@@ -1,0 +1,47 @@
+name: Engineering task
+description: Track bounded implementation, research, migration, or maintenance work.
+title: "[Task]: "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One bounded outcome.
+    validations:
+      required: true
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: Example T-014. Create/update TASKS.jsonl when appropriate.
+      placeholder: T-014
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Link requirements, acceptance criteria, issues, ADRs, designs, or dependencies.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included and explicitly excluded?
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: What exact evidence must exist before this can be merged?
+    validations:
+      required: true
+  - type: textarea
+    id: ownership
+    attributes:
+      label: Ownership / affected files or modules
+      description: Especially important for parallel work.
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / blockers

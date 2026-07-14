@@ -1,0 +1,36 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Dependencies / build
+node_modules/
+.next/
+dist/
+build/
+.expo/
+.turbo/
+coverage/
+
+# Claude local state
+.claude/settings.local.json
+.claude/worktrees/
+
+# Browser auth / traces
+playwright/.auth/
+test-results/
+playwright-report/
+*.har
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/settings.json
+
+# Temporary
+tmp/
+.cache/
+*.log

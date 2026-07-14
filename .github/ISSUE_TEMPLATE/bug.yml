@@ -1,0 +1,62 @@
+name: Bug report
+description: Report reproducible incorrect behavior or a regression.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Provide concrete evidence and remove secrets, credentials, and sensitive customer data before submitting.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is broken?
+      placeholder: A clear description of the incorrect behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Who or what is affected? Include severity, frequency, and data/security impact when known.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Perform ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and evidence
+      description: Include logs, screenshots, traces, or exact error messages with secrets removed.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, device, app version, commit SHA, deployment environment, or other relevant context.
+  - type: textarea
+    id: scope
+    attributes:
+      label: Suspected scope or affected components
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I removed secrets, credentials, and sensitive customer data from this report.
+          required: true

@@ -1,0 +1,1 @@
+{"id": "T-001", "title": "Replace with first atomic task", "goal": "One bounded, independently verifiable outcome", "requirement_ids": ["FR-001"], "acceptance_ids": ["AC-001"], "owner": "orchestrator", "depends_on": [], "status": "backlog", "files_owned": [], "verification": [], "risk": "low", "notes": ""}
