@@ -1,5 +1,11 @@
 # Everything Agentic Engineering
 
+[![GitHub stars](...)](...)
+[![License](...)](...)
+[![Claude Code](...)](...)
+[![MCP](...)](...)
+[![PRs Welcome](...)](...)
+
 IDEA
   ↓
 PRD + ACCEPTANCE CRITERIA
