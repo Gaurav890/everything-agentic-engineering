@@ -26,3 +26,7 @@ Write a research ledger:
 - Recommendation
 
 Return distilled findings, not raw retrieval dumps.
+
+For recurring ecosystem monitoring or repository self-improvement, invoke
+`self-improvement-loop`, deduplicate against the learning ledger, and separate
+research findings from adoption decisions.

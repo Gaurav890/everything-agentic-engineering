@@ -98,5 +98,6 @@ The non-design local skills remain:
 - `parallel-plan`
 - `loop-engineering`
 - `security-gate`
+- `self-improvement-loop`
 
 Superpowers and Expo tooling remain optional external workflow/platform layers.
