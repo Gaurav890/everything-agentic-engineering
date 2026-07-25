@@ -217,6 +217,11 @@ The principle:
 > References are ingredients. Components are structural donors. Tokens encode
 > approved decisions. The project design system wins.
 
+See the complete
+[product-design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md)
+for source links, commands, phase routing, usage guidance, and original
+assessments.
+
 ---
 
 ## MCP stack

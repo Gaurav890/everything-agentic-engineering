@@ -1,5 +1,8 @@
 # Skills strategy
 
+For exact source URLs, invocation notes, timing, rationale, and the original
+assessments, read [`PRODUCT_DESIGN_RESOURCES.md`](PRODUCT_DESIGN_RESOURCES.md).
+
 ## Principle
 
 Use a small phase-based system, not a pile of overlapping aesthetic prompts.
