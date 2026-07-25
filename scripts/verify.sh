@@ -4,10 +4,11 @@ set -euo pipefail
 MODE="${1:-quick}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+export PYTHONPYCACHEPREFIX="$ROOT/.cache/python"
 
 echo "== Verification: $MODE =="
 
-echo "[1/6] Validate JSON"
+echo "[1/10] Validate JSON"
 python3 -m json.tool .mcp.json >/dev/null
 python3 -m json.tool .claude/settings.json >/dev/null
 python3 -m json.tool .agentic/project.json >/dev/null
@@ -51,7 +52,7 @@ if missing:
 print(f"Validated {len(token_paths)} design tokens and {len(aliases)} aliases")
 PY
 
-echo "[2/6] Validate JSONL"
+echo "[2/10] Validate JSONL"
 python3 - <<'PY'
 import json
 from pathlib import Path
@@ -62,7 +63,7 @@ for i, line in enumerate(path.read_text().splitlines(), 1):
 print("TASKS.jsonl valid")
 PY
 
-echo "[3/6] Validate GitHub YAML"
+echo "[3/10] Validate GitHub YAML"
 python3 - <<'PY'
 from pathlib import Path
 try:
@@ -77,12 +78,15 @@ else:
     print(f"Validated {len(files)} GitHub YAML files")
 PY
 
-echo "[4/6] Validate shell scripts"
+echo "[4/10] Validate shell and Python scripts"
 for f in .claude/hooks/*.sh scripts/*.sh; do
   bash -n "$f"
 done
+python3 -m compileall -q scripts tests
 
-echo "[5/6] Validate collaboration policy scripts"
+echo "[5/10] Run profile and initializer tests"
+python3 -m unittest discover -s tests -p 'test_profile_engine.py'
+python3 -m unittest discover -s tests -p 'test_initializer.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null
@@ -95,7 +99,20 @@ if ./scripts/profile-preview.sh backend-supabase,backend-convex >/dev/null 2>&1;
   exit 1
 fi
 
+echo "[6/10] Build and test design tokens"
+./scripts/build-design-tokens.sh
+./scripts/build-design-tokens.sh --check
+python3 -m unittest discover -s tests -p 'test_design_tokens.py'
+
+echo "[7/10] Test deterministic security hooks"
+python3 -m unittest discover -s tests -p 'test_security_hooks.py'
+
+echo "[8/10] Validate collaboration and community contracts"
 for required in \
+  LICENSE \
+  SECURITY.md \
+  CODE_OF_CONDUCT.md \
+  CHANGELOG.md \
   CONTRIBUTING.md \
   docs/70-collaboration/GITHUB_WORKFLOW.md \
   docs/70-collaboration/REPOSITORY_SETUP.md \
@@ -106,6 +123,42 @@ for required in \
   test -f "$required" || { echo "Missing required file: $required" >&2; exit 1; }
 done
 
+echo "[9/10] Validate local documentation links and evidence bundles"
+python3 - <<'PY'
+import re
+from pathlib import Path
+
+root = Path.cwd()
+missing = []
+pattern = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
+for source in root.rglob("*.md"):
+    if any(part in {".git", "node_modules"} for part in source.parts):
+        continue
+    for target in pattern.findall(source.read_text(errors="ignore")):
+        target = target.strip().split("#", 1)[0]
+        if not target or "://" in target or target.startswith(("mailto:", "#")):
+            continue
+        destination = (source.parent / target).resolve()
+        if not destination.exists():
+            missing.append(f"{source.relative_to(root)} -> {target}")
+if missing:
+    raise SystemExit("Broken local documentation links:\n" + "\n".join(missing))
+print("Local documentation links valid")
+PY
+
+evidence_bundles=()
+if [ -d docs/50-evals/evidence ]; then
+  while IFS= read -r bundle; do
+    evidence_bundles+=("$bundle")
+  done < <(find docs/50-evals/evidence -mindepth 1 -maxdepth 1 -type d | sort)
+fi
+if [ "${#evidence_bundles[@]}" -gt 0 ]; then
+  python3 scripts/validate_evidence.py "${evidence_bundles[@]}"
+else
+  echo "No committed evidence bundles yet"
+fi
+
+echo "[10/10] Run project-defined checks when available"
 for skill in .claude/skills/*/SKILL.md; do
   python3 - "$skill" <<'PY'
 from pathlib import Path
@@ -124,8 +177,6 @@ for field in ("name", "description"):
 PY
 done
 
-echo "[6/6] Run project-defined checks when available"
-
 if [ -f package.json ]; then
   if command -v pnpm >/dev/null 2>&1; then
     for script in lint typecheck test; do
@@ -139,7 +190,7 @@ if [ -f package.json ]; then
 fi
 
 if [ "$MODE" = "full" ]; then
-  echo "Full mode: add profile-specific E2E, visual, accessibility, and security commands as the implementation grows."
+  echo "Full mode complete. Product profiles may add application-specific E2E, visual, accessibility, and security commands."
 fi
 
 echo "Verification complete."

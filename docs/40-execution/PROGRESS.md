@@ -76,3 +76,32 @@ Branch: `feat/T-005-profile-engine`; commit/PR pending final review.
 
 External installation and cleanup remain intentionally advisory. No package,
 plugin, MCP, or user file is automatically added or removed.
+
+### 2026-07-25 — T-006
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** PARTIAL
+
+**Change**
+
+Added open-source governance files, guided non-destructive initialization,
+profile-engine unit tests, CSS/TypeScript/React Native token generation,
+security-hook tests, local-link validation, and machine-checkable evidence
+bundles.
+
+**Evidence**
+
+- 16 unit and integration tests pass.
+- 95 DTCG tokens and 45 aliases validate.
+- Generated web and native outputs pass freshness checks.
+- Full repository verification passes all ten stages.
+
+**Commit/PR**
+
+Branch: `feat/T-006-launch-readiness-foundation`; commit and PR pending.
+
+**Remaining risk**
+
+Application-specific browser, accessibility, performance, and visual regression
+checks activate only after a real showcase or product application exists.

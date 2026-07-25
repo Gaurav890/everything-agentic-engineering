@@ -25,3 +25,21 @@ approved visual thesis
 Applications should consume semantic or component tokens. Replace scaffold
 values only after the project design direction is approved. Keep rationale and
 design-decision IDs in `$extensions.com.everything-agentic`.
+
+## Generate platform outputs
+
+```bash
+./scripts/build-design-tokens.sh
+```
+
+This validates aliases and writes:
+
+```text
+generated/
+├── tokens.css
+├── tokens.ts
+└── tokens.native.ts
+```
+
+Generated files are build artifacts and are not edited or committed. CI
+regenerates and tests them from the canonical DTCG sources.
