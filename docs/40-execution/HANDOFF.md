@@ -4,47 +4,45 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land T-001 through review without merging directly to `main`.
+Land T-005 profile-engine changes through review without merging directly to
+`main`.
 
 ## Completed
 
-- Phase-based product-design routing and contracts.
-- Product-specific design-system authority rules.
-- DTCG-compatible primitive, semantic, component, theme, layout, density,
-  motion, and agent-state token scaffold.
-- Skill and repository verification.
+- Machine-readable project/profile/resource configuration.
+- Deterministic dependency and conflict resolution.
+- Profile doctor and non-destructive preview/select commands.
+- Resolution, conflict, confirmation, isolated write, and full verification.
 
 ## In progress
 
-- Pull-request creation and review.
+- Final commit, push, and pull-request review.
 
 ## Blockers
 
-- The branch is pushed, but the connected GitHub app returns `403 Resource not
-  accessible by integration` when creating the PR, and `gh` is not installed.
+- None for implementation. GitHub PR creation may still require the direct web
+  URL because the connected integration has previously returned 403.
 
 ## Unresolved decisions
 
-- Select a build/export tool only when a target web/mobile profile needs it.
-- Choose external design-phase skills per active project; do not bulk-install.
+- Future versions may add reviewed installers or cleanup execution. Version one
+  intentionally reports and previews only.
 
 ## Verification status
 
-All local skills validate. Full repository verification and diff checks pass.
+Full repository verification and profile-engine scenario tests pass.
 
 ## Exact next action
 
-Open
-`https://github.com/Gaurav890/everything-agentic-engineering/pull/new/feat/T-001-product-design-engine`
-and create a PR titled `feat(T-001): add phase-based product design engine`.
+Commit and push `feat/T-005-profile-engine`, then open a PR titled
+`feat(T-005): add deterministic project profile engine`.
 
 ## Relevant files
 
-- `.claude/skills/product-design-router/SKILL.md`
-- `.claude/skills/design-system/SKILL.md`
-- `.claude/skills/design-tokens/SKILL.md`
-- `docs/20-design/DESIGN_SYSTEM.md`
-- `docs/60-tooling/SKILLS.md`
-- `packages/design-tokens/`
+- `.agentic/project.json`
+- `.agentic/profiles/`
+- `.agentic/resources.json`
+- `scripts/profile_engine.py`
+- `docs/60-tooling/PROFILES.md`
 
 Keep this concise enough to read in under two minutes.

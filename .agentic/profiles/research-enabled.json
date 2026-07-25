@@ -1,0 +1,7 @@
+{
+  "id": "research-enabled",
+  "description": "Current research, crawling, and source-ledger workflow",
+  "requires": ["core"],
+  "resources": ["researcher-agent", "research-ledger", "perplexity-mcp", "firecrawl-mcp", "playwright-mcp"],
+  "conflicts": []
+}

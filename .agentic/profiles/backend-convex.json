@@ -1,0 +1,7 @@
+{
+  "id": "backend-convex",
+  "description": "Convex realtime backend selection",
+  "requires": ["core"],
+  "resources": ["convex-backend"],
+  "conflicts": ["backend-supabase"]
+}

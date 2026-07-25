@@ -46,3 +46,33 @@ blocked by its pull-request write permission.
 
 The scaffold has no platform token build/export pipeline yet. External phase
 skills remain optional installations and must be reviewed before use.
+
+### 2026-07-25 — T-005
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** PARTIAL
+
+**Change**
+
+Added a machine-readable project manifest, composable profiles, resource
+provenance, deterministic resolution/conflict checks, drift reporting, and
+non-destructive profile previews/selections.
+
+**Evidence**
+
+- Web-only and web+mobile resolution tested.
+- Supabase/Convex conflict fails closed.
+- Unknown profiles fail closed.
+- Selection without confirmation is refused.
+- Isolated confirmed selection changes only the manifest.
+- `./scripts/verify.sh full` passes.
+
+**Commit/PR**
+
+Branch: `feat/T-005-profile-engine`; commit/PR pending final review.
+
+**Remaining risk**
+
+External installation and cleanup remain intentionally advisory. No package,
+plugin, MCP, or user file is automatically added or removed.

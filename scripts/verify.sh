@@ -10,6 +10,11 @@ echo "== Verification: $MODE =="
 echo "[1/6] Validate JSON"
 python3 -m json.tool .mcp.json >/dev/null
 python3 -m json.tool .claude/settings.json >/dev/null
+python3 -m json.tool .agentic/project.json >/dev/null
+python3 -m json.tool .agentic/resources.json >/dev/null
+for f in .agentic/profiles/*.json; do
+  python3 -m json.tool "$f" >/dev/null
+done
 for f in packages/design-tokens/tokens/*/*.json; do
   python3 -m json.tool "$f" >/dev/null
 done
@@ -81,6 +86,14 @@ echo "[5/6] Validate collaboration policy scripts"
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null
+./scripts/profile-resolve.sh >/dev/null
+./scripts/profile-doctor.sh >/dev/null
+./scripts/profile-preview.sh web-next,design-critical,research-enabled >/dev/null
+
+if ./scripts/profile-preview.sh backend-supabase,backend-convex >/dev/null 2>&1; then
+  echo "Profile conflict check unexpectedly passed" >&2
+  exit 1
+fi
 
 for required in \
   CONTRIBUTING.md \

@@ -1,0 +1,7 @@
+{
+  "id": "web-next",
+  "description": "Next.js web product with browser verification",
+  "requires": ["core"],
+  "resources": ["web-surface", "frontend-agent", "react-guidance", "playwright-mcp"],
+  "conflicts": []
+}

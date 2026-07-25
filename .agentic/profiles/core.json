@@ -1,0 +1,7 @@
+{
+  "id": "core",
+  "description": "Durable context, task, verification, and collaboration kernel",
+  "requires": [],
+  "resources": ["core-harness"],
+  "conflicts": []
+}

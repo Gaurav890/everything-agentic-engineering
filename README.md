@@ -217,6 +217,20 @@ The principle:
 > References are ingredients. Components are structural donors. Tokens encode
 > approved decisions. The project design system wins.
 
+### Activate only what the project needs
+
+The starter catalogs web, mobile, backend, research, and design capabilities,
+but `.agentic/project.json` determines which profiles are active.
+
+```bash
+./scripts/profile-resolve.sh
+./scripts/profile-doctor.sh
+./scripts/profile-preview.sh web-next,design-critical,research-enabled
+```
+
+Profile selection is non-destructive: it does not silently install tools or
+delete inactive surfaces.
+
 See the complete
 [product-design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md)
 for source links, commands, phase routing, usage guidance, and original

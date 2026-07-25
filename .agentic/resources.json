@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "resources": {
+    "core-harness": {
+      "kind": "local",
+      "description": "Constitution, task ledger, verification, and durable context",
+      "detect": [{"type": "path", "value": "CLAUDE.md"}]
+    },
+    "web-surface": {
+      "kind": "surface",
+      "description": "Web application workspace",
+      "catalog_only_when_inactive": true,
+      "detect": [{"type": "path", "value": "apps/web"}]
+    },
+    "mobile-surface": {
+      "kind": "surface",
+      "description": "Expo/React Native application workspace",
+      "catalog_only_when_inactive": true,
+      "detect": [{"type": "path", "value": "apps/mobile"}]
+    },
+    "frontend-agent": {
+      "kind": "agent",
+      "description": "Web product-experience owner",
+      "detect": [{"type": "path", "value": ".claude/agents/frontend.md"}]
+    },
+    "mobile-agent": {
+      "kind": "agent",
+      "description": "Native mobile owner",
+      "detect": [{"type": "path", "value": ".claude/agents/mobile.md"}]
+    },
+    "product-design-router": {
+      "kind": "skill",
+      "description": "Phase-based product-design routing",
+      "detect": [{"type": "path", "value": ".claude/skills/product-design-router/SKILL.md"}]
+    },
+    "design-tokens": {
+      "kind": "package",
+      "description": "DTCG-compatible design-token source",
+      "detect": [{"type": "path", "value": "packages/design-tokens"}]
+    },
+    "react-guidance": {
+      "kind": "external-skill",
+      "description": "React/Next.js engineering guidance",
+      "detect": []
+    },
+    "react-native-guidance": {
+      "kind": "external-skill",
+      "description": "React Native/Expo engineering guidance",
+      "detect": []
+    },
+    "researcher-agent": {
+      "kind": "agent",
+      "description": "Research and source-ledger owner",
+      "detect": [{"type": "path", "value": ".claude/agents/researcher.md"}]
+    },
+    "research-ledger": {
+      "kind": "skill",
+      "description": "Evidence and source-quality workflow",
+      "detect": [{"type": "path", "value": ".claude/skills/research-ledger/SKILL.md"}]
+    },
+    "playwright-mcp": {
+      "kind": "mcp",
+      "description": "Interactive browser and running-product evidence",
+      "detect": [{"type": "mcp", "value": "playwright"}]
+    },
+    "perplexity-mcp": {
+      "kind": "mcp",
+      "description": "Current web research and discovery",
+      "detect": [{"type": "mcp", "value": "perplexity"}]
+    },
+    "firecrawl-mcp": {
+      "kind": "mcp",
+      "description": "Site mapping, crawling, and extraction",
+      "detect": [{"type": "mcp", "value": "firecrawl"}]
+    },
+    "supabase-backend": {
+      "kind": "backend",
+      "description": "Supabase backend profile",
+      "detect": []
+    },
+    "convex-backend": {
+      "kind": "backend",
+      "description": "Convex realtime backend profile",
+      "detect": []
+    }
+  }
+}

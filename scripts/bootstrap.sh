@@ -23,6 +23,11 @@ fi
 echo "Validating JSON..."
 python3 -m json.tool .mcp.json >/dev/null
 python3 -m json.tool .claude/settings.json >/dev/null
+python3 -m json.tool .agentic/project.json >/dev/null
+python3 -m json.tool .agentic/resources.json >/dev/null
+for f in .agentic/profiles/*.json; do
+  python3 -m json.tool "$f" >/dev/null
+done
 
 echo "Validating shell syntax..."
 for f in .claude/hooks/*.sh scripts/*.sh; do
@@ -35,5 +40,6 @@ echo "Next:"
 echo "  1. Add PERPLEXITY_API_KEY and FIRECRAWL_API_KEY to .env"
 echo "  2. Export them into your shell"
 echo "  3. Run ./scripts/install-skills.sh"
-echo "  4. Run ./scripts/mcp-doctor.sh"
-echo "  5. Open docs/ as an Obsidian vault"
+echo "  4. Review .agentic/project.json and run ./scripts/profile-doctor.sh"
+echo "  5. Run ./scripts/mcp-doctor.sh"
+echo "  6. Open docs/ as an Obsidian vault"

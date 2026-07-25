@@ -25,11 +25,17 @@ Canonical DTCG-compatible design-token source files exist under
 
 ## Integrations
 
+Project capabilities are selected in `.agentic/project.json` and resolved
+through non-destructive profile tooling. The doctor reports drift; it does not
+install or remove resources.
+
 ## Security
 
 ## Verification
 
 Local skills and the full repository verification suite pass on T-001.
+Profile resolution, conflict detection, preview, and isolated manifest selection
+pass on T-005.
 
 ## Known incomplete work
 
