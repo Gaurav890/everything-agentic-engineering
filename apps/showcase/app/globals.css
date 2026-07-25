@@ -28,7 +28,7 @@
     --paper: #f2f0e8;
     --paper-deep: #e8e5db;
     --white: #fbfaf6;
-    --muted: #77766f;
+    --muted: #64625c;
     --line: #cfcbc0;
     --signal: #f05a28;
     --signal-dark: #b93812;
@@ -704,7 +704,7 @@
   }
 
   .ribbonStep.waiting {
-    color: #77766f;
+    color: var(--muted);
   }
 
   .stepTop {
@@ -937,7 +937,7 @@
   }
 
   .approvalFacts dt {
-    color: #8f8c83;
+    color: #9a978e;
     font-family: var(--mono);
     font-size: 8px;
     text-transform: uppercase;
@@ -998,7 +998,7 @@
     gap: 8px;
     align-items: center;
     margin-top: 13px;
-    color: #79776f;
+    color: #aaa79e;
     font-size: 9px;
   }
 
@@ -1061,6 +1061,10 @@
   .sectionHeading.compact h2 {
     color: var(--paper);
     font-size: 22px;
+  }
+
+  .attentionRail .sectionHeading .micro {
+    color: #aaa79e;
   }
 
   .agentRow {
