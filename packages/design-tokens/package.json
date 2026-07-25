@@ -1,0 +1,15 @@
+{
+  "name": "@everything-agentic/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DTCG-compatible token source and generated web/native outputs",
+  "scripts": {
+    "build": "python3 ../../scripts/build_design_tokens.py",
+    "check": "python3 ../../scripts/build_design_tokens.py --check",
+    "test": "python3 -m unittest discover -s ../../tests -p test_design_tokens.py"
+  },
+  "files": [
+    "generated",
+    "tokens"
+  ]
+}

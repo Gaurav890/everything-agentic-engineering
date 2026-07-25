@@ -15,6 +15,7 @@ Turn an idea into:
 [![GitHub stars](https://img.shields.io/github/stars/Gaurav890/everything-agentic-engineering?style=for-the-badge&logo=github)](https://github.com/Gaurav890/everything-agentic-engineering/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Gaurav890/everything-agentic-engineering?style=for-the-badge&logo=github)](https://github.com/Gaurav890/everything-agentic-engineering/network/members)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 <br />
 
@@ -223,6 +224,7 @@ The starter catalogs web, mobile, backend, research, and design capabilities,
 but `.agentic/project.json` determines which profiles are active.
 
 ```bash
+./scripts/init-project.sh
 ./scripts/profile-resolve.sh
 ./scripts/profile-doctor.sh
 ./scripts/profile-preview.sh web-next,design-critical,research-enabled
@@ -230,6 +232,9 @@ but `.agentic/project.json` determines which profiles are active.
 
 Profile selection is non-destructive: it does not silently install tools or
 delete inactive surfaces.
+
+The guided initializer asks what you are building, previews the resulting
+profiles, and changes only `.agentic/project.json` after confirmation.
 
 See the complete
 [product-design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md)
@@ -824,7 +829,20 @@ git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
 ```
 
-### 2. Configure environment
+### 2. Choose the project capabilities
+
+```bash
+./scripts/init-project.sh
+```
+
+This does not install or remove anything. Review the proposed manifest, then
+run:
+
+```bash
+./scripts/profile-doctor.sh
+```
+
+### 3. Configure environment
 
 ```bash
 cp .env.example .env
@@ -832,25 +850,34 @@ cp .env.example .env
 
 Add the API keys for the MCP services you plan to use.
 
-### 3. Bootstrap
+### 4. Bootstrap
 
 ```bash
 ./scripts/bootstrap.sh
 ```
 
-### 4. Check your MCP setup
+### 5. Check your MCP setup
 
 ```bash
 ./scripts/mcp-doctor.sh
 ```
 
-### 5. Open Claude Code
+### 6. Verify the harness
+
+```bash
+./scripts/verify.sh full
+```
+
+This runs profile and initializer tests, token generation, security-hook tests,
+documentation-link checks, policy checks, and project-defined checks.
+
+### 7. Open Claude Code
 
 ```bash
 claude
 ```
 
-### 6. Start with an idea
+### 8. Start with an idea
 
 Try:
 

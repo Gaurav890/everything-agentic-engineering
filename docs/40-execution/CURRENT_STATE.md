@@ -21,7 +21,8 @@ The same phase routing applies while preserving native platform conventions.
 ## Data
 
 Canonical DTCG-compatible design-token source files exist under
-`packages/design-tokens/tokens/`; platform exports are not yet generated.
+`packages/design-tokens/tokens/`. A dependency-free build generates CSS,
+TypeScript, and React Native theme outputs.
 
 ## Integrations
 
@@ -33,13 +34,13 @@ install or remove resources.
 
 ## Verification
 
-Local skills and the full repository verification suite pass on T-001.
-Profile resolution, conflict detection, preview, and isolated manifest selection
-pass on T-005.
+The full suite validates local skills, profiles, initialization, token
+generation, security hooks, local documentation links, collaboration policy,
+evidence bundles when present, and project-defined checks.
 
 ## Known incomplete work
 
-- No platform-specific CSS, TypeScript, or React Native token build is configured.
+- No production showcase application or visual evidence bundle exists yet.
 - Optional external design skills are not bundled or auto-installed.
 
 Only factual present-tense truth belongs here.

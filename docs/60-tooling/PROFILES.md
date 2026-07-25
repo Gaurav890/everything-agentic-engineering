@@ -6,6 +6,7 @@ mobile, backend, research, and design tooling without activating all of it.
 The source of truth is `.agentic/project.json`.
 
 ```bash
+./scripts/init-project.sh
 ./scripts/profile-resolve.sh
 ./scripts/profile-doctor.sh
 ./scripts/profile-preview.sh web-next,design-critical,research-enabled
@@ -15,6 +16,22 @@ The source of truth is `.agentic/project.json`.
 Selection changes only the manifest. It never installs packages, enables MCPs,
 or removes files. The doctor reports missing/external resources and
 present-but-inactive resources for review.
+
+The guided initializer asks plain-language questions about web, mobile, backend,
+design importance, research, and agentic UX. It previews the exact manifest and
+requires confirmation before writing. In non-interactive environments:
+
+```bash
+./scripts/init-project.sh \
+  --name my-product \
+  --web \
+  --design \
+  --research \
+  --backend supabase \
+  --dry-run
+```
+
+Replace `--dry-run` with `--yes` only after reviewing the proposal.
 
 ```text
 PROJECT MANIFEST

@@ -27,6 +27,7 @@ playwright-report/
 
 # OS/editor
 .DS_Store
+**/.DS_Store
 .idea/
 .vscode/settings.json
 
@@ -34,3 +35,6 @@ playwright-report/
 tmp/
 .cache/
 *.log
+
+# Generated design-token outputs
+packages/design-tokens/generated/

@@ -54,3 +54,6 @@ For sensitive work:
 - PASS_WITH_RISKS
 - FAIL
 - BLOCKED
+
+For important tasks, record this evidence in a machine-checkable bundle. See
+[`EVIDENCE_BUNDLES.md`](EVIDENCE_BUNDLES.md).

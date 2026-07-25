@@ -4,19 +4,20 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land T-005 profile-engine changes through review without merging directly to
-`main`.
+Land T-006 launch-readiness foundation through review without merging directly
+to `main`.
 
 ## Completed
 
-- Machine-readable project/profile/resource configuration.
-- Deterministic dependency and conflict resolution.
-- Profile doctor and non-destructive preview/select commands.
-- Resolution, conflict, confirmation, isolated write, and full verification.
+- Guided project initialization with explicit manifest-only confirmation.
+- Profile, initializer, token, and security-hook tests.
+- CSS, TypeScript, and React Native token generation.
+- Machine-checkable evidence-bundle validation.
+- License, security policy, conduct standard, changelog, and compatibility docs.
 
 ## In progress
 
-- Final commit, push, and pull-request review.
+- Final verification, commit, push, and pull-request review.
 
 ## Blockers
 
@@ -25,24 +26,23 @@ Land T-005 profile-engine changes through review without merging directly to
 
 ## Unresolved decisions
 
-- Future versions may add reviewed installers or cleanup execution. Version one
-  intentionally reports and previews only.
+- The first production showcase application should be a dedicated follow-up PR.
 
 ## Verification status
 
-Full repository verification and profile-engine scenario tests pass.
+Full ten-stage repository verification and 16 automated tests pass.
 
 ## Exact next action
 
-Commit and push `feat/T-005-profile-engine`, then open a PR titled
-`feat(T-005): add deterministic project profile engine`.
+Commit and push `feat/T-006-launch-readiness-foundation`, then open a PR titled
+`feat(T-006): add launch-readiness foundation`.
 
 ## Relevant files
 
-- `.agentic/project.json`
-- `.agentic/profiles/`
-- `.agentic/resources.json`
-- `scripts/profile_engine.py`
-- `docs/60-tooling/PROFILES.md`
+- `scripts/init_project.py`
+- `scripts/build_design_tokens.py`
+- `scripts/verify.sh`
+- `tests/`
+- `docs/50-evals/EVIDENCE_BUNDLES.md`
 
 Keep this concise enough to read in under two minutes.
