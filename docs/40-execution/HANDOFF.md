@@ -19,7 +19,7 @@ Land the T-011 launch metadata and social-preview asset through review.
 
 ## In progress
 
-- T-011 PR #12 checks and review.
+- T-011 follow-up PR #13 checks and review.
 
 ## Blockers
 
@@ -38,8 +38,8 @@ passes on the T-011 branch.
 
 ## Exact next action
 
-Wait for PR #12 checks, review the social-preview asset and release-state
-claims, then squash merge if all required checks pass.
+Wait for PR #13 checks, review the final handoff record, then squash merge if
+all required checks pass.
 
 ## Relevant files
 
