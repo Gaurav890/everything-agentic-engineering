@@ -69,6 +69,7 @@ Default decision:
 - parallel-plan
 - loop-engineering
 - security-gate
+- self-improvement-loop
 
 ## External skills
 

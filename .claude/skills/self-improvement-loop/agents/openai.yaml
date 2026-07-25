@@ -1,0 +1,4 @@
+interface:
+  display_name: "Self-Improvement Loop"
+  short_description: "Research and propose safe harness updates"
+  default_prompt: "Use $self-improvement-loop to research material ecosystem changes and propose safe, evidence-backed improvements."
