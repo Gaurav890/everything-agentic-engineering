@@ -22,7 +22,7 @@ Append-only verified history.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -38,9 +38,7 @@ product-specific design-system contract and DTCG-compatible token scaffold.
 
 **Commit/PR**
 
-Branch: `feat/T-001-product-design-engine`; implementation commit `d44d145`
-pushed to `origin`. PR creation through the connected GitHub integration is
-blocked by its pull-request write permission.
+Merged through PR #2.
 
 **Remaining risk**
 
@@ -51,7 +49,7 @@ skills remain optional installations and must be reviewed before use.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -70,7 +68,7 @@ non-destructive profile previews/selections.
 
 **Commit/PR**
 
-Branch: `feat/T-005-profile-engine`; commit/PR pending final review.
+Merged through PR #6.
 
 **Remaining risk**
 
@@ -81,7 +79,7 @@ plugin, MCP, or user file is automatically added or removed.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -99,7 +97,7 @@ bundles.
 
 **Commit/PR**
 
-Branch: `feat/T-006-launch-readiness-foundation`; commit and PR pending.
+Merged through PR #7.
 
 **Remaining risk**
 
@@ -110,7 +108,7 @@ checks activate only after a real showcase or product application exists.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -131,7 +129,7 @@ critique, and post-critique fixes.
 
 **Commit/PR**
 
-Branch: `feat/T-007-agent-mission-control`; commit and PR pending.
+Merged through PR #8.
 
 **Remaining risk**
 
@@ -142,7 +140,7 @@ frontend reference, not a production backend.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -160,7 +158,7 @@ separate review.
 
 **Commit/PR**
 
-Branch: `feat/T-008-guided-project-initializer`; commit and PR pending.
+Merged through PR #9.
 
 **Remaining risk**
 
@@ -171,7 +169,7 @@ reversible. Physical cleanup remains a separate explicit human decision.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -189,9 +187,42 @@ verification, parallel-work, and stale-base gates.
 
 **Commit/PR**
 
-Branch: `feat/T-009-task-execution-launcher`; commit and PR pending.
+Merged through PR #10.
 
 **Remaining risk**
 
 The launcher prepares branches and worktrees only. GitHub Issue synchronization
 and autonomous implementation remain intentionally out of scope.
+
+### 2026-07-25 — T-010
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** PARTIAL
+
+**Change**
+
+Prepared the first public preview as a human-gated release candidate: semantic
+version and changelog, curated release notes, compatibility and limitation
+statements, a release runbook, clean-checkout onboarding validation, a
+review-first GitHub release workflow, README quick-start visual, a 60-second
+demo script, and launch copy.
+
+**Evidence**
+
+- Release contract validation covers version, tag, changelog, notes, README,
+  and compatibility.
+- Clean-checkout smoke test exercises bootstrap, initializer preview, profile
+  resolution, profile doctor, and tracked-file cleanliness.
+- Full repository verification is required before packaging.
+- Public publishing is disabled by default and refuses existing releases/tags.
+
+**Commit/PR**
+
+Branch: `feat/T-010-v0-1-0-release-package`; commit and PR pending.
+
+**Remaining risk**
+
+The demo recording, GitHub topics, social preview upload, final artifact review,
+tag creation, public release, and announcements remain explicit maintainer
+actions after this branch is merged.

@@ -123,6 +123,7 @@ for required in \
   .github/CODEOWNERS; do
   test -f "$required" || { echo "Missing required file: $required" >&2; exit 1; }
 done
+./scripts/release-check.sh
 
 echo "[9/10] Validate local documentation links and evidence bundles"
 python3 - <<'PY'
