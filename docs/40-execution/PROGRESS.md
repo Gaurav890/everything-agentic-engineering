@@ -198,7 +198,7 @@ and autonomous implementation remain intentionally out of scope.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** PARTIAL
+**Outcome:** DONE
 
 **Change**
 
@@ -219,11 +219,43 @@ demo script, and launch copy.
 
 **Commit/PR**
 
-Branch: `feat/T-010-v0-1-0-release-package`; implementation commit `d679fe2`;
-PR #11 open for review.
+Merged through PR #11 and published as `v0.1.0` from commit `991c70c`.
 
 **Remaining risk**
 
 The demo recording, GitHub topics, social preview upload, final artifact review,
 tag creation, public release, and announcements remain explicit maintainer
 actions after this branch is merged.
+
+### 2026-07-25 — T-011
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Created a 1280×640 social-preview asset aligned with the Signalroom visual
+language and prepared accurate repository description/topic metadata for the
+public launch surface.
+
+Applied the description and ten focused topics to the public repository and
+uploaded the social preview through GitHub's repository settings.
+
+**Evidence**
+
+- Exact project name and launch tagline visually inspected.
+- 1280×640 JPEG is 131 KB and suitable for GitHub social cards.
+- The system path communicates durable context, product design, coordinated
+  specialist agents, verification gates, and shipping.
+- GitHub's social-preview menu exposes `Remove image`, confirming the upload.
+- Full repository verification passes.
+
+**Commit/PR**
+
+Branch: `feat/T-011-launch-metadata`; commit and PR pending.
+
+**Remaining risk**
+
+GitHub caches social preview images; shared links may take time to refresh after
+the settings upload.

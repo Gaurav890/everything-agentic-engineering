@@ -52,6 +52,10 @@ compatibility and limitation statements, a 60-second demo script, and
 channel-specific launch copy. Running the workflow without its publish option
 only builds a reviewable archive and checksum.
 
+The public `v0.1.0` release is published from reviewed commit `991c70c` with a
+verified source archive and checksum. A 1280×640 launch card is maintained at
+`docs/assets/social-preview-v0.1.0.jpg`.
+
 ## Security
 
 ## Verification
@@ -68,9 +72,7 @@ accessibility checks; browser tests run as a dedicated GitHub Actions gate.
 - Optional external design skills are not bundled or auto-installed.
 - The initializer intentionally does not delete inactive template inventory;
   cleanup remains a separate explicit decision.
-- The reviewed screen recording and GitHub social preview still require a
-  maintainer to capture and upload them.
-- The public `v0.1.0` tag and GitHub release do not exist until a maintainer
-  deliberately runs the release workflow with publishing enabled.
+- The reviewed screen recording still requires a maintainer to capture it.
+- Social platforms may cache older repository preview metadata after updates.
 
 Only factual present-tense truth belongs here.
