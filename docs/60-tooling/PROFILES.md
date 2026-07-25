@@ -19,7 +19,23 @@ present-but-inactive resources for review.
 
 The guided initializer asks plain-language questions about web, mobile, backend,
 design importance, research, and agentic UX. It previews the exact manifest and
-requires confirmation before writing. In non-interactive environments:
+requires confirmation before writing.
+
+It also makes non-selection explicit. If a project does not use mobile,
+`mobile-expo`, the mobile agent, and React Native guidance remain inactive:
+agents do not route work to them and they are not project requirements. Their
+template files remain in the starter so profile changes stay reversible.
+Removing cataloged files is a separate, explicit cleanup decision—never an
+initializer side effect.
+
+Start from a preset when the shape is familiar:
+
+```bash
+./scripts/init-project.sh --list-presets
+./scripts/init-project.sh --name my-saas --preset web-supabase --dry-run
+```
+
+Or select capabilities directly:
 
 ```bash
 ./scripts/init-project.sh \
@@ -32,6 +48,17 @@ requires confirmation before writing. In non-interactive environments:
 ```
 
 Replace `--dry-run` with `--yes` only after reviewing the proposal.
+
+Every preview shows:
+
+- active profiles and why they are active;
+- inactive profiles;
+- active capabilities;
+- inactive capabilities retained in the starter;
+- external skills, MCPs, and backends that require separate review.
+
+Presets and manual selectors cannot be mixed. This prevents a convenient
+starting point from silently accumulating contradictory choices.
 
 ```text
 PROJECT MANIFEST
@@ -51,7 +78,20 @@ active.
 
 Choose only what the product genuinely needs.
 
-## web-next-supabase
+## Presets
+
+| Preset | Intended starting point |
+|---|---|
+| `core` | Harness and durable context only |
+| `web` | Next.js plus design-critical workflow |
+| `web-research` | Web plus current research/crawling |
+| `web-supabase` | Web plus design workflow and Supabase |
+| `mobile` | Expo plus design-critical workflow |
+| `mobile-research` | Mobile plus current research/crawling |
+| `full-stack` | Web, mobile, design, research, and Supabase |
+| `research` | Research/crawling harness without an app surface |
+
+## Web + Supabase composition
 
 Recommended default for many full-stack web products.
 
