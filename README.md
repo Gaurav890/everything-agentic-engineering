@@ -16,12 +16,50 @@ Turn an idea into:
 [![GitHub forks](https://img.shields.io/github/forks/Gaurav890/everything-agentic-engineering?style=for-the-badge&logo=github)](https://github.com/Gaurav890/everything-agentic-engineering/network/members)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+[![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-111827?style=for-the-badge)](docs/releases/v0.1.0.md)
 
 <br />
 
 **Built for Claude Code. Designed for agentic engineering. Adaptable to Codex and other coding agents.**
 
 </div>
+
+---
+
+## From clone to an agent-ready task
+
+![Everything Agentic Engineering quick-start flow](docs/assets/quickstart-flow.svg)
+
+```bash
+git clone https://github.com/Gaurav890/everything-agentic-engineering.git
+cd everything-agentic-engineering
+cp .env.example .env
+./scripts/bootstrap.sh
+./scripts/init-project.sh
+```
+
+In one guided path, the starter:
+
+1. explains which capabilities your project actually needs;
+2. keeps irrelevant web, mobile, backend, research, or design surfaces inactive;
+3. records the selection in a machine-readable project manifest;
+4. validates the environment without silently installing or deleting tools;
+5. turns a durable task into a reviewed branch or worktree plan.
+
+After product discovery and task decomposition create a ready task such as
+`T-101`, inspect it without changing the workspace:
+
+```bash
+./scripts/task-plan.sh T-101
+```
+
+The planner is read-only. Workspace creation requires explicit confirmation,
+and implementation, merging, deployment, and release remain separate human
+decisions.
+
+Read the [installation guide](docs/60-tooling/INSTALLATION.md), follow the
+[60-second demo](docs/80-showcase/DEMO_SCRIPT.md), or review the
+[v0.1.0 limitations](docs/60-tooling/COMPATIBILITY.md#known-limitations-in-v010).
 
 ---
 
@@ -516,7 +554,9 @@ IDEA / BUG / REQUIREMENT
 .github/
 ├── workflows/
 │   ├── ci.yml
-│   └── pr-policy.yml
+│   ├── pr-policy.yml
+│   ├── release.yml
+│   └── showcase.yml
 │
 ├── ISSUE_TEMPLATE/
 │   ├── bug.yml
@@ -1042,6 +1082,9 @@ Potential future directions:
 - [ ] Community-contributed skills, agents, and project profiles
 
 Have an idea? Open an issue or start a discussion.
+
+For maintainers, see the [release runbook](docs/70-collaboration/RELEASING.md).
+For launch material, see the [copy deck](docs/80-showcase/LAUNCH_COPY.md).
 
 ---
 

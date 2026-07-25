@@ -46,6 +46,12 @@ compatibility, specialist routing, exclusive file ownership, verification
 gates, and base-branch freshness. Planning is read-only and workspace creation
 requires explicit confirmation.
 
+The repository identifies as `v0.1.0` and contains a human-gated release
+workflow, curated release notes, a clean-checkout onboarding smoke test,
+compatibility and limitation statements, a 60-second demo script, and
+channel-specific launch copy. Running the workflow without its publish option
+only builds a reviewable archive and checksum.
+
 ## Security
 
 ## Verification
@@ -62,5 +68,9 @@ accessibility checks; browser tests run as a dedicated GitHub Actions gate.
 - Optional external design skills are not bundled or auto-installed.
 - The initializer intentionally does not delete inactive template inventory;
   cleanup remains a separate explicit decision.
+- The reviewed screen recording and GitHub social preview still require a
+  maintainer to capture and upload them.
+- The public `v0.1.0` tag and GitHub release do not exist until a maintainer
+  deliberately runs the release workflow with publishing enabled.
 
 Only factual present-tense truth belongs here.

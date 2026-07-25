@@ -2,20 +2,36 @@
 
 All notable changes will be documented here.
 
-This project follows semantic versioning after its first tagged release. Until
-then, entries describe the evolving pre-release harness.
+This project follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+## [0.1.0] - 2026-07-25
+
 ### Added
 
-- Phase-based product-design routing and DTCG-compatible token sources.
-- Controlled daily self-improvement research loop.
-- Product-design resource and source ledgers.
-- Deterministic project profiles with non-destructive selection.
-- Guided project initialization, executable profile tests, generated token
-  outputs, and stronger launch-readiness verification.
-- Safe initializer presets with explicit active/inactive capability plans and
-  external setup guidance.
-- Read-only task planning and confirmation-gated branch/worktree preparation
-  from `TASKS.jsonl`.
+- A repository-centered agent harness with durable product, design,
+  engineering, execution, evaluation, and collaboration context.
+- A phase-based product-design engine with product-specific authority,
+  specialist routing, independent critique, and Playwright evidence.
+- DTCG-compatible design-token sources and generated CSS, TypeScript, and
+  React Native outputs.
+- Controlled, evidence-gated daily ecosystem research that proposes changes
+  without modifying the harness autonomously.
+- A complete product-design resource catalog with source links and routing.
+- Deterministic, non-destructive project profiles and a guided initializer
+  with explicit active and inactive capability plans.
+- A confirmation-gated task launcher that turns `TASKS.jsonl` entries into
+  reviewed branch or worktree plans.
+- Signalroom, a responsive reference product for supervising AI-agent work,
+  including interaction, accessibility, and visual evidence.
+- GitHub issue, branch, pull-request, review, CI, security, and contribution
+  contracts for human-agent collaboration.
+
+### Security
+
+- Deterministic hooks for destructive-command prevention and secret detection.
+- Human approval gates for releases, deployments, credentials, destructive
+  migrations, and other irreversible actions.
+
+[0.1.0]: https://github.com/Gaurav890/everything-agentic-engineering/releases/tag/v0.1.0

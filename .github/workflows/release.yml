@@ -1,0 +1,130 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Semantic release tag (for example v0.1.0)"
+        required: true
+        default: "v0.1.0"
+        type: string
+      publish:
+        description: "Publish the reviewed GitHub release"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: validate-and-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Require main
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$REF_NAME" != "main" ]; then
+            echo "Releases must run from main, not $REF_NAME." >&2
+            exit 1
+          fi
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate release contract
+        run: ./scripts/release-check.sh "${{ inputs.version }}"
+
+      - name: Test clean-checkout onboarding
+        run: ./scripts/release-smoke-test.sh
+
+      - name: Run full verification
+        run: ./scripts/verify.sh full
+
+      - name: Build source archive and checksum
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          mkdir -p dist
+          archive="everything-agentic-engineering-${VERSION}.tar.gz"
+          git archive \
+            --format=tar.gz \
+            --prefix="everything-agentic-engineering-${VERSION}/" \
+            --output="dist/${archive}" \
+            HEAD
+          (
+            cd dist
+            sha256sum "$archive" > "${archive}.sha256"
+          )
+
+      - name: Upload reviewed release candidate
+        uses: actions/upload-artifact@v6
+        with:
+          name: everything-agentic-engineering-${{ inputs.version }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: publish
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+
+      - name: Refuse to overwrite a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "Release $VERSION already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+
+      - name: Download reviewed release candidate
+        uses: actions/download-artifact@v7
+        with:
+          name: everything-agentic-engineering-${{ inputs.version }}
+          path: dist
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release create "$VERSION" \
+            dist/* \
+            --target "$GITHUB_SHA" \
+            --title "Everything Agentic Engineering ${VERSION}" \
+            --notes-file "docs/releases/${VERSION}.md"
