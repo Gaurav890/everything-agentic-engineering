@@ -30,6 +30,10 @@ This starter intentionally uses primary sources for technical integration decisi
 - `expo/skills`
 - `obra/superpowers`
 
+The complete product-design link and usage catalog is:
+
+- [`PRODUCT_DESIGN_RESOURCES.md`](PRODUCT_DESIGN_RESOURCES.md)
+
 
 ## GitHub collaboration and repository governance
 
@@ -51,4 +55,5 @@ Primary references used for the collaboration layer:
 - `https://github.com/microsoft/playwright-mcp`
 - `https://github.com/firecrawl/firecrawl-mcp-server`
 
-Additional user-supplied research references can be added to the project research ledger without treating them as implementation dependencies.
+Additional user-supplied research references belong in the appropriate source
+catalog or learning ledger without automatically becoming dependencies.
