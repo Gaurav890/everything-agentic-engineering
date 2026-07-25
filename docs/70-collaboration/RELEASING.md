@@ -83,8 +83,9 @@ Recommended repository description:
 > agents: durable context, product design, skills, MCPs, task orchestration,
 > security gates, evidence, and GitHub workflows.
 
-Use `docs/assets/quickstart-flow.svg` as the basis for a 1280×640 social
-preview. Uploading the preview in GitHub settings remains a maintainer action.
+Use `docs/assets/social-preview-v0.1.0.jpg` as the 1280×640 social preview.
+Uploading or replacing the preview in GitHub settings remains an explicit
+maintainer action.
 
 ## After publishing
 

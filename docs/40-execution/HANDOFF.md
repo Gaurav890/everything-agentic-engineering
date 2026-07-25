@@ -4,8 +4,7 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land the T-010 `v0.1.0` release package through review without publishing or
-merging directly to `main`.
+Land the T-011 launch metadata and social-preview asset through review.
 
 ## Completed
 
@@ -15,10 +14,12 @@ merging directly to `main`.
 - Human-gated GitHub release workflow with reviewable archive/checksum.
 - Clean-checkout onboarding smoke test and release contract validator.
 - README quick-start visual, demo script, and launch copy.
+- Public `v0.1.0` tag and release with verified archive/checksum.
+- 1280×640 GitHub social-preview asset.
 
 ## In progress
 
-- T-010 PR #11 checks and review.
+- T-011 commit, push, and PR review.
 
 ## Blockers
 
@@ -26,28 +27,23 @@ merging directly to `main`.
 
 ## Unresolved decisions
 
-- Final recording, social preview, GitHub topics, tag, public release, and
-  announcements remain maintainer actions after merge.
+- Final demo recording and public announcements remain maintainer actions.
 
 ## Verification status
 
-Release contract validation, clean-checkout onboarding smoke test, full
-repository verification, documentation-link validation, token/profile/task
-tests, security-hook tests, and showcase project checks pass locally.
+The public release and its checksum are verified. The repository description,
+ten launch topics, and social preview are live. The preview passed manual size,
+text, composition, and contrast inspection, and full repository verification
+passes on the T-011 branch.
 
 ## Exact next action
 
-Wait for PR #11 checks, review the release claims and publish gate, then squash
-merge if all required checks pass. Do not publish `v0.1.0` as part of the merge.
+Commit and push the verified branch, then open T-011 for review.
 
 ## Relevant files
 
-- `.github/workflows/release.yml`
-- `scripts/release-check.sh`
-- `scripts/release-smoke-test.sh`
-- `docs/releases/v0.1.0.md`
+- `docs/assets/social-preview-v0.1.0.jpg`
 - `docs/70-collaboration/RELEASING.md`
-- `docs/80-showcase/DEMO_SCRIPT.md`
-- `README.md`
+- `docs/40-execution/TASKS.jsonl`
 
 Keep this concise enough to read in under two minutes.
