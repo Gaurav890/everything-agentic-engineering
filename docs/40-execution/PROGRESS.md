@@ -253,7 +253,8 @@ uploaded the social preview through GitHub's repository settings.
 
 **Commit/PR**
 
-Branch: `feat/T-011-launch-metadata`; commit and PR pending.
+Implementation commit `7a74be4` merged through PR #12. Follow-up PR #13 records
+the final handoff state.
 
 **Remaining risk**
 
