@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Polish"
+  short_description: "Refine launch-critical experience details"
+  default_prompt: "Use $polish to refine visual and interaction details after functionality and system integrity pass."

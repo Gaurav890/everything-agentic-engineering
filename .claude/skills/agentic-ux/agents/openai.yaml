@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic UX"
+  short_description: "Design trustworthy agent experiences"
+  default_prompt: "Use $agentic-ux to design agent states, control, trust, recovery, and human handoff."

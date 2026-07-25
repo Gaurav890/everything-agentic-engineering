@@ -1,0 +1,4 @@
+interface:
+  display_name: "UX Strategy"
+  short_description: "Define a product UX strategy"
+  default_prompt: "Use $strategize to turn discovery evidence into a focused UX strategy."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Token Audit"
+  short_description: "Detect token drift and bypasses"
+  default_prompt: "Use $token-audit to find raw visual values, duplicate semantics, and unused tokens."

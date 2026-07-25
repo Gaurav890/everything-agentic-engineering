@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark"
+  short_description: "Compare competitive UX patterns"
+  default_prompt: "Use $benchmark to compare relevant competitors, category conventions, strengths, and gaps."

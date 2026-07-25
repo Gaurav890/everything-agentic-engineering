@@ -48,7 +48,23 @@ Default decision:
 - create-prd
 - decompose-prd
 - context-handoff
+- product-design-router
+- discover
+- user-needs
+- benchmark
+- strategize
+- interaction-design
+- agentic-ux
 - design-system
+- design-tokens
+- responsive-audit
+- accessibility-audit
+- design-system-audit
+- token-audit
+- performance-ux
+- design-critic
+- polish
+- design-ops
 - research-ledger
 - parallel-plan
 - loop-engineering
@@ -56,16 +72,22 @@ Default decision:
 
 ## External skills
 
-Install by default:
-- Anthropic frontend-design
-- Vercel react-best-practices
-- Vercel web-design-guidelines
-- Vercel react-native-guidelines
+Install only when the active design phase needs them:
+
+- discovery/strategy specialists;
+- UI UX Pro Max, Taste Skill, or Impeccable phase tools;
+- shadcn/21st.dev/Aceternity component discovery;
+- Figma MCP/Code Connect for approved design translation;
+- Vercel React/Next.js or React Native engineering guidance;
+- Anthropic frontend-design as optional supplementary design intelligence.
 
 Optional:
 - Superpowers workflow plugin
 - Expo official plugin for mobile
-- one creative frontend companion, not several overlapping ones
+- one relevant creative/critique specialist at a time
+
+The project design system is authoritative. References are ingredients,
+components are structural donors, and tokens encode approved decisions.
 
 ## Web default
 

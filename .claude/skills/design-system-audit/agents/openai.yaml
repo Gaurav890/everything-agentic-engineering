@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design System Audit"
+  short_description: "Audit design-system coherence"
+  default_prompt: "Use $design-system-audit to evaluate consistency, completeness, accessibility, and drift across the design system."

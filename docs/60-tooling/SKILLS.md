@@ -1,102 +1,102 @@
 # Skills strategy
 
-## Core project-local skills
+## Principle
 
-Already included:
+Use a small phase-based system, not a pile of overlapping aesthetic prompts.
+Local skills own routing, contracts, durable outputs, and fallbacks. Third-party
+skills remain externally installed and are invoked only for the phase they serve.
+
+`product-design-router` selects the minimum phases required by evidence:
+
+```text
+DISCOVERY
+→ USER NEEDS
+→ BENCHMARK
+→ UX STRATEGY
+→ INTERACTION DESIGN
+→ DESIGN DIRECTIONS
+→ DESIGN SYSTEM
+→ DESIGN TOKENS
+→ COMPONENT / FIGMA TRANSLATION
+→ IMPLEMENTATION
+→ LIVE ITERATION
+→ RESPONSIVE / ACCESSIBILITY / SYSTEM / TOKEN AUDITS
+→ PERFORMANCE
+→ INDEPENDENT CRITIQUE
+→ POLISH
+→ DESIGN OPS
+→ SHIP
+```
+
+Do not rerun phases whose outputs exist, remain valid, and match the current task.
+
+## Product-design routing
+
+| Phase | Local contract | External capability when installed |
+|---|---|---|
+| Discovery | `discover` | Owl Listener discover; Impeccable Shape |
+| User needs | `user-needs` | Layers user-needs |
+| Competitive landscape | `benchmark` | Owl Listener UX strategy |
+| UX strategy | `strategize` | Owl Listener strategize |
+| Interaction | `interaction-design`, `agentic-ux` | cuellarfr interaction-design |
+| Design directions | `design-system` | UI UX Pro Max; Refero; real products; optional Anthropic frontend-design |
+| System documentation | `design-system` | Impeccable Document; extract-design-system for existing products |
+| Tokens | `design-tokens` | tailwind-design-system when Tailwind is active |
+| Components | project design system | shadcn registry/MCP; 21st.dev; Aceternity |
+| Design-to-code | project design system | Figma MCP Implement Design; Code Connect |
+| Live iteration | frontend agent | Impeccable Live |
+| Audits | `responsive-audit`, `accessibility-audit`, `design-system-audit`, `token-audit` | relevant specialist audit skills |
+| Engineering | framework rules | Vercel React/Next.js or React Native guidance |
+| Performance | `performance-ux` | Impeccable Optimize |
+| Critique | `design-critic` | Impeccable Critique; Taste Skill |
+| Polish | `polish` | Impeccable Polish |
+| Delivery | `design-ops` | cuellarfr design-ops |
+| Evidence | repo verification contract | Playwright |
+
+## Authority rules
+
+- The product context and approved brief define intent.
+- `docs/20-design/DESIGN_SYSTEM.md` defines the product experience.
+- `packages/design-tokens/tokens/` encodes approved reusable values.
+- References are ingredients, not templates.
+- Imported components are structural donors.
+- Anthropic `frontend-design` is optional supplementary design intelligence. It
+  is never the default aesthetic and may be skipped.
+- Vercel engineering and audit guidance improves implementation quality; it does
+  not define visual identity.
+- The project design system wins every conflict.
+
+## Existing-product routing
+
+For an inherited or mature product, inspect the running implementation before
+proposing a new system. Use external extraction/documentation skills when
+installed, then audit drift and plan migration. Do not overwrite a coherent
+existing language with starter defaults.
+
+## Install and trust policy
+
+Install an external skill only when its phase is active, its source is trusted,
+and it does not conflict with an already selected specialist. Review third-party
+shell hooks and code before enabling them.
+
+Avoid:
+
+- bulk skill dumps;
+- several taste skills loaded simultaneously;
+- copying external skill implementations into this repository without need;
+- using a component registry as art direction;
+- treating automated accessibility or performance output as complete evidence.
+
+## Core engineering skills
+
+The non-design local skills remain:
 
 - `create-prd`
 - `decompose-prd`
 - `context-handoff`
-- `design-system`
 - `research-ledger`
 - `parallel-plan`
 - `loop-engineering`
 - `security-gate`
 
-These encode project behavior and should remain version-controlled.
-
-## External skills: final core recommendation
-
-### Frontend creation
-
-**Anthropic `frontend-design`**
-
-Purpose:
-- distinctive production-grade frontend creation,
-- design intent,
-- critique loop.
-
-### React/Next.js engineering
-
-**Vercel `react-best-practices`**
-
-Purpose:
-- React/Next.js performance and engineering guidance.
-
-### UI/UX audit
-
-**Vercel `web-design-guidelines`**
-
-Purpose:
-- accessibility,
-- focus,
-- forms,
-- animation,
-- typography,
-- performance,
-- navigation/state,
-- theming,
-- touch,
-- i18n.
-
-### Mobile
-
-**Vercel `react-native-guidelines`**
-and, when mobile is enabled,
-**official Expo skills/plugin**.
-
-## Workflow plugin
-
-**Superpowers** is recommended as an optional workflow layer for brainstorming, planning, worktrees, TDD, debugging, and subagent-driven development.
-
-Do not let Superpowers replace this repository's durable product truth, acceptance criteria, security gates, or handoff system.
-
-## Install philosophy
-
-Do not install every popular skill.
-
-Install a skill when:
-- the domain is active,
-- the instructions are narrow and high quality,
-- the source is trusted,
-- the skill does not conflict heavily with another loaded skill.
-
-Avoid:
-- 100-skill dumps,
-- overlapping frontend taste skills all loaded together,
-- stale stack-specific instructions,
-- unknown skills with shell hooks you have not reviewed.
-
-## Creative frontend companions
-
-Optional, choose at most one initially:
-- `taste-skill`
-- `ui-ux-pro-max`
-
-The starter does not auto-install either. First see whether Anthropic frontend-design + the project's own design-system skill + Vercel audit is enough.
-
-## Mobile plugin
-
-For Expo projects, install the official Expo plugin in Claude Code:
-
-```text
-/plugin install expo@claude-plugins-official
-```
-
-## Superpowers plugin
-
-In Claude Code:
-
-```text
-/plugin install superpowers@claude-plugins-official
-```
+Superpowers and Expo tooling remain optional external workflow/platform layers.

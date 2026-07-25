@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Ops"
+  short_description: "Prepare implementation-ready design delivery"
+  default_prompt: "Use $design-ops to produce unambiguous design delivery artifacts and durable handoff."

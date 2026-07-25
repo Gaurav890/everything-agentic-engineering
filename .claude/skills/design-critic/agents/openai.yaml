@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Critic"
+  short_description: "Critique the running product honestly"
+  default_prompt: "Use $design-critic to independently score and critique the running product experience."

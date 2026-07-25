@@ -1,0 +1,4 @@
+interface:
+  display_name: "Responsive Audit"
+  short_description: "Audit behavior across breakpoints"
+  default_prompt: "Use $responsive-audit to evaluate the interface across mobile, tablet, desktop, and wide layouts."

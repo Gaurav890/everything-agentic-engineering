@@ -13,7 +13,7 @@ Keep the main context focused on requirements, decisions, task state, and integr
 | orchestrator | task graph, delegation, merge order, final synthesis | execution docs only |
 | product | PRD, requirements, acceptance criteria | product docs |
 | architect | architecture, contracts, data model, ADRs | engineering docs |
-| frontend | web UI implementation and visual evidence | web/UI-owned files |
+| frontend | phase-routed product experience, web UI implementation, and visual evidence | web/UI-owned files |
 | backend | APIs, auth, jobs, database | backend-owned files |
 | mobile | Expo/React Native | mobile-owned files |
 | researcher | live research and source ledger | research docs |
@@ -42,6 +42,15 @@ See `docs/70-collaboration/GITHUB_WORKFLOW.md`.
 5. Evaluators independently test the claim.
 6. Orchestrator opens or updates the PR and merges only after evidence, required review, and checks are present.
 7. Update durable state as part of the branch/PR, then mark the task `done` only after merge.
+
+## Product-design routing
+
+For substantial UI/UX work, the frontend owner invokes
+`product-design-router` and runs only the design phases whose durable outputs
+are missing or stale. Design direction must precede tokenization and
+implementation. External skills remain specialist inputs; the project brief,
+design system, and tokens remain authoritative. A separate evaluator owns final
+critique of the running experience.
 
 ## Agent result contract
 

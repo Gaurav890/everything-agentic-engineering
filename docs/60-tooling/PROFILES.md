@@ -16,9 +16,11 @@ Suggested:
 - Vercel
 
 External skills:
-- frontend-design
-- react-best-practices
-- web-design-guidelines
+- route product-design phases through `product-design-router`
+- install discovery, strategy, taste, component, or Figma specialists only when routed
+- use react-best-practices for engineering
+- use web-design-guidelines as one audit input
+- use frontend-design only as optional supplementary direction intelligence
 
 ## mobile-expo
 
