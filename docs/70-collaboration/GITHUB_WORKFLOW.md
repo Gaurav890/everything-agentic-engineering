@@ -131,6 +131,17 @@ Before coding:
 Recommended commands:
 
 ```bash
+./scripts/task-plan.sh T-014
+./scripts/task-start.sh T-014 --yes
+```
+
+The task launcher checks dependencies, active profiles, file ownership, agent
+routing, and verification gates before preparing a branch or worktree. See
+`docs/70-collaboration/TASK_EXECUTION.md`.
+
+The lower-level branch commands remain available:
+
+```bash
 git switch main
 git pull --ff-only origin main
 ./scripts/new-branch.sh feat T-014 password-reset

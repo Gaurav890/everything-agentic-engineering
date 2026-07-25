@@ -87,6 +87,7 @@ python3 -m compileall -q scripts tests
 echo "[5/10] Run profile and initializer tests"
 python3 -m unittest discover -s tests -p 'test_profile_engine.py'
 python3 -m unittest discover -s tests -p 'test_initializer.py'
+python3 -m unittest discover -s tests -p 'test_task_engine.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null

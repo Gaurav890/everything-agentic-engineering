@@ -238,6 +238,8 @@ Use:
 - `./scripts/start-task.sh <TASK-ID>`
 - `./scripts/new-branch.sh <type> <TASK-ID> <slug>`
 - `./scripts/create-worktree.sh <TASK-ID> <slug> [type] [base]`
+- `./scripts/task-plan.sh <TASK-ID>`
+- `./scripts/task-start.sh <TASK-ID> --yes`
 - `./scripts/pr-ready.sh <TASK-ID>`
 - `./scripts/finish-task.sh <TASK-ID>` — moves task to `review` after full verification
 - `./scripts/prepare-merge.sh <TASK-ID>` — writes `done` on the task branch before final merge; `main` becomes authoritative only after merge
