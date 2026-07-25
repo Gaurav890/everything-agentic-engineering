@@ -4,20 +4,21 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land T-006 launch-readiness foundation through review without merging directly
-to `main`.
+Land T-007 Signalroom showcase through independent review without merging
+directly to `main`.
 
 ## Completed
 
-- Guided project initialization with explicit manifest-only confirmation.
-- Profile, initializer, token, and security-hook tests.
-- CSS, TypeScript, and React Native token generation.
-- Machine-checkable evidence-bundle validation.
-- License, security policy, conduct standard, changelog, and compatibility docs.
+- Signalroom product brief, user needs, benchmark, strategy, and interaction model.
+- Product-specific editorial operations design contract.
+- Responsive Next.js reference product with agentic approval/recovery controls.
+- Required loading, empty, error, desktop, and mobile evidence.
+- Dedicated Playwright and axe GitHub Actions gate.
+- Independent critique and applied mobile/search corrections.
 
 ## In progress
 
-- Final verification, commit, push, and pull-request review.
+- Final evidence refresh, task review state, commit, push, and PR review.
 
 ## Blockers
 
@@ -26,23 +27,24 @@ to `main`.
 
 ## Unresolved decisions
 
-- The first production showcase application should be a dedicated follow-up PR.
+- A future version may connect Signalroom to a real agent runtime; this PR should
+  remain a focused frontend reference.
 
 ## Verification status
 
-Full ten-stage repository verification and 16 automated tests pass.
+Production build, root checks, evidence validation, and full repository
+verification pass. GitHub Actions owns the sandbox-independent browser/axe run.
 
 ## Exact next action
 
-Commit and push `feat/T-006-launch-readiness-foundation`, then open a PR titled
-`feat(T-006): add launch-readiness foundation`.
+Commit and push `feat/T-007-agent-mission-control`, then open a PR titled
+`feat(T-007): add Signalroom agent operations showcase`.
 
 ## Relevant files
 
-- `scripts/init_project.py`
-- `scripts/build_design_tokens.py`
-- `scripts/verify.sh`
-- `tests/`
-- `docs/50-evals/EVIDENCE_BUNDLES.md`
+- `apps/showcase/`
+- `docs/80-showcase/`
+- `docs/50-evals/evidence/T-007/`
+- `.github/workflows/showcase.yml`
 
 Keep this concise enough to read in under two minutes.

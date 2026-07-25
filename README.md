@@ -117,6 +117,23 @@ No relying on chat history as project memory.
 
 ## What is included
 
+### ✦ A real reference product
+
+`apps/showcase` contains **Signalroom**, an agent-operations console built
+through the repository's complete product-design and evidence workflow.
+
+It demonstrates planning, parallel workstreams, protected approvals,
+pause/resume, recovery, durable artifacts, responsive layouts, required UI
+states, accessibility checks, and an independent design critique.
+
+```bash
+pnpm install
+pnpm dev:showcase
+```
+
+See the [showcase brief](docs/80-showcase/BRIEF.md) and its
+[evidence bundle](docs/50-evals/evidence/T-007/evidence.json).
+
 ### 🧠 Durable context that survives sessions
 
 The repository, not the conversation, is the source of truth.

@@ -8,12 +8,14 @@
 
 # Dependencies / build
 node_modules/
+.pnpm-store/
 .next/
 dist/
 build/
 .expo/
 .turbo/
 coverage/
+*.tsbuildinfo
 
 # Claude local state
 .claude/settings.local.json

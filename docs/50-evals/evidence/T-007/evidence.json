@@ -1,0 +1,28 @@
+{
+  "task_id": "T-007",
+  "acceptance_ids": ["AC-001"],
+  "ui_change": true,
+  "builder": "frontend",
+  "evaluator": "qa-evaluator",
+  "commands": [
+    "pnpm lint",
+    "pnpm typecheck",
+    "pnpm test",
+    "pnpm build",
+    "in-app Playwright approval/pause/resume and responsive inspection",
+    "pnpm test:e2e (configured for GitHub Actions; local launch restricted by macOS sandbox)"
+  ],
+  "states": ["normal", "loading", "empty", "error"],
+  "viewports": ["mobile", "desktop"],
+  "artifacts": [
+    "desktop.jpg",
+    "mobile.jpg",
+    "mobile-attention.jpg",
+    "loading.jpg",
+    "empty.jpg",
+    "error.jpg",
+    "critic.md",
+    "accessibility.json"
+  ],
+  "verdict": "PASS_WITH_RISKS"
+}
