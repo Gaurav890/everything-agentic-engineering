@@ -15,6 +15,7 @@ build/
 .expo/
 .turbo/
 coverage/
+*.tsbuildinfo
 
 # Claude local state
 .claude/settings.local.json
