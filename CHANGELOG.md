@@ -17,3 +17,5 @@ then, entries describe the evolving pre-release harness.
   outputs, and stronger launch-readiness verification.
 - Safe initializer presets with explicit active/inactive capability plans and
   external setup guidance.
+- Read-only task planning and confirmation-gated branch/worktree preparation
+  from `TASKS.jsonl`.

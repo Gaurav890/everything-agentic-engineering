@@ -4,21 +4,21 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land T-008 guided project initializer through PR review without merging
+Land T-009 task execution launcher through PR review without merging
 directly to `main`.
 
 ## Completed
 
-- T-007 Signalroom merged through PR #8 with all checks passing.
-- Initializer presets for core, web, mobile, full-stack, and research shapes.
-- Explicit active/inactive profile and capability preview.
-- External setup review list.
-- Manifest-only, confirmation-gated selection behavior.
-- Unit coverage for presets, incompatible selectors, and web-without-mobile.
+- T-008 guided initializer merged through PR #9.
+- Read-only task planning from `TASKS.jsonl`.
+- Dependency, profile, agent, ownership, and verification gates.
+- Branch/worktree recommendation based on active parallel work.
+- Confirmation-gated workspace creation with stale-base protection.
+- Nine task-engine tests.
 
 ## In progress
 
-- T-008 branch commit, push, and PR review.
+- T-009 branch commit, push, and PR review.
 
 ## Blockers
 
@@ -26,24 +26,25 @@ directly to `main`.
 
 ## Unresolved decisions
 
-- Physical cleanup of inactive starter inventory remains deliberately separate
-  from selection so initialization is reversible.
+- GitHub Issue synchronization remains a separate future capability.
 
 ## Verification status
 
-Eight initializer tests, five profile-engine tests, local-link validation,
-showcase project checks, and full repository verification pass.
+Nine task-engine tests, eight initializer tests, five profile-engine tests,
+local-link validation, showcase checks, and full repository verification pass.
 
 ## Exact next action
 
-Commit and push `feat/T-008-guided-project-initializer`, then open a PR titled
-`feat(T-008): add guided project initializer`.
+Commit and push `feat/T-009-task-execution-launcher`, then open a PR titled
+`feat(T-009): add task execution launcher`.
 
 ## Relevant files
 
-- `scripts/init_project.py`
-- `tests/test_initializer.py`
-- `docs/60-tooling/PROFILES.md`
+- `scripts/task_engine.py`
+- `scripts/task-plan.sh`
+- `scripts/task-start.sh`
+- `tests/test_task_engine.py`
+- `docs/70-collaboration/TASK_EXECUTION.md`
 - `README.md`
 
 Keep this concise enough to read in under two minutes.

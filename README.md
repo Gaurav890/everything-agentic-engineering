@@ -263,6 +263,18 @@ If you choose web without mobile, mobile agents and guidance stay inactive.
 Nothing is installed or deleted automatically, so profile selection remains
 safe and reversible.
 
+### Turn a task into a safe workspace
+
+```bash
+./scripts/task-plan.sh T-009
+./scripts/task-start.sh T-009 --yes
+```
+
+The planner checks dependencies, active profiles, agent routing, exclusive file
+ownership, and verification gates. Starting requires confirmation and creates a
+short-lived branch or isolated worktree; it does not implement or merge the
+task.
+
 See the complete
 [product-design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md)
 for source links, commands, phase routing, usage guidance, and original
@@ -1019,7 +1031,7 @@ Potential future directions:
 
 - [x] Interactive project initializer CLI with safe presets and previews
 - [x] Selectable web, mobile, backend, design, and research profiles
-- [ ] Automated agent/worktree creation from `TASKS.jsonl`
+- [x] Reviewed branch/worktree creation from `TASKS.jsonl`
 - [ ] Deeper GitHub Issue ↔ Task synchronization
 - [ ] Agent-team orchestration examples
 - [ ] Visual regression pipelines

@@ -166,3 +166,32 @@ Branch: `feat/T-008-guided-project-initializer`; commit and PR pending.
 
 Inactive template inventory is deliberately retained so profile selection stays
 reversible. Physical cleanup remains a separate explicit human decision.
+
+### 2026-07-25 — T-009
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** PARTIAL
+
+**Change**
+
+Added a read-only task planner and confirmation-gated task workspace launcher
+with dependency, active-profile, specialist-routing, file-ownership,
+verification, parallel-work, and stale-base gates.
+
+**Evidence**
+
+- Nine task-engine tests pass.
+- Starting without `--yes` leaves task state unchanged.
+- Incomplete dependencies and overlapping ownership fail closed.
+- Independent active work recommends an isolated worktree.
+- Full repository verification passes all ten stages.
+
+**Commit/PR**
+
+Branch: `feat/T-009-task-execution-launcher`; commit and PR pending.
+
+**Remaining risk**
+
+The launcher prepares branches and worktrees only. GitHub Issue synchronization
+and autonomous implementation remain intentionally out of scope.

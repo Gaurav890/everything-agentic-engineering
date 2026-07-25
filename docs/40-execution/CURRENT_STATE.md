@@ -40,6 +40,12 @@ capabilities, and external setup. It writes only the profile manifest after
 explicit confirmation. Unselected mobile, web, research, backend, or
 design-critical capabilities are not routed or treated as project requirements.
 
+Task-ledger work can be inspected with `task-plan.sh` and prepared with
+`task-start.sh`. The launcher checks dependency completion, active-profile
+compatibility, specialist routing, exclusive file ownership, verification
+gates, and base-branch freshness. Planning is read-only and workspace creation
+requires explicit confirmation.
+
 ## Security
 
 ## Verification
