@@ -219,7 +219,8 @@ demo script, and launch copy.
 
 **Commit/PR**
 
-Branch: `feat/T-010-v0-1-0-release-package`; commit and PR pending.
+Branch: `feat/T-010-v0-1-0-release-package`; implementation commit `d679fe2`;
+PR #11 open for review.
 
 **Remaining risk**
 

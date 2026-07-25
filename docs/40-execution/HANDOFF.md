@@ -18,7 +18,7 @@ merging directly to `main`.
 
 ## In progress
 
-- T-010 verification, commit, push, and PR review.
+- T-010 PR #11 checks and review.
 
 ## Blockers
 
@@ -31,13 +31,14 @@ merging directly to `main`.
 
 ## Verification status
 
-Release-specific checks and full repository verification must pass before the
-branch is pushed.
+Release contract validation, clean-checkout onboarding smoke test, full
+repository verification, documentation-link validation, token/profile/task
+tests, security-hook tests, and showcase project checks pass locally.
 
 ## Exact next action
 
-Commit and push `feat/T-010-v0-1-0-release-package`, then open a PR titled
-`feat(T-010): prepare v0.1.0 release package`.
+Wait for PR #11 checks, review the release claims and publish gate, then squash
+merge if all required checks pass. Do not publish `v0.1.0` as part of the merge.
 
 ## Relevant files
 
