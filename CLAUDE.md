@@ -100,6 +100,15 @@ Read `docs/70-collaboration/GITHUB_WORKFLOW.md` for the complete workflow.
 
 ## 7. Agent routing
 
+Before routing non-trivial implementation, read `.agentic/project.json` and
+respect its selected profiles. Cataloged capabilities are not automatically
+enabled. If a task requires a disabled profile, propose the profile change and
+show `profile-preview.sh` output before modifying the manifest.
+
+Never install, remove, or delete resources merely because a profile changed.
+Use `profile-doctor.sh` to detect drift and require explicit approval for
+external installation or destructive cleanup.
+
 Default orchestration:
 - Product ambiguity → `product`
 - Architecture or data boundaries → `architect`

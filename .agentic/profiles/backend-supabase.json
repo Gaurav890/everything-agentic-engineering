@@ -1,0 +1,7 @@
+{
+  "id": "backend-supabase",
+  "description": "Supabase backend selection",
+  "requires": ["core"],
+  "resources": ["supabase-backend"],
+  "conflicts": ["backend-convex"]
+}

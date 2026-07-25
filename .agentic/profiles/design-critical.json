@@ -1,0 +1,7 @@
+{
+  "id": "design-critical",
+  "description": "World-class product-design workflow and quality gates",
+  "requires": ["core"],
+  "resources": ["product-design-router", "design-tokens", "playwright-mcp"],
+  "conflicts": []
+}
