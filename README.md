@@ -8,7 +8,7 @@
 
 Turn an idea into:
 
-**Research → PRD → Architecture → Task DAG → Parallel Agents → Code → QA → Security → Pull Request → Review → Merge → Durable Memory**
+**Discovery → UX Strategy → Product-Specific Design → Architecture → Parallel Agents → Evidence → Pull Request → Durable Memory**
 
 <br />
 
@@ -57,31 +57,29 @@ It is an engineering harness designed to answer a harder question:
 
 ```mermaid
 flowchart TD
-    A[💡 Your Idea] --> B[🔎 Research]
-    B --> C[📋 Product Interview + PRD]
-    C --> D[✅ Requirements + Acceptance Criteria]
-    D --> E[🏗️ Architecture + Design System]
-    E --> F[🧩 Atomic Task DAG]
+    A[💡 Idea] --> B[🔎 Discovery + User Needs]
+    B --> C[📋 PRD + Acceptance Criteria]
+    C --> D[📊 Benchmark + UX Strategy]
+    D --> E[🧭 Interaction + Agentic UX]
+    E --> F[🎨 Design System + Tokens]
+    F --> G[✅ Approved Product Experience]
+    G --> H[🏗️ Architecture + Task DAG]
+    H --> I[🎯 Orchestrator]
 
-    F --> G[🎯 Orchestrator]
+    I --> J[🎨 Frontend]
+    I --> K[⚙️ Backend]
+    I --> L[📱 Mobile]
+    I --> M[🔬 Research]
 
-    G --> H[🎨 Frontend Agent]
-    G --> I[⚙️ Backend Agent]
-    G --> J[📱 Mobile Agent]
-    G --> K[🔬 Research Agent]
+    J --> N[🧪 Running-Product Audits]
+    K --> N
+    L --> N
+    M --> N
 
-    H --> L[🧪 QA Evaluator]
-    I --> L
-    J --> L
-    K --> L
-
-    L --> M[🔐 Security Review]
-    M --> N[🔗 Integration Review]
-    N --> O[🌿 Branch]
-    O --> P[🔀 Pull Request]
-    P --> Q[👥 Human + Agent Review]
-    Q --> R[🚀 Merge to Main]
-
+    N --> O[🕵️ Independent Critic]
+    O --> P[🔐 Security + Integration]
+    P --> Q[🔀 Pull Request + Review]
+    Q --> R[🚀 Merge]
     R --> S[🧠 Durable Memory]
     S --> T[🔁 Next Task]
 ```
@@ -129,6 +127,7 @@ The repository, not the conversation, is the source of truth.
 | `PRD.md` | What must be built |
 | `ACCEPTANCE_CRITERIA.md` | How success is objectively determined |
 | `DESIGN_SYSTEM.md` | Visual and interaction contract |
+| `packages/design-tokens/` | Machine-readable visual and interaction decisions |
 | `ARCHITECTURE.md` | Technical boundaries and system structure |
 | `ADR/` | Why important architectural decisions were made |
 | `TASKS.jsonl` | Atomic executable work and dependencies |
@@ -149,7 +148,7 @@ The starter includes focused agents for:
 - **Orchestrator** — owns dependencies, delegation, parallelization, file ownership, merge order, and completion.
 - **Product** — turns ideas into requirements, PRDs, journeys, non-goals, and acceptance criteria.
 - **Architect** — defines technical boundaries, contracts, data models, and ADRs.
-- **Frontend** — implements high-quality interfaces and interaction states.
+- **Frontend** — routes the required product-design phases, implements the approved experience, and captures running-product evidence.
 - **Backend** — owns APIs, data, authentication, integrations, queues, and server-side logic.
 - **Mobile** — handles React Native and Expo workflows.
 - **Researcher** — performs current web research, crawling, documentation discovery, and source synthesis.
@@ -548,39 +547,73 @@ docs/70-collaboration/GITHUB_WORKFLOW.md
 
 ---
 
-## Frontend and UI/UX workflow
+## Product-design engine
 
-The frontend system separates creation from evaluation.
+Code is increasingly cheap. Product judgment, interaction quality, visual
+coherence, and human-agent experience are not.
+
+This starter treats design as a routed engineering discipline:
 
 ```text
-PRODUCT CONTEXT
-       ↓
-VISUAL THESIS
-       ↓
-DESIGN_SYSTEM.md
-       ↓
-FRONTEND-DESIGN SKILL
-       ↓
-IMPLEMENTATION
-       ↓
-REACT BEST PRACTICES
-       ↓
-RUN THE REAL APPLICATION
-       ↓
-PLAYWRIGHT INSPECTION
-       ↓
-SEPARATE QA EVALUATOR
-       ↓
-ACCESSIBILITY + UX AUDIT
-       ↓
-FIX
-       ↓
-FINAL VISUAL EVIDENCE
+DISCOVERY
+→ USER NEEDS
+→ BENCHMARK
+→ UX STRATEGY
+→ INTERACTION + AGENTIC UX
+→ DESIGN DIRECTIONS
+→ DESIGN SYSTEM
+→ DESIGN TOKENS
+→ COMPONENT / FIGMA TRANSLATION
+→ IMPLEMENTATION
+→ LIVE ITERATION
+→ RESPONSIVE / ACCESSIBILITY / SYSTEM / TOKEN AUDITS
+→ PERFORMANCE
+→ INDEPENDENT CRITIQUE
+→ POLISH
+→ DESIGN OPS
+→ SHIP
 ```
 
-The agent that writes the UI does not get to certify its own work just by reading the JSX.
+`product-design-router` inspects the task and durable artifacts, then runs only
+the phases that are missing or stale. A small fix does not repeat discovery. A
+0→1 product does not skip it.
 
-The running product must be inspected.
+The authority model is explicit:
+
+```text
+PRODUCT INTENT
+→ RESEARCHED REFERENCES
+→ ORIGINAL VISUAL THESIS
+→ DESIGN_SYSTEM.md
+→ DTCG-COMPATIBLE TOKENS
+→ COMPONENTS
+→ RUNNING EXPERIENCE
+```
+
+- References are ingredients, not templates.
+- Components from shadcn, 21st.dev, Aceternity, Figma, or other registries are
+  structural donors—not the product identity.
+- Tokens encode approved decisions; they never invent the direction.
+- Anthropic `frontend-design` is optional supplementary intelligence, not the
+  default art director.
+- The project design system wins every conflict.
+
+The builder cannot certify its own work. Playwright evidence, focused audits,
+and an independent critic evaluate the running product before polish and ship.
+
+### Design-token architecture
+
+```text
+PRIMITIVES
+→ SEMANTIC TOKENS
+→ SELECTIVE COMPONENT TOKENS
+→ LIGHT / DARK THEMES
+→ WEB / MOBILE OUTPUTS
+```
+
+The included DTCG-compatible scaffold covers color, typography, spacing,
+radii, borders, elevation, motion, layout, density, components, themes, and
+agent states such as thinking, running, approval, completion, and failure.
 
 ---
 
@@ -715,6 +748,7 @@ docs/50-evals/RUBRIC.md
 │   ├── api/
 │   ├── config/
 │   ├── database/
+│   ├── design-tokens/
 │   ├── domain/
 │   ├── types/
 │   └── ui/
@@ -822,9 +856,13 @@ Then move from:
 ```text
 IDEA
   ↓
-PRD
+DISCOVERY + USER NEEDS
   ↓
-ACCEPTANCE CRITERIA
+PRD + ACCEPTANCE CRITERIA
+  ↓
+UX STRATEGY + INTERACTION MODEL
+  ↓
+DESIGN SYSTEM + TOKENS
   ↓
 ARCHITECTURE
   ↓
@@ -832,7 +870,7 @@ TASK DAG
   ↓
 IMPLEMENTATION
   ↓
-EVIDENCE
+RUNNING-PRODUCT AUDITS + INDEPENDENT CRITIQUE
   ↓
 PULL REQUEST
   ↓
