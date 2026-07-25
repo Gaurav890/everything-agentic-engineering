@@ -1,0 +1,4 @@
+interface:
+  display_name: "Performance UX"
+  short_description: "Audit experience performance"
+  default_prompt: "Use $performance-ux to evaluate loading, responsiveness, rendering, and bundle costs as UX."

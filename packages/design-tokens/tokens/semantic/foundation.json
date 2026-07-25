@@ -1,0 +1,34 @@
+{
+  "layout": {
+    "content": {
+      "maxWidth": {
+        "$type": "dimension",
+        "$value": {"value": 1200, "unit": "px"},
+        "$description": "Default product content width"
+      },
+      "readingWidth": {
+        "$type": "dimension",
+        "$value": {"value": 720, "unit": "px"}
+      }
+    },
+    "gutter": {
+      "mobile": {"$type": "dimension", "$value": "{space.4}"},
+      "desktop": {"$type": "dimension", "$value": "{space.8}"}
+    }
+  },
+  "density": {
+    "compact": {"$type": "dimension", "$value": "{space.2}"},
+    "default": {"$type": "dimension", "$value": "{space.3}"},
+    "comfortable": {"$type": "dimension", "$value": "{space.4}"}
+  },
+  "interaction": {
+    "focusWidth": {"$type": "dimension", "$value": "{border.strong}"},
+    "transition": {"$type": "duration", "$value": "{duration.normal}"}
+  },
+  "agent": {
+    "motion": {
+      "thinking": {"$type": "duration", "$value": "{duration.slow}"},
+      "stateChange": {"$type": "duration", "$value": "{duration.normal}"}
+    }
+  }
+}

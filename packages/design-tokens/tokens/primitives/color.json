@@ -1,0 +1,21 @@
+{
+  "color": {
+    "$type": "color",
+    "neutral": {
+      "0": {"$value": {"colorSpace": "srgb", "components": [1, 1, 1], "alpha": 1}, "$description": "Lightest neutral"},
+      "50": {"$value": {"colorSpace": "srgb", "components": [0.93, 0.93, 0.95], "alpha": 1}, "$description": "Subtle neutral surface"},
+      "200": {"$value": {"colorSpace": "srgb", "components": [0.74, 0.74, 0.78], "alpha": 1}, "$description": "Neutral divider"},
+      "600": {"$value": {"colorSpace": "srgb", "components": [0.31, 0.31, 0.36], "alpha": 1}, "$description": "Muted neutral content"},
+      "900": {"$value": {"colorSpace": "srgb", "components": [0.13, 0.13, 0.16], "alpha": 1}, "$description": "Strong neutral surface"},
+      "950": {"$value": {"colorSpace": "srgb", "components": [0.07, 0.07, 0.09], "alpha": 1}, "$description": "Darkest neutral"}
+    },
+    "accent": {
+      "400": {"$value": {"colorSpace": "srgb", "components": [0.49, 0.51, 1], "alpha": 1}, "$description": "Example accent for dark surfaces"},
+      "600": {"$value": {"colorSpace": "srgb", "components": [0.33, 0.36, 0.91], "alpha": 1}, "$description": "Example primary action accent"}
+    },
+    "green": {"600": {"$value": {"colorSpace": "srgb", "components": [0.09, 0.52, 0.36], "alpha": 1}}},
+    "amber": {"600": {"$value": {"colorSpace": "srgb", "components": [0.65, 0.38, 0], "alpha": 1}}},
+    "red": {"600": {"$value": {"colorSpace": "srgb", "components": [0.77, 0.24, 0.29], "alpha": 1}}},
+    "blue": {"600": {"$value": {"colorSpace": "srgb", "components": [0.15, 0.41, 0.78], "alpha": 1}}}
+  }
+}

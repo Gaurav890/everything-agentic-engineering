@@ -1,60 +1,57 @@
 ---
 name: design-system
-description: Establish and maintain a product-specific design contract covering visual thesis, tokens, typography, spacing, interaction, motion, accessibility, responsive behavior, and required UI states before substantial frontend work.
+description: Establish or revise a product-specific design contract after discovery, strategy, interaction design, and design-direction selection. Use for substantial new UI, redesigns, or system changes that need a coherent visual thesis, reference synthesis, component language, motion, accessibility, responsive behavior, and required states.
 ---
 
 # Design system
 
-## First principle
+## Establish the direction
 
-A UI needs a point of view. Do not begin with a component library and call that the design.
+Start from approved product intent, user needs, UX strategy, interaction model,
+and design directions. If those inputs are missing, return to
+`product-design-router`; do not hide upstream ambiguity with styling.
+
+Synthesize 3–7 appropriate references when the scope warrants research.
+Record what each reference contributes and explicitly reject wholesale copying.
 
 Define:
-- product personality,
-- audience,
-- visual thesis,
-- density,
-- tone,
-- information hierarchy,
-- signature interaction.
 
-## Required contract
+- audience, product personality, visual thesis, and differentiation;
+- hierarchy, information density, composition, typography, color, geometry;
+- content voice, interaction principles, signature behaviors, and motion;
+- responsive, accessibility, platform, and agentic-experience rules;
+- required normal, edge, failure, recovery, and trust states.
 
-Update `docs/20-design/DESIGN_SYSTEM.md` with:
+Avoid empty adjectives such as “clean, modern, minimal.” Make decisions specific
+enough that another designer or agent could distinguish this product from a
+framework demo.
 
-1. Visual thesis
-2. Design principles
-3. Color tokens and semantic roles
-4. Typography scale and usage
-5. Spacing and layout grid
-6. Radius, border, elevation
-7. Iconography
-8. Motion and reduced-motion behavior
-9. Component behavior
-10. Content/copy conventions
-11. Responsive strategy
-12. Accessibility
-13. Required states:
-   - loading
-   - empty
-   - sparse
-   - dense
-   - error
-   - disabled
-   - success
-14. Anti-patterns
+## Resource roles
 
-## Build and critique
+- Refero, real category-leading products, and brand material: visual research.
+- UI UX Pro Max or equivalent: broad exploration and alternative generation.
+- 21st.dev, Aceternity, shadcn registries: component/interaction discovery.
+- Taste Skill or Impeccable: anti-slop critique and refinement.
+- Motion references: interaction inspiration when motion serves comprehension.
+- Anthropic `frontend-design`: optional supplementary design intelligence only.
+- Vercel engineering/audit skills: implementation quality, not visual identity.
 
-Creation:
-- use Anthropic `frontend-design` when installed.
+The project brief and `docs/20-design/DESIGN_SYSTEM.md` always win.
 
-Engineering:
-- use Vercel `react-best-practices` for React/Next.js.
+## Structural-donor rule
 
-Audit:
-- use Vercel `web-design-guidelines`.
+External components may donate interaction structure, accessibility behavior,
+layout ideas, or implementation techniques. Replace their copy, tokens, fonts,
+colors, geometry, effects, and branding with the product’s approved system.
 
-Evidence:
-- inspect the running app with Playwright.
-- use a separate evaluator from the builder.
+## Tokenization boundary
+
+Complete the visual direction before invoking `design-tokens`. Tokens encode
+approved reusable decisions; they do not choose those decisions.
+
+## Required output
+
+Update `docs/20-design/DESIGN_SYSTEM.md` with the reference ledger, synthesis,
+visual thesis, system contract, interaction/agentic states, anti-patterns, and
+decision provenance. Do not approve implementation from source alone; preserve
+Playwright evidence and independent critique as later phases.

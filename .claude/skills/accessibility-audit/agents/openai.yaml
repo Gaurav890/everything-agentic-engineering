@@ -1,0 +1,4 @@
+interface:
+  display_name: "Accessibility Audit"
+  short_description: "Audit inclusive interaction quality"
+  default_prompt: "Use $accessibility-audit to evaluate semantics, keyboard use, focus, contrast, motion, and assistive technology behavior."

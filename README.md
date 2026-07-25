@@ -171,7 +171,23 @@ Included skills:
 create-prd
 decompose-prd
 context-handoff
+product-design-router
+discover
+user-needs
+benchmark
+strategize
+interaction-design
+agentic-ux
 design-system
+design-tokens
+responsive-audit
+accessibility-audit
+design-system-audit
+token-audit
+performance-ux
+design-critic
+polish
+design-ops
 research-ledger
 parallel-plan
 loop-engineering
@@ -180,12 +196,14 @@ security-gate
 
 External skills are deliberately restrained rather than maximized.
 
-Recommended core additions include:
+The router selects only the product-design phases whose outputs are missing or
+stale. External additions are phase specialists, not aesthetic authority:
 
-- Anthropic `frontend-design`
-- Vercel `react-best-practices`
-- Vercel `web-design-guidelines`
-- Vercel `react-native-guidelines`
+- discovery/strategy skills from trusted design collections;
+- UI UX Pro Max, Taste Skill, or Impeccable for the appropriate phase;
+- shadcn, 21st.dev, Aceternity, or Figma tooling for components/translation;
+- Vercel framework guidance for engineering and audit quality;
+- Anthropic `frontend-design` only as optional supplementary design intelligence.
 
 Run:
 
@@ -196,6 +214,9 @@ Run:
 The principle:
 
 > Install narrow, relevant expertise. Do not load a hundred overlapping skills and hope the agent chooses correctly.
+
+> References are ingredients. Components are structural donors. Tokens encode
+> approved decisions. The project design system wins.
 
 ---
 

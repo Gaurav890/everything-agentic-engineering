@@ -1,0 +1,4 @@
+interface:
+  display_name: "User Needs"
+  short_description: "Layer user needs and motivations"
+  default_prompt: "Use $user-needs to separate functional, emotional, social, and underlying user needs."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interaction Design"
+  short_description: "Model flows states and recovery"
+  default_prompt: "Use $interaction-design to define flows, states, feedback, failure, and recovery before screens."

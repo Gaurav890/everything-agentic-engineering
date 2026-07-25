@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Tokens"
+  short_description: "Encode approved visual decisions"
+  default_prompt: "Use $design-tokens to encode the approved design direction as DTCG-compatible tokens."

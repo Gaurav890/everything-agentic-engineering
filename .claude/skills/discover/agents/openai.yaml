@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Discovery"
+  short_description: "Map ambiguous product opportunities"
+  default_prompt: "Use $discover to structure discovery for this ambiguous product problem."

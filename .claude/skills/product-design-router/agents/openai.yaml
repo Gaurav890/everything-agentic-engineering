@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Design Router"
+  short_description: "Route product-design phases"
+  default_prompt: "Use $product-design-router to select the minimum design phases needed for this task."
