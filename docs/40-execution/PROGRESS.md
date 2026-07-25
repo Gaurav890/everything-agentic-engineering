@@ -38,7 +38,9 @@ product-specific design-system contract and DTCG-compatible token scaffold.
 
 **Commit/PR**
 
-Branch: `feat/T-001-product-design-engine`; commit and PR pending final review.
+Branch: `feat/T-001-product-design-engine`; implementation commit `d44d145`
+pushed to `origin`. PR creation through the connected GitHub integration is
+blocked by its pull-request write permission.
 
 **Remaining risk**
 

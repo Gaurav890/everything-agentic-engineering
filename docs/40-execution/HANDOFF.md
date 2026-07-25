@@ -16,11 +16,12 @@ Land T-001 through review without merging directly to `main`.
 
 ## In progress
 
-- Final branch commit and pull-request preparation.
+- Pull-request creation and review.
 
 ## Blockers
 
-- `gh` is not installed; PR creation may require GitHub API tooling or manual URL.
+- The branch is pushed, but the connected GitHub app returns `403 Resource not
+  accessible by integration` when creating the PR, and `gh` is not installed.
 
 ## Unresolved decisions
 
@@ -33,8 +34,9 @@ All local skills validate. Full repository verification and diff checks pass.
 
 ## Exact next action
 
-Review the committed diff, push `feat/T-001-product-design-engine`, and open a
-PR titled `feat(T-001): add phase-based product design engine`.
+Open
+`https://github.com/Gaurav890/everything-agentic-engineering/pull/new/feat/T-001-product-design-engine`
+and create a PR titled `feat(T-001): add phase-based product design engine`.
 
 ## Relevant files
 
