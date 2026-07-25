@@ -1,0 +1,18 @@
+{
+  "review_date": "2026-07-25",
+  "manual": {
+    "semantic_landmarks": "pass",
+    "heading_structure": "pass",
+    "accessible_control_names": "pass",
+    "visible_focus_styles": "pass",
+    "keyboard_approval_and_pause_controls": "pass",
+    "reduced_motion_rule": "pass",
+    "mobile_target_sizes": "pass"
+  },
+  "automated": {
+    "tool": "@axe-core/playwright",
+    "status": "configured_in_ci",
+    "blocking_rule": "zero accessibility violations"
+  },
+  "known_risk": "The local desktop sandbox blocked launching a second headless Chromium process. The same test is a required GitHub Actions check."
+}

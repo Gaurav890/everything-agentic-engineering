@@ -1,0 +1,1574 @@
+@layer reset, base, components, responsive;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    color: inherit;
+  }
+}
+
+@layer base {
+  :root {
+    --ink: #171714;
+    --ink-soft: #272721;
+    --paper: #f2f0e8;
+    --paper-deep: #e8e5db;
+    --white: #fbfaf6;
+    --muted: #77766f;
+    --line: #cfcbc0;
+    --signal: #f05a28;
+    --signal-dark: #b93812;
+    --green: #2d7551;
+    --red: #b83b32;
+    --amber: #b06a19;
+    --blue: #3f6f88;
+    --display: Georgia, "Times New Roman", serif;
+    --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+
+  html {
+    background: var(--ink);
+  }
+
+  body {
+    color: var(--ink);
+    background: var(--paper);
+    font-family: var(--sans);
+    min-width: 320px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+  }
+
+  .srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .skipLink {
+    position: fixed;
+    left: 80px;
+    top: -60px;
+    z-index: 100;
+    background: var(--signal);
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+  }
+
+  .skipLink:focus {
+    top: 10px;
+  }
+
+  .micro {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.11em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  kbd {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+  }
+}
+
+@layer components {
+  .appShell {
+    display: grid;
+    grid-template-columns: 62px 280px minmax(540px, 1fr) 330px;
+    grid-template-rows: 58px calc(100vh - 58px);
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  .topbar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 58px;
+    padding: 0 14px 0 18px;
+    color: var(--paper);
+    background: var(--ink);
+    border-bottom: 1px solid #393831;
+  }
+
+  .brand,
+  .topActions,
+  .runIdentity,
+  .runControls,
+  .approvalActions,
+  .stateActions,
+  .recoveryFacts {
+    display: flex;
+    align-items: center;
+  }
+
+  .brand {
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .brand > i {
+    width: 1px;
+    height: 15px;
+    background: #4d4c44;
+  }
+
+  .brand small {
+    color: #9a988f;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .logoMark {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #646158;
+  }
+
+  .logoMark span {
+    position: absolute;
+    bottom: 4px;
+    width: 3px;
+    background: var(--signal);
+  }
+
+  .logoMark span:nth-child(1) {
+    left: 5px;
+    height: 7px;
+  }
+
+  .logoMark span:nth-child(2) {
+    left: 10px;
+    height: 13px;
+  }
+
+  .logoMark span:nth-child(3) {
+    left: 15px;
+    height: 10px;
+  }
+
+  .topActions {
+    gap: 8px;
+  }
+
+  .searchBox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 220px;
+    height: 34px;
+    padding: 0 8px 0 10px;
+    color: #a9a69d;
+    background: #252520;
+    border: 1px solid #3d3c35;
+  }
+
+  .searchBox input {
+    width: 100%;
+    color: white;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 12px;
+  }
+
+  .searchBox kbd {
+    padding: 2px 4px;
+    border: 1px solid #55534b;
+  }
+
+  .scenarioControl {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    border: 1px solid #3d3c35;
+  }
+
+  .scenarioControl button {
+    height: 100%;
+    padding: 0 8px;
+    color: #918f87;
+    background: transparent;
+    border: 0;
+    border-right: 1px solid #3d3c35;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+
+  .scenarioControl button:last-child {
+    border-right: 0;
+  }
+
+  .scenarioControl button.active {
+    color: white;
+    background: #3a3932;
+  }
+
+  .iconButton {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    color: inherit;
+    background: transparent;
+    border: 1px solid #3d3c35;
+  }
+
+  .iconButton.light {
+    color: var(--ink);
+    border-color: var(--line);
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    color: var(--ink);
+    background: var(--signal);
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .commandRail {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 10px;
+    color: #8f8c83;
+    background: var(--ink);
+    border-right: 1px solid #393831;
+  }
+
+  .commandRail nav,
+  .railBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .railButton {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 0;
+  }
+
+  .railButton:hover,
+  .railButton.active {
+    color: white;
+    background: #2e2d28;
+  }
+
+  .railButton.active {
+    box-shadow: inset 2px 0 var(--signal);
+  }
+
+  .liveMark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .liveMark i {
+    width: 7px;
+    height: 7px;
+    background: #58a978;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgb(88 169 120 / 12%);
+    animation: livePulse 2s ease-in-out infinite;
+  }
+
+  .runRail {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    background: var(--paper-deep);
+    border-right: 1px solid var(--line);
+  }
+
+  .runRailHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 18px 16px;
+  }
+
+  .runRailHeader .micro {
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .runRailHeader h1 {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+  }
+
+  .filterTabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 13px 13px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .filterTabs button {
+    padding: 5px 7px;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    font-size: 10px;
+    text-transform: capitalize;
+  }
+
+  .filterTabs button.active {
+    color: var(--ink);
+    background: var(--white);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .runList {
+    min-height: 0;
+    overflow-y: auto;
+    border-top: 1px solid var(--line);
+  }
+
+  .runItem {
+    position: relative;
+    display: grid;
+    grid-template-columns: 8px 1fr auto;
+    gap: 9px;
+    width: 100%;
+    padding: 16px 14px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .runItem:hover {
+    background: rgb(255 255 255 / 35%);
+  }
+
+  .runItem.selected {
+    background: var(--white);
+  }
+
+  .runItem.selected::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--signal);
+    content: "";
+  }
+
+  .statusDot {
+    width: 7px;
+    height: 7px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  .statusDot.approval {
+    background: var(--signal);
+  }
+
+  .statusDot.complete {
+    background: var(--green);
+  }
+
+  .statusDot.failed {
+    background: var(--red);
+  }
+
+  .runItemCopy {
+    display: grid;
+    gap: 5px;
+  }
+
+  .runEyebrow,
+  .runMeta {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .runItemCopy strong {
+    max-width: 185px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .runMeta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .runMeta i {
+    width: 2px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 50%;
+  }
+
+  .runProgress {
+    align-self: end;
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 20px;
+  }
+
+  .runProgress::after {
+    content: "%";
+    font-family: var(--sans);
+    font-size: 8px;
+  }
+
+  .newRunButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding: 14px 18px;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .newRunButton span {
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  .newRunButton kbd {
+    margin-left: auto;
+  }
+
+  .inlineEmpty {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .inlineEmpty span {
+    font-family: var(--display);
+    font-size: 42px;
+    color: #aaa69b;
+  }
+
+  .inlineEmpty p {
+    margin: 8px 0 14px;
+    font-size: 12px;
+  }
+
+  .inlineEmpty button {
+    color: var(--signal-dark);
+    background: transparent;
+    border: 0;
+    font-size: 11px;
+    text-decoration: underline;
+  }
+
+  .workspace {
+    min-width: 0;
+    overflow-y: auto;
+    background:
+      linear-gradient(90deg, rgb(0 0 0 / 2%) 1px, transparent 1px) 0 0 / 72px
+        100%,
+      var(--paper);
+  }
+
+  .runHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 28px 30px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .runHeader > div:first-child {
+    max-width: 720px;
+  }
+
+  .runIdentity {
+    gap: 8px;
+    margin-bottom: 13px;
+  }
+
+  .statusChip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 7px;
+    color: var(--blue);
+    background: rgb(63 111 136 / 9%);
+    border: 1px solid rgb(63 111 136 / 25%);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .statusChip.approval {
+    color: var(--signal-dark);
+    background: rgb(240 90 40 / 8%);
+    border-color: rgb(240 90 40 / 28%);
+  }
+
+  .statusChip.complete {
+    color: var(--green);
+  }
+
+  .statusChip.failed {
+    color: var(--red);
+  }
+
+  .runId,
+  .updated {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+  }
+
+  .updated {
+    padding-left: 8px;
+    border-left: 1px solid var(--line);
+  }
+
+  .runHeader h2 {
+    max-width: 730px;
+    font-family: var(--display);
+    font-size: clamp(32px, 3.1vw, 48px);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 0.99;
+  }
+
+  .runHeader > div > p {
+    max-width: 650px;
+    margin-top: 14px;
+    color: #5f5e58;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .runControls {
+    gap: 7px;
+  }
+
+  .pauseButton,
+  .approveButton,
+  .primaryButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 13px;
+    color: white;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    font-size: 10px;
+    font-weight: 750;
+  }
+
+  .pauseButton.paused {
+    color: var(--ink);
+    background: var(--signal);
+    border-color: var(--signal);
+  }
+
+  .pauseNotice {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 30px;
+    color: #6b3b06;
+    background: #f1d49f;
+    border-bottom: 1px solid #d2a861;
+    font-size: 11px;
+  }
+
+  .runRibbon {
+    padding: 26px 30px 30px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ribbonIntro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .ribbonIntro .micro {
+    color: var(--muted);
+  }
+
+  .ribbonIntro > span {
+    font-family: var(--display);
+    font-size: 28px;
+  }
+
+  .ribbonIntro > span::after {
+    content: "%";
+    font-family: var(--sans);
+    font-size: 9px;
+  }
+
+  .ribbonSteps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+
+  .ribbonStep {
+    min-height: 126px;
+    padding: 13px 14px 12px;
+    border-right: 1px solid var(--line);
+    border-bottom: 3px solid transparent;
+  }
+
+  .ribbonStep:last-child {
+    border-right: 0;
+  }
+
+  .ribbonStep.active {
+    background: var(--white);
+    border-bottom-color: var(--signal);
+  }
+
+  .ribbonStep.done {
+    border-bottom-color: var(--green);
+  }
+
+  .ribbonStep.error {
+    background: rgb(184 59 50 / 5%);
+    border-bottom-color: var(--red);
+  }
+
+  .ribbonStep.waiting {
+    color: #77766f;
+  }
+
+  .stepTop {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+
+  .stepTop i {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .ribbonStep h3 {
+    margin-top: 20px;
+    font-size: 12px;
+  }
+
+  .ribbonStep p {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  .activitySection {
+    padding: 27px 30px 20px;
+  }
+
+  .sectionHeading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .sectionHeading .micro {
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .sectionHeading h2 {
+    font-family: var(--display);
+    font-size: 25px;
+    font-weight: 400;
+  }
+
+  .textButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    font-size: 10px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .activityTable {
+    border-top: 1px solid var(--ink);
+  }
+
+  .activityRow {
+    display: grid;
+    grid-template-columns: 66px 72px minmax(0, 1fr) 28px;
+    gap: 10px;
+    align-items: center;
+    min-height: 57px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .activityRow time,
+  .activityOwner {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+  }
+
+  .activityOwner {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .activityRow h3 {
+    font-size: 11px;
+  }
+
+  .activityRow p {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  .activityRow > button {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 0;
+  }
+
+  .activityRow.attention h3 {
+    color: var(--signal-dark);
+  }
+
+  .artifactStrip {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+    padding: 5px 30px 30px;
+  }
+
+  .artifactStrip > div {
+    align-self: center;
+  }
+
+  .artifactStrip .micro {
+    color: var(--muted);
+  }
+
+  .artifactStrip h2 {
+    margin-top: 3px;
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .artifact {
+    display: grid;
+    grid-template-columns: 20px 1fr 16px;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    text-align: left;
+    background: var(--white);
+    border: 1px solid var(--line);
+  }
+
+  .artifact span {
+    display: grid;
+    gap: 4px;
+  }
+
+  .artifact strong {
+    font-size: 10px;
+  }
+
+  .artifact small {
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  .attentionRail {
+    min-height: 0;
+    overflow-y: auto;
+    color: var(--paper);
+    background: var(--ink-soft);
+    border-left: 1px solid #3b3a34;
+  }
+
+  .approvalPanel,
+  .recoveryPanel,
+  .calmPanel {
+    padding: 25px 22px 22px;
+    border-bottom: 1px solid #48463f;
+  }
+
+  .approvalHeader {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .attentionIndex {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    color: var(--ink);
+    background: var(--signal);
+    font-family: var(--display);
+    font-size: 18px;
+  }
+
+  .approvalHeader .micro,
+  .recoveryPanel .micro,
+  .calmPanel .micro {
+    color: #aaa79e;
+    margin-bottom: 5px;
+  }
+
+  .approvalHeader h2,
+  .recoveryPanel h2,
+  .calmPanel h2 {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+  }
+
+  .approvalLead,
+  .recoveryPanel > p,
+  .calmPanel > p {
+    margin: 20px 0;
+    color: #c7c4ba;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .approvalFacts {
+    border-top: 1px solid #4a4841;
+  }
+
+  .approvalFacts > div {
+    display: grid;
+    grid-template-columns: 86px 1fr;
+    padding: 9px 0;
+    border-bottom: 1px solid #4a4841;
+  }
+
+  .approvalFacts dt {
+    color: #8f8c83;
+    font-family: var(--mono);
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+
+  .approvalFacts dd {
+    font-size: 10px;
+  }
+
+  .sourceProof {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 9px;
+    padding: 12px;
+    margin: 16px 0;
+    color: #a7d3b7;
+    background: rgb(45 117 81 / 12%);
+    border-left: 2px solid #60a778;
+  }
+
+  .sourceProof span {
+    display: grid;
+    gap: 3px;
+    color: #a6a39a;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  .sourceProof strong {
+    color: #d8eade;
+    font-size: 10px;
+  }
+
+  .approvalActions {
+    gap: 7px;
+  }
+
+  .approveButton {
+    flex: 1;
+    color: var(--ink);
+    background: var(--signal);
+    border-color: var(--signal);
+  }
+
+  .denyButton,
+  .quietButton {
+    min-height: 36px;
+    padding: 0 13px;
+    color: #c9c6bd;
+    background: transparent;
+    border: 1px solid #55534b;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .shortcutHint {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 13px;
+    color: #79776f;
+    font-size: 9px;
+  }
+
+  .shortcutHint kbd {
+    padding: 2px 5px;
+    border: 1px solid #55534b;
+  }
+
+  .decisionReceipt {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    padding: 25px 22px;
+    border-bottom: 1px solid #48463f;
+  }
+
+  .decisionReceipt.approved {
+    color: #9cccae;
+    background: rgb(45 117 81 / 12%);
+  }
+
+  .decisionReceipt.denied {
+    color: #e28a81;
+    background: rgb(184 59 50 / 10%);
+  }
+
+  .decisionReceipt h2 {
+    margin: 4px 0 8px;
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .decisionReceipt p:last-child {
+    color: #aaa79e;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .calmPanel > svg {
+    margin-bottom: 20px;
+    color: #77b98f;
+  }
+
+  .recoveryPanel .attentionIndex {
+    margin-bottom: 18px;
+    background: var(--red);
+  }
+
+  .teamPanel {
+    padding: 22px;
+  }
+
+  .sectionHeading.compact {
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .sectionHeading.compact h2 {
+    color: var(--paper);
+    font-size: 22px;
+  }
+
+  .agentRow {
+    display: grid;
+    grid-template-columns: 28px 1fr 8px;
+    gap: 9px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #48463f;
+  }
+
+  .agentInitial {
+    display: grid;
+    place-items: center;
+    width: 27px;
+    height: 27px;
+    color: var(--paper);
+    border: 1px solid #5b5951;
+    font-family: var(--mono);
+    font-size: 9px;
+  }
+
+  .agentRow > span:nth-child(2) {
+    display: grid;
+    gap: 3px;
+  }
+
+  .agentRow strong {
+    font-size: 10px;
+  }
+
+  .agentRow small {
+    color: #8f8c83;
+    font-size: 8px;
+    text-transform: capitalize;
+  }
+
+  .agentRow > i {
+    width: 6px;
+    height: 6px;
+    background: #77746c;
+    border-radius: 50%;
+  }
+
+  .agentRow > i.active {
+    background: var(--signal);
+  }
+
+  .agentRow > i.done {
+    background: #60a778;
+  }
+
+  .agentRow > i.error {
+    background: #d35d52;
+  }
+
+  .statePage {
+    display: grid;
+    align-content: center;
+    min-height: 100vh;
+    padding: clamp(24px, 5vw, 70px);
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  .stateWord {
+    position: fixed;
+    top: 24px;
+    left: clamp(24px, 5vw, 70px);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+  }
+
+  .skeletonGrid {
+    display: grid;
+    grid-template-columns: 22% 1fr 28%;
+    min-height: 58vh;
+    border: 1px solid var(--line);
+  }
+
+  .skeletonRail,
+  .skeletonAside {
+    background: #e4e1d7;
+    animation: skeletonShift 1.4s ease-in-out infinite alternate;
+  }
+
+  .skeletonRail {
+    border-right: 1px solid var(--line);
+  }
+
+  .skeletonAside {
+    background: #282823;
+  }
+
+  .skeletonMain {
+    padding: 50px 40px;
+  }
+
+  .skeletonLine {
+    height: 10px;
+    margin-bottom: 16px;
+    background: #d9d5ca;
+  }
+
+  .skeletonLine.short {
+    width: 18%;
+  }
+
+  .skeletonLine.hero {
+    width: 74%;
+    height: 42px;
+  }
+
+  .skeletonLine.medium {
+    width: 52%;
+  }
+
+  .skeletonRows {
+    display: grid;
+    gap: 1px;
+    margin-top: 80px;
+    background: var(--line);
+  }
+
+  .skeletonRows i {
+    height: 65px;
+    background: #ece9df;
+  }
+
+  .statePage > p:last-child {
+    margin-top: 20px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+  }
+
+  .emptyState,
+  .errorState {
+    justify-items: start;
+    background:
+      linear-gradient(90deg, transparent 49.9%, var(--line) 50%, transparent 50.1%),
+      var(--paper);
+  }
+
+  .emptyOrb {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 30px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+  }
+
+  .emptyOrb::before,
+  .emptyOrb::after {
+    position: absolute;
+    background: var(--ink);
+    content: "";
+  }
+
+  .emptyOrb::before {
+    inset: 50% -16px auto;
+    height: 1px;
+  }
+
+  .emptyOrb::after {
+    inset: -16px auto -16px 50%;
+    width: 1px;
+  }
+
+  .emptyOrb span {
+    position: absolute;
+    inset: 32px;
+    background: var(--signal);
+  }
+
+  .kicker {
+    color: var(--signal-dark);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .emptyState h1,
+  .errorState h1 {
+    max-width: 720px;
+    margin: 10px 0 16px;
+    font-family: var(--display);
+    font-size: clamp(50px, 8vw, 100px);
+    font-weight: 400;
+    letter-spacing: -0.06em;
+    line-height: 0.88;
+  }
+
+  .stateCopy {
+    max-width: 560px;
+    color: #5f5e58;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .primaryButton {
+    margin-top: 25px;
+  }
+
+  .errorRule {
+    width: 90px;
+    height: 9px;
+    margin-bottom: 30px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--red) 0 8px,
+      transparent 8px 13px
+    );
+  }
+
+  .recoveryFacts {
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .recoveryFacts span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 9px;
+  }
+
+  .stateActions {
+    gap: 8px;
+  }
+
+  .stateActions .quietButton {
+    margin-top: 25px;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+
+  @keyframes livePulse {
+    0%,
+    100% {
+      opacity: 0.65;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes skeletonShift {
+    from {
+      opacity: 0.6;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer responsive {
+  @media (max-width: 1180px) {
+    .appShell {
+      grid-template-columns: 58px 244px minmax(480px, 1fr);
+    }
+
+    .attentionRail {
+      position: fixed;
+      z-index: 20;
+      right: 18px;
+      bottom: 18px;
+      width: 320px;
+      max-height: calc(100vh - 100px);
+      box-shadow: 0 18px 60px rgb(0 0 0 / 32%);
+    }
+
+    .teamPanel {
+      display: none;
+    }
+
+    .scenarioControl {
+      display: none;
+    }
+  }
+
+  @media (max-width: 840px) {
+    .appShell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow: visible;
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      order: 1;
+    }
+
+    .brand small,
+    .brand > i,
+    .searchBox,
+    .commandRail {
+      display: none;
+    }
+
+    .runRail {
+      min-height: auto;
+      order: 2;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .runRailHeader {
+      padding: 16px 18px 10px;
+    }
+
+    .runRailHeader h1 {
+      font-size: 23px;
+    }
+
+    .runList {
+      display: flex;
+      gap: 1px;
+      padding: 0 14px 14px;
+      overflow-x: auto;
+      border-top: 0;
+      scroll-snap-type: x mandatory;
+    }
+
+    .runItem {
+      flex: 0 0 255px;
+      min-height: 118px;
+      background: rgb(255 255 255 / 30%);
+      border: 1px solid var(--line);
+      scroll-snap-align: start;
+    }
+
+    .runItem.selected {
+      border-color: var(--signal);
+    }
+
+    .newRunButton {
+      display: none;
+    }
+
+    .workspace {
+      order: 4;
+      overflow: visible;
+    }
+
+    .runHeader {
+      display: block;
+      padding: 24px 18px 20px;
+    }
+
+    .runHeader h2 {
+      font-size: clamp(37px, 10vw, 54px);
+    }
+
+    .runControls {
+      margin-top: 20px;
+    }
+
+    .runRibbon,
+    .activitySection {
+      padding-right: 18px;
+      padding-left: 18px;
+    }
+
+    .ribbonSteps {
+      display: block;
+    }
+
+    .ribbonStep {
+      min-height: auto;
+      padding: 14px 0 16px;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ribbonStep.active,
+    .ribbonStep.error {
+      padding-right: 12px;
+      padding-left: 12px;
+    }
+
+    .ribbonStep h3 {
+      margin-top: 11px;
+    }
+
+    .activityRow {
+      grid-template-columns: 58px minmax(0, 1fr) 28px;
+      padding: 10px 0;
+    }
+
+    .activityOwner {
+      display: none;
+    }
+
+    .activityRow h3 {
+      line-height: 1.35;
+    }
+
+    .artifactStrip {
+      grid-template-columns: 1fr;
+      padding: 0 18px 30px;
+    }
+
+    .attentionRail {
+      position: static;
+      width: auto;
+      max-height: none;
+      order: 3;
+      box-shadow: none;
+    }
+
+    .teamPanel {
+      display: block;
+    }
+
+    .approvalPanel,
+    .recoveryPanel,
+    .calmPanel {
+      padding: 28px 18px;
+    }
+
+    .approvalHeader h2,
+    .recoveryPanel h2,
+    .calmPanel h2 {
+      font-size: 31px;
+    }
+
+    .scenarioControl {
+      display: none;
+    }
+
+    .skeletonGrid {
+      grid-template-columns: 1fr;
+    }
+
+    .skeletonRail,
+    .skeletonAside {
+      display: none;
+    }
+
+    .emptyState,
+    .errorState {
+      background: var(--paper);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .topbar {
+      padding: 0 10px 0 14px;
+    }
+
+    .topActions .iconButton {
+      display: none;
+    }
+
+    .filterTabs {
+      padding-bottom: 10px;
+    }
+
+    .runIdentity {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .runHeader h2 {
+      font-size: 40px;
+    }
+
+    .runControls {
+      width: 100%;
+    }
+
+    .pauseButton {
+      flex: 1;
+    }
+
+    .approvalFacts > div {
+      grid-template-columns: 95px 1fr;
+    }
+
+    .approvalActions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .approveButton,
+    .denyButton {
+      min-height: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "everything-agentic-engineering",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev:showcase": "pnpm --filter @eae/showcase dev",
+    "build": "pnpm --filter @eae/showcase build",
+    "lint": "pnpm --filter @eae/showcase lint",
+    "typecheck": "pnpm --filter @eae/showcase typecheck",
+    "test": "pnpm --filter @eae/showcase test"
+  }
+}

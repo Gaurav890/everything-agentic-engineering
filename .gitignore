@@ -8,6 +8,7 @@
 
 # Dependencies / build
 node_modules/
+.pnpm-store/
 .next/
 dist/
 build/

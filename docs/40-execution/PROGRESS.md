@@ -105,3 +105,36 @@ Branch: `feat/T-006-launch-readiness-foundation`; commit and PR pending.
 
 Application-specific browser, accessibility, performance, and visual regression
 checks activate only after a real showcase or product application exists.
+
+### 2026-07-25 — T-007
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** PARTIAL
+
+**Change**
+
+Built Signalroom, a distinctive agent-operations reference product using the
+complete design router: brief, user needs, benchmark, UX strategy, interaction
+model, design contract, token-driven implementation, responsive states,
+browser interaction review, accessibility gate, evidence bundle, independent
+critique, and post-critique fixes.
+
+**Evidence**
+
+- Production Next.js build passes.
+- Lint, typecheck, model tests, and full repository verification pass.
+- Approval and pause/resume behavior verified in the running product.
+- Desktop, mobile, loading, empty, and error evidence captured.
+- Evidence bundle passes machine validation.
+- Playwright plus axe runs as a required GitHub Actions job.
+
+**Commit/PR**
+
+Branch: `feat/T-007-agent-mission-control`; commit and PR pending.
+
+**Remaining risk**
+
+The local macOS sandbox blocks a second headless Chromium process, so the
+automated browser/axe suite is executed by GitHub Actions. Signalroom remains a
+frontend reference, not a production backend.
