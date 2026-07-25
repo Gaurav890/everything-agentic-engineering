@@ -138,3 +138,31 @@ Branch: `feat/T-007-agent-mission-control`; commit and PR pending.
 The local macOS sandbox blocks a second headless Chromium process, so the
 automated browser/axe suite is executed by GitHub Actions. Signalroom remains a
 frontend reference, not a production backend.
+### 2026-07-25 — T-008
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** PARTIAL
+
+**Change**
+
+Added safe presets for common web, mobile, full-stack, research, and
+harness-only starting points. Initializer previews now make active and inactive
+profiles and capabilities explicit, including external setup that requires
+separate review.
+
+**Evidence**
+
+- Eight initializer tests pass.
+- Five profile-engine tests pass.
+- Web-only preview explicitly keeps mobile capabilities inactive.
+- Full repository verification passes all ten stages.
+
+**Commit/PR**
+
+Branch: `feat/T-008-guided-project-initializer`; commit and PR pending.
+
+**Remaining risk**
+
+Inactive template inventory is deliberately retained so profile selection stays
+reversible. Physical cleanup remains a separate explicit human decision.

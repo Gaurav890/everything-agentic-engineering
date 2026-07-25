@@ -34,6 +34,12 @@ Project capabilities are selected in `.agentic/project.json` and resolved
 through non-destructive profile tooling. The doctor reports drift; it does not
 install or remove resources.
 
+The guided initializer offers safe presets or manual selection and previews
+active profiles, inactive profiles, required capabilities, retained inactive
+capabilities, and external setup. It writes only the profile manifest after
+explicit confirmation. Unselected mobile, web, research, backend, or
+design-critical capabilities are not routed or treated as project requirements.
+
 ## Security
 
 ## Verification
@@ -48,5 +54,7 @@ accessibility checks; browser tests run as a dedicated GitHub Actions gate.
 
 - Signalroom is a static reference experience, not a connected agent runtime.
 - Optional external design skills are not bundled or auto-installed.
+- The initializer intentionally does not delete inactive template inventory;
+  cleanup remains a separate explicit decision.
 
 Only factual present-tense truth belongs here.

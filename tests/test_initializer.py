@@ -39,6 +39,46 @@ class InitializerTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('"design-critical"', result.stdout)
 
+    def test_web_only_keeps_mobile_inactive(self) -> None:
+        result = self.run_init("--name", "web-only", "--web", "--dry-run")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Inactive profiles:", result.stdout)
+        self.assertIn("- mobile-expo:", result.stdout)
+        self.assertIn("- mobile-agent:", result.stdout)
+        self.assertNotIn('"mobile-expo"', result.stdout)
+
+    def test_preset_resolves_a_coherent_stack(self) -> None:
+        result = self.run_init(
+            "--name",
+            "saas",
+            "--preset",
+            "web-supabase",
+            "--dry-run",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('"web-next"', result.stdout)
+        self.assertIn('"design-critical"', result.stdout)
+        self.assertIn('"backend-supabase"', result.stdout)
+        self.assertIn("External setup to review", result.stdout)
+
+    def test_preset_cannot_be_mixed_with_manual_selectors(self) -> None:
+        result = self.run_init(
+            "--name",
+            "mixed",
+            "--preset",
+            "web",
+            "--mobile",
+            "--dry-run",
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("--preset cannot be combined", result.stderr)
+
+    def test_lists_presets_without_project_name(self) -> None:
+        result = self.run_init("--list-presets")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("web-supabase", result.stdout)
+        self.assertIn("full-stack", result.stdout)
+
     def test_invalid_backend_fails(self) -> None:
         result = self.run_init("--name", "bad", "--backend", "both", "--dry-run")
         self.assertNotEqual(result.returncode, 0)

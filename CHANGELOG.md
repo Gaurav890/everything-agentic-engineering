@@ -15,3 +15,5 @@ then, entries describe the evolving pre-release harness.
 - Deterministic project profiles with non-destructive selection.
 - Guided project initialization, executable profile tests, generated token
   outputs, and stronger launch-readiness verification.
+- Safe initializer presets with explicit active/inactive capability plans and
+  external setup guidance.

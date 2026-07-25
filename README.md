@@ -251,7 +251,17 @@ Profile selection is non-destructive: it does not silently install tools or
 delete inactive surfaces.
 
 The guided initializer asks what you are building, previews the resulting
-profiles, and changes only `.agentic/project.json` after confirmation.
+profiles, clearly lists what stays inactive, and changes only
+`.agentic/project.json` after confirmation.
+
+```bash
+./scripts/init-project.sh --list-presets
+./scripts/init-project.sh --name my-saas --preset web-supabase --dry-run
+```
+
+If you choose web without mobile, mobile agents and guidance stay inactive.
+Nothing is installed or deleted automatically, so profile selection remains
+safe and reversible.
 
 See the complete
 [product-design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md)
@@ -944,49 +954,21 @@ MERGE
 
 ## Project profiles
 
-The starter supports several operating profiles:
+Profiles are composable decisions, not one oversized default:
 
-### Web
+| Profile | Activates |
+|---|---|
+| `core` | Durable context, tasks, verification, and collaboration |
+| `web-next` | Next.js surface, frontend owner, React guidance, Playwright |
+| `mobile-expo` | Expo surface, mobile owner, React Native guidance |
+| `design-critical` | Product-design router, tokens, and running-UI evidence |
+| `research-enabled` | Researcher, source ledger, Perplexity, Firecrawl, Playwright |
+| `backend-supabase` | Supabase as the selected backend |
+| `backend-convex` | Convex as the selected backend |
 
-```text
-Next.js
-TypeScript
-Tailwind
-shadcn/ui
-Supabase
-Playwright
-```
-
-### Mobile
-
-```text
-Expo
-React Native
-TypeScript
-React Native agent skills
-```
-
-### Realtime
-
-```text
-Next.js / React Native
-Convex
-TypeScript
-```
-
-### Research-heavy
-
-```text
-Perplexity
-Firecrawl
-Playwright
-Research ledger
-Source-quality rules
-```
-
-### Full stack
-
-Combine web, mobile, backend, research, security, and evaluation while preserving explicit ownership boundaries.
+Supabase and Convex conflict by design. Web does not imply mobile; mobile does
+not imply web; neither app surface implies research. The guided initializer
+selects only the required composition and explains what remains inactive.
 
 Read:
 
@@ -1035,8 +1017,8 @@ A few rules drive the entire project:
 
 Potential future directions:
 
-- [ ] Interactive project initializer CLI
-- [ ] Selectable web, mobile, backend, and research profiles
+- [x] Interactive project initializer CLI with safe presets and previews
+- [x] Selectable web, mobile, backend, design, and research profiles
 - [ ] Automated agent/worktree creation from `TASKS.jsonl`
 - [ ] Deeper GitHub Issue ↔ Task synchronization
 - [ ] Agent-team orchestration examples

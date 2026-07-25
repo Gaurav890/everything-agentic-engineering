@@ -4,47 +4,46 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land T-007 Signalroom showcase through independent review without merging
+Land T-008 guided project initializer through PR review without merging
 directly to `main`.
 
 ## Completed
 
-- Signalroom product brief, user needs, benchmark, strategy, and interaction model.
-- Product-specific editorial operations design contract.
-- Responsive Next.js reference product with agentic approval/recovery controls.
-- Required loading, empty, error, desktop, and mobile evidence.
-- Dedicated Playwright and axe GitHub Actions gate.
-- Independent critique and applied mobile/search corrections.
+- T-007 Signalroom merged through PR #8 with all checks passing.
+- Initializer presets for core, web, mobile, full-stack, and research shapes.
+- Explicit active/inactive profile and capability preview.
+- External setup review list.
+- Manifest-only, confirmation-gated selection behavior.
+- Unit coverage for presets, incompatible selectors, and web-without-mobile.
 
 ## In progress
 
-- Final evidence refresh, task review state, commit, push, and PR review.
+- T-008 branch commit, push, and PR review.
 
 ## Blockers
 
-- None for implementation. GitHub PR creation may still require the direct web
-  URL because the connected integration has previously returned 403.
+- None for implementation.
 
 ## Unresolved decisions
 
-- A future version may connect Signalroom to a real agent runtime; this PR should
-  remain a focused frontend reference.
+- Physical cleanup of inactive starter inventory remains deliberately separate
+  from selection so initialization is reversible.
 
 ## Verification status
 
-Production build, root checks, evidence validation, and full repository
-verification pass. GitHub Actions owns the sandbox-independent browser/axe run.
+Eight initializer tests, five profile-engine tests, local-link validation,
+showcase project checks, and full repository verification pass.
 
 ## Exact next action
 
-Commit and push `feat/T-007-agent-mission-control`, then open a PR titled
-`feat(T-007): add Signalroom agent operations showcase`.
+Commit and push `feat/T-008-guided-project-initializer`, then open a PR titled
+`feat(T-008): add guided project initializer`.
 
 ## Relevant files
 
-- `apps/showcase/`
-- `docs/80-showcase/`
-- `docs/50-evals/evidence/T-007/`
-- `.github/workflows/showcase.yml`
+- `scripts/init_project.py`
+- `tests/test_initializer.py`
+- `docs/60-tooling/PROFILES.md`
+- `README.md`
 
 Keep this concise enough to read in under two minutes.
