@@ -260,3 +260,33 @@ the final handoff state.
 
 GitHub caches social preview images; shared links may take time to refresh after
 the settings upload.
+
+### 2026-07-25 — T-012
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Replaced the single-video documentation approach with five focused README GIFs
+embedded beside the capabilities they explain.
+
+**Evidence**
+
+- The project-profile GIF runs the real non-destructive initializer preview.
+- The task-planning GIF runs the real planner against Signalroom task T-007.
+- The approval GIF exercises pause, resume, and protected-read approval in the
+  running Signalroom app.
+- The UI-state GIF exercises normal, loading, empty, and error states.
+- The verification GIF runs the full repository verification suite.
+- Individual GIF sizes range from 122 KB to 542 KB.
+
+**Commit/PR**
+
+Branch: `feat/T-012-readme-demo-gifs`; commit and PR pending.
+
+**Remaining risk**
+
+GitHub may defer animation for users with reduced-motion preferences; the first
+frame of every GIF remains meaningful and labeled.

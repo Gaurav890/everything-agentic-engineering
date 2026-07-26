@@ -4,7 +4,7 @@ Last updated: 2026-07-25
 
 ## Current goal
 
-Land the T-011 launch metadata and social-preview asset through review.
+Land the T-012 section-specific README GIFs through review.
 
 ## Completed
 
@@ -16,10 +16,12 @@ Land the T-011 launch metadata and social-preview asset through review.
 - README quick-start visual, demo script, and launch copy.
 - Public `v0.1.0` tag and release with verified archive/checksum.
 - 1280×640 GitHub social-preview asset.
+- Real initializer, task-planning, Signalroom interaction, UI-state, and
+  verification GIFs embedded beside their README explanations.
 
 ## In progress
 
-- T-011 follow-up PR #13 checks and review.
+- T-012 verification, commit, push, and PR review.
 
 ## Blockers
 
@@ -27,24 +29,22 @@ Land the T-011 launch metadata and social-preview asset through review.
 
 ## Unresolved decisions
 
-- Final demo recording and public announcements remain maintainer actions.
+- Public announcements remain maintainer actions.
 
 ## Verification status
 
-The public release and its checksum are verified. The repository description,
-ten launch topics, and social preview are live. The preview passed manual size,
-text, composition, and contrast inspection, and full repository verification
-passes on the T-011 branch.
+The five GIFs were captured from actual command execution and running
+Signalroom interactions. Repository verification remains to run on T-012.
 
 ## Exact next action
 
-Wait for PR #13 checks, review the final handoff record, then squash merge if
-all required checks pass.
+Run full verification, inspect every GIF for readability, then commit, push,
+and open T-012 for review.
 
 ## Relevant files
 
-- `docs/assets/social-preview-v0.1.0.jpg`
-- `docs/70-collaboration/RELEASING.md`
+- `README.md`
+- `docs/assets/demo/`
 - `docs/40-execution/TASKS.jsonl`
 
 Keep this concise enough to read in under two minutes.

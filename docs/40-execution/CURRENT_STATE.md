@@ -56,6 +56,10 @@ The public `v0.1.0` release is published from reviewed commit `991c70c` with a
 verified source archive and checksum. A 1280×640 launch card is maintained at
 `docs/assets/social-preview-v0.1.0.jpg`.
 
+The README demonstrates the system with five focused GIFs captured from actual
+initializer, task-planning, running-product interaction, UI-state, and full
+verification flows.
+
 ## Security
 
 ## Verification

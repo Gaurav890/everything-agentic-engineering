@@ -164,6 +164,21 @@ It demonstrates planning, parallel workstreams, protected approvals,
 pause/resume, recovery, durable artifacts, responsive layouts, required UI
 states, accessibility checks, and an independent design critique.
 
+#### Approve, pause, and resume a real run
+
+The GIF below was captured from the running Signalroom app. It pauses and
+resumes the selected run, then approves a protected read after showing scope,
+masked fields, retention, and reversibility.
+
+![Signalroom protected approval, pause, and resume flow](docs/assets/demo/03-signalroom-approval.gif)
+
+#### Inspect required product states
+
+Normal, loading, empty, and error are real selectable states in the showcase,
+not screenshots invented for the README.
+
+![Signalroom normal, loading, empty, and error states](docs/assets/demo/04-running-states.gif)
+
 ```bash
 pnpm install
 pnpm dev:showcase
@@ -301,6 +316,8 @@ If you choose web without mobile, mobile agents and guidance stay inactive.
 Nothing is installed or deleted automatically, so profile selection remains
 safe and reversible.
 
+![Actual non-destructive project profile preview](docs/assets/demo/01-project-profiles.gif)
+
 ### Turn a task into a safe workspace
 
 ```bash
@@ -312,6 +329,11 @@ The planner checks dependencies, active profiles, agent routing, exclusive file
 ownership, and verification gates. Starting requires confirmation and creates a
 short-lived branch or isolated worktree; it does not implement or merge the
 task.
+
+This is the real read-only planner running against the completed Signalroom
+showcase task, `T-007`:
+
+![Actual task planner output for Signalroom task T-007](docs/assets/demo/02-task-plan.gif)
 
 See the complete
 [product-design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md)
@@ -807,6 +829,13 @@ Read:
 ```text
 docs/50-evals/RUBRIC.md
 ```
+
+The full repository verification below is executed rather than mocked. It
+checks JSON/JSONL, GitHub workflows, profiles, the initializer, task routing,
+design tokens, security hooks, documentation links, evidence bundles, lint,
+types, and tests.
+
+![Actual full repository verification](docs/assets/demo/05-verification.gif)
 
 ---
 
