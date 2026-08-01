@@ -71,42 +71,80 @@ this file.
 - **Decision/PR:** Human approval required before configuring limits or network
   policy. No third-party code or new capability was enabled.
 
-### L-2026-07-26-02 — MCP 2026-07-28 stateless revision remains a release candidate
+### L-2026-07-26-02 — MCP 2026-07-28 stateless revision is stable
 
-- **State:** watching
-- **Event date:** 2026-05-29 RC; final release scheduled for 2026-07-28
-- **Discovered:** 2026-07-26
+- **State:** proposed
+- **Event date:** 2026-05-29 RC; stable release 2026-07-28
+- **Discovered:** 2026-07-26; stable release verified 2026-07-29
 - **Domains:** MCP, transport, version negotiation, compatibility
-- **Sources:** `https://github.com/modelcontextprotocol/modelcontextprotocol/releases/tag/2026-07-28-RC`
-  (official specification release, highest authority);
-  `https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/`
-  (official release announcement, high authority);
+- **Sources:** `https://github.com/modelcontextprotocol/modelcontextprotocol/releases/tag/2026-07-28`
+  (official stable specification release, highest authority);
+  `https://modelcontextprotocol.io/specification/2026-07-28`
+  (official specification, highest authority);
+  `https://modelcontextprotocol.io/specification/2026-07-28/changelog`
+  (official changelog, highest authority);
   `https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/migration/support-2026-07-28.md`
   (official SDK migration guide, high authority)
-- **Change:** The RC introduces a stateless core, explicit protocol-era
+- **Change:** The stable revision introduces a stateless core, explicit protocol-era
   negotiation, per-request client/server metadata, an extension framework, and
-  revised task/subscription mechanisms. The TypeScript SDK keeps 2025-era
-  behavior by default and requires explicit opt-in while the revision is a
-  draft.
+  revised task/subscription mechanisms. Adoption remains asynchronous across
+  SDKs, clients, and servers, with version negotiation preserving compatibility
+  during the transition.
 - **Repository relevance:** The starter depends on project-scoped MCP servers
   and documents Perplexity, Firecrawl, and Playwright routing, but does not
   claim a protocol revision or provide a compatibility matrix.
 - **Existing coverage:** partial
 - **Scores:** relevance 4 / authority 5 / confidence 5 / impact 4 / risk 4 /
   maintenance 3 / novelty 5
-- **Recommendation:** watch until the final specification is published and the
-  selected MCP servers declare support. Do not update `.mcp.json`, SDKs, or
-  transport assumptions from RC material.
-- **Affected artifacts:** after final release,
-  `docs/60-tooling/MCP_STACK.md`, `docs/60-tooling/COMPATIBILITY.md`,
+- **Recommendation:** propose a documentation-only compatibility update and
+  inventory declared support for each selected MCP server. Do not update
+  `.mcp.json`, SDKs, or transport assumptions until that inventory and
+  negotiation tests exist.
+- **Affected artifacts:** `docs/60-tooling/MCP_STACK.md`,
+  `docs/60-tooling/COMPATIBILITY.md`,
   `docs/60-tooling/SOURCES.md`, and MCP doctor expectations
-- **Acceptance and verification:** Re-check the final changelog on or after
-  2026-07-28, record declared protocol support for each selected server, test
-  version negotiation without credentials, and preserve isolated-browser and
+- **Acceptance and verification:** Record declared protocol support for
+  Perplexity, Firecrawl, and Playwright; test version negotiation without
+  credentials; document fallback behavior; and preserve isolated-browser and
   human-approval controls.
-- **Uncertainty:** The final revision is not yet published, SDK adoption is
-  asynchronous, and server behavior may remain on the 2025 protocol for an
+- **Uncertainty:** The specification is stable, but SDK and server adoption is
+  asynchronous. Selected servers may remain on the 2025 protocol for an
   undetermined period.
-- **Decision/PR:** Deferred until the final specification and first-party server
-  compatibility statements are available. Human approval will be required for
-  any dependency or transport change.
+- **Decision/PR:** Stable status is verified. Human approval remains required
+  for any dependency, server, or transport change.
+
+### L-2026-07-28-01 — GitHub expands public-repository supply-chain safeguards
+
+- **State:** proposed
+- **Event date:** 2026-07-28
+- **Discovered:** 2026-07-28; recorded 2026-07-29
+- **Domains:** GitHub Actions, Dependabot, supply-chain security
+- **Sources:** `https://github.blog/changelog/2026-07-28-github-actions-holds-unproven-workflows-for-approval/`
+  (official GitHub changelog, high authority);
+  `https://github.blog/changelog/2026-07-28-dependabot-alerts-on-malicious-packages-across-more-ecosystems/`
+  (official GitHub changelog, high authority)
+- **Change:** GitHub now automatically holds certain potentially malicious
+  workflow runs in public repositories until a write-authorized collaborator
+  approves them through an authenticated web session. Dependabot malware alerts
+  now ingest OpenSSF malicious-package advisories across npm, PyPI, and other
+  ecosystems.
+- **Repository relevance:** The starter is public, runs pull-request workflows,
+  and recommends dependency scanning. The workflow hold is automatic; expanded
+  malware coverage applies only when repository malware alerts are enabled.
+- **Existing coverage:** partial
+- **Scores:** relevance 4 / authority 5 / confidence 5 / impact 4 / risk 1 /
+  maintenance 1 / novelty 4
+- **Recommendation:** document held workflow runs as a normal human approval
+  state. Ask a maintainer to confirm or enable Dependabot malware alerts; do not
+  automate approval of held workflows.
+- **Affected artifacts:** `docs/70-collaboration/GITHUB_WORKFLOW.md`,
+  `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/70-collaboration/REPOSITORY_SETUP.md`
+- **Acceptance and verification:** Documentation distinguishes GitHub's
+  automatic hold from a CI failure, requires inspection before approval, and
+  records malware-alert enablement as a human-owned repository setting.
+- **Uncertainty:** GitHub does not publish the detection criteria for held
+  workflows. The automatic hold currently applies to public repositories on
+  github.com, not GitHub Enterprise Server.
+- **Decision/PR:** Documentation proposal only. Human approval is required to
+  enable the repository setting or release a held workflow.
