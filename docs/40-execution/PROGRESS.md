@@ -290,3 +290,36 @@ Branch: `feat/T-012-readme-demo-gifs`; commit and PR pending.
 
 GitHub may defer animation for users with reduced-motion preferences; the first
 frame of every GIF remains meaningful and labeled.
+
+### 2026-08-03 — T-015
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Added an adaptive product-design intake, durable brief and direction artifacts,
+and an explicit human approval gate before design-system or canonical token
+changes. Reworked color theming around stable semantic roles, added mode-aware
+component resolution, theme parity and WCAG contrast validation, and generated
+an inspectable light/dark token specimen.
+
+**Evidence**
+
+- The new `design-intake` skill passes project skill validation.
+- Nine token tests cover generation, parity, light/dark resolution, contrast,
+  invalid theme coupling, and invalid aliases.
+- The token specimen was inspected at desktop and 390px mobile widths with no
+  horizontal overflow.
+- Full repository verification passes.
+
+**Commit/PR**
+
+Commit `2de0e01`; draft PR #16.
+
+**Remaining risk**
+
+Generated directions still require product-specific human taste and approval.
+High-contrast mode is documented but not generated until a project activates
+that requirement. External design and Figma tools remain optional inputs.

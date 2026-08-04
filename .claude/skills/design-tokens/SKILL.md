@@ -22,4 +22,18 @@ component tokens, never raw primitives.
 Before adding a token ask whether it is reusable, semantically meaningful, and
 different from an existing token. Before changing one assess cross-platform and
 theme impact. Document legitimate one-offs as `TOKEN_EXCEPTION` with rationale.
-Run `token-audit` after implementation.
+
+Component tokens reference mode-independent semantic roles, never
+`theme.light.*` or `theme.dark.*`. The build resolves those roles once per mode.
+Keep semantic key and type parity across themes.
+
+Before adoption, run the token build and require:
+
+- valid aliases without cycles;
+- identical semantic keys across modes;
+- WCAG contrast for declared text and UI pairs;
+- current generated web/native outputs and token preview;
+- a token audit after implementation.
+
+For redesigns, update the smallest correct layer. Deprecate renamed public
+tokens and document migration rather than breaking consumers silently.

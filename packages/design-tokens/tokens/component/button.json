@@ -2,10 +2,12 @@
   "button": {
     "primary": {
       "background": {
-        "$type": "color",
-        "$value": "{theme.light.color.action.primary}",
-        "$description": "Example component alias; replace with mode-aware build output"
+        "default": {"$type": "color", "$value": "{color.action.primary.default}"},
+        "hover": {"$type": "color", "$value": "{color.action.primary.hover}"},
+        "pressed": {"$type": "color", "$value": "{color.action.primary.pressed}"}
       },
+      "foreground": {"$type": "color", "$value": "{color.action.primary.foreground}"},
+      "focusRing": {"$type": "color", "$value": "{color.focus.ring}"},
       "radius": {"$type": "dimension", "$value": "{radius.md}"},
       "gap": {"$type": "dimension", "$value": "{space.2}"},
       "transition": {"$type": "duration", "$value": "{duration.fast}"}

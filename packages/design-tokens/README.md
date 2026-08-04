@@ -26,6 +26,10 @@ Applications should consume semantic or component tokens. Replace scaffold
 values only after the project design direction is approved. Keep rationale and
 design-decision IDs in `$extensions.com.everything-agentic`.
 
+Component tokens reference stable semantic roles such as
+`color.action.primary.default`; they never reference a light or dark namespace.
+The build resolves semantic and component values independently for each mode.
+
 ## Generate platform outputs
 
 ```bash
@@ -38,8 +42,13 @@ This validates aliases and writes:
 generated/
 ├── tokens.css
 ├── tokens.ts
-└── tokens.native.ts
+├── tokens.native.ts
+└── tokens.preview.html
 ```
 
 Generated files are build artifacts and are not edited or committed. CI
 regenerates and tests them from the canonical DTCG sources.
+
+Validation fails on theme key/type drift, theme-specific component aliases, or
+required WCAG contrast failures. Open `generated/tokens.preview.html` to review
+light/dark semantic roles and contrast evidence before evaluating real screens.

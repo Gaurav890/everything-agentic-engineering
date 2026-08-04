@@ -149,7 +149,7 @@ experience work through `product-design-router` before implementation.
 
 Preferred sequence:
 
-`DISCOVERY → USER NEEDS → BENCHMARK → UX STRATEGY → INTERACTION DESIGN → DESIGN DIRECTIONS → DESIGN SYSTEM → DESIGN TOKENS → COMPONENT/FIGMA TRANSLATION → IMPLEMENTATION → LIVE ITERATION → RESPONSIVE/ACCESSIBILITY/SYSTEM/TOKEN AUDITS → PERFORMANCE → INDEPENDENT CRITIQUE → POLISH → DESIGN OPS → SHIP`
+`DISCOVERY → USER NEEDS → BENCHMARK → UX STRATEGY → INTERACTION DESIGN → DESIGN INTAKE → DESIGN DIRECTIONS → HUMAN APPROVAL → DESIGN SYSTEM → DESIGN TOKENS → COMPONENT/FIGMA TRANSLATION → IMPLEMENTATION → LIVE ITERATION → RESPONSIVE/ACCESSIBILITY/SYSTEM/TOKEN AUDITS → PERFORMANCE → INDEPENDENT CRITIQUE → POLISH → DESIGN OPS → SHIP`
 
 Run only phases whose outputs are missing, stale, or invalid for the current
 task. Never use a single model, company, skill, component library, or reference
@@ -158,6 +158,9 @@ as the default visual identity.
 - References are ingredients, not templates.
 - Components are structural donors, not aesthetic authority.
 - Tokens encode approved decisions; they do not invent the direction.
+- Ask only for design constraints relevant to active project profiles.
+- Compare rendered directions and obtain explicit human approval before
+  canonical design-system or token changes.
 - The project design system wins when external guidance conflicts.
 - Anthropic `frontend-design` is optional supplementary design intelligence.
 - Build loading, empty, error, sparse, dense, disabled, success, and relevant

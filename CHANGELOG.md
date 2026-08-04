@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Added
+
+- An adaptive product-design intake that asks only relevant questions for the
+  active platform, creates comparable visual directions, and requires explicit
+  human approval before canonical design-system or token changes.
+- Mode-aware semantic color tokens, light/dark parity validation, required WCAG
+  contrast checks, and a generated token specimen for review evidence.
+
 ## [0.1.0] - 2026-07-25
 
 ### Added

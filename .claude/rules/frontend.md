@@ -4,6 +4,10 @@
 - Start from product context, user needs, interaction logic, and an approved
   visual thesis—not component generation.
 - Run only phases whose durable outputs are missing, stale, or invalid.
+- Use `design-intake` when product-specific brand or visual constraints are
+  missing. Ask only about active platforms.
+- Require explicit approval of a rendered direction before canonical
+  design-system or token changes.
 - Read `docs/20-design/DESIGN_SYSTEM.md` and canonical design tokens.
 - Treat references as ingredients and components as structural donors.
 - Let tokens encode approved decisions; never use tokens to invent the design.

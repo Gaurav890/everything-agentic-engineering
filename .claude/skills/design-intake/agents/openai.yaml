@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Intake"
+  short_description: "Turn design constraints into approved directions"
+  default_prompt: "Use $design-intake to collect the minimum design constraints and prepare directions for approval."

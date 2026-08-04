@@ -7,10 +7,14 @@ Status: Draft
 This document explains why the product looks and behaves as it does.
 `packages/design-tokens/tokens/` encodes approved reusable values.
 Components consume semantic or component tokens; screens compose components.
+`DESIGN_BRIEF.md` records constraints and `DESIGN_DIRECTIONS.md` records the
+explicitly approved direction that authorizes this contract.
 
 ```text
 PRODUCT INTENT
 → RESEARCH + REFERENCES
+→ DESIGN INTAKE
+→ COMPARED DIRECTIONS + HUMAN APPROVAL
 → VISUAL THESIS
 → DESIGN SYSTEM
 → DESIGN TOKENS
@@ -21,6 +25,9 @@ PRODUCT INTENT
 References are ingredients, not templates. Components are structural donors,
 not visual identity. Tokens encode approved decisions; they do not create the
 direction. If external guidance conflicts with this contract, this contract wins.
+
+Do not replace `Status: Draft` until the direction decision includes an
+approver, date, evidence reviewed, and design-decision ID.
 
 ## Product and audience
 
@@ -66,6 +73,14 @@ Canonical tokens use DTCG-compatible JSON under `packages/design-tokens/tokens/`
 
 Define canvas, surfaces, text, borders, actions, feedback, data visualization,
 focus, selection, and agent-state semantics for light/dark modes.
+
+Record required brand colors, forbidden hues, neutral temperature, expression
+level, and foreground/background relationships. Theme modes keep the same
+semantic names and types while values may change. Component tokens reference
+mode-independent semantic roles, never a specific light/dark namespace.
+
+Every approved color direction must include realistic previews and contrast
+evidence for primary/secondary text, interactive controls, and focus indicators.
 
 ## Typography
 
@@ -126,6 +141,18 @@ Examples:
 - icon-only controls without accessible labels.
 
 ## Verification
+
+Require token schema/alias validation, light-dark semantic parity, contrast
+checks, generated web/native output, the generated token specimen, running UI
+screenshots, and independent evaluation.
+
+## Redesign and migration
+
+For a visual redesign, capture baseline evidence before changing tokens. Update
+the smallest correct layer: primitives for raw scales, semantics for system-wide
+meaning, and component tokens only for stable component contracts. Deprecate and
+document public token renames. Token changes do not silently redefine product
+flows, information architecture, content, or interaction behavior.
 
 Important UI must be inspected in the running application with Playwright or
 equivalent evidence at meaningful breakpoints and states. Responsive,
