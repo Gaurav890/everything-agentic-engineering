@@ -10,15 +10,17 @@ tokens, and relevant task criteria before implementation.
 Process:
 1. Invoke `product-design-router`.
 2. Run only missing or stale phases, from discovery through design ops.
-3. Establish interaction logic and a product-specific design direction before
-   component selection.
-4. Treat references as ingredients and imported components as structural donors.
-5. Encode approved reusable decisions with `design-tokens`.
-6. Implement all important product and agentic states.
-7. Apply framework engineering guidance, then iterate on the running product.
-8. Inspect with Playwright and capture evidence at meaningful breakpoints.
-9. Run responsive, accessibility, token, system, and performance audits as routed.
-10. Hand off to an independent design critic/QA evaluator, address findings, and
+3. Invoke `design-intake` when brand, palette, type, density, geometry, motion,
+   platform, or accessibility constraints are unclear.
+4. Establish interaction logic, compare directions, and record human approval
+   before component selection or canonical token changes.
+5. Treat references as ingredients and imported components as structural donors.
+6. Encode approved reusable decisions with `design-tokens`.
+7. Implement all important product and agentic states.
+8. Apply framework engineering guidance, then iterate on the running product.
+9. Inspect with Playwright and capture evidence at meaningful breakpoints.
+10. Run responsive, accessibility, token, system, and performance audits as routed.
+11. Hand off to an independent design critic/QA evaluator, address findings, and
     polish before design-ops handoff.
 
 Anthropic `frontend-design` may offer a design-direction perspective when

@@ -200,14 +200,17 @@ original resource, invocation, timing, rationale, and assessment.
 - **Assessment:** “Copy, own, modify” is the right tradeoff; default shadcn styling is not a finished design.
 - **Repository route:** Conditional structural donor.
 
-### DTCG design tokens
+### Design intake and token-system foundations
 
-- **Source:** [Design Tokens Community Group specification](https://www.designtokens.org/tr/drafts/format/)
+- **Sources:** [DTCG 2025.10 format](https://www.designtokens.org/tr/2025.10/format/) · [DTCG color module](https://www.designtokens.org/tr/2025.10/color/) · [Figma variables and modes](https://help.figma.com/hc/en-us/articles/14506821864087-Overview-of-variables-collections-and-modes) · [Carbon color tokens](https://preview.carbondesignsystem.com/building-blocks/foundations/color/overview) · [Fluent design tokens](https://fluent2.microsoft.design/design-tokens) · [Material Color Utilities](https://github.com/material-foundation/material-color-utilities) · [WCAG text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) · [WCAG non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast)
 - **What:** Platform-neutral token format with types, values, aliases, groups, and extensions.
 - **When:** Encoding an approved design direction for multiple platforms or tools.
 - **Why:** Keeps design decisions interoperable rather than trapped in CSS or one design tool.
-- **Assessment:** Tokens encode decisions; they do not create the direction.
-- **Repository route:** Local `design-tokens` contract and `packages/design-tokens/` scaffold.
+- **Assessment:** Gather constraints, compare realistic directions, and obtain
+  human approval first. Stable semantic roles should keep their names across
+  modes while values change. Tokens encode decisions; they do not create them.
+- **Repository route:** Local `design-intake` and `design-tokens` contracts plus
+  the `packages/design-tokens/` scaffold and generated specimen.
 
 ## Phase 5: Figma and implementation
 

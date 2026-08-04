@@ -8,7 +8,7 @@ description: Establish or revise a product-specific design contract after discov
 ## Establish the direction
 
 Start from approved product intent, user needs, UX strategy, interaction model,
-and design directions. If those inputs are missing, return to
+`DESIGN_BRIEF.md`, and an explicitly approved direction. If those inputs are missing, return to
 `product-design-router`; do not hide upstream ambiguity with styling.
 
 Synthesize 3–7 appropriate references when the scope warrants research.
@@ -48,6 +48,11 @@ colors, geometry, effects, and branding with the product’s approved system.
 
 Complete the visual direction before invoking `design-tokens`. Tokens encode
 approved reusable decisions; they do not choose those decisions.
+
+For color, define semantic roles and foreground/background relationships across
+every required mode. A palette is not approved merely because its swatches look
+attractive. Record contrast evidence and how brand colors behave in actions,
+surfaces, focus, feedback, data visualization, and agent states.
 
 ## Required output
 

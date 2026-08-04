@@ -11,7 +11,15 @@
           "secondary": {"$type": "color", "$value": "{color.neutral.600}"}
         },
         "border": {"default": {"$type": "color", "$value": "{color.neutral.200}"}},
-        "action": {"primary": {"$type": "color", "$value": "{color.accent.600}"}},
+        "action": {
+          "primary": {
+            "default": {"$type": "color", "$value": "{color.accent.600}"},
+            "hover": {"$type": "color", "$value": "{color.accent.700}"},
+            "pressed": {"$type": "color", "$value": "{color.accent.800}"},
+            "foreground": {"$type": "color", "$value": "{color.neutral.0}"}
+          }
+        },
+        "focus": {"ring": {"$type": "color", "$value": "{color.accent.600}"}},
         "feedback": {
           "success": {"$type": "color", "$value": "{color.green.600}"},
           "warning": {"$type": "color", "$value": "{color.amber.600}"},

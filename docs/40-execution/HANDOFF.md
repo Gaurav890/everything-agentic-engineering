@@ -1,10 +1,10 @@
 # Handoff
 
-Last updated: 2026-07-25
+Last updated: 2026-08-03
 
 ## Current goal
 
-Land the T-012 section-specific README GIFs through review.
+Land T-015 adaptive design intake and mode-aware token evidence through review.
 
 ## Completed
 
@@ -18,10 +18,15 @@ Land the T-012 section-specific README GIFs through review.
 - 1280×640 GitHub social-preview asset.
 - Real initializer, task-planning, Signalroom interaction, UI-state, and
   verification GIFs embedded beside their README explanations.
+- Adaptive greenfield, existing-brand, redesign, and restrained-baseline intake.
+- Durable design brief and direction comparison artifacts with human approval.
+- Stable semantic color roles and mode-aware component aliases.
+- Automated theme parity and required WCAG contrast validation.
+- Generated light/dark token specimen inspected at desktop and mobile widths.
 
 ## In progress
 
-- T-012 verification, commit, push, and PR review.
+- T-015 commit, push, and PR review.
 
 ## Blockers
 
@@ -33,18 +38,22 @@ Land the T-012 section-specific README GIFs through review.
 
 ## Verification status
 
-The five GIFs were captured from actual command execution and running
-Signalroom interactions. Repository verification remains to run on T-012.
+The new skill and nine token tests pass. The generated specimen is responsive
+and has been visually inspected. Full repository verification passes all ten
+stages, including application lint, typecheck, and tests.
 
 ## Exact next action
 
-Run full verification, inspect every GIF for readability, then commit, push,
-and open T-012 for review.
+Commit, push, and open T-015 for review. Do not self-approve or merge.
 
 ## Relevant files
 
-- `README.md`
-- `docs/assets/demo/`
+- `.claude/skills/design-intake/`
+- `docs/20-design/DESIGN_BRIEF.md`
+- `docs/20-design/DESIGN_DIRECTIONS.md`
+- `packages/design-tokens/`
+- `scripts/build_design_tokens.py`
+- `tests/test_design_tokens.py`
 - `docs/40-execution/TASKS.jsonl`
 
 Keep this concise enough to read in under two minutes.

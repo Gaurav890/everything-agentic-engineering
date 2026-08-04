@@ -1,11 +1,17 @@
 # Current state
 
-Last updated: 2026-07-25
+Last updated: 2026-08-03
 
 ## Product
 
 Product-design work is routed through explicit discovery, strategy, interaction,
 system, implementation, audit, critique, polish, and delivery phases.
+
+Design-critical work first uses an adaptive intake for the active project
+profiles. It records brand authority, experience intent, color constraints,
+typography, composition, motion, accessibility, and references, then presents
+comparable directions. Canonical design-system and token changes require an
+explicitly approved direction or synthesis.
 
 Signalroom under `apps/showcase` is the reference AI-native product. It
 demonstrates agent runs, protected approvals, interruption, recovery, durable
@@ -26,7 +32,10 @@ The same phase routing applies while preserving native platform conventions.
 
 Canonical DTCG-compatible design-token source files exist under
 `packages/design-tokens/tokens/`. A dependency-free build generates CSS,
-TypeScript, and React Native theme outputs.
+TypeScript, React Native theme outputs, and an inspectable token specimen.
+Component tokens consume stable semantic roles; light and dark themes override
+those roles. The build fails on theme parity drift, direct component-to-theme
+aliases, missing aliases, and required WCAG contrast failures.
 
 ## Integrations
 

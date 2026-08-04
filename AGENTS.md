@@ -48,9 +48,11 @@ See `docs/70-collaboration/GITHUB_WORKFLOW.md`.
 For substantial UI/UX work, the frontend owner invokes
 `product-design-router` and runs only the design phases whose durable outputs
 are missing or stale. Design direction must precede tokenization and
-implementation. External skills remain specialist inputs; the project brief,
-design system, and tokens remain authoritative. A separate evaluator owns final
-critique of the running experience.
+implementation. When visual constraints are unclear, `design-intake` records an
+adaptive brief and compares rendered directions. Human approval must precede
+canonical design-system and token changes. External skills remain specialist
+inputs; the project brief, design system, and tokens remain authoritative. A
+separate evaluator owns final critique of the running experience.
 
 ## Agent result contract
 

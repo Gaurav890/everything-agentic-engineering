@@ -242,6 +242,7 @@ create-prd
 decompose-prd
 context-handoff
 product-design-router
+design-intake
 discover
 user-needs
 benchmark
@@ -287,6 +288,11 @@ The principle:
 
 > References are ingredients. Components are structural donors. Tokens encode
 > approved decisions. The project design system wins.
+
+For design-critical work, `design-intake` asks only the relevant brand, palette,
+type, density, geometry, motion, platform, and accessibility questions. It then
+compares realistic directions and requires human approval before changing the
+canonical design system or tokens.
 
 ### Activate only what the project needs
 
@@ -685,7 +691,9 @@ DISCOVERY
 → BENCHMARK
 → UX STRATEGY
 → INTERACTION + AGENTIC UX
+→ ADAPTIVE DESIGN INTAKE
 → DESIGN DIRECTIONS
+→ HUMAN APPROVAL
 → DESIGN SYSTEM
 → DESIGN TOKENS
 → COMPONENT / FIGMA TRANSLATION
@@ -703,11 +711,17 @@ DISCOVERY
 the phases that are missing or stale. A small fix does not repeat discovery. A
 0→1 product does not skip it.
 
+The intake adapts to the selected project profiles. A web-only project is not
+asked about native mobile behavior; a restrained internal tool does not need
+three expressive art directions; an existing brand supplies authoritative
+colors and fonts rather than receiving guessed replacements.
+
 The authority model is explicit:
 
 ```text
 PRODUCT INTENT
 → RESEARCHED REFERENCES
+→ APPROVED DESIGN BRIEF + DIRECTION
 → ORIGINAL VISUAL THESIS
 → DESIGN_SYSTEM.md
 → DTCG-COMPATIBLE TOKENS
@@ -739,6 +753,11 @@ PRIMITIVES
 The included DTCG-compatible scaffold covers color, typography, spacing,
 radii, borders, elevation, motion, layout, density, components, themes, and
 agent states such as thinking, running, approval, completion, and failure.
+
+The token build also validates light/dark semantic parity and required contrast
+pairs, resolves component tokens per mode, and generates a visual token specimen
+alongside web and native outputs. This lets a redesign update approved
+primitive/semantic mappings instead of restyling every screen independently.
 
 ---
 

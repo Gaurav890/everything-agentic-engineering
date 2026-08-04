@@ -1,0 +1,38 @@
+{
+  "color": {
+    "$type": "color",
+    "$description": "Mode-independent semantic color roles. Theme files override these stable names.",
+    "background": {
+      "canvas": {"$value": "{color.neutral.0}"},
+      "surface": {"$value": "{color.neutral.50}"}
+    },
+    "text": {
+      "primary": {"$value": "{color.neutral.950}"},
+      "secondary": {"$value": "{color.neutral.600}"}
+    },
+    "border": {"default": {"$value": "{color.neutral.200}"}},
+    "action": {
+      "primary": {
+        "default": {"$value": "{color.accent.600}"},
+        "hover": {"$value": "{color.accent.700}"},
+        "pressed": {"$value": "{color.accent.800}"},
+        "foreground": {"$value": "{color.neutral.0}"}
+      }
+    },
+    "focus": {"ring": {"$value": "{color.accent.600}"}},
+    "feedback": {
+      "success": {"$value": "{color.green.600}"},
+      "warning": {"$value": "{color.amber.600}"},
+      "danger": {"$value": "{color.red.600}"},
+      "info": {"$value": "{color.blue.600}"}
+    },
+    "agent": {
+      "idle": {"$value": "{color.neutral.600}"},
+      "thinking": {"$value": "{color.blue.600}"},
+      "running": {"$value": "{color.accent.600}"},
+      "approval": {"$value": "{color.amber.600}"},
+      "complete": {"$value": "{color.green.600}"},
+      "failed": {"$value": "{color.red.600}"}
+    }
+  }
+}

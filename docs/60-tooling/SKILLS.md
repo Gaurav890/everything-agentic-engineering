@@ -17,7 +17,9 @@ DISCOVERY
 → BENCHMARK
 → UX STRATEGY
 → INTERACTION DESIGN
+→ DESIGN INTAKE
 → DESIGN DIRECTIONS
+→ HUMAN APPROVAL
 → DESIGN SYSTEM
 → DESIGN TOKENS
 → COMPONENT / FIGMA TRANSLATION
@@ -42,6 +44,7 @@ Do not rerun phases whose outputs exist, remain valid, and match the current tas
 | Competitive landscape | `benchmark` | Owl Listener UX strategy |
 | UX strategy | `strategize` | Owl Listener strategize |
 | Interaction | `interaction-design`, `agentic-ux` | cuellarfr interaction-design |
+| Design intake | `design-intake` | Existing brand/Figma inputs and user constraints |
 | Design directions | `design-system` | UI UX Pro Max; Refero; real products; optional Anthropic frontend-design |
 | System documentation | `design-system` | Impeccable Document; extract-design-system for existing products |
 | Tokens | `design-tokens` | tailwind-design-system when Tailwind is active |
@@ -59,6 +62,7 @@ Do not rerun phases whose outputs exist, remain valid, and match the current tas
 ## Authority rules
 
 - The product context and approved brief define intent.
+- `DESIGN_DIRECTIONS.md` records the human-approved direction.
 - `docs/20-design/DESIGN_SYSTEM.md` defines the product experience.
 - `packages/design-tokens/tokens/` encodes approved reusable values.
 - References are ingredients, not templates.
