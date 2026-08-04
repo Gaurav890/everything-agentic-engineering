@@ -316,7 +316,7 @@ an inspectable light/dark token specimen.
 
 **Commit/PR**
 
-Branch: `feat/T-015-design-intake`; commit and PR pending.
+Commit `2de0e01`; draft PR #16.
 
 **Remaining risk**
 

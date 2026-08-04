@@ -26,7 +26,7 @@ Land T-015 adaptive design intake and mode-aware token evidence through review.
 
 ## In progress
 
-- T-015 commit, push, and PR review.
+- T-015 draft PR #16 CI and human review.
 
 ## Blockers
 
@@ -44,7 +44,8 @@ stages, including application lint, typecheck, and tests.
 
 ## Exact next action
 
-Commit, push, and open T-015 for review. Do not self-approve or merge.
+Review draft PR #16, confirm CI, request any changes, then mark it ready when
+the design intake and token contract are accepted. Do not self-approve or merge.
 
 ## Relevant files
 
