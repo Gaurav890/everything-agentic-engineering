@@ -383,7 +383,7 @@ non-draft PR title to be `done` before final review or merge.
 
 **Commit/PR**
 
-Branch: `chore/T-017-reconcile-merged-tasks`; commit and draft PR pending.
+Commit `dfe5aeb`; draft PR #18.
 
 **Remaining risk**
 

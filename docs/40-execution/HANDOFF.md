@@ -34,7 +34,7 @@ human review.
 
 ## In progress
 
-- T-017 commit, push, draft PR, CI, and human review.
+- T-017 draft PR #18 CI and human review.
 
 ## Blockers
 
@@ -55,8 +55,9 @@ preparation.
 
 ## Exact next action
 
-Commit the scoped T-017 changes, push the branch, and open a draft PR. Confirm
-CI, then request human review. Do not self-approve or merge.
+Review draft PR #18 and confirm CI. When the policy and reconciliation are
+accepted, mark it ready so the new task-state gate validates T-017 itself. Do
+not self-approve or merge.
 
 ## Relevant files
 
