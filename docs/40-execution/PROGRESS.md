@@ -323,3 +323,38 @@ Commit `2de0e01`; draft PR #16.
 Generated directions still require product-specific human taste and approval.
 High-contrast mode is documented but not generated until a project activates
 that requirement. External design and Figma tools remain optional inputs.
+
+### 2026-08-04 — T-016
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Corrected version-sensitive Claude Code nesting guidance and documented the
+credential-file masking and permission-analysis hardening introduced in Claude
+Code 2.1.221. Kept the recommendation advisory and version-qualified: no
+credentials, credential paths, sandbox settings, network rules, dependencies,
+plugins, or MCP servers were added or enabled.
+
+**Evidence**
+
+- Official Claude Code releases and changelog confirm that 2.1.217 initially
+  restricted nesting, 2.1.219 changed the default nesting depth to three, and
+  `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` restores no nesting.
+- The 2.1.221 release documents Linux/WSL credential masking, macOS deny
+  fallback, and a zsh permission-check bypass fix.
+- Existing Git and background-session policy already matches the upstream
+  guidance, so no workflow behavior changed.
+- Full repository verification passes all ten stages.
+
+**Commit/PR**
+
+Commit `acf9b83`; draft PR #17.
+
+**Remaining risk**
+
+Public documentation does not yet expose a complete stable schema for declaring
+masked credential paths. A maintainer must review any future settings change;
+macOS users should expect deny behavior instead of transparent masking.

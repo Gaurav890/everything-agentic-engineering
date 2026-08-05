@@ -29,22 +29,24 @@ this file.
 - Record rejection/deferment so it is not rediscovered as new.
 - Never store secrets, raw personal data, or untrusted executable content.
 
-### L-2026-07-26-01 — Claude Code adds bounded subagent and stricter sandbox controls
+### L-2026-07-26-01 — Claude Code bounds subagents and changes nesting defaults
 
 - **State:** proposed
-- **Event date:** 2026-07-24
-- **Discovered:** 2026-07-26
+- **Event date:** 2026-07-21 and 2026-07-24
+- **Discovered:** 2026-07-26; corrected 2026-08-04
 - **Domains:** Claude Code, orchestration, security, budget controls
-- **Sources:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.219`
+- **Sources:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.217`
+  (first-party release, high authority);
+  `https://github.com/anthropics/claude-code/releases/tag/v2.1.219`
   (first-party release, high authority);
   `https://github.com/anthropics/claude-code/blob/main/feed.xml`
   (first-party release feed, high authority)
-- **Change:** Claude Code v2.1.219 added a default cap of 20 concurrently running
-  subagents with `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, disabled nested
-  subagent spawning by default unless
-  `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` is set, fixed
-  `--max-budget-usd` enforcement for background subagents, and added
-  `sandbox.network.strictAllowlist`.
+- **Change:** Claude Code v2.1.217 added a default cap of 20 concurrently running
+  subagents with `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, initially disabled
+  nested spawning by default, and fixed `--max-budget-usd` enforcement for
+  background subagents. Version 2.1.219 then changed the default nesting depth
+  to three; `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` restores non-nested
+  behavior. Version 2.1.219 also added `sandbox.network.strictAllowlist`.
 - **Repository relevance:** The harness already requires bounded parallel work,
   explicit ownership, safety hooks, and evidence gates, but it does not name
   these runtime controls or explain how to choose conservative project limits.
@@ -64,8 +66,9 @@ this file.
   fail-safe network-host inventory process. Preserve existing tests and run
   `./scripts/verify.sh full`. Any settings example must remain optional and
   version-qualified.
-- **Uncertainty:** The release note establishes behavior in v2.1.219, but older
-  Claude Code installations may not understand the new settings. A strict
+- **Uncertainty:** These defaults changed across two close releases, so runtime
+  behavior must be version-qualified rather than assumed. Older Claude Code
+  installations may not understand the controls. A strict
   network allowlist can break package managers, MCP servers, or documentation
   access if adopted without a project-specific host inventory.
 - **Decision/PR:** Human approval required before configuring limits or network
@@ -148,3 +151,44 @@ this file.
   github.com, not GitHub Enterprise Server.
 - **Decision/PR:** Documentation proposal only. Human approval is required to
   enable the repository setting or release a held workflow.
+
+### L-2026-08-04-01 — Claude Code 2.1.221 adds credential masking and permission hardening
+
+- **State:** proposed
+- **Event date:** 2026-08-04
+- **Discovered:** 2026-08-04
+- **Domains:** Claude Code, sandboxing, credentials, permissions, plugins, Git workflow
+- **Sources:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.221`
+  (first-party release, high authority);
+  `https://code.claude.com/docs/en/sandboxing`
+  (first-party security documentation, high authority)
+- **Change:** Claude Code v2.1.221 added `mode: "mask"` for sandbox credential
+  files on Linux and WSL, with macOS falling back to `deny`; fixed a Bash
+  permission-check bypass involving hidden zsh commands inside `[[ ]]` regex
+  conditionals; added plugin-validation compatibility warnings; and changed
+  background sessions to preserve work, follow repository Git instructions,
+  open draft PRs only when the task calls for one, and report where work lives.
+- **Repository relevance:** The repository already requires scoped credentials,
+  protected Git workflows, explicit draft-PR routing, and deterministic hooks,
+  but it does not version-qualify the new credential masking or zsh permission
+  fix. The background-session behavior confirms the existing collaboration
+  contract and requires no policy change.
+- **Existing coverage:** partial
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 4 / risk 2 /
+  maintenance 2 / novelty 4
+- **Recommendation:** document 2.1.221+ as the recommended Claude Code version
+  for Linux/WSL projects that expose credential files to sandboxed commands or
+  run zsh expressions through the permission analyzer. Do not add credential
+  paths, masking rules, or project settings until the official settings schema
+  documents the feature and a maintainer inventories the required files.
+- **Affected artifacts:** `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/60-tooling/COMPATIBILITY.md`,
+  `docs/40-execution/PARALLELIZATION.md`, and this ledger
+- **Acceptance and verification:** Correct the prior nested-agent default,
+  explain OS-specific credential behavior without example secrets, preserve
+  existing Git policy, add no runtime setting, and pass repository verification.
+- **Uncertainty:** The release note establishes the feature, but the public
+  sandbox settings documentation does not yet provide a complete credential-file
+  masking schema. macOS does not provide masking and falls back to denial.
+- **Decision/PR:** Documentation-only proposal. Human approval remains required
+  before configuring sandbox credential files, agent limits, or network policy.

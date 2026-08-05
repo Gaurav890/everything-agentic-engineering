@@ -16,6 +16,25 @@
 Profiles describe required capabilities; they do not silently install them.
 Run `./scripts/profile-doctor.sh` after tool or agent upgrades.
 
+## Claude Code runtime notes
+
+The repository does not silently pin or upgrade Claude Code. Runtime behavior
+must be checked against the installed version.
+
+- Claude Code 2.1.217 introduced a default concurrent-subagent cap; 2.1.219
+  changed the default nested-spawn depth to three. Projects that require a
+  non-nested topology may set `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` only
+  after a maintainer approves the runtime policy.
+- Claude Code 2.1.221 or newer is recommended for Linux/WSL workflows that make
+  credential files available to sandboxed commands or rely on zsh permission
+  analysis. That release adds credential-file masking on Linux/WSL and fixes a
+  zsh permission-check bypass. On macOS the masking mode falls back to denial.
+- This recommendation does not authorize adding credential paths, secrets,
+  sandbox settings, or network allowlists to the repository. Inventory and
+  approve those separately.
+
+See `LEARNING_LEDGER.md` for dated primary-source evidence and uncertainty.
+
 ## Versioning
 
 `v0.1.x` is the first public preview line. Until `v1.0.0`, profile manifests,
