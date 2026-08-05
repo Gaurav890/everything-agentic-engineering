@@ -4,7 +4,7 @@ Last updated: 2026-08-04
 
 ## Current goal
 
-Publish T-016's version-qualified Claude Code security guidance for human
+Land T-016's version-qualified Claude Code security guidance through human
 review without enabling any credential or sandbox configuration.
 
 ## Completed
@@ -31,8 +31,7 @@ review without enabling any credential or sandbox configuration.
 
 ## In progress
 
-- T-016 is ready locally on `docs/T-016-claude-security` for commit, push, and
-  draft PR creation.
+- T-016 draft PR #17 CI and human review.
 
 ## Blockers
 
@@ -52,8 +51,8 @@ documentation links, security hooks, application lint, typecheck, and tests.
 
 ## Exact next action
 
-Commit the scoped T-016 files, push `docs/T-016-claude-security`, and open a
-draft PR. Human review is required. Do not self-approve or merge.
+Review draft PR #17, confirm CI, request any changes, and mark it ready when the
+version-qualified guidance is accepted. Do not self-approve or merge.
 
 ## Relevant files
 

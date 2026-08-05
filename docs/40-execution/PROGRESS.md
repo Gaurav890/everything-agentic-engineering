@@ -351,7 +351,7 @@ plugins, or MCP servers were added or enabled.
 
 **Commit/PR**
 
-Local branch: `docs/T-016-claude-security`; commit and draft PR pending.
+Commit `acf9b83`; draft PR #17.
 
 **Remaining risk**
 
