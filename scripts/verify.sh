@@ -91,6 +91,18 @@ python3 -m unittest discover -s tests -p 'test_task_engine.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null
+TASKS_PATH=tests/fixtures/pr-task-states.jsonl \
+  ./scripts/check-pr-task-state.sh 'feat(T-900): completed fixture' >/dev/null
+if TASKS_PATH=tests/fixtures/pr-task-states.jsonl \
+  ./scripts/check-pr-task-state.sh 'feat(T-901): unfinished fixture' >/dev/null 2>&1; then
+  echo "Unfinished PR task state unexpectedly passed" >&2
+  exit 1
+fi
+if TASKS_PATH=tests/fixtures/pr-task-states.jsonl \
+  ./scripts/check-pr-task-state.sh 'feat(T-999): unknown task' >/dev/null 2>&1; then
+  echo "Unknown PR task state unexpectedly passed" >&2
+  exit 1
+fi
 ./scripts/profile-resolve.sh >/dev/null
 ./scripts/profile-doctor.sh >/dev/null
 ./scripts/profile-preview.sh web-next,design-critical,research-enabled >/dev/null
