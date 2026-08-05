@@ -14,6 +14,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Mode-aware semantic color tokens, light/dark parity validation, required WCAG
   contrast checks, and a generated token specimen for review evidence.
 
+### Security
+
+- Version-qualified Claude Code guidance for credential-file masking, zsh
+  permission hardening, and corrected nested-subagent defaults without enabling
+  new runtime settings or exposing credential paths.
+
 ## [0.1.0] - 2026-07-25
 
 ### Added

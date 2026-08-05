@@ -1,10 +1,11 @@
 # Handoff
 
-Last updated: 2026-08-03
+Last updated: 2026-08-04
 
 ## Current goal
 
-Land T-015 adaptive design intake and mode-aware token evidence through review.
+Publish T-016's version-qualified Claude Code security guidance for human
+review without enabling any credential or sandbox configuration.
 
 ## Completed
 
@@ -23,38 +24,44 @@ Land T-015 adaptive design intake and mode-aware token evidence through review.
 - Stable semantic color roles and mode-aware component aliases.
 - Automated theme parity and required WCAG contrast validation.
 - Generated light/dark token specimen inspected at desktop and mobile widths.
+- T-015 merged through PR #16 and is reconciled as done.
+- Corrected the Claude Code 2.1.217/2.1.219 subagent nesting history.
+- Documented the 2.1.221 credential masking and zsh permission hardening.
+- Full repository verification passes for T-016.
 
 ## In progress
 
-- T-015 draft PR #16 CI and human review.
+- T-016 is ready locally on `docs/T-016-claude-security` for commit, push, and
+  draft PR creation.
 
 ## Blockers
 
-- None for implementation.
+- None for implementation or publication.
 
 ## Unresolved decisions
 
+- Whether to add credential masking settings later. Do not do so until the
+  public schema and project credential inventory are reviewed.
 - Public announcements remain maintainer actions.
 
 ## Verification status
 
-The new skill and nine token tests pass. The generated specimen is responsive
-and has been visually inspected. Full repository verification passes all ten
-stages, including application lint, typecheck, and tests.
+Primary-source links were checked, the prior nesting-default claim was
+corrected, and full repository verification passes all ten stages, including
+documentation links, security hooks, application lint, typecheck, and tests.
 
 ## Exact next action
 
-Review draft PR #16, confirm CI, request any changes, then mark it ready when
-the design intake and token contract are accepted. Do not self-approve or merge.
+Commit the scoped T-016 files, push `docs/T-016-claude-security`, and open a
+draft PR. Human review is required. Do not self-approve or merge.
 
 ## Relevant files
 
-- `.claude/skills/design-intake/`
-- `docs/20-design/DESIGN_BRIEF.md`
-- `docs/20-design/DESIGN_DIRECTIONS.md`
-- `packages/design-tokens/`
-- `scripts/build_design_tokens.py`
-- `tests/test_design_tokens.py`
+- `CHANGELOG.md`
+- `docs/30-engineering/SECURITY_MODEL.md`
+- `docs/40-execution/PARALLELIZATION.md`
 - `docs/40-execution/TASKS.jsonl`
+- `docs/60-tooling/COMPATIBILITY.md`
+- `docs/60-tooling/LEARNING_LEDGER.md`
 
 Keep this concise enough to read in under two minutes.
