@@ -295,6 +295,12 @@ When the implementation is final and the PR is ready for its last review/check c
 # commit this final task-state update; then complete final review/checks and merge
 ```
 
+The PR policy check enforces this contract for non-draft pull requests. It
+extracts the task ID from the PR title and requires that task to be `done` in
+the branch's `TASKS.jsonl`. Draft PRs may remain `in_progress` or `review` while
+feedback is active, but they must run `prepare-merge.sh` and commit the durable
+state before requesting final review.
+
 ## 12. Merge strategy
 
 ### Default: squash merge
@@ -386,4 +392,4 @@ failed_safe
 | Merge with failing checks? | No. |
 | Default merge method? | Squash merge. |
 | Delete merged branches? | Yes. |
-| Mark task done before merge? | No. |
+| Mark task done before merge? | Yes, on the task branch after final verification; it becomes authoritative only after merge. |

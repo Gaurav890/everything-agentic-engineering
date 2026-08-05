@@ -4,8 +4,8 @@ Last updated: 2026-08-04
 
 ## Current goal
 
-Land T-016's version-qualified Claude Code security guidance through human
-review without enabling any credential or sandbox configuration.
+Land T-017's merged-task reconciliation and final task-state policy through
+human review.
 
 ## Completed
 
@@ -28,10 +28,13 @@ review without enabling any credential or sandbox configuration.
 - Corrected the Claude Code 2.1.217/2.1.219 subagent nesting history.
 - Documented the 2.1.221 credential masking and zsh permission hardening.
 - Full repository verification passes for T-016.
+- T-011, T-012, T-013, and T-016 are reconciled with their merged PRs.
+- T-017 completed the documented review and final branch-state lifecycle.
+- Full repository verification passes with the new PR task-state policy.
 
 ## In progress
 
-- T-016 draft PR #17 CI and human review.
+- T-017 commit, push, draft PR, CI, and human review.
 
 ## Blockers
 
@@ -45,22 +48,23 @@ review without enabling any credential or sandbox configuration.
 
 ## Verification status
 
-Primary-source links were checked, the prior nesting-default claim was
-corrected, and full repository verification passes all ten stages, including
-documentation links, security hooks, application lint, typecheck, and tests.
+T-011 through T-013 and T-016 were matched to merged PRs #12/#13, #14, #15,
+and #17. The task-state check accepts completed tasks and rejects missing or
+unfinished tasks. Full verification passes before and during lifecycle
+preparation.
 
 ## Exact next action
 
-Review draft PR #17, confirm CI, request any changes, and mark it ready when the
-version-qualified guidance is accepted. Do not self-approve or merge.
+Commit the scoped T-017 changes, push the branch, and open a draft PR. Confirm
+CI, then request human review. Do not self-approve or merge.
 
 ## Relevant files
 
+- `.github/workflows/pr-policy.yml`
 - `CHANGELOG.md`
-- `docs/30-engineering/SECURITY_MODEL.md`
-- `docs/40-execution/PARALLELIZATION.md`
+- `scripts/check-pr-task-state.sh`
+- `scripts/verify.sh`
 - `docs/40-execution/TASKS.jsonl`
-- `docs/60-tooling/COMPATIBILITY.md`
-- `docs/60-tooling/LEARNING_LEDGER.md`
+- `docs/70-collaboration/GITHUB_WORKFLOW.md`
 
 Keep this concise enough to read in under two minutes.

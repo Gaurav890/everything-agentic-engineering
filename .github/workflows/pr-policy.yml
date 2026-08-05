@@ -29,6 +29,12 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: ./scripts/check-pr-title.sh "$PR_TITLE"
 
+      - name: Validate task merge state
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: ./scripts/check-pr-task-state.sh "$PR_TITLE"
+
       - name: Merge queue compatibility
         if: github.event_name == 'merge_group'
-        run: echo "PR policy already validated on the pull request; reporting success for merge_group."
+        run: echo "PR title and task state were validated before queue entry; reporting success for merge_group."

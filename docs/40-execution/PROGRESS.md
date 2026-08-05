@@ -358,3 +358,35 @@ Commit `acf9b83`; draft PR #17.
 Public documentation does not yet expose a complete stable schema for declaring
 masked credential paths. A maintainer must review any future settings change;
 macOS users should expect deny behavior instead of transparent masking.
+
+### 2026-08-04 — T-017
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Reconciled T-011, T-012, T-013, and T-016 with their merged pull requests and
+added a deterministic PR policy check that requires the task named in a
+non-draft PR title to be `done` before final review or merge.
+
+**Evidence**
+
+- Merged PRs #12/#13, #14, #15, and #17 match the reconciled tasks.
+- The new check accepts known `done` tasks.
+- The new check rejects missing tasks and tasks that have not completed the
+  documented `finish-task.sh` → `prepare-merge.sh` lifecycle.
+- Draft PRs remain available for early collaboration without a false failure.
+- Full repository verification passes throughout review and final branch-state
+  preparation.
+
+**Commit/PR**
+
+Branch: `chore/T-017-reconcile-merged-tasks`; commit and draft PR pending.
+
+**Remaining risk**
+
+The repository must keep the PR policy check required on `main`; otherwise the
+script remains advisory. Emergency bypasses still depend on protected-branch
+and ruleset administration.

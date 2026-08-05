@@ -13,6 +13,8 @@ This project follows [Semantic Versioning](https://semver.org/).
   human approval before canonical design-system or token changes.
 - Mode-aware semantic color tokens, light/dark parity validation, required WCAG
   contrast checks, and a generated token specimen for review evidence.
+- A ready-for-review PR policy gate that requires the linked task to be `done`,
+  preventing merged work from leaving stale execution state behind.
 
 ### Security
 
