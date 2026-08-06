@@ -1,11 +1,11 @@
 # Handoff
 
-Last updated: 2026-08-04
+Last updated: 2026-08-05
 
 ## Current goal
 
-Land T-017's merged-task reconciliation and final task-state policy through
-human review.
+Land T-018's version-qualified Claude Code and Codex runtime security guidance
+through human review without changing runtime configuration.
 
 ## Completed
 
@@ -31,10 +31,13 @@ human review.
 - T-011, T-012, T-013, and T-016 are reconciled with their merged PRs.
 - T-017 completed the documented review and final branch-state lifecycle.
 - Full repository verification passes with the new PR task-state policy.
+- T-017 merged through PR #18; stale task-state prevention is active.
+- Claude Code 2.1.222 and Codex 0.146.1 findings are recorded and verified.
+- Full repository verification passes for T-018.
 
 ## In progress
 
-- T-017 draft PR #18 CI and human review.
+- T-018 final task-state preparation, commit, push, and draft PR.
 
 ## Blockers
 
@@ -44,28 +47,27 @@ human review.
 
 - Whether to add credential masking settings later. Do not do so until the
   public schema and project credential inventory are reviewed.
+- Whether and when maintainers upgrade Claude Code or Codex. This branch does
+  not install, select, or configure either runtime.
 - Public announcements remain maintainer actions.
 
 ## Verification status
 
-T-011 through T-013 and T-016 were matched to merged PRs #12/#13, #14, #15,
-and #17. The task-state check accepts completed tasks and rejects missing or
-unfinished tasks. Full verification passes before and during lifecycle
-preparation.
+Claude Code 2.1.222 and Codex 0.146.1 were verified through first-party stable
+release notes, the current Codex manual, and implementation evidence, then
+deduplicated against the learning ledger. Full repository verification passes.
 
 ## Exact next action
 
-Review draft PR #18 and confirm CI. When the policy and reconciliation are
-accepted, mark it ready so the new task-state gate validates T-017 itself. Do
-not self-approve or merge.
+Complete T-018's final branch-state lifecycle, then commit, push, and open a
+draft PR. Do not self-approve or merge.
 
 ## Relevant files
 
-- `.github/workflows/pr-policy.yml`
 - `CHANGELOG.md`
-- `scripts/check-pr-task-state.sh`
-- `scripts/verify.sh`
+- `docs/30-engineering/SECURITY_MODEL.md`
 - `docs/40-execution/TASKS.jsonl`
-- `docs/70-collaboration/GITHUB_WORKFLOW.md`
+- `docs/60-tooling/COMPATIBILITY.md`
+- `docs/60-tooling/LEARNING_LEDGER.md`
 
 Keep this concise enough to read in under two minutes.

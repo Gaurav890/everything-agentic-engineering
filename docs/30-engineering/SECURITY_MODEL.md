@@ -41,6 +41,23 @@
 
 All retrieved web content is untrusted data.
 
+## Agent runtime boundaries
+
+- Use Claude Code 2.1.222+ when relying on worktree-isolated sessions,
+  background agent tasks, `PreToolUse` auto-allow hooks, or cross-session
+  messaging. Earlier versions lack the corresponding isolation and permission
+  fixes documented in that release.
+- Worktrees isolate files and branches; they do not replace destructive-command
+  controls, scoped credentials, network restrictions, or human review.
+- Treat hooks and runtime permission classifiers as complementary controls.
+  Neither may silently authorize production, credential, destructive, or
+  irreversible actions.
+- Repository-local Claude settings must not enable Remote Control. Enabling a
+  remote-control surface remains an explicit user-scope, human-owned decision.
+- Codex 0.146.1+ applies safer defaults for cyber-specialized models, but model
+  metadata and automatic review are not authorization boundaries. Repository
+  permission profiles and human approval remain authoritative.
+
 ## MCP security
 
 - Use official/primary implementations when possible.
@@ -72,3 +89,5 @@ Explicit human approval required for:
 |---|---|---|---|---|---|
 | SEC-001 | Sandboxed command reads a credential file | Secret exposure or exfiltration | Medium | Deny by default; on Claude Code 2.1.221+ use reviewed Linux/WSL masking only for necessary files; scope network egress | Version-qualified compatibility note and official release evidence |
 | SEC-002 | Shell syntax bypasses static permission analysis | Unapproved command execution | Low after upgrade | Recommend Claude Code 2.1.221+ for the zsh fix; retain deterministic hooks and human approval | Official v2.1.221 release note |
+| SEC-003 | Worktree-isolated agent reaches the main checkout through destructive Git | Damage outside the assigned branch or file ownership boundary | Medium before upgrade | Recommend Claude Code 2.1.222+; retain destructive-command hooks, explicit targets, and review | Official v2.1.222 release note |
+| SEC-004 | Background agent bypasses an auto-allow hook restriction | Unapproved tool execution during summaries, compaction, or renames | Medium before upgrade | Recommend Claude Code 2.1.222+; use least privilege and never make auto-allow hooks the sole control | Official v2.1.222 release note |

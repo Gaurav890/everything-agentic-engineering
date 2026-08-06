@@ -21,6 +21,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Version-qualified Claude Code guidance for credential-file masking, zsh
   permission hardening, and corrected nested-subagent defaults without enabling
   new runtime settings or exposing credential paths.
+- Version-qualified Claude Code worktree/background-agent fixes and Codex
+  cyber-model review defaults without enabling models, permissions, hooks, or
+  remote-control capabilities.
 
 ## [0.1.0] - 2026-07-25
 

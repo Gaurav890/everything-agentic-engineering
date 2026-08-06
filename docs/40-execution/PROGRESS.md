@@ -390,3 +390,38 @@ Commit `dfe5aeb`; draft PR #18.
 The repository must keep the PR policy check required on `main`; otherwise the
 script remains advisory. Emergency bypasses still depend on protected-branch
 and ruleset administration.
+
+### 2026-08-05 — T-018
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Recorded material agent-runtime security changes from Claude Code 2.1.222 and
+Codex 0.146.1, then added narrow compatibility and threat-model guidance without
+changing either runtime or any model, permission, hook, credential, sandbox,
+network, or Remote Control setting.
+
+**Evidence**
+
+- Claude Code 2.1.222 first-party release notes document worktree/main-checkout
+  isolation, background-task hook restriction, cross-session message
+  classification, and Remote Control setting fixes.
+- Codex 0.146.1 stable release notes and its first-party implementation PR
+  document safer cyber-specialized model review defaults.
+- The current Codex manual confirms that automatic review swaps the reviewer;
+  it does not grant permissions or expand sandbox boundaries.
+- Both findings were deduplicated against the learning ledger.
+- Full repository verification passes.
+
+**Commit/PR**
+
+Branch: `docs/T-018-runtime-security-research`; commit and draft PR pending.
+
+**Remaining risk**
+
+Claude's release notes do not publish a CVE or affected-version floor. Codex's
+behavior depends on model metadata and client support. Runtime upgrades and all
+permission or automatic-review changes remain human decisions.
