@@ -192,3 +192,80 @@ this file.
   masking schema. macOS does not provide masking and falls back to denial.
 - **Decision/PR:** Documentation-only proposal. Human approval remains required
   before configuring sandbox credential files, agent limits, or network policy.
+
+### L-2026-08-05-01 — Claude Code 2.1.222 closes worktree and background-hook isolation gaps
+
+- **State:** proposed
+- **Event date:** 2026-08-04
+- **Discovered:** 2026-08-05
+- **Domains:** Claude Code, worktrees, hooks, background agents, permissions, remote control
+- **Sources:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.222`
+  (first-party release, high authority)
+- **Change:** Claude Code v2.1.222 fixed worktree-isolated sessions and their
+  subagents being able to run destructive Git commands against the main
+  checkout; fixed `PreToolUse` auto-allow hooks bypassing tool restrictions in
+  background agent tasks; added permission classification to cross-session
+  `SendMessage`; and prevented repository-local settings from turning on Remote
+  Control. Repository-local settings may still turn Remote Control off.
+- **Repository relevance:** The harness explicitly uses worktrees, subagents,
+  background work, deterministic hooks, and repository-local Claude settings.
+  Those are direct matches for the corrected boundaries.
+- **Existing coverage:** partial
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 5 / risk 1 /
+  maintenance 1 / novelty 5
+- **Recommendation:** recommend Claude Code 2.1.222+ whenever worktree isolation,
+  background agent tasks, or auto-allow hooks are relied upon. Retain
+  destructive-command hooks, scoped permissions, and human approval because a
+  runtime fix is not a substitute for layered controls. Do not silently pin or
+  upgrade the runtime.
+- **Affected artifacts:** `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/60-tooling/COMPATIBILITY.md`, and this ledger
+- **Acceptance and verification:** Record the affected boundaries and minimum
+  recommended version without adding settings, credentials, dependencies, or
+  capabilities; preserve current worktree and hook policy; pass full repository
+  verification.
+- **Uncertainty:** The release notes establish the fixed behaviors but do not
+  publish a CVE, exploit prerequisites, or affected-version floor. Treat
+  versions before 2.1.222 as lacking these fixes without inferring a remotely
+  exploitable vulnerability.
+- **Decision/PR:** Documentation-only proposal. Human approval remains required
+  for runtime upgrades, permission changes, Remote Control, or hook changes.
+
+### L-2026-08-05-02 — Codex 0.146.1 adds safer cyber-model review defaults
+
+- **State:** proposed
+- **Event date:** 2026-08-05
+- **Discovered:** 2026-08-05
+- **Domains:** Codex, model selection, automatic review, permissions, cyber safety
+- **Sources:** `https://github.com/openai/codex/releases/tag/rust-v0.146.1`
+  (first-party stable release, high authority);
+  `https://github.com/openai/codex/pull/37057`
+  (first-party implementation and tests, high authority)
+- **Change:** Codex 0.146.1 applies safer automatic-review defaults for models
+  identified as cyber-specialized and explains permission changes in the
+  terminal. The implementation respects managed permission requirements,
+  prefers automatic review when allowed, otherwise falls back to user approval,
+  and warns before broader access.
+- **Repository relevance:** The harness supports Codex by contract and requires
+  scoped permissions, explicit approval, and separate evaluation. The new
+  runtime default reinforces those rules but must not be mistaken for project
+  authorization or a replacement for repository gates.
+- **Existing coverage:** partial
+- **Scores:** relevance 4 / authority 5 / confidence 5 / impact 4 / risk 1 /
+  maintenance 1 / novelty 4
+- **Recommendation:** document Codex 0.146.1+ as the preferred stable baseline
+  when cyber-specialized models are available. Preserve project permission
+  profiles, human approval, and security review; do not enable a model,
+  automatic reviewer, or broader access automatically.
+- **Affected artifacts:** `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/60-tooling/COMPATIBILITY.md`, and this ledger
+- **Acceptance and verification:** Describe the safer default narrowly, keep
+  repository policy authoritative, add no model or permission configuration,
+  and pass full repository verification.
+- **Uncertainty:** The behavior is limited to models whose catalog metadata
+  identifies them as cyber-specialized and to clients that consume the new
+  defaults. It does not guarantee that every Codex surface or older session
+  adopts the same reviewer state.
+- **Decision/PR:** Documentation-only proposal. Human approval remains required
+  for model selection, permission profiles, automatic review, and external
+  actions.

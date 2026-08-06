@@ -29,11 +29,29 @@ must be checked against the installed version.
   credential files available to sandboxed commands or rely on zsh permission
   analysis. That release adds credential-file masking on Linux/WSL and fixes a
   zsh permission-check bypass. On macOS the masking mode falls back to denial.
+- Claude Code 2.1.222 or newer is recommended for every workflow that relies on
+  worktree isolation, background agents, `PreToolUse` auto-allow hooks, or
+  cross-session messaging. That release closes isolation and permission gaps
+  across those paths and prevents repository-local settings from enabling
+  Remote Control.
 - This recommendation does not authorize adding credential paths, secrets,
   sandbox settings, or network allowlists to the repository. Inventory and
   approve those separately.
 
 See `LEARNING_LEDGER.md` for dated primary-source evidence and uncertainty.
+
+## Codex runtime notes
+
+The repository contract remains authoritative regardless of runtime defaults.
+
+- Codex 0.146.1 or newer is the preferred stable baseline when using models
+  identified by Codex as cyber-specialized. It applies safer review defaults
+  and explains permission changes in the terminal.
+- Do not infer authorization from an automatic reviewer or model default.
+  Project permission profiles, human approval, security review, and external
+  action boundaries still apply.
+- The repository does not silently select models, enable automatic review, or
+  expand filesystem, network, or external-service permissions.
 
 ## Versioning
 
