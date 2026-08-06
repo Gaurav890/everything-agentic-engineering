@@ -37,7 +37,7 @@ through human review without changing runtime configuration.
 
 ## In progress
 
-- T-018 final task-state preparation, commit, push, and draft PR.
+- T-018 draft PR #19 CI and human review.
 
 ## Blockers
 
@@ -59,8 +59,8 @@ deduplicated against the learning ledger. Full repository verification passes.
 
 ## Exact next action
 
-Complete T-018's final branch-state lifecycle, then commit, push, and open a
-draft PR. Do not self-approve or merge.
+Review draft PR #19 and confirm CI. Mark it ready when the version-qualified
+guidance is accepted, then obtain human review. Do not self-approve or merge.
 
 ## Relevant files
 

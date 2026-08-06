@@ -418,7 +418,7 @@ network, or Remote Control setting.
 
 **Commit/PR**
 
-Branch: `docs/T-018-runtime-security-research`; commit and draft PR pending.
+Commit `1745e31`; draft PR #19.
 
 **Remaining risk**
 
