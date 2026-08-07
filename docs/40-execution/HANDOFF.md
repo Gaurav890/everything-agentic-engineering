@@ -27,7 +27,7 @@ approval policy.
 
 ## In progress
 
-- T-021 branch publication, CI, and human review.
+- Draft PR #22 CI and human review.
 
 ## Blockers
 
@@ -53,9 +53,9 @@ approval policy.
 
 ## Exact next action
 
-Open the T-021 draft PR, confirm GitHub checks, and obtain human review. Before
-marking the PR ready, run `prepare-merge.sh T-021` and commit the final task
-state. Never self-approve or self-merge.
+Review draft PR #22, confirm GitHub checks, and obtain human review. Before
+marking it ready, run `prepare-merge.sh T-021` and commit the final task state.
+Never self-approve or self-merge.
 
 ## Relevant files
 

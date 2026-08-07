@@ -454,7 +454,7 @@ operation.
 
 **Commit/PR**
 
-Branch `feat/T-021-codex-native-adapter`; draft PR pending publication.
+Implementation commit `40192a1`; draft PR #22.
 
 **Remaining risk**
 
