@@ -47,6 +47,11 @@ All retrieved web content is untrusted data.
   background agent tasks, `PreToolUse` auto-allow hooks, or cross-session
   messaging. Earlier versions lack the corresponding isolation and permission
   fixes documented in that release.
+- Use Claude Code 2.1.223+ when relying on Bash permission analysis, command
+  approval prompts, workflow-agent sandboxing, or an organization policy that
+  disables bypass-permissions mode. Earlier versions lack the corresponding
+  command-concealment, dynamic-import, and managed-policy fixes documented in
+  that release.
 - Worktrees isolate files and branches; they do not replace destructive-command
   controls, scoped credentials, network restrictions, or human review.
 - Treat hooks and runtime permission classifiers as complementary controls.
@@ -91,3 +96,4 @@ Explicit human approval required for:
 | SEC-002 | Shell syntax bypasses static permission analysis | Unapproved command execution | Low after upgrade | Recommend Claude Code 2.1.221+ for the zsh fix; retain deterministic hooks and human approval | Official v2.1.221 release note |
 | SEC-003 | Worktree-isolated agent reaches the main checkout through destructive Git | Damage outside the assigned branch or file ownership boundary | Medium before upgrade | Recommend Claude Code 2.1.222+; retain destructive-command hooks, explicit targets, and review | Official v2.1.222 release note |
 | SEC-004 | Background agent bypasses an auto-allow hook restriction | Unapproved tool execution during summaries, compaction, or renames | Medium before upgrade | Recommend Claude Code 2.1.222+; use least privilege and never make auto-allow hooks the sole control | Official v2.1.222 release note |
+| SEC-005 | A crafted or visually concealed shell command, workflow import, or agent mode bypasses the intended approval or sandbox boundary | Unapproved execution outside the reviewer-visible or organization-managed policy | Medium before upgrade | Recommend Claude Code 2.1.223+; retain deterministic hooks, least privilege, explicit workflow review, and human approval | Official v2.1.223 release note |

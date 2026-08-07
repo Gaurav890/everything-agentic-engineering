@@ -269,3 +269,43 @@ this file.
 - **Decision/PR:** Documentation-only proposal. Human approval remains required
   for model selection, permission profiles, automatic review, and external
   actions.
+
+### L-2026-08-06-01 — Claude Code 2.1.223 closes shell and workflow policy gaps
+
+- **State:** proposed
+- **Event date:** 2026-08-06
+- **Discovered:** 2026-08-06
+- **Domains:** Claude Code, shell permissions, approval prompts, workflow sandboxing, managed policy
+- **Sources:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.223`
+  (first-party release, high authority)
+- **Change:** Claude Code v2.1.223 fixed a Bash permission bypass that could
+  conceal part of a crafted command; prevented tabs and invisible Unicode from
+  hiding command content in approval prompts; blocked workflow-script dynamic
+  imports from escaping the workflow sandbox; and made an organization's
+  bypass-permissions disable policy apply to agent definitions that request
+  `bypassPermissions` mode.
+- **Repository relevance:** The harness runs shell tools, treats approval text
+  as review evidence, supports workflow agents, and requires managed policy and
+  least privilege to remain authoritative. These fixes directly strengthen
+  those trust boundaries.
+- **Existing coverage:** partial
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 5 / risk 1 /
+  maintenance 1 / novelty 5
+- **Recommendation:** recommend Claude Code 2.1.223+ whenever shell permission
+  analysis, workflow-agent sandboxing, or managed bypass-permission policy is
+  relied upon. Keep deterministic hooks, scoped permissions, workflow review,
+  and human approval because the runtime fixes do not replace layered controls.
+  Do not silently pin or upgrade the runtime.
+- **Affected artifacts:** `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/60-tooling/COMPATIBILITY.md`, `CHANGELOG.md`, and this ledger
+- **Acceptance and verification:** Record the affected boundaries and minimum
+  recommended version; add no runtime, agent-mode, permission, workflow, or
+  managed-setting configuration; preserve existing security gates; pass full
+  repository verification.
+- **Uncertainty:** The release note does not publish a CVE, exploit
+  prerequisites, or affected-version floor. Treat versions before 2.1.223 as
+  lacking these fixes without inferring remote exploitability or guaranteed
+  exposure in every configuration.
+- **Decision/PR:** Documentation-only proposal. Human approval remains required
+  for runtime upgrades, agent modes, permission policy, workflow changes, or
+  managed settings.

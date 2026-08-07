@@ -24,6 +24,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Version-qualified Claude Code worktree/background-agent fixes and Codex
   cyber-model review defaults without enabling models, permissions, hooks, or
   remote-control capabilities.
+- Version-qualified Claude Code 2.1.223 guidance for shell approval,
+  workflow-sandbox, and managed bypass-permission fixes without changing the
+  repository's runtime or permission configuration.
 
 ## [0.1.0] - 2026-07-25
 
