@@ -6,6 +6,22 @@ This file mirrors the repo's agent conventions for tools that understand `AGENTS
 
 Keep the main context focused on requirements, decisions, task state, and integration. Quarantine noisy exploration, logs, research, and audits inside specialized agents.
 
+## Runtime adapters
+
+This file is the cross-runtime contract and is loaded natively by Codex.
+
+- Claude-specific runtime assets live under `.claude/`.
+- Codex project configuration and hooks live under `.codex/`.
+- `.agents/skills` exposes the canonical `.claude/skills` catalog to Codex by
+  symbolic link; do not maintain a copied second catalog.
+- `.codex-plugin/plugin.json` packages the same catalog as a skills-only Codex
+  plugin.
+- Run `./scripts/codex-doctor.sh` after Codex adapter changes.
+
+The committed Codex adapter must not choose models/providers, add credentials,
+register external MCP execution, enable network access, widen sandboxes, or
+bypass approvals. Those require explicit, separately reviewed authority.
+
 ## Default team
 
 | Agent | Owns | Default write access |
@@ -42,6 +58,11 @@ See `docs/70-collaboration/GITHUB_WORKFLOW.md`.
 5. Evaluators independently test the claim.
 6. Orchestrator opens or updates the PR and merges only after evidence, required review, and checks are present.
 7. Update durable state as part of the branch/PR, then mark the task `done` only after merge.
+
+For separate terminals or Codex worktrees, follow
+`docs/70-collaboration/PARALLEL_TERMINALS.md`. Treat shared execution ledgers as
+orchestrator-owned integration files even though the launcher excludes them
+from file-collision checks.
 
 ## Product-design routing
 

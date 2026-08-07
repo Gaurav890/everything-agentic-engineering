@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A native Codex adapter with shared repository skills, bounded project
+  configuration, reviewed safety-hook wiring, a skills-only plugin manifest,
+  runtime doctor, multi-terminal worktree guidance, and automated drift tests.
 - A Playwright visual-regression gate for the Showcase's normal, loading,
   empty, and error states across desktop and mobile, with reviewed Linux
   baselines and failure artifacts.

@@ -28,6 +28,10 @@ Do not indiscriminately load every Markdown file.
 - Evaluation evidence and rubrics: `docs/50-evals/`
 - MCPs, external skills, profiles, installation: `docs/60-tooling/`
 - GitHub workflow, code review, repository setup, team collaboration: `docs/70-collaboration/`
+- Cross-runtime agent rules: `AGENTS.md`
+- Codex adapter and parallel-terminal guidance: `.codex/`,
+  `docs/60-tooling/CODEX.md`, and
+  `docs/70-collaboration/PARALLEL_TERMINALS.md`
 
 When files disagree, do not guess. Surface the conflict and resolve it in the owning artifact.
 
@@ -66,6 +70,8 @@ For parallel code changes:
 - One owner per file or tightly coupled module at a time.
 - Do not let multiple agents edit the same files concurrently.
 - Merge through the orchestrator after each worker verifies its own scope.
+- Give final updates to shared execution ledgers to the orchestrator so Git
+  worktrees do not race on coordination state.
 
 Use agent teams only when workers genuinely need peer-to-peer coordination. Do not use them merely because the task is large.
 
@@ -238,6 +244,9 @@ Use:
 - `./scripts/verify.sh quick`
 - `./scripts/verify.sh full`
 - `./scripts/mcp-doctor.sh`
+- `./scripts/codex-doctor.sh`
+- `./scripts/codex-doctor.sh --strict-runtime` — require the documented Codex
+  plugin baseline on a developer machine
 - `./scripts/start-task.sh <TASK-ID>`
 - `./scripts/new-branch.sh <type> <TASK-ID> <slug>`
 - `./scripts/create-worktree.sh <TASK-ID> <slug> [type] [base]`

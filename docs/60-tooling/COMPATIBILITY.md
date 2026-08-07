@@ -8,7 +8,7 @@
 | Linux / GitHub Actions | Supported | Full verification runs on Ubuntu |
 | Windows | Best effort | Use WSL until PowerShell wrappers exist |
 | Claude Code | Supported | Native `.claude/` agents, rules, skills, and hooks |
-| Codex | Supported by contract | `AGENTS.md` plus skill metadata where provided |
+| Codex | Native adapter | `AGENTS.md`, shared repo skills, trusted project config/hooks, doctor, and skills-only plugin manifest |
 | Other coding agents | Adaptable | Must honor repository source-of-truth and safety contracts |
 
 ## Profiles
@@ -51,11 +51,19 @@ The repository contract remains authoritative regardless of runtime defaults.
 - Codex 0.146.1 or newer is the preferred stable baseline when using models
   identified by Codex as cyber-specialized. It applies safer review defaults
   and explains permission changes in the terminal.
+- Codex 0.147.0 or newer is the recommended baseline for the repository's
+  plugin workflow. `codex-doctor.sh --strict-runtime` enforces that floor on a
+  developer machine; normal CI validates the adapter without installing or
+  upgrading Codex.
 - Do not infer authorization from an automatic reviewer or model default.
   Project permission profiles, human approval, security review, and external
   action boundaries still apply.
 - The repository does not silently select models, enable automatic review, or
   expand filesystem, network, or external-service permissions.
+- Project Codex configuration intentionally omits models, providers,
+  credentials, MCP execution, sandbox selection, network access, writable-root
+  expansion, and approval policy. User and managed enterprise policy remain
+  authoritative.
 
 ## Versioning
 
@@ -77,6 +85,11 @@ include a migration note.
   production deployments remain explicit human actions.
 - The research loop may propose updates but cannot adopt, commit, merge, or
   release them autonomously.
+- Claude agent definitions are not yet translated into Codex-specific subagent
+  role files; Codex currently shares the repository contract, skills, hooks,
+  worktree workflow, and plugin metadata.
+- The Codex plugin manifest is package-ready but marketplace publication and
+  installation policy remain explicit release actions.
 
 See the [v0.1.0 release notes](../releases/v0.1.0.md) for the exact public
 preview scope.

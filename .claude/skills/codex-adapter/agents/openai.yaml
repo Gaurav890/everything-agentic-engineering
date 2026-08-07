@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Adapter"
+  short_description: "Validate and operate this repository with Codex"
+  default_prompt: "Use $codex-adapter to validate this repository for safe Codex operation."

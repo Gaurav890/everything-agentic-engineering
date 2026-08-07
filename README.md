@@ -20,7 +20,7 @@ Turn an idea into:
 
 <br />
 
-**Built for Claude Code. Designed for agentic engineering. Adaptable to Codex and other coding agents.**
+**Native Claude Code and Codex adapters. Designed for durable, evidence-gated agentic engineering.**
 
 </div>
 
@@ -534,6 +534,10 @@ For isolated parallel coding:
 ./scripts/create-worktree.sh T-014 password-reset agent main
 ```
 
+Codex desktop can also create a dedicated managed worktree for each task. Use
+one task, branch, and exclusive file owner per writing workspace. See the
+[parallel terminals and Codex worktree guide](docs/70-collaboration/PARALLEL_TERMINALS.md).
+
 ---
 
 ## GitHub workflow for humans and agents
@@ -880,6 +884,18 @@ types, and tests.
 │   ├── skills/
 │   └── hooks/
 │
+├── .codex/
+│   ├── config.toml
+│   └── hooks.json
+│
+├── .agents/
+│   └── skills -> ../.claude/skills
+│
+├── .codex-plugin/
+│   └── plugin.json
+│
+├── skills -> .claude/skills
+│
 ├── docs/                         # Open directly as an Obsidian vault
 │   ├── 00-vision/
 │   ├── 10-product/
@@ -996,13 +1012,28 @@ Add the API keys for the MCP services you plan to use.
 ```
 
 This runs profile and initializer tests, token generation, security-hook tests,
-documentation-link checks, policy checks, and project-defined checks.
+Codex adapter drift tests, documentation-link checks, policy checks, and
+project-defined checks.
 
-### 7. Open Claude Code
+### 7. Open your coding agent
+
+Claude Code:
 
 ```bash
 claude
 ```
+
+Codex:
+
+```bash
+./scripts/codex-doctor.sh
+codex
+```
+
+Codex reads `AGENTS.md` and discovers the same local skills through
+`.agents/skills`. The committed adapter does not select a model, widen
+permissions, configure credentials, or start external MCP servers. Read the
+[Codex adapter guide](docs/60-tooling/CODEX.md).
 
 ### 8. Start with an idea
 
@@ -1125,7 +1156,8 @@ Potential future directions:
 - [x] Visual regression pipeline for the Showcase's required states
 - [ ] Security scanner integrations
 - [ ] Additional evaluation patterns
-- [ ] Codex-specific adapter
+- [x] Codex-native instructions, shared skills, hooks, doctor, and plugin manifest
+- [ ] Codex-specific subagent role adapters
 - [ ] Example production application built entirely with the harness
 - [ ] Community-contributed skills, agents, and project profiles
 

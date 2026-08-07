@@ -1,0 +1,29 @@
+{
+  "name": "everything-agentic-engineering",
+  "version": "0.1.0",
+  "description": "Durable product, design, engineering, verification, and collaboration workflows for Codex.",
+  "author": {
+    "name": "Gaurav890",
+    "url": "https://github.com/Gaurav890"
+  },
+  "homepage": "https://github.com/Gaurav890/everything-agentic-engineering",
+  "repository": "https://github.com/Gaurav890/everything-agentic-engineering",
+  "license": "MIT",
+  "keywords": [
+    "agentic-engineering",
+    "codex",
+    "product-design",
+    "worktrees",
+    "software-development"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Everything Agentic Engineering",
+    "shortDescription": "Ship software with durable agent workflows.",
+    "longDescription": "An opinionated engineering system for product discovery, design, parallel implementation, verification, security, and GitHub collaboration with Codex.",
+    "developerName": "Gaurav890",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Read AGENTS.md, inspect the active project profile, and prepare the next evidence-gated task."
+  }
+}

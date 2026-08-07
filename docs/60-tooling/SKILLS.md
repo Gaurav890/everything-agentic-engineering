@@ -9,6 +9,10 @@ Use a small phase-based system, not a pile of overlapping aesthetic prompts.
 Local skills own routing, contracts, durable outputs, and fallbacks. Third-party
 skills remain externally installed and are invoked only for the phase they serve.
 
+The canonical repository skill content lives under `.claude/skills`. Codex
+discovers the same catalog through `.agents/skills`, and the Codex plugin uses
+the root `skills` link. Both links are validated so the adapters cannot drift.
+
 `product-design-router` selects the minimum phases required by evidence:
 
 ```text
@@ -106,5 +110,6 @@ The non-design local skills remain:
 - `loop-engineering`
 - `security-gate`
 - `self-improvement-loop`
+- `codex-adapter`
 
 Superpowers and Expo tooling remain optional external workflow/platform layers.

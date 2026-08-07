@@ -4,9 +4,12 @@
 
 - Git
 - Node.js 18+
-- Claude Code
+- Claude Code and/or Codex
 - Python 3 for included guardrail hooks
 - pnpm recommended for app profiles
+
+Codex 0.147.0 or newer is recommended when using the plugin workflow. The
+repository doctor reports an older or missing runtime without upgrading it.
 
 ## 1. Clone/copy
 
@@ -25,7 +28,7 @@ Add:
 - `PERPLEXITY_API_KEY`
 - `FIRECRAWL_API_KEY`
 
-Export them into the shell that launches Claude Code.
+Export them only into the shell that launches an approved MCP-enabled runtime.
 
 Example:
 
@@ -47,6 +50,9 @@ set +a
 ./scripts/install-skills.sh
 ```
 
+The project-local skills require no Codex copy step. Codex discovers the same
+catalog through `.agents/skills`.
+
 ## 5. Check MCPs
 
 ```bash
@@ -61,17 +67,32 @@ Inside Claude Code, also use:
 
 Project-scoped MCPs may require workspace trust/approval.
 
-## 6. Open Obsidian
+The Codex adapter intentionally does not translate `.mcp.json` into executable
+project configuration. Read `CODEX.md` and configure only the MCP capabilities
+required by the selected profile after reviewing their code, credentials, and
+permissions.
+
+## 6. Check the selected coding-agent runtime
+
+For Codex:
+
+```bash
+./scripts/codex-doctor.sh
+```
+
+Review project hooks with `/hooks` before trusting them.
+
+## 7. Open Obsidian
 
 Open the `docs/` folder as a vault.
 
-## 7. Choose profile
+## 8. Choose profile
 
 Read `PROFILES.md` and record the decision in:
 - `ARCHITECTURE.md`
 - an ADR when the choice is significant.
 
-## 8. Build the PRD before large implementation
+## 9. Build the PRD before large implementation
 
 Use:
 - `create-prd`

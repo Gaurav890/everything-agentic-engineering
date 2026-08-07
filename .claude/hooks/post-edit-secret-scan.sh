@@ -16,22 +16,43 @@ except Exception:
     sys.exit(0)
 
 tool_input = data.get("tool_input", {}) or {}
-path_value = (
+path_values = []
+
+direct_path = (
     tool_input.get("file_path")
     or tool_input.get("path")
     or tool_input.get("filename")
 )
+if direct_path:
+    path_values.append(str(direct_path))
 
-if not path_value:
+# Codex reports apply_patch content in tool_input.command. Extract only the
+# explicit file headers emitted by apply_patch; never interpret patch content
+# as shell input.
+if data.get("tool_name") == "apply_patch":
+    command = str(tool_input.get("command", ""))
+    path_values.extend(
+        match.group(1).strip()
+        for match in re.finditer(
+            r"^\*\*\* (?:Add|Update) File: (.+)$",
+            command,
+            flags=re.MULTILINE,
+        )
+    )
+
+if not path_values:
     sys.exit(0)
 
-path = Path(path_value)
-if not path.is_file() or path.stat().st_size > 2_000_000:
-    sys.exit(0)
+base = Path(str(data.get("cwd") or "."))
+paths = []
+for value in dict.fromkeys(path_values):
+    path = Path(value)
+    if not path.is_absolute():
+        path = base / path
+    if path.is_file() and path.stat().st_size <= 2_000_000:
+        paths.append(path)
 
-try:
-    text = path.read_text(errors="ignore")
-except Exception:
+if not paths:
     sys.exit(0)
 
 patterns = {
@@ -42,13 +63,22 @@ patterns = {
     "Generic hard-coded secret": r"(?i)\b(?:api[_-]?key|secret|password|token)\s*[:=]\s*[\"'][^\"'\n]{12,}[\"']",
 }
 
-hits = [name for name, pattern in patterns.items() if re.search(pattern, text)]
+findings = []
+for path in paths:
+    try:
+        text = path.read_text(errors="ignore")
+    except Exception:
+        continue
+    hits = [name for name, pattern in patterns.items() if re.search(pattern, text)]
+    if hits:
+        findings.append(f"{path}: {', '.join(hits)}")
 
-if hits:
+if findings:
     print(json.dumps({
         "systemMessage": (
             "Potential hard-coded secret pattern detected in "
-            f"{path}: {', '.join(hits)}. Review immediately; do not commit real secrets."
+            + "; ".join(findings)
+            + ". Review immediately; do not commit real secrets."
         )
     }))
 

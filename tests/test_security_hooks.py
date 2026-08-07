@@ -49,6 +49,23 @@ class SecurityHookTests(unittest.TestCase):
         warning = json.loads(output)
         self.assertIn("Potential hard-coded secret", warning["systemMessage"])
 
+    def test_secret_scanner_supports_codex_apply_patch_payload(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "codex-example.txt"
+            path.write_text('token = "this-is-not-a-real-token-but-is-long"')
+            output = self.call_hook(
+                "post-edit-secret-scan.sh",
+                {
+                    "cwd": directory,
+                    "tool_name": "apply_patch",
+                    "tool_input": {
+                        "command": "*** Begin Patch\n*** Update File: codex-example.txt\n*** End Patch"
+                    },
+                },
+            )
+        warning = json.loads(output)
+        self.assertIn("codex-example.txt", warning["systemMessage"])
+
 
 if __name__ == "__main__":
     unittest.main()
