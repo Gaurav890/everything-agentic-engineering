@@ -62,24 +62,19 @@ jobs:
 
       - name: Compare approved visual baselines
         if: >-
-          !(
-            (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines) ||
-            (github.event_name == 'pull_request' && github.head_ref == 'test/T-020-showcase-visual-regression')
-          )
+          !(github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines)
         working-directory: apps/showcase
         run: pnpm test:visual
 
       - name: Generate visual baseline candidates
         if: >-
-          (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines) ||
-          (github.event_name == 'pull_request' && github.head_ref == 'test/T-020-showcase-visual-regression')
+          github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines
         working-directory: apps/showcase
         run: pnpm test:visual:update
 
       - name: Upload visual baseline candidates
         if: >-
-          (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines) ||
-          (github.event_name == 'pull_request' && github.head_ref == 'test/T-020-showcase-visual-regression')
+          github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines
         uses: actions/upload-artifact@v4
         with:
           name: showcase-visual-baselines-linux
