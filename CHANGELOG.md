@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Seven project-scoped, read-only Codex specialist roles for product,
+  architecture, research, design, security, QA, and integration review, with
+  deterministic authority and schema validation.
 - A native Codex adapter with shared repository skills, bounded project
   configuration, reviewed safety-hook wiring, a skills-only plugin manifest,
   runtime doctor, multi-terminal worktree guidance, and automated drift tests.

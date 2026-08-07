@@ -37,6 +37,29 @@ bypass approvals. Those require explicit, separately reviewed authority.
 | qa-evaluator | adversarial verification | eval evidence |
 | integration-reviewer | cross-layer review | read-only by default |
 
+## In-session Codex subagents
+
+Project-scoped Codex role files live under `.codex/agents/` and translate the
+read-heavy specialist responsibilities into native Codex custom agents:
+
+| Codex role | Use for |
+|---|---|
+| `product_planner` | requirements, user needs, scope, non-goals, acceptance gaps |
+| `architect` | boundaries, contracts, data flow, ADR implications, merge order |
+| `researcher` | primary-source research, provenance, freshness, uncertainty |
+| `design_critic` | independent running-product UX, accessibility, and token critique |
+| `security_reviewer` | trust boundaries, authorization, secrets, and security tests |
+| `qa_evaluator` | adversarial acceptance testing, regressions, and evidence gaps |
+| `integration_reviewer` | cross-layer compatibility and final readiness review |
+
+These roles are read-only, do not pin a model or reasoning level, do not add an
+MCP server or network authority, and do not self-approve. Use Codex's built-in
+`explorer` for general code mapping and the normal foreground worker for a
+single implementation task.
+
+Parallel write-heavy work requires a separate branch and worktree per owner.
+Do not spawn several writable in-session subagents into the same checkout.
+
 ## GitHub integration rules
 
 1. Normal committed work happens on a short-lived task branch, not directly on `main`.

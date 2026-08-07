@@ -31,6 +31,7 @@ runtime changes separately.
 |---|---|
 | `AGENTS.md` | Cross-runtime engineering, review, and safety contract |
 | `.codex/config.toml` | Safe project-scoped Codex context and concurrency defaults |
+| `.codex/agents/*.toml` | Read-only project-scoped Codex specialist roles |
 | `.codex/hooks.json` | Codex lifecycle wiring for reviewed safety scripts |
 | `.agents/skills` | Codex repository skill discovery |
 | `.claude/skills` | Canonical local skill content shared by both adapters |
@@ -83,6 +84,34 @@ from separate terminals. In both cases:
 Read [Parallel terminals](../70-collaboration/PARALLEL_TERMINALS.md) for the
 full operating pattern.
 
+## Specialist subagents
+
+Codex automatically discovers the custom agents under `.codex/agents/` after
+the project is trusted. The starter includes bounded roles for product
+planning, architecture, research, design critique, security review,
+adversarial QA, and final integration review.
+
+All committed roles:
+
+- use `sandbox_mode = "read-only"`;
+- inherit the parent session's approved capabilities without adding new ones;
+- avoid repository-level model and reasoning choices;
+- do not register MCP servers, credentials, network access, or approval rules;
+- return findings to the parent rather than modifying or approving the change.
+
+Example:
+
+```text
+Review this branch against main. Use architect to map contract changes,
+security_reviewer to identify trust-boundary risks, and qa_evaluator to find
+acceptance or regression gaps. Wait for all three, then consolidate only
+evidence-backed findings with file references. Do not modify code.
+```
+
+Use Codex's built-in `explorer` for ordinary code mapping. For multiple agents
+that must change code, create separate task branches and worktrees instead of
+making the in-session specialist roles writable.
+
 ## Skills and plugin packaging
 
 Codex discovers the project skills directly through `.agents/skills`. The
@@ -112,8 +141,9 @@ use.
 
 ## Known boundaries
 
-- Repository and plugin skills are shared; Claude agent definitions under
-  `.claude/agents/` are not automatically translated into Codex subagents.
+- The Codex roles intentionally translate only safe read-heavy specialist
+  responsibilities; Claude write-capable agent definitions are not copied
+  mechanically.
 - The adapter supports parallel workspaces but does not start concurrent
   feature branches without reviewed tasks and ownership.
 - Plugin marketplace publication is not automatic.
@@ -126,6 +156,7 @@ use.
 - [Codex project instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
 - [Codex worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)
 - [Codex project configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)
+- [Codex subagents and custom agents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 - [Codex skills](https://learn.chatgpt.com/docs/build-skills)
 - [Codex hooks](https://learn.chatgpt.com/docs/hooks)
 - [Codex plugins](https://developers.openai.com/plugins/build/plugins)

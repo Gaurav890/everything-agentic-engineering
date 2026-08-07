@@ -65,6 +65,10 @@ Before parallel work, produce:
 
 Use read-only subagents freely for exploration, review, research, test analysis, and threat modeling.
 
+In Codex, route those bounded responsibilities through the reviewed read-only
+roles under `.codex/agents/`. Do not use an in-session subagent as a substitute
+for an independently owned implementation workspace.
+
 For parallel code changes:
 - Prefer isolated git worktrees.
 - One owner per file or tightly coupled module at a time.
@@ -72,6 +76,8 @@ For parallel code changes:
 - Merge through the orchestrator after each worker verifies its own scope.
 - Give final updates to shared execution ledgers to the orchestrator so Git
   worktrees do not race on coordination state.
+- Give every write-capable worker a separate branch and worktree; keep
+  in-session Codex specialist roles read-only.
 
 Use agent teams only when workers genuinely need peer-to-peer coordination. Do not use them merely because the task is large.
 

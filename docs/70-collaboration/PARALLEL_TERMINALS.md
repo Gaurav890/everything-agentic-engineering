@@ -50,6 +50,28 @@ After each task exists in `TASKS.jsonl` and passes planning:
 The launcher prints each worktree path. Open each path in a separate terminal
 and start Codex there. Never check out the same branch in two worktrees.
 
+## Subagents versus worktree workers
+
+Use in-session Codex subagents for bounded read-only work that benefits from a
+separate context window:
+
+- architecture mapping;
+- product and requirements analysis;
+- primary-source research;
+- design critique;
+- security review;
+- test and acceptance analysis;
+- final integration review.
+
+The project roles under `.codex/agents/` enforce that read-only default. They
+share the parent turn's approved capabilities but do not add model, MCP,
+network, credential, or approval configuration.
+
+Use a separate task branch and worktree for every parallel worker that must
+edit code or durable documentation. A custom role is context isolation; it is
+not Git isolation. Never let several writable subagents race inside one
+checkout.
+
 The lower-level command remains available when the reviewed plan requires an
 explicit branch type or base:
 

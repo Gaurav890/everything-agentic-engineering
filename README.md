@@ -1035,6 +1035,11 @@ Codex reads `AGENTS.md` and discovers the same local skills through
 permissions, configure credentials, or start external MCP servers. Read the
 [Codex adapter guide](docs/60-tooling/CODEX.md).
 
+It also discovers seven project-scoped, read-only specialist roles for product
+planning, architecture, research, design critique, security review, QA, and
+integration review. Use these subagents for parallel analysis; use separate
+task worktrees—not writable in-session subagents—for parallel implementation.
+
 ### 8. Start with an idea
 
 Try:
@@ -1157,7 +1162,7 @@ Potential future directions:
 - [ ] Security scanner integrations
 - [ ] Additional evaluation patterns
 - [x] Codex-native instructions, shared skills, hooks, doctor, and plugin manifest
-- [ ] Codex-specific subagent role adapters
+- [x] Codex-specific read-only subagent role adapters
 - [ ] Example production application built entirely with the harness
 - [ ] Community-contributed skills, agents, and project profiles
 

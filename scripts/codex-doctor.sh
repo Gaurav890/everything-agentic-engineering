@@ -141,6 +141,12 @@ print("PASS  Codex configuration does not grant additional authority")
 print("PASS  Codex hook and plugin contracts are valid")
 PY
 
+if python3 scripts/validate_codex_agents.py; then
+  :
+else
+  failures=$((failures + 1))
+fi
+
 if [ -x .claude/hooks/pre-tool-security.sh ] && \
    [ -x .claude/hooks/post-edit-secret-scan.sh ]; then
   pass "shared safety hooks are executable"
