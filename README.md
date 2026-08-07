@@ -1122,7 +1122,7 @@ Potential future directions:
 - [x] Reviewed branch/worktree creation from `TASKS.jsonl`
 - [ ] Deeper GitHub Issue ↔ Task synchronization
 - [ ] Agent-team orchestration examples
-- [ ] Visual regression pipelines
+- [x] Visual regression pipeline for the Showcase's required states
 - [ ] Security scanner integrations
 - [ ] Additional evaluation patterns
 - [ ] Codex-specific adapter

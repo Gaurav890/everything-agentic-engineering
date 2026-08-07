@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A Playwright visual-regression gate for the Showcase's normal, loading,
+  empty, and error states across desktop and mobile, with reviewed Linux
+  baselines and failure artifacts.
 - An adaptive product-design intake that asks only relevant questions for the
   active platform, creates comparable visual directions, and requires explicit
   human approval before canonical design-system or token changes.
