@@ -36,7 +36,7 @@ sandboxes, or approval policy.
 
 ## In progress
 
-- Draft PR preparation for `feat/T-022-codex-specialist-roles`.
+- Draft PR #24 CI and human review.
 
 ## Blockers
 
@@ -67,8 +67,9 @@ sandboxes, or approval policy.
 
 ## Exact next action
 
-Commit and push the reviewed T-022 scope, then open a draft PR. Never
-self-approve or self-merge.
+Review draft PR #24. After human approval, run `prepare-merge.sh T-022`, commit
+the final task state, mark the PR ready, and confirm the required checks again.
+Never self-approve or self-merge.
 
 ## Relevant files
 

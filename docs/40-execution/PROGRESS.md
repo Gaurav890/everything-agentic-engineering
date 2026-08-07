@@ -495,7 +495,7 @@ parallel implementation.
 
 **Commit/PR**
 
-Branch `feat/T-022-codex-specialist-roles`; draft PR pending.
+Implementation commit `c803398`; draft PR #24.
 
 **Remaining risk**
 
