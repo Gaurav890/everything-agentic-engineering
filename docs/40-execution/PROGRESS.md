@@ -451,10 +451,14 @@ operation.
   correctly rejects it as below the 0.147.0 plugin baseline.
 - Full repository verification passes after restoring locked dependencies in
   the isolated worktree.
+- PR #22 received human approval and merged before the final task-state commit.
+- The final merge-readiness gate passed, and this narrow follow-up records
+  T-021 as `done` on authoritative `main` without changing implementation.
 
 **Commit/PR**
 
-Implementation commit `40192a1`; draft PR #22.
+Implementation commit `40192a1`; merged PR #22; follow-up state reconciliation
+requires human-reviewed merge.
 
 **Remaining risk**
 

@@ -4,9 +4,8 @@ Last updated: 2026-08-07
 
 ## Current goal
 
-Land T-021's native Codex adapter through human review without changing models,
-providers, credentials, MCP execution, network access, sandbox boundaries, or
-approval policy.
+Reconcile T-021's durable task state after approved PR #22 merged before its
+final bookkeeping commit, without changing implementation or authority.
 
 ## Completed
 
@@ -24,10 +23,12 @@ approval policy.
 - Official skill and plugin validators pass.
 - Full repository verification passes after restoring locked worktree
   dependencies.
+- PR #22 received human approval and merged into `main`.
 
 ## In progress
 
-- Draft PR #22 CI and human review.
+- A documentation-only follow-up PR to record T-021 as `done` on authoritative
+  `main`.
 
 ## Blockers
 
@@ -53,9 +54,8 @@ approval policy.
 
 ## Exact next action
 
-Review draft PR #22, confirm GitHub checks, and obtain human review. Before
-marking it ready, run `prepare-merge.sh T-021` and commit the final task state.
-Never self-approve or self-merge.
+Confirm the follow-up PR's GitHub checks. If they are green, a human may
+squash-merge it and delete its branch. Never self-approve or self-merge.
 
 ## Relevant files
 
