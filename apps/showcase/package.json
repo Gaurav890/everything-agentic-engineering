@@ -10,7 +10,9 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=../../.cache/ms-playwright playwright test",
+    "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=../../.cache/ms-playwright playwright test showcase.spec.ts",
+    "test:visual": "PLAYWRIGHT_BROWSERS_PATH=../../.cache/ms-playwright playwright test visual.spec.ts",
+    "test:visual:update": "PLAYWRIGHT_BROWSERS_PATH=../../.cache/ms-playwright playwright test visual.spec.ts --update-snapshots",
     "install:browsers": "PLAYWRIGHT_BROWSERS_PATH=../../.cache/ms-playwright playwright install chromium"
   },
   "dependencies": {

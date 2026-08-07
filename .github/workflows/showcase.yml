@@ -1,6 +1,13 @@
 name: Showcase
 
 on:
+  workflow_dispatch:
+    inputs:
+      update_visual_baselines:
+        description: Generate Linux baseline candidates for human review
+        required: false
+        default: false
+        type: boolean
   pull_request:
     branches: [main]
     paths:
@@ -52,3 +59,38 @@ jobs:
       - name: Run interaction and accessibility tests
         working-directory: apps/showcase
         run: pnpm test:e2e
+
+      - name: Compare approved visual baselines
+        if: >-
+          !(
+            (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines) ||
+            (github.event_name == 'pull_request' && github.head_ref == 'test/T-020-showcase-visual-regression')
+          )
+        working-directory: apps/showcase
+        run: pnpm test:visual
+
+      - name: Generate visual baseline candidates
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines) ||
+          (github.event_name == 'pull_request' && github.head_ref == 'test/T-020-showcase-visual-regression')
+        working-directory: apps/showcase
+        run: pnpm test:visual:update
+
+      - name: Upload visual baseline candidates
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines) ||
+          (github.event_name == 'pull_request' && github.head_ref == 'test/T-020-showcase-visual-regression')
+        uses: actions/upload-artifact@v4
+        with:
+          name: showcase-visual-baselines-linux
+          path: apps/showcase/tests/visual.spec.ts-snapshots/
+          retention-days: 7
+
+      - name: Upload visual failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showcase-visual-failure
+          path: apps/showcase/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
