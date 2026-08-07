@@ -7,6 +7,13 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from scripts.validate_codex_agents import (
+    EXPECTED_ROLES,
+    AgentValidationError,
+    load_restricted_toml,
+    validate_role_directory,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -84,6 +91,44 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertIn("$codex-adapter", metadata)
         self.assertNotIn("TODO", text)
         self.assertNotIn("TODO", metadata)
+
+    def test_project_codex_roles_are_complete_and_read_only(self) -> None:
+        roles = validate_role_directory(ROOT / ".codex/agents")
+        self.assertEqual(set(roles), EXPECTED_ROLES)
+        for name, path in roles.items():
+            role = load_restricted_toml(path)
+            self.assertEqual(role["name"], name)
+            self.assertEqual(role["sandbox_mode"], "read-only")
+            self.assertEqual(
+                set(role),
+                {"name", "description", "developer_instructions", "sandbox_mode"},
+            )
+
+    def test_codex_role_validator_rejects_authority_expansion(self) -> None:
+        fixture = ROOT / ".cache/test-codex-role.toml"
+        fixture.parent.mkdir(parents=True, exist_ok=True)
+        fixture.write_text(
+            'name = "unsafe"\n'
+            'description = "Unsafe test role"\n'
+            'sandbox_mode = "workspace-write"\n'
+            'model = "unreviewed"\n'
+            'developer_instructions = """\nTest only.\n"""\n'
+        )
+        try:
+            role = load_restricted_toml(fixture)
+            self.assertIn("model", role)
+            with self.assertRaises(AgentValidationError):
+                validate_role_directory(fixture.parent)
+        finally:
+            fixture.unlink(missing_ok=True)
+
+    def test_codex_roles_do_not_replace_worktrees_for_parallel_writes(self) -> None:
+        agreement = (ROOT / "AGENTS.md").read_text()
+        guide = (ROOT / "docs/70-collaboration/PARALLEL_TERMINALS.md").read_text()
+        self.assertIn("In-session Codex subagents", agreement)
+        self.assertIn("separate branch and worktree", agreement)
+        self.assertIn("Subagents versus worktree workers", guide)
+        self.assertIn("read-only", guide)
 
     def test_doctor_passes_without_requiring_a_runtime_install(self) -> None:
         environment = os.environ.copy()

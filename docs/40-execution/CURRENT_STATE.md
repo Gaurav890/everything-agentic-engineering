@@ -63,6 +63,18 @@ reviewed destructive-command and secret-scan scripts. The adapter intentionally
 does not select models/providers, add credentials or MCP execution, enable
 network access, widen sandboxes, or bypass approvals.
 
+Seven project-scoped Codex custom agents cover read-only product planning,
+architecture, research, design critique, security review, adversarial QA, and
+integration review. They add context specialization without adding runtime
+authority. Parallel implementation remains isolated by task branch and
+worktree.
+
+GitHub `main` protection requires the `verify` and `policy` checks, an up-to-date
+branch, linear history, and resolved review conversations. It applies to
+administrators and blocks force pushes and branch deletion. The solo-maintainer
+configuration currently requires zero approving reviews; increase this when a
+second maintainer can provide independent approval.
+
 The repository identifies as `v0.1.0` and contains a human-gated release
 workflow, curated release notes, a clean-checkout onboarding smoke test,
 compatibility and limitation statements, a 60-second demo script, and
@@ -99,8 +111,8 @@ strict runtime-doctor behavior, and Codex `apply_patch` secret scanning.
   cleanup remains a separate explicit decision.
 - The reviewed screen recording still requires a maintainer to capture it.
 - Social platforms may cache older repository preview metadata after updates.
-- Codex-specific subagent role files are not yet generated from the canonical
-  agent contracts.
+- Write-capable Codex specialist roles are intentionally not committed;
+  parallel writers use separate task branches and worktrees.
 - Codex plugin marketplace publication and installation policy remain explicit
   release actions.
 

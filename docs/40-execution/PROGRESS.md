@@ -465,3 +465,43 @@ requires human-reviewed merge.
 Codex-specific subagent role adapters and plugin marketplace publication are
 not included. Runtime upgrades and all external capability or permission
 changes remain human decisions.
+
+### 2026-08-07 — T-022
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** DONE ON TASK BRANCH; PENDING MERGE
+
+**Change**
+
+Activated GitHub `main` protection and began a native Codex role pack for
+bounded product, architecture, research, design, security, QA, and integration
+analysis. The roles remain read-only and do not replace worktree isolation for
+parallel implementation.
+
+**Evidence**
+
+- Live GitHub protection requires `verify` and `policy`, an up-to-date branch,
+  resolved conversations, linear history, and applies to administrators.
+- Force pushes and branch deletion are disabled for `main`.
+- Official Codex custom-agent documentation requires `name`, `description`,
+  and `developer_instructions` and supports project-scoped `.codex/agents/`
+  files and read-only sandbox overrides.
+- The dependency-free validator accepts all seven reviewed role files and
+  rejects unreviewed fields or writable sandboxes.
+- Nine Codex adapter tests pass.
+- Official skill and plugin validators pass.
+- Full repository verification passes all ten stages.
+- Human approval was recorded and the repository merge-readiness gate passed,
+  moving T-022 from `review` to `done` on the feature branch.
+
+**Commit/PR**
+
+Implementation commit `c803398`; PR #24 is ready for final protected checks
+and human squash merge.
+
+**Remaining risk**
+
+Project roles inherit capabilities already approved for the parent session.
+They add no external capability themselves. Independent approving reviews
+remain at zero until another maintainer can participate without blocking work.

@@ -7,6 +7,7 @@
 | Cross-runtime workflow and safety | `AGENTS.md` |
 | Codex project behavior | `.codex/config.toml` |
 | Codex lifecycle wiring | `.codex/hooks.json` |
+| Codex read-only specialist roles | `.codex/agents/*.toml` |
 | Canonical local skills | `.claude/skills/` |
 | Codex repository discovery | `.agents/skills` |
 | Plugin skill packaging | `skills` and `.codex-plugin/plugin.json` |
@@ -22,6 +23,11 @@ bounded agent concurrency, and lifecycle-hook discovery. It must not select a
 model or provider, define credentials, register external MCP execution, enable
 network access, weaken a sandbox, or bypass approval.
 
+Committed specialist roles must remain read-only. They may narrow a spawned
+agent's responsibility and instructions, but they must not select models,
+providers, MCP servers, network access, writable sandboxes, or approval policy.
+Write-heavy parallel work remains isolated by branch and worktree.
+
 User, workspace-admin, and managed policy remain authoritative. Project hooks
 run only after Codex trust review.
 
@@ -31,6 +37,8 @@ run only after Codex trust review.
 - Claude continues to discover the unchanged `.claude/skills` paths.
 - The plugin manifest validates against the current plugin schema.
 - The project hook configuration invokes the reviewed shared safety scripts.
+- The expected project-scoped Codex roles parse, contain the required custom
+  agent fields, and remain read-only and authority-neutral.
 - A missing or older Codex runtime produces an actionable doctor warning; it
   does not break framework-independent CI.
 - Strict runtime validation fails when the installed Codex version is below

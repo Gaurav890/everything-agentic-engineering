@@ -4,8 +4,9 @@ Last updated: 2026-08-07
 
 ## Current goal
 
-Reconcile T-021's durable task state after approved PR #22 merged before its
-final bookkeeping commit, without changing implementation or authority.
+Land T-022's safe Codex specialist-role pack through human review without
+expanding models, providers, MCPs, credentials, network access, writable
+sandboxes, or approval policy.
 
 ## Completed
 
@@ -23,12 +24,19 @@ final bookkeeping commit, without changing implementation or authority.
 - Official skill and plugin validators pass.
 - Full repository verification passes after restoring locked worktree
   dependencies.
-- PR #22 received human approval and merged into `main`.
+- PRs #22 and #23 merged; T-021 is `done` on authoritative `main`.
+- GitHub `main` protection now requires `verify` and `policy`, applies to
+  administrators, requires resolved conversations and linear history, and
+  blocks force pushes and deletion.
+- Clean merged T-021 worktrees and branches were removed.
+- Added seven project-scoped, read-only Codex specialist roles and a
+  dependency-free validator that rejects unreviewed configuration fields.
+- Updated the cross-runtime routing, Codex guide, parallel-worktree contract,
+  tests, README, and durable state.
 
 ## In progress
 
-- A documentation-only follow-up PR to record T-021 as `done` on authoritative
-  `main`.
+- PR #24 final protected checks after human approval and merge preparation.
 
 ## Blockers
 
@@ -39,7 +47,8 @@ final bookkeeping commit, without changing implementation or authority.
 - The installed local Codex reports 0.146.0 and is below the documented 0.147.0
   plugin baseline. The adapter warns by default and fails only in explicit
   strict-runtime mode. Runtime upgrade remains a human decision.
-- Codex-specific subagent role adapters remain a separate future task.
+- A second maintainer is needed before enabling a non-zero required approval
+  count without blocking the solo-maintainer workflow.
 - Plugin marketplace publication and installation policy remain separate
   reviewed release actions.
 
@@ -51,16 +60,24 @@ final bookkeeping commit, without changing implementation or authority.
 - Strict runtime doctor: correctly rejects the older installed runtime.
 - Security-hook and adapter unit tests: pass.
 - `./scripts/verify.sh full`: pass.
+- Seven-role restricted schema validation: pass.
+- Nine Codex adapter tests: pass.
+- Codex adapter skill and repository plugin validation: pass.
+- T-022 `./scripts/verify.sh full`: pass.
+- T-022 `./scripts/prepare-merge.sh T-022`: pass; task state is `done` on the
+  feature branch pending merge into authoritative `main`.
 
 ## Exact next action
 
-Confirm the follow-up PR's GitHub checks. If they are green, a human may
-squash-merge it and delete its branch. Never self-approve or self-merge.
+Confirm PR #24's required `verify` and `policy` checks are green. If they pass,
+the human maintainer may squash merge the PR and delete the feature branch.
+Never self-approve or self-merge.
 
 ## Relevant files
 
 - `AGENTS.md`
 - `.codex/`
+- `.codex/agents/`
 - `.codex-plugin/plugin.json`
 - `.agents/skills`
 - `.claude/skills/codex-adapter/`
