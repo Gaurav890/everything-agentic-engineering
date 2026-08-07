@@ -470,11 +470,11 @@ changes remain human decisions.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** DONE ON TASK BRANCH; PENDING MERGE
+**Outcome:** DONE
 
 **Change**
 
-Activated GitHub `main` protection and began a native Codex role pack for
+Activated GitHub `main` protection and delivered a native Codex role pack for
 bounded product, architecture, research, design, security, QA, and integration
 analysis. The roles remain read-only and do not replace worktree isolation for
 parallel implementation.
@@ -494,11 +494,13 @@ parallel implementation.
 - Full repository verification passes all ten stages.
 - Human approval was recorded and the repository merge-readiness gate passed,
   moving T-022 from `review` to `done` on the feature branch.
+- PR #24 passed the protected `verify` and `policy` checks and merged into
+  authoritative `main` as `7906e62`.
 
 **Commit/PR**
 
-Implementation commit `c803398`; PR #24 is ready for final protected checks
-and human squash merge.
+Merged through PR #24 as `7906e62`; implementation commit `c803398` and final
+merge-preparation commit `5b80b57` remain visible in the PR history.
 
 **Remaining risk**
 
