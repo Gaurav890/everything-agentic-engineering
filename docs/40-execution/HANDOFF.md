@@ -4,9 +4,8 @@ Last updated: 2026-08-07
 
 ## Current goal
 
-Land T-022's safe Codex specialist-role pack through human review without
-expanding models, providers, MCPs, credentials, network access, writable
-sandboxes, or approval policy.
+Choose and define the next bounded improvement after completing T-022. The
+current recommendation is deeper GitHub Issue ↔ task synchronization.
 
 ## Completed
 
@@ -33,10 +32,14 @@ sandboxes, or approval policy.
   dependency-free validator that rejects unreviewed configuration fields.
 - Updated the cross-runtime routing, Codex guide, parallel-worktree contract,
   tests, README, and durable state.
+- PR #24 passed the protected `verify` and `policy` checks and merged into
+  `main` as `7906e62`; T-022 is now durably `done`.
+- Removed the clean merged T-022 worktree and local feature branch. The merged
+  work remains recoverable through PR #24 and its Git history.
 
 ## In progress
 
-- PR #24 final protected checks after human approval and merge preparation.
+- None. T-022 is complete; no implementation task is active in this handoff.
 
 ## Blockers
 
@@ -64,14 +67,15 @@ sandboxes, or approval policy.
 - Nine Codex adapter tests: pass.
 - Codex adapter skill and repository plugin validation: pass.
 - T-022 `./scripts/verify.sh full`: pass.
-- T-022 `./scripts/prepare-merge.sh T-022`: pass; task state is `done` on the
-  feature branch pending merge into authoritative `main`.
+- T-022 `./scripts/prepare-merge.sh T-022`: pass.
+- PR #24 required `verify` and `policy` checks: pass.
+- T-022 task state on authoritative `main`: `done`.
 
 ## Exact next action
 
-Confirm PR #24's required `verify` and `policy` checks are green. If they pass,
-the human maintainer may squash merge the PR and delete the feature branch.
-Never self-approve or self-merge.
+Define T-023 as a separately reviewed GitHub Issue ↔ task synchronization
+slice before implementation. Use a new task branch and preserve human approval
+for adoption and merge.
 
 ## Relevant files
 
