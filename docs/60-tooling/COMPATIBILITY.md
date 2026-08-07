@@ -34,6 +34,10 @@ must be checked against the installed version.
   cross-session messaging. That release closes isolation and permission gaps
   across those paths and prevents repository-local settings from enabling
   Remote Control.
+- Claude Code 2.1.223 or newer is recommended when shell permission analysis,
+  workflow agents, dynamic workflow imports, or managed bypass-permission
+  policy are part of the trust boundary. That release closes additional command
+  concealment, approval-dialog, workflow-sandbox, and organization-policy gaps.
 - This recommendation does not authorize adding credential paths, secrets,
   sandbox settings, or network allowlists to the repository. Inventory and
   approve those separately.
