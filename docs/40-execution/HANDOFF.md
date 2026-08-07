@@ -36,7 +36,7 @@ sandboxes, or approval policy.
 
 ## In progress
 
-- Draft PR #24 CI and human review.
+- PR #24 final protected checks after human approval and merge preparation.
 
 ## Blockers
 
@@ -64,11 +64,13 @@ sandboxes, or approval policy.
 - Nine Codex adapter tests: pass.
 - Codex adapter skill and repository plugin validation: pass.
 - T-022 `./scripts/verify.sh full`: pass.
+- T-022 `./scripts/prepare-merge.sh T-022`: pass; task state is `done` on the
+  feature branch pending merge into authoritative `main`.
 
 ## Exact next action
 
-Review draft PR #24. After human approval, run `prepare-merge.sh T-022`, commit
-the final task state, mark the PR ready, and confirm the required checks again.
+Confirm PR #24's required `verify` and `policy` checks are green. If they pass,
+the human maintainer may squash merge the PR and delete the feature branch.
 Never self-approve or self-merge.
 
 ## Relevant files

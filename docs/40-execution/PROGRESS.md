@@ -470,7 +470,7 @@ changes remain human decisions.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** REVIEW
+**Outcome:** DONE ON TASK BRANCH; PENDING MERGE
 
 **Change**
 
@@ -492,10 +492,13 @@ parallel implementation.
 - Nine Codex adapter tests pass.
 - Official skill and plugin validators pass.
 - Full repository verification passes all ten stages.
+- Human approval was recorded and the repository merge-readiness gate passed,
+  moving T-022 from `review` to `done` on the feature branch.
 
 **Commit/PR**
 
-Implementation commit `c803398`; draft PR #24.
+Implementation commit `c803398`; PR #24 is ready for final protected checks
+and human squash merge.
 
 **Remaining risk**
 
