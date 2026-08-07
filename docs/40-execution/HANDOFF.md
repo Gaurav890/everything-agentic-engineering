@@ -1,73 +1,72 @@
 # Handoff
 
-Last updated: 2026-08-05
+Last updated: 2026-08-07
 
 ## Current goal
 
-Land T-018's version-qualified Claude Code and Codex runtime security guidance
-through human review without changing runtime configuration.
+Land T-021's native Codex adapter through human review without changing models,
+providers, credentials, MCP execution, network access, sandbox boundaries, or
+approval policy.
 
 ## Completed
 
-- T-009 task execution launcher merged through PR #10.
-- Semantic `0.1.0` repository version and curated changelog.
-- Versioned release notes and compatibility/limitations.
-- Human-gated GitHub release workflow with reviewable archive/checksum.
-- Clean-checkout onboarding smoke test and release contract validator.
-- README quick-start visual, demo script, and launch copy.
-- Public `v0.1.0` tag and release with verified archive/checksum.
-- 1280×640 GitHub social-preview asset.
-- Real initializer, task-planning, Signalroom interaction, UI-state, and
-  verification GIFs embedded beside their README explanations.
-- Adaptive greenfield, existing-brand, redesign, and restrained-baseline intake.
-- Durable design brief and direction comparison artifacts with human approval.
-- Stable semantic color roles and mode-aware component aliases.
-- Automated theme parity and required WCAG contrast validation.
-- Generated light/dark token specimen inspected at desktop and mobile widths.
-- T-015 merged through PR #16 and is reconciled as done.
-- Corrected the Claude Code 2.1.217/2.1.219 subagent nesting history.
-- Documented the 2.1.221 credential masking and zsh permission hardening.
-- Full repository verification passes for T-016.
-- T-011, T-012, T-013, and T-016 are reconciled with their merged PRs.
-- T-017 completed the documented review and final branch-state lifecycle.
-- Full repository verification passes with the new PR task-state policy.
-- T-017 merged through PR #18; stale task-state prevention is active.
-- Claude Code 2.1.222 and Codex 0.146.1 findings are recorded and verified.
-- Full repository verification passes for T-018.
+- Added trusted-project Codex configuration with bounded instruction context
+  and concurrent spawned-agent threads.
+- Exposed one canonical local skill catalog to Claude, Codex repository
+  discovery, and skills-only plugin packaging.
+- Added the validated `codex-adapter` skill and plugin manifest.
+- Wired Codex lifecycle hooks to the reviewed destructive-command and
+  post-edit secret-scan scripts.
+- Extended secret scanning to Codex `apply_patch` payloads.
+- Added multi-terminal and Codex worktree guidance, including ownership,
+  dependency, integration, and shared-ledger rules.
+- Added a dependency-free doctor and six Codex adapter tests.
+- Official skill and plugin validators pass.
+- Full repository verification passes after restoring locked worktree
+  dependencies.
 
 ## In progress
 
-- T-018 draft PR #19 CI and human review.
+- Draft PR #22 CI and human review.
 
 ## Blockers
 
-- None for implementation or publication.
+- None for publication.
 
 ## Unresolved decisions
 
-- Whether to add credential masking settings later. Do not do so until the
-  public schema and project credential inventory are reviewed.
-- Whether and when maintainers upgrade Claude Code or Codex. This branch does
-  not install, select, or configure either runtime.
-- Public announcements remain maintainer actions.
+- The installed local Codex reports 0.146.0 and is below the documented 0.147.0
+  plugin baseline. The adapter warns by default and fails only in explicit
+  strict-runtime mode. Runtime upgrade remains a human decision.
+- Codex-specific subagent role adapters remain a separate future task.
+- Plugin marketplace publication and installation policy remain separate
+  reviewed release actions.
 
 ## Verification status
 
-Claude Code 2.1.222 and Codex 0.146.1 were verified through first-party stable
-release notes, the current Codex manual, and implementation evidence, then
-deduplicated against the learning ledger. Full repository verification passes.
+- `codex-adapter` skill validation: pass.
+- Plugin schema validation: pass.
+- Default doctor: pass with the expected runtime warning.
+- Strict runtime doctor: correctly rejects the older installed runtime.
+- Security-hook and adapter unit tests: pass.
+- `./scripts/verify.sh full`: pass.
 
 ## Exact next action
 
-Review draft PR #19 and confirm CI. Mark it ready when the version-qualified
-guidance is accepted, then obtain human review. Do not self-approve or merge.
+Review draft PR #22, confirm GitHub checks, and obtain human review. Before
+marking it ready, run `prepare-merge.sh T-021` and commit the final task state.
+Never self-approve or self-merge.
 
 ## Relevant files
 
-- `CHANGELOG.md`
-- `docs/30-engineering/SECURITY_MODEL.md`
-- `docs/40-execution/TASKS.jsonl`
-- `docs/60-tooling/COMPATIBILITY.md`
-- `docs/60-tooling/LEARNING_LEDGER.md`
+- `AGENTS.md`
+- `.codex/`
+- `.codex-plugin/plugin.json`
+- `.agents/skills`
+- `.claude/skills/codex-adapter/`
+- `docs/60-tooling/CODEX.md`
+- `docs/70-collaboration/PARALLEL_TERMINALS.md`
+- `scripts/codex-doctor.sh`
+- `tests/test_codex_adapter.py`
 
 Keep this concise enough to read in under two minutes.

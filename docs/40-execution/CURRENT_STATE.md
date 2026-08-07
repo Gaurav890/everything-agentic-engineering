@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-03
+Last updated: 2026-08-07
 
 ## Product
 
@@ -55,6 +55,14 @@ compatibility, specialist routing, exclusive file ownership, verification
 gates, and base-branch freshness. Planning is read-only and workspace creation
 requires explicit confirmation.
 
+Codex is supported through a native repository adapter. `AGENTS.md` carries the
+cross-runtime contract; `.agents/skills` and the skills-only plugin expose the
+canonical `.claude/skills` catalog without copied instructions; trusted
+project configuration bounds context and concurrency; Codex hooks reuse the
+reviewed destructive-command and secret-scan scripts. The adapter intentionally
+does not select models/providers, add credentials or MCP execution, enable
+network access, widen sandboxes, or bypass approvals.
+
 The repository identifies as `v0.1.0` and contains a human-gated release
 workflow, curated release notes, a clean-checkout onboarding smoke test,
 compatibility and limitation statements, a 60-second demo script, and
@@ -79,6 +87,10 @@ evidence bundles when present, and project-defined checks. Signalroom also has
 production builds, model tests, Playwright interaction tests, and axe
 accessibility checks; browser tests run as a dedicated GitHub Actions gate.
 
+Codex verification additionally validates shared skill discovery, project
+configuration authority boundaries, hook wiring, plugin metadata, default and
+strict runtime-doctor behavior, and Codex `apply_patch` secret scanning.
+
 ## Known incomplete work
 
 - Signalroom is a static reference experience, not a connected agent runtime.
@@ -87,5 +99,9 @@ accessibility checks; browser tests run as a dedicated GitHub Actions gate.
   cleanup remains a separate explicit decision.
 - The reviewed screen recording still requires a maintainer to capture it.
 - Social platforms may cache older repository preview metadata after updates.
+- Codex-specific subagent role files are not yet generated from the canonical
+  agent contracts.
+- Codex plugin marketplace publication and installation policy remain explicit
+  release actions.
 
 Only factual present-tense truth belongs here.

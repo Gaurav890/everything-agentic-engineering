@@ -1,0 +1,12 @@
+# Project-scoped Codex configuration. Codex loads this layer only after the
+# repository is trusted. Keep machine-, model-, provider-, credential-, MCP-,
+# sandbox-, network-, and approval-specific settings in reviewed user/admin
+# configuration rather than this public starter.
+
+project_doc_max_bytes = 65536
+
+[agents]
+max_concurrent_threads_per_session = 4
+
+[features]
+hooks = true

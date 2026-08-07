@@ -425,3 +425,39 @@ Commit `1745e31`; draft PR #19.
 Claude's release notes do not publish a CVE or affected-version floor. Codex's
 behavior depends on model metadata and client support. Runtime upgrades and all
 permission or automatic-review changes remain human decisions.
+### 2026-08-07 — T-021
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Added a native Codex adapter that shares one canonical skill catalog with
+Claude, uses trusted and authority-neutral project configuration, reuses the
+reviewed safety scripts through Codex hooks, packages the catalog through a
+skills-only plugin manifest, and documents safe multi-terminal worktree
+operation.
+
+**Evidence**
+
+- Official skill validation passes for `codex-adapter`.
+- Official plugin validation passes for the repository package.
+- Six adapter tests cover shared skill discovery, authority-sensitive config,
+  hook wiring, plugin scope, metadata, and runtime-independent doctor behavior.
+- The secret scanner handles both Claude edit/write payloads and Codex
+  `apply_patch` payloads.
+- Default doctor passes and reports the installed 0.146.0 runtime; strict mode
+  correctly rejects it as below the 0.147.0 plugin baseline.
+- Full repository verification passes after restoring locked dependencies in
+  the isolated worktree.
+
+**Commit/PR**
+
+Implementation commit `40192a1`; draft PR #22.
+
+**Remaining risk**
+
+Codex-specific subagent role adapters and plugin marketplace publication are
+not included. Runtime upgrades and all external capability or permission
+changes remain human decisions.

@@ -66,6 +66,9 @@ Recommended ownership boundaries:
 /docs/30-engineering/    architecture owners
 /.github/                repository maintainers
 /.claude/                agent-harness maintainers
+/.codex/                 agent-harness and security maintainers
+/.agents/                agent-harness maintainers
+/.codex-plugin/          release and agent-harness maintainers
 ```
 
 For a team repository, pair CODEOWNERS with a ruleset that requires code-owner review for owned paths.

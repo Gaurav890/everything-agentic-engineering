@@ -21,8 +21,12 @@
 # /docs/30-engineering/     @your-org/architecture
 # /docs/30-engineering/SECURITY_MODEL.md @your-org/security
 # /.claude/hooks/           @your-org/security @your-org/agent-platform
+# /.codex/hooks.json        @your-org/security @your-org/agent-platform
 #
 # Repository operations:
 # /.github/                 @your-org/repo-maintainers
 # /scripts/                 @your-org/repo-maintainers
 # /.claude/                 @your-org/agent-platform
+# /.codex/                  @your-org/agent-platform
+# /.agents/                 @your-org/agent-platform
+# /.codex-plugin/           @your-org/repo-maintainers @your-org/agent-platform

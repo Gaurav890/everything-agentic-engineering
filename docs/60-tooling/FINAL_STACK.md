@@ -4,11 +4,15 @@ This is the opinionated default for the reusable starter.
 
 ## Harness
 
-- Claude Code
+- Claude Code and Codex adapters over one repository contract
 - Git + GitHub
-- `CLAUDE.md` as constitution
+- `AGENTS.md` as the cross-runtime contract
+- `CLAUDE.md` as the Claude project constitution
 - `.claude/rules/` for scoped policies
-- `.claude/skills/` for repeatable project workflows
+- `.claude/skills/` as the canonical repeatable workflow catalog
+- `.agents/skills` for Codex repository discovery without copied skills
+- `.codex/` for safe Codex project configuration and hook wiring
+- `.codex-plugin/` for Codex plugin package metadata
 - `.claude/agents/` for specialized roles
 - hooks for deterministic guardrails
 - Git worktrees for parallel write-heavy work
@@ -70,6 +74,7 @@ Default decision:
 - loop-engineering
 - security-gate
 - self-improvement-loop
+- codex-adapter
 
 ## External skills
 
