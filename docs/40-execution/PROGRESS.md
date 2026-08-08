@@ -512,7 +512,7 @@ remain at zero until another maintainer can participate without blocking work.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** REVIEW
+**Outcome:** DONE ON TASK BRANCH — MERGE PENDING
 
 **Change**
 
@@ -538,7 +538,8 @@ GitHub drift using read-only operations.
 
 **Commit/PR**
 
-Branch `feat/T-023-github-task-sync`; commit and ready-for-review PR pending.
+Implementation commit `cfb25bb`; ready-for-review PR pending. The task becomes
+authoritatively done only after human-reviewed merge to `main`.
 
 **Remaining risk**
 

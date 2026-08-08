@@ -4,7 +4,7 @@ Last updated: 2026-08-07
 
 ## Current goal
 
-Complete T-023: deterministic GitHub Issue ↔ task ↔ PR synchronization without
+Merge the reviewed T-023 GitHub Issue ↔ task ↔ PR synchronization without
 adding write authority.
 
 ## Completed
@@ -39,8 +39,8 @@ adding write authority.
 
 ## In progress
 
-- T-023 is implementing explicit task tracking, deterministic PR validation,
-  task-planner guidance, and optional read-only live status for issue #26.
+- T-023 implementation is complete and `done` on its feature branch. Human
+  review and merge remain; authoritative `main` is still unchanged.
 
 ## Blockers
 
@@ -79,8 +79,9 @@ adding write authority.
 
 ## Exact next action
 
-Finish T-023 verification, prepare its task state, and open a ready-for-review
-PR that closes issue #26. Do not self-approve or merge.
+Review the ready T-023 PR, confirm protected checks pass, and squash merge it.
+The merged `Closes #26` relationship will close the issue. Do not self-approve
+or bypass required checks.
 
 ## Relevant files
 
