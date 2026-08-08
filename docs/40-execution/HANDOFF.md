@@ -4,8 +4,9 @@ Last updated: 2026-08-07
 
 ## Current goal
 
-Merge the reviewed T-023 GitHub Issue ↔ task ↔ PR synchronization without
-adding write authority.
+Use `task-closeout.sh T-024` as the live lifecycle source. When it reports a
+clean closeout, select the connected Signalroom vertical slice as the next
+bounded product task.
 
 ## Completed
 
@@ -36,11 +37,15 @@ adding write authority.
   `main` as `7906e62`; T-022 is now durably `done`.
 - Removed the clean merged T-022 worktree and local feature branch. The merged
   work remains recoverable through PR #24 and its Git history.
+- T-023 landed through PR #27 as `2dc1b63`; issue #26 closed automatically and
+  both protected checks passed.
+- T-023 established deterministic Issue ↔ task ↔ PR validation and read-only
+  live drift reporting.
 
 ## In progress
 
-- T-023 implementation is complete and `done` on its feature branch. Human
-  review and merge remain; authoritative `main` is still unchanged.
+- Lifecycle state is intentionally not duplicated here. Run the closeout
+  command named in the current goal for authoritative GitHub and `main` truth.
 
 ## Blockers
 
@@ -74,14 +79,19 @@ adding write authority.
 - T-023 synchronization tests: 12 pass.
 - T-023 task-planner tests: 11 pass.
 - T-023 ledger validation: 22 tasks valid.
-- T-023 live issue status: issue #26 open, no drift.
+- T-023 post-merge state: PR #27 merged, issue #26 closed, task `done` on
+  authoritative `main`.
+- T-024 closeout tests: 12 pass.
+- T-024 handoff lifecycle guard: pass.
+- T-024 task tracking ledger: 23 tasks valid.
+- T-024 `./scripts/verify.sh full`: pass.
 - T-023 `./scripts/verify.sh full`: pass.
 
 ## Exact next action
 
-Review the ready T-023 PR, confirm protected checks pass, and squash merge it.
-The merged `Closes #26` relationship will close the issue. Do not self-approve
-or bypass required checks.
+Run the closeout command named above. Address reported findings through a new
+task branch; never rewrite durable state or delete local work automatically.
+When the report passes, choose the next bounded task from the roadmap.
 
 ## Relevant files
 
@@ -98,5 +108,8 @@ or bypass required checks.
 - `docs/70-collaboration/GITHUB_TASK_SYNC.md`
 - `scripts/github_task_sync.py`
 - `tests/test_github_task_sync.py`
+- `scripts/post_merge_closeout.py`
+- `scripts/task-closeout.sh`
+- `tests/test_post_merge_closeout.py`
 
 Keep this concise enough to read in under two minutes.

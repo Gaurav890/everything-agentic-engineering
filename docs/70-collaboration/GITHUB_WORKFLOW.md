@@ -346,13 +346,20 @@ Enable a merge queue only when repository traffic is high enough that many appro
 
 After the PR lands:
 
-1. Delete the task branch automatically or manually.
-2. Confirm `main` now contains the task status and durable-state changes from the PR.
-3. Record the PR link or merge evidence in `PROGRESS.md` when useful.
-4. Pull the latest `main` before starting dependent work.
-5. The owning issue closes automatically only when the final linked PR uses
+1. Run `./scripts/task-closeout.sh T-014` to resolve merged `main`, PR, issue,
+   handoff, and local cleanup state.
+2. Review its optional cleanup commands. Run them manually only when their
+   exact worktree and branch targets are clean and correct.
+3. Confirm `main` now contains the task status and durable-state changes from the PR.
+4. Record the PR link or merge evidence in `PROGRESS.md` when useful.
+5. Pull the latest `main` before starting dependent work.
+6. The owning issue closes automatically only when the final linked PR uses
    `Closes #128`; intermediate PRs use `Relates to #128`.
-6. Re-evaluate any tasks that depended on the merged change.
+7. Re-evaluate any tasks that depended on the merged change.
+
+Do not commit predictions such as “PR pending” or “merge remains” into the same
+branch that is expected to merge them. Use conditional instructions and let
+the closeout command resolve current lifecycle truth.
 
 ## 14. Hotfix workflow
 

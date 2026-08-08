@@ -113,6 +113,12 @@ state but does not write issues, tasks, PRs, or repository settings. Read
 `docs/70-collaboration/GITHUB_WORKFLOW.md` and `GITHUB_TASK_SYNC.md` for the
 complete workflow.
 
+After merge, use `task-closeout.sh` for current lifecycle truth and cleanup
+guidance. Do not commit unqualified future claims such as “PR pending” or
+“merge remains” into the branch expected to merge them. Use conditional next
+actions or time-qualified evidence. Never execute closeout cleanup suggestions
+without independently resolving the exact clean targets.
+
 ## 7. Agent routing
 
 Before routing non-trivial implementation, read `.agentic/project.json` and
@@ -264,6 +270,7 @@ Use:
 - `./scripts/pr-ready.sh <TASK-ID>`
 - `./scripts/finish-task.sh <TASK-ID>` — moves task to `review` after full verification
 - `./scripts/prepare-merge.sh <TASK-ID>` — writes `done` on the task branch before final merge; `main` becomes authoritative only after merge
+- `./scripts/task-closeout.sh <TASK-ID>` — read-only post-merge verification and local cleanup guidance
 
 If a project adds framework-specific commands, document them in `docs/30-engineering/DEVELOPER_COMMANDS.md`.
 

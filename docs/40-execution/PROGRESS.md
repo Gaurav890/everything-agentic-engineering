@@ -512,7 +512,7 @@ remain at zero until another maintainer can participate without blocking work.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** DONE ON TASK BRANCH — MERGE PENDING
+**Outcome:** DONE
 
 **Change**
 
@@ -530,7 +530,7 @@ GitHub drift using read-only operations.
 - Eleven task-launcher tests pass, including tracking-contract blocking and
   issue-closure guidance.
 - `task-sync.sh validate-ledger` accepts all 22 ledger tasks.
-- Live status confirms issue #26 is open and reports no drift.
+- Post-merge status confirms issue #26 closed through the merged PR.
 - GitHub workflow and issue-form YAML parse successfully.
 - Local documentation links pass.
 - `./scripts/verify.sh full` passes all ten stages, including Showcase lint,
@@ -538,11 +538,49 @@ GitHub drift using read-only operations.
 
 **Commit/PR**
 
-Implementation commit `cfb25bb`; ready-for-review PR pending. The task becomes
-authoritatively done only after human-reviewed merge to `main`.
+Merged through PR #27 as `2dc1b63`; implementation commit `cfb25bb` and
+merge-preparation commit `5604470` remain visible in the PR history.
 
 **Remaining risk**
 
 Live status depends on an authenticated GitHub CLI but is optional. Required CI
 validation is offline. The automation deliberately cannot comment, label,
 assign, close, approve, merge, or change repository/task state.
+
+### 2026-08-07 — T-024
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome AT VERIFICATION:** REVIEW
+
+**Change**
+
+Added deterministic post-merge closeout. The command reads the live default
+branch, merged PR, linked issues, volatile handoff sections, and local
+branch/worktree state. It reports findings and optional cleanup commands but
+cannot edit GitHub, durable state, branches, or worktrees.
+
+**Evidence**
+
+- The first live T-023 run verified PR #27, closed issue #26, and `done` on
+  authoritative `main`, then detected all three stale volatile handoff claims.
+- The same run identified the clean managed T-023 worktree and printed cleanup
+  commands without executing them.
+- Twelve closeout tests cover remote-main truth, merged PR ambiguity, issue
+  closure, issue-free and historical tasks, missing CLI behavior, stale
+  handoff detection, dirty/unmanaged worktree preservation, and read-only
+  command safety.
+- The offline handoff guard reports no transient task lifecycle claims.
+- All 23 tasks pass the GitHub tracking contract.
+- `./scripts/verify.sh full` passes all ten stages, including Showcase lint,
+  typecheck, and tests.
+
+**Commit/PR**
+
+Resolve the current lifecycle with `task-closeout.sh T-024`; do not duplicate
+predicted PR state in this historical record.
+
+**Remaining risk**
+
+Live closeout requires authenticated read access through `gh`. Cleanup commands
+remain recommendations and require independent human target verification.

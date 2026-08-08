@@ -61,6 +61,11 @@ whether a PR should relate to or close each issue. Required PR policy validation
 is deterministic and offline; optional live status uses read-only GitHub
 commands and cannot edit issues, tasks, pull requests, or repository state.
 
+Post-merge closeout is resolved live rather than predicted in committed prose.
+`task-closeout.sh` reads the default branch and GitHub state, verifies the
+merged task/PR/issue contract, detects stale volatile handoff claims, and
+reports safe local worktree/branch cleanup commands without executing them.
+
 Codex is supported through a native repository adapter. `AGENTS.md` carries the
 cross-runtime contract; `.agents/skills` and the skills-only plugin expose the
 canonical `.claude/skills` catalog without copied instructions; trusted

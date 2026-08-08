@@ -651,6 +651,16 @@ must record a reviewed reason instead of silently omitting the link. The live
 status command is read-only; automation does not comment, label, approve,
 merge, or copy GitHub state over durable repository truth.
 
+After a human merges the PR:
+
+```bash
+./scripts/task-closeout.sh T-014
+```
+
+Closeout verifies the task on the live default branch, its merged PR, issue
+state, and volatile handoff text. It reports exact local cleanup commands but
+never runs them, so dirty or unrelated work remains protected.
+
 ### PR naming
 
 ```text
