@@ -85,6 +85,7 @@ bounded product task.
 - T-024 handoff lifecycle guard: pass.
 - T-024 task tracking ledger: 23 tasks valid.
 - T-024 `./scripts/verify.sh full`: pass.
+- T-024 merge-preparation gate: pass; task is `done` on its task branch.
 - T-023 `./scripts/verify.sh full`: pass.
 
 ## Exact next action

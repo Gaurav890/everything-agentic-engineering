@@ -551,7 +551,7 @@ assign, close, approve, merge, or change repository/task state.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome AT VERIFICATION:** REVIEW
+**Outcome AT FINAL VERIFICATION:** DONE ON TASK BRANCH
 
 **Change**
 
@@ -577,8 +577,9 @@ cannot edit GitHub, durable state, branches, or worktrees.
 
 **Commit/PR**
 
-Resolve the current lifecycle with `task-closeout.sh T-024`; do not duplicate
-predicted PR state in this historical record.
+Implementation commit `22a9625`. Resolve the current lifecycle with
+`task-closeout.sh T-024`; do not duplicate predicted PR state in this
+historical record.
 
 **Remaining risk**
 
