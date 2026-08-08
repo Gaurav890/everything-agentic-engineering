@@ -604,6 +604,8 @@ Also included:
 
 - Branch naming rules
 - PR title enforcement
+- Deterministic Issue ↔ task ↔ PR contract validation
+- Read-only live issue/PR drift inspection
 - Issue guidance
 - Draft PR guidance
 - Code review standards
@@ -635,6 +637,19 @@ Create a branch:
 ```bash
 ./scripts/new-branch.sh feat T-014 password-reset
 ```
+
+Plan and validate the issue relationship:
+
+```bash
+./scripts/task-sync.sh plan T-014
+./scripts/task-sync.sh validate-ledger
+```
+
+One issue may decompose into several tasks. Intermediate PRs use `Relates to`;
+only the final unfinished linked task may use `Closes`. Small issue-free work
+must record a reviewed reason instead of silently omitting the link. The live
+status command is read-only; automation does not comment, label, approve,
+merge, or copy GitHub state over durable repository truth.
 
 ### PR naming
 
@@ -1156,7 +1171,7 @@ Potential future directions:
 - [x] Interactive project initializer CLI with safe presets and previews
 - [x] Selectable web, mobile, backend, design, and research profiles
 - [x] Reviewed branch/worktree creation from `TASKS.jsonl`
-- [ ] Deeper GitHub Issue ↔ Task synchronization
+- [x] Deterministic GitHub Issue ↔ Task ↔ PR validation and read-only drift reporting
 - [ ] Agent-team orchestration examples
 - [x] Visual regression pipeline for the Showcase's required states
 - [ ] Security scanner integrations

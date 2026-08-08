@@ -14,6 +14,7 @@ approval.
 The plan reports:
 
 - requirement and acceptance-criteria IDs;
+- the reviewed GitHub issue contract and whether the PR should relate or close;
 - dependency state;
 - recommended specialist agent;
 - compatibility with active project profiles;
@@ -60,6 +61,7 @@ Starting is blocked when:
 - another active task owns overlapping files;
 - the working tree is dirty;
 - the requested slug or branch type is invalid.
+- any unfinished task lacks a valid issue link or reviewed issue-free reason.
 
 Execution-ledger files under `docs/40-execution/` are shared coordination state
 and do not create false file-ownership collisions. Product and implementation
@@ -80,3 +82,18 @@ verification:
 
 The project manifest remains authoritative. The launcher does not activate a
 missing profile automatically; use the profile preview workflow first.
+
+## GitHub tracking
+
+The launcher includes the deterministic issue/task plan. Inspect the same
+contract directly with:
+
+```bash
+./scripts/task-sync.sh validate-ledger
+./scripts/task-sync.sh plan T-009
+./scripts/task-sync.sh status T-009
+```
+
+`status` is an optional read-only live inspection. CI uses offline ledger and
+PR-payload validation and does not need GitHub write authority. See
+[`GITHUB_TASK_SYNC.md`](GITHUB_TASK_SYNC.md).

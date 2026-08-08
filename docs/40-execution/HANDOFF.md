@@ -4,8 +4,8 @@ Last updated: 2026-08-07
 
 ## Current goal
 
-Choose and define the next bounded improvement after completing T-022. The
-current recommendation is deeper GitHub Issue ↔ task synchronization.
+Merge the reviewed T-023 GitHub Issue ↔ task ↔ PR synchronization without
+adding write authority.
 
 ## Completed
 
@@ -39,7 +39,8 @@ current recommendation is deeper GitHub Issue ↔ task synchronization.
 
 ## In progress
 
-- None. T-022 is complete; no implementation task is active in this handoff.
+- T-023 implementation is complete and `done` on its feature branch. Human
+  review and merge remain; authoritative `main` is still unchanged.
 
 ## Blockers
 
@@ -70,12 +71,17 @@ current recommendation is deeper GitHub Issue ↔ task synchronization.
 - T-022 `./scripts/prepare-merge.sh T-022`: pass.
 - PR #24 required `verify` and `policy` checks: pass.
 - T-022 task state on authoritative `main`: `done`.
+- T-023 synchronization tests: 12 pass.
+- T-023 task-planner tests: 11 pass.
+- T-023 ledger validation: 22 tasks valid.
+- T-023 live issue status: issue #26 open, no drift.
+- T-023 `./scripts/verify.sh full`: pass.
 
 ## Exact next action
 
-Define T-023 as a separately reviewed GitHub Issue ↔ task synchronization
-slice before implementation. Use a new task branch and preserve human approval
-for adoption and merge.
+Review the ready T-023 PR, confirm protected checks pass, and squash merge it.
+The merged `Closes #26` relationship will close the issue. Do not self-approve
+or bypass required checks.
 
 ## Relevant files
 
@@ -89,5 +95,8 @@ for adoption and merge.
 - `docs/70-collaboration/PARALLEL_TERMINALS.md`
 - `scripts/codex-doctor.sh`
 - `tests/test_codex_adapter.py`
+- `docs/70-collaboration/GITHUB_TASK_SYNC.md`
+- `scripts/github_task_sync.py`
+- `tests/test_github_task_sync.py`
 
 Keep this concise enough to read in under two minutes.

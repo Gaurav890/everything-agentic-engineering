@@ -65,12 +65,18 @@ Do not spawn several writable in-session subagents into the same checkout.
 1. Normal committed work happens on a short-lived task branch, not directly on `main`.
 2. Branches use `<type>/<TASK-ID>-<slug>`.
 3. Draft PRs are the preferred shared surface for in-progress implementation collaboration.
-4. Every meaningful PR links task IDs, issues when applicable, requirements, acceptance criteria, and evidence.
+4. Every new unfinished task records required issue references or an explicit
+   reviewed issue-free reason. Every meaningful PR reproduces that contract,
+   links its task, requirements, acceptance criteria, and evidence.
 5. Workers move implemented tasks to `review`. Before final merge, `prepare-merge.sh` may write `done` on the task branch; only the merged state on `main` is authoritative.
 6. Squash merge is the default.
 7. Agents follow the same review, security, CODEOWNERS, and protected-branch rules as human contributors.
 
 See `docs/70-collaboration/GITHUB_WORKFLOW.md`.
+
+The deterministic `task-sync.sh` contract validates relationships and reports
+live drift read-only. It never grants an agent authority to update issues,
+tasks, PRs, approvals, or merges.
 
 ## Parallelization rules
 

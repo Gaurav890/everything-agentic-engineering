@@ -507,3 +507,42 @@ merge-preparation commit `5b80b57` remain visible in the PR history.
 Project roles inherit capabilities already approved for the parent session.
 They add no external capability themselves. Independent approving reviews
 remain at zero until another maintainer can participate without blocking work.
+
+### 2026-08-07 — T-023
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** DONE ON TASK BRANCH — MERGE PENDING
+
+**Change**
+
+Added a deterministic GitHub Issue ↔ task ↔ PR contract. New unfinished tasks
+must record required issue references or a reviewed issue-free reason. The task
+planner determines whether a PR should relate to or close each issue, the PR
+policy validates the contract offline, and an optional live command reports
+GitHub drift using read-only operations.
+
+**Evidence**
+
+- Twelve synchronization tests cover historical compatibility, required and
+  issue-free tracking, title/body mismatches, exact multi-issue references,
+  multi-task closure safety, reviewed fixtures, and read-only live status.
+- Eleven task-launcher tests pass, including tracking-contract blocking and
+  issue-closure guidance.
+- `task-sync.sh validate-ledger` accepts all 22 ledger tasks.
+- Live status confirms issue #26 is open and reports no drift.
+- GitHub workflow and issue-form YAML parse successfully.
+- Local documentation links pass.
+- `./scripts/verify.sh full` passes all ten stages, including Showcase lint,
+  typecheck, and tests.
+
+**Commit/PR**
+
+Implementation commit `cfb25bb`; ready-for-review PR pending. The task becomes
+authoritatively done only after human-reviewed merge to `main`.
+
+**Remaining risk**
+
+Live status depends on an authenticated GitHub CLI but is optional. Required CI
+validation is offline. The automation deliberately cannot comment, label,
+assign, close, approve, merge, or change repository/task state.

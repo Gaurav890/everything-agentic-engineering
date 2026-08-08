@@ -21,6 +21,7 @@ def task(
     depends_on: list[str] | None = None,
     files: list[str] | None = None,
     verification: list[str] | None = None,
+    tracking: dict | None = None,
 ) -> dict:
     return {
         "id": task_id,
@@ -34,6 +35,12 @@ def task(
         "files_owned": files or ["scripts/example.py"],
         "verification": verification or ["unit tests"],
         "risk": "low",
+        "tracking": tracking
+        or {
+            "mode": "not_required",
+            "issues": [],
+            "reason": "Unit-test fixture",
+        },
     }
 
 
@@ -128,6 +135,26 @@ class TaskEngineTests(unittest.TestCase):
             result = task_engine.run_start(args, plan)
         self.assertEqual(result, 2)
         self.assertEqual(tasks[0]["status"], "ready")
+
+    def test_missing_tracking_blocks_unfinished_task(self) -> None:
+        candidate = task("T-100")
+        candidate.pop("tracking")
+        plan = task_engine.build_plan("T-100", [candidate], ["core"])
+        self.assertFalse(plan["ready"])
+        self.assertTrue(
+            any("tracking contract" in blocker for blocker in plan["blockers"])
+        )
+
+    def test_plan_exposes_issue_closure_guidance(self) -> None:
+        tasks = [
+            task(
+                "T-100",
+                tracking={"mode": "required", "issues": ["#77"]},
+            )
+        ]
+        plan = task_engine.build_plan("T-100", tasks, ["core"])
+        self.assertEqual(plan["github_tracking"]["issues"][0]["ref"], "#77")
+        self.assertTrue(plan["github_tracking"]["issues"][0]["may_close"])
 
 
 if __name__ == "__main__":

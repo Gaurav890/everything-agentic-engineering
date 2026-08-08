@@ -98,9 +98,9 @@ Examples:
 
 Rules:
 
-- Create or link a GitHub issue when work needs discussion, prioritization, cross-team collaboration, durable tracking, or spans multiple PRs.
+- Every new unfinished task records `tracking.mode=required` with its GitHub issue references, or `tracking.mode=not_required` with a reviewed reason.
 - Open draft PRs early when visibility, dependency coordination, API/schema review, or design feedback would help.
-- Every meaningful PR links its task ID, relevant issue, requirements, acceptance criteria, and verification evidence.
+- Every meaningful PR links its task ID, the exact issue contract, requirements, acceptance criteria, and verification evidence. Intermediate slices use `Relates to`; only the final unfinished task for an issue may use `Closes`.
 - Use one accountable owner per active work item.
 - Use exclusive file/module ownership for parallel writes.
 - Require passing checks and resolved blocking review comments before merge.
@@ -108,7 +108,10 @@ Rules:
 - Delete merged branches.
 - A task moves to `review` after implementation verification. Before final merge, write `done` on the task branch with `prepare-merge.sh`; the task becomes durably done only when that PR lands in `main`.
 
-Read `docs/70-collaboration/GITHUB_WORKFLOW.md` for the complete workflow.
+Use `task-sync.sh` to validate or inspect the contract. It may read live GitHub
+state but does not write issues, tasks, PRs, or repository settings. Read
+`docs/70-collaboration/GITHUB_WORKFLOW.md` and `GITHUB_TASK_SYNC.md` for the
+complete workflow.
 
 ## 7. Agent routing
 

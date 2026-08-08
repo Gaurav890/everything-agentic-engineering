@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A deterministic GitHub Issue ↔ task ↔ PR contract with explicit issue-free
+  exceptions, multi-task closure safety, task-planner guidance, required
+  offline policy validation, and optional read-only live drift inspection.
 - Seven project-scoped, read-only Codex specialist roles for product,
   architecture, research, design, security, QA, and integration review, with
   deterministic authority and schema validation.

@@ -109,12 +109,26 @@ Issue #128: Add password recovery
   └── T-017 end-to-end verification
 ```
 
-Reference both in the pull request:
+Every newly created unfinished task records one of these contracts:
 
 ```text
-Closes #128
+tracking.mode = required      → one or more issue references
+tracking.mode = not_required  → no issue plus a reviewed reason
+```
+
+Reference both in the pull request. Use `Relates to` for intermediate slices;
+only the final unfinished task linked to the issue may use `Closes`:
+
+```text
+Issue: Relates to #128
 Task: T-016
 ```
+
+Run `./scripts/task-sync.sh plan T-016` to get the relationship from the
+ledger. The policy validates the PR body against that contract. Historical
+tasks already marked `done` do not require migration. See
+[`GITHUB_TASK_SYNC.md`](GITHUB_TASK_SYNC.md) for the complete authority,
+exception, and security model.
 
 ## 4. Starting work
 
@@ -122,7 +136,8 @@ Before coding:
 
 1. Read the relevant requirement and acceptance criteria.
 2. Confirm or create the task in `TASKS.jsonl`.
-3. Identify any GitHub issue that owns the work.
+3. Record the owning issue(s), or an explicit reviewed issue-free reason, in
+   the task's `tracking` object.
 4. Pull the latest `main`.
 5. Create a short-lived branch or isolated worktree.
 6. Mark the task `in_progress`.
@@ -295,11 +310,11 @@ When the implementation is final and the PR is ready for its last review/check c
 # commit this final task-state update; then complete final review/checks and merge
 ```
 
-The PR policy check enforces this contract for non-draft pull requests. It
-extracts the task ID from the PR title and requires that task to be `done` in
-the branch's `TASKS.jsonl`. Draft PRs may remain `in_progress` or `review` while
-feedback is active, but they must run `prepare-merge.sh` and commit the durable
-state before requesting final review.
+The PR policy validates task and issue references for draft and ready pull
+requests. A ready PR must also reference a task marked `done` in the branch's
+`TASKS.jsonl`. Draft PRs may remain `in_progress` or `review` while feedback is
+active, but they still cannot drift from their task's issue contract. Before
+requesting final review, run `prepare-merge.sh` and commit the durable state.
 
 ## 12. Merge strategy
 
@@ -335,7 +350,8 @@ After the PR lands:
 2. Confirm `main` now contains the task status and durable-state changes from the PR.
 3. Record the PR link or merge evidence in `PROGRESS.md` when useful.
 4. Pull the latest `main` before starting dependent work.
-5. The owning issue should close automatically when the PR uses a closing keyword such as `Closes #128`; otherwise close or update it manually.
+5. The owning issue closes automatically only when the final linked PR uses
+   `Closes #128`; intermediate PRs use `Relates to #128`.
 6. Re-evaluate any tasks that depended on the merged change.
 
 ## 14. Hotfix workflow
@@ -393,3 +409,4 @@ failed_safe
 | Default merge method? | Squash merge. |
 | Delete merged branches? | Yes. |
 | Mark task done before merge? | Yes, on the task branch after final verification; it becomes authoritative only after merge. |
+| Copy GitHub status into the ledger automatically? | No. Validate and report drift; keep authority explicit. |
