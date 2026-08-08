@@ -55,6 +55,12 @@ compatibility, specialist routing, exclusive file ownership, verification
 gates, and base-branch freshness. Planning is read-only and workspace creation
 requires explicit confirmation.
 
+New unfinished tasks also carry an explicit GitHub tracking contract: required
+issue references or a reviewed issue-free reason. The task planner reports
+whether a PR should relate to or close each issue. Required PR policy validation
+is deterministic and offline; optional live status uses read-only GitHub
+commands and cannot edit issues, tasks, pull requests, or repository state.
+
 Codex is supported through a native repository adapter. `AGENTS.md` carries the
 cross-runtime contract; `.agents/skills` and the skills-only plugin expose the
 canonical `.claude/skills` catalog without copied instructions; trusted

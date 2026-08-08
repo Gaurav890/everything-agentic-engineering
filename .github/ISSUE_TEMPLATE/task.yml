@@ -13,8 +13,13 @@ body:
     id: task_id
     attributes:
       label: Task ID
-      description: Example T-014. Create/update TASKS.jsonl when appropriate.
+      description: Optional when opening the issue. Add the stable T-### after decomposition and record this issue in TASKS.jsonl.
       placeholder: T-014
+  - type: textarea
+    id: task_slices
+    attributes:
+      label: Expected task slices
+      description: If this outcome needs multiple executable tasks, describe the likely slices. Each task must link back to this issue; only the final unfinished slice may close it.
   - type: textarea
     id: context
     attributes:

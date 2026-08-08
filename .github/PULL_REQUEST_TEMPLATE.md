@@ -8,10 +8,12 @@
 
 ## Linked work
 
-- Issue: <!-- Closes #123 / Relates to #123 -->
+- Issue: <!-- Relates to #123 / Closes #123 / Not required — exact reason from TASKS.jsonl -->
 - Task: <!-- T-014 -->
 - Requirements: <!-- FR-001, NFR-002 -->
 - Acceptance criteria: <!-- AC-001, AC-002 -->
+
+<!-- Use "Relates to" while another unfinished task shares the issue. Only the final linked task may use "Closes". -->
 
 ## Scope
 

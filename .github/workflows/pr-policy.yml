@@ -3,7 +3,7 @@ name: PR policy
 on:
   pull_request:
     branches: [main]
-    types: [opened, edited, reopened, synchronize, ready_for_review]
+    types: [opened, edited, reopened, synchronize, ready_for_review, converted_to_draft]
   merge_group:
 
 permissions:
@@ -29,12 +29,14 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: ./scripts/check-pr-title.sh "$PR_TITLE"
 
-      - name: Validate task merge state
-        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+      - name: Validate task and issue contract
+        if: github.event_name == 'pull_request'
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-        run: ./scripts/check-pr-task-state.sh "$PR_TITLE"
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+          PR_READY: ${{ github.event.pull_request.draft == false }}
+        run: ./scripts/task-sync.sh validate-pr
 
       - name: Merge queue compatibility
         if: github.event_name == 'merge_group'
-        run: echo "PR title and task state were validated before queue entry; reporting success for merge_group."
+        run: echo "PR title, task state, and issue contract were validated before queue entry; reporting success for merge_group."

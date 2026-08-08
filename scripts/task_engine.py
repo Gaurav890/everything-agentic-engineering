@@ -16,6 +16,7 @@ TASKS_PATH = ROOT / "docs/40-execution/TASKS.jsonl"
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import profile_engine  # noqa: E402
+import github_task_sync  # noqa: E402
 
 ACTIVE_STATUSES = {"in_progress", "review"}
 STARTABLE_STATUSES = {"backlog", "ready", "blocked"}
@@ -145,6 +146,13 @@ def build_plan(task_id: str, tasks: list[dict], active_profiles: list[str]) -> d
     blockers: list[str] = []
     warnings: list[str] = []
 
+    try:
+        github_task_sync.validate_ledger(tasks)
+        github_tracking = github_task_sync.tracking_plan(task_id, tasks)
+    except github_task_sync.TaskSyncError as exc:
+        github_tracking = {"mode": "invalid", "issues": [], "reason": str(exc)}
+        blockers.append(f"GitHub tracking contract: {exc}")
+
     dependency_states = []
     for dependency_id in task.get("depends_on", []):
         dependency = index.get(dependency_id)
@@ -192,6 +200,7 @@ def build_plan(task_id: str, tasks: list[dict], active_profiles: list[str]) -> d
     return {
         "task": task,
         "recommended_agent": AGENT_BY_OWNER.get(task.get("owner"), task.get("owner")),
+        "github_tracking": github_tracking,
         "dependency_states": dependency_states,
         "profile_checks": profile_checks,
         "active_profiles": active_profiles,
@@ -214,6 +223,24 @@ def print_plan(plan: dict) -> None:
     print(f"Goal: {task.get('goal', '')}")
     print(f"Requirements: {', '.join(task.get('requirement_ids', [])) or 'none'}")
     print(f"Acceptance: {', '.join(task.get('acceptance_ids', [])) or 'none'}")
+
+    print("\nGitHub tracking:")
+    tracking = plan["github_tracking"]
+    if tracking["mode"] == "required":
+        for issue in tracking["issues"]:
+            relationship = "Closes" if issue["may_close"] else "Relates to"
+            print(f"  - {issue['ref']}: {relationship}")
+            if issue["other_unfinished_tasks"]:
+                print(
+                    "    Other unfinished tasks: "
+                    + ", ".join(issue["other_unfinished_tasks"])
+                )
+    elif tracking["mode"] == "not_required":
+        print(f"  - Not required: {tracking['reason']}")
+    elif tracking["mode"] == "historical":
+        print("  - Historical completed task; no migration required")
+    else:
+        print(f"  - INVALID: {tracking['reason']}")
 
     print("\nDependencies:")
     if plan["dependency_states"]:
