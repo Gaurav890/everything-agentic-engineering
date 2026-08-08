@@ -97,3 +97,7 @@ contract directly with:
 `status` is an optional read-only live inspection. CI uses offline ledger and
 PR-payload validation and does not need GitHub write authority. See
 [`GITHUB_TASK_SYNC.md`](GITHUB_TASK_SYNC.md).
+
+After merge, run `./scripts/task-closeout.sh T-009`. It reads authoritative
+GitHub/default-branch state, reports stale handoff claims, and prints optional
+local cleanup commands. It never executes those commands.
