@@ -144,6 +144,11 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Codex adapter valid", result.stdout)
 
+    def test_codex_doctor_reuses_shared_runtime_policy(self) -> None:
+        doctor = (ROOT / "scripts/codex-doctor.sh").read_text()
+        self.assertIn("runtime-doctor.sh", doctor)
+        self.assertNotIn("actual >= (0, 147, 0)", doctor)
+
 
 if __name__ == "__main__":
     unittest.main()

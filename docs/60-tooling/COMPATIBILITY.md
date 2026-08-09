@@ -16,6 +16,30 @@
 Profiles describe required capabilities; they do not silently install them.
 Run `./scripts/profile-doctor.sh` after tool or agent upgrades.
 
+## Runtime compatibility policy
+
+`.agentic/runtime-baselines.json` is the machine-readable source for tested
+Claude Code and Codex version floors and optional capability gates.
+
+Run the read-only doctor after cloning or changing either runtime:
+
+```bash
+./scripts/runtime-doctor.sh
+```
+
+Advisory mode warns when a runtime is missing or below the recommended floor
+without making portable repository CI depend on a local installation.
+Enterprise validation can fail closed:
+
+```bash
+./scripts/runtime-doctor.sh --strict
+./scripts/runtime-doctor.sh --json
+```
+
+The doctor never installs, upgrades, enables, authenticates, or configures a
+runtime. A compatible version is a prerequisite, not authorization to enable
+an optional capability.
+
 ## Claude Code runtime notes
 
 The repository does not silently pin or upgrade Claude Code. Runtime behavior
@@ -38,6 +62,14 @@ must be checked against the installed version.
   workflow agents, dynamic workflow imports, or managed bypass-permission
   policy are part of the trust boundary. That release closes additional command
   concealment, approval-dialog, workflow-sandbox, and organization-policy gaps.
+- Claude Code 2.1.224 or newer is recommended when filesystem deny rules,
+  self-hosted environments, archive plugin sources, credential extraction, or
+  cross-session messaging are being evaluated. That release fixes trailing-
+  slash filesystem deny entries and introduces those optional surfaces.
+- Claude Code 2.1.225 is the repository's recommended general baseline because
+  it adds workspace trust to `claude agents` and hardens cross-session,
+  self-hosted, OAuth, and auto-mode failure behavior. This does not enable any
+  of those capabilities.
 - This recommendation does not authorize adding credential paths, secrets,
   sandbox settings, or network allowlists to the repository. Inventory and
   approve those separately.
@@ -85,9 +117,9 @@ include a migration note.
   production deployments remain explicit human actions.
 - The research loop may propose updates but cannot adopt, commit, merge, or
   release them autonomously.
-- Claude agent definitions are not yet translated into Codex-specific subagent
-  role files; Codex currently shares the repository contract, skills, hooks,
-  worktree workflow, and plugin metadata.
+- Codex translates only reviewed read-heavy specialist roles. Claude
+  write-capable agent definitions are intentionally not copied mechanically;
+  parallel writes still require separate branches and worktrees.
 - The Codex plugin manifest is package-ready but marketplace publication and
   installation policy remain explicit release actions.
 

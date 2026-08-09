@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-07
+Last updated: 2026-08-09
 
 ## Product
 
@@ -80,6 +80,14 @@ integration review. They add context specialization without adding runtime
 authority. Parallel implementation remains isolated by task branch and
 worktree.
 
+Claude Code and Codex compatibility is defined in
+`.agentic/runtime-baselines.json` and reported by `runtime-doctor.sh` in
+advisory, strict, or JSON form. The doctor is read-only and keeps version
+availability separate from optional capability approval. Claude self-hosted
+and cross-session execution, archive plugin sources, Codex portable plugin
+installation, MCP 2026-07-28 opt-in, and automatically reviewed approvals are
+not enabled by the committed policy.
+
 GitHub `main` protection requires the `verify` and `policy` checks, an up-to-date
 branch, linear history, and resolved review conversations. It applies to
 administrators and blocks force pushes and branch deletion. The solo-maintainer
@@ -114,6 +122,10 @@ Codex verification additionally validates shared skill discovery, project
 configuration authority boundaries, hook wiring, plugin metadata, default and
 strict runtime-doctor behavior, and Codex `apply_patch` secret scanning.
 
+Runtime compatibility verification validates the machine-readable policy,
+stable-versus-prerelease comparison, advisory and strict outcomes, JSON output,
+and Codex doctor reuse without requiring either runtime in portable CI.
+
 ## Known incomplete work
 
 - Signalroom is a static reference experience, not a connected agent runtime.
@@ -126,5 +138,8 @@ strict runtime-doctor behavior, and Codex `apply_patch` secret scanning.
   parallel writers use separate task branches and worktrees.
 - Codex plugin marketplace publication and installation policy remain explicit
   release actions.
+- The developer machine inspected for T-025 reports Claude Code 2.1.220 and a
+  Codex 0.146.0 prerelease build, both below the recommended baselines. The
+  repository reports this drift but does not upgrade developer tooling.
 
 Only factual present-tense truth belongs here.

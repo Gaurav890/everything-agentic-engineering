@@ -36,6 +36,7 @@ cd everything-agentic-engineering
 cp .env.example .env
 ./scripts/bootstrap.sh
 ./scripts/init-project.sh
+./scripts/runtime-doctor.sh
 ```
 
 In one guided path, the starter:
@@ -45,6 +46,11 @@ In one guided path, the starter:
 3. records the selection in a machine-readable project manifest;
 4. validates the environment without silently installing or deleting tools;
 5. turns a durable task into a reviewed branch or worktree plan.
+
+The runtime doctor is advisory by default: it reports whether Claude Code and
+Codex meet the repository's reviewed baselines but never installs, upgrades, or
+enables them. Managed environments can use `--strict`; inventory systems can
+use `--json`.
 
 After product discovery and task decomposition create a ready task such as
 `T-101`, inspect it without changing the workspace:

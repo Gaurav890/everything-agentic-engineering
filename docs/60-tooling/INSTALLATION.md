@@ -8,8 +8,9 @@
 - Python 3 for included guardrail hooks
 - pnpm recommended for app profiles
 
-Codex 0.147.0 or newer is recommended when using the plugin workflow. The
-repository doctor reports an older or missing runtime without upgrading it.
+Claude Code 2.1.225+ and Codex 0.147.0+ are the recommended runtime baselines.
+The repository doctor reports an older or missing runtime without upgrading it
+or enabling optional capabilities.
 
 ## 1. Clone/copy
 
@@ -73,6 +74,15 @@ required by the selected profile after reviewing their code, credentials, and
 permissions.
 
 ## 6. Check the selected coding-agent runtime
+
+For either adapter:
+
+```bash
+./scripts/runtime-doctor.sh
+```
+
+Use `--strict` for a managed developer image or release validation and `--json`
+for inventory tooling. The doctor is read-only.
 
 For Codex:
 

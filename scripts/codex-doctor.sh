@@ -154,29 +154,33 @@ else
   fail "shared safety hooks must be executable"
 fi
 
-if command -v codex >/dev/null 2>&1; then
-  version_output="$(codex --version 2>/dev/null || true)"
-  version="$(printf '%s\n' "$version_output" | sed -nE 's/.* ([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' | head -1)"
-  if [ -z "$version" ]; then
-    warn "Codex is installed but its version could not be parsed: $version_output"
-  elif python3 - "$version" <<'PY'
-import sys
-actual = tuple(int(part) for part in sys.argv[1].split("."))
-raise SystemExit(0 if actual >= (0, 147, 0) else 1)
-PY
-  then
-    pass "Codex runtime $version meets the plugin baseline"
-  elif [ "$STRICT_RUNTIME" = true ]; then
-    fail "Codex runtime $version is below the 0.147.0 plugin baseline"
-  else
-    warn "Codex runtime $version is below 0.147.0; repository contracts still validate, but plugin workflows require an approved upgrade"
-  fi
+runtime_args=(--runtime codex --json)
+if [ "$STRICT_RUNTIME" = true ]; then
+  runtime_args+=(--strict)
+fi
+if runtime_report="$(./scripts/runtime-doctor.sh "${runtime_args[@]}")"; then
+  runtime_command_passed=true
 else
-  if [ "$STRICT_RUNTIME" = true ]; then
-    fail "Codex is not installed"
-  else
-    warn "Codex is not installed; runtime checks were skipped"
-  fi
+  runtime_command_passed=false
+fi
+runtime_status="$(printf '%s' "$runtime_report" | python3 -c 'import json, sys; print(json.load(sys.stdin)["runtimes"][0]["status"])')"
+runtime_message="$(printf '%s' "$runtime_report" | python3 -c 'import json, sys; print(json.load(sys.stdin)["runtimes"][0]["message"])')"
+case "$runtime_status" in
+  pass)
+    pass "$runtime_message"
+    ;;
+  warn)
+    warn "$runtime_message"
+    ;;
+  fail)
+    fail "$runtime_message"
+    ;;
+  *)
+    fail "shared Codex runtime policy returned unknown status: $runtime_status"
+    ;;
+esac
+if [ "$runtime_command_passed" = false ] && [ "$runtime_status" != fail ]; then
+  fail "shared Codex runtime policy command failed unexpectedly"
 fi
 
 if [ "$failures" -gt 0 ]; then

@@ -9,6 +9,7 @@ canonical skills and safety scripts remain shared with the Claude adapter.
 From a trusted checkout:
 
 ```bash
+./scripts/runtime-doctor.sh
 ./scripts/codex-doctor.sh
 codex
 ```
@@ -24,6 +25,10 @@ on a developer machine can require the runtime floor:
 Codex 0.147.0 or newer is the recommended baseline for plugin workflows. An
 older runtime does not authorize an automatic upgrade; review and approve
 runtime changes separately.
+
+The shared runtime doctor reads `.agentic/runtime-baselines.json`, supports
+advisory, strict, and JSON reports, and performs no mutation. The Codex doctor
+reuses that baseline so version policy cannot drift between scripts.
 
 ## Source-of-truth map
 
@@ -147,6 +152,9 @@ use.
 - The adapter supports parallel workspaces but does not start concurrent
   feature branches without reviewed tasks and ownership.
 - Plugin marketplace publication is not automatic.
+- Portable plugin installation, MCP 2026-07-28 opt-in, and
+  `--approve-for-me` remain disabled by default and require separate human
+  approval; runtime compatibility alone does not authorize them.
 - Enterprise administrators may constrain plugins, hooks, concurrency,
   permissions, models, network access, or MCP sources beyond repository
   defaults.

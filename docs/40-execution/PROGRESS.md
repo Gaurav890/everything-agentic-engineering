@@ -585,3 +585,47 @@ historical record.
 
 Live closeout requires authenticated read access through `gh`. Cleanup commands
 remain recommendations and require independent human target verification.
+
+### 2026-08-09 — T-025
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** REVIEW
+
+**Change**
+
+Added one machine-readable runtime compatibility policy for Claude Code and
+Codex, plus a dependency-free read-only doctor with advisory, strict,
+runtime-specific, and JSON modes. Codex verification now reuses that canonical
+policy. Optional runtime capabilities remain disabled and explicitly require
+human approval.
+
+**Evidence**
+
+- The manifest records primary release sources and tested minimums: Claude Code
+  2.1.225 and Codex 0.147.0.
+- Seven runtime tests cover policy validation, stable versus prerelease
+  comparison, advisory and strict behavior, JSON stability, and fail-closed
+  optional-capability governance.
+- Ten Codex adapter tests confirm the existing authority boundary and shared
+  policy reuse.
+- The doctor reports the inspected developer runtimes below recommendation
+  without installing, upgrading, or enabling anything.
+- Simulated strict checks reject older versions and accept the recommended
+  stable versions.
+- Full repository verification passes all ten stages, including 24-task
+  tracking validation, security hooks, design tokens, Showcase lint,
+  typecheck, and tests.
+
+**Commit/PR**
+
+Issue #30 owns the human discussion. Commit and pull-request references are
+recorded after publication.
+
+**Remaining risk**
+
+The inspected developer runtimes remain below recommendation until a human
+chooses to upgrade them. Self-hosted and cross-session Claude execution,
+archive plugin sources, Codex portable plugin installation, MCP 2026-07-28,
+and automatically reviewed approvals need separate threat models and are not
+enabled by this change.

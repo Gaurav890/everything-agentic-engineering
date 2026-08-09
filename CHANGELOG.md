@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A machine-readable Claude Code and Codex runtime policy plus a read-only
+  advisory/strict/JSON doctor that separates compatibility from authority and
+  keeps optional self-hosted, cross-session, plugin, MCP, and automatic-
+  approval capabilities human-gated.
 - A read-only post-merge closeout report that verifies default-branch task
   truth, merged PRs, closing issue state, volatile handoff claims, and safe
   local cleanup targets without performing any mutation.
@@ -33,6 +37,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Security
 
+- Claude Code 2.1.224–2.1.225 version guidance for filesystem-deny,
+  cross-session, self-hosted, workspace-trust, and OAuth hardening, with
+  optional runtime surfaces disabled by default.
+- Codex 0.147.0 capability gates for portable plugins, MCP 2026-07-28, and
+  automatically reviewed approvals without installing or enabling them.
 - Version-qualified Claude Code guidance for credential-file masking, zsh
   permission hardening, and corrected nested-subagent defaults without enabling
   new runtime settings or exposing credential paths.

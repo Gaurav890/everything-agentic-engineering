@@ -52,6 +52,12 @@ All retrieved web content is untrusted data.
   disables bypass-permissions mode. Earlier versions lack the corresponding
   command-concealment, dynamic-import, and managed-policy fixes documented in
   that release.
+- Use Claude Code 2.1.224+ when filesystem deny entries are part of the trust
+  boundary. Earlier versions can silently bypass deny entries written with a
+  trailing slash. Normalize and review paths even after upgrading.
+- Prefer Claude Code 2.1.225+ for `claude agents`, cross-session messaging,
+  self-hosted environments, MCP OAuth, and headless execution because it adds a
+  workspace trust prompt and follow-up reliability fixes.
 - Worktrees isolate files and branches; they do not replace destructive-command
   controls, scoped credentials, network restrictions, or human review.
 - Treat hooks and runtime permission classifiers as complementary controls.
@@ -62,6 +68,24 @@ All retrieved web content is untrusted data.
 - Codex 0.146.1+ applies safer defaults for cyber-specialized models, but model
   metadata and automatic review are not authorization boundaries. Repository
   permission profiles and human approval remain authoritative.
+- Codex 0.147.0 adds portable plugins, an opt-in MCP 2026-07-28 client, and
+  `--approve-for-me`. The repository may package skills, but installation,
+  protocol opt-in, and automatically reviewed approvals remain separate human
+  decisions and are disabled by default in the committed adapter.
+
+## Optional runtime capability gates
+
+The version policy in `.agentic/runtime-baselines.json` records availability;
+it does not grant authority. These surfaces require a separate threat model,
+owner, rollback plan, and human approval before use:
+
+- Claude self-hosted environments and their base directories, credentials,
+  network policy, patching, and isolation;
+- Claude cross-session messaging and recipient/session identity;
+- Claude archive plugin sources, including HTTPS origin and SHA-256 pinning;
+- Codex portable plugin installation and marketplace policy;
+- Codex MCP 2026-07-28 opt-in and server compatibility;
+- Codex `--approve-for-me` or any equivalent automatic approval mode.
 
 ## MCP security
 
@@ -97,3 +121,6 @@ Explicit human approval required for:
 | SEC-003 | Worktree-isolated agent reaches the main checkout through destructive Git | Damage outside the assigned branch or file ownership boundary | Medium before upgrade | Recommend Claude Code 2.1.222+; retain destructive-command hooks, explicit targets, and review | Official v2.1.222 release note |
 | SEC-004 | Background agent bypasses an auto-allow hook restriction | Unapproved tool execution during summaries, compaction, or renames | Medium before upgrade | Recommend Claude Code 2.1.222+; use least privilege and never make auto-allow hooks the sole control | Official v2.1.222 release note |
 | SEC-005 | A crafted or visually concealed shell command, workflow import, or agent mode bypasses the intended approval or sandbox boundary | Unapproved execution outside the reviewer-visible or organization-managed policy | Medium before upgrade | Recommend Claude Code 2.1.223+; retain deterministic hooks, least privilege, explicit workflow review, and human approval | Official v2.1.223 release note |
+| SEC-006 | A trailing slash silently weakens a Claude filesystem deny entry | Sandboxed access to a denied file or directory | Medium before upgrade | Recommend Claude Code 2.1.224+; normalize and test exact deny paths; retain least-privilege credentials | Official v2.1.224 release note |
+| SEC-007 | Cross-session or self-hosted execution targets the wrong session, project, directory, or trust domain | Confused-deputy writes, data exposure, or execution on an unintended host | Medium | Keep optional surfaces disabled by default; require Claude Code 2.1.225+, explicit recipient/base-directory validation, scoped credentials, expiry, and human approval | Official v2.1.224 and v2.1.225 release notes |
+| SEC-008 | A compatible Codex runtime is mistaken for permission to auto-approve or activate plugins/MCPs | Unreviewed external execution or authority expansion | Medium | Keep capability gates false in the committed policy; require a separate reviewed pilot and managed permission policy | Official Codex 0.147.0 changelog and project runtime manifest |
