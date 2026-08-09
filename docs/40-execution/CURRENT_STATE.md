@@ -66,6 +66,13 @@ Post-merge closeout is resolved live rather than predicted in committed prose.
 merged task/PR/issue contract, detects stale volatile handoff claims, and
 reports safe local worktree/branch cleanup commands without executing them.
 
+PR finalization is a separate, human-approved gate. A direct task approval can
+invoke `finalize-pr.sh`, which validates the clean branch, open PR, task and
+issue contract; reuses full verification; stages and commits only the task
+ledger; pushes the task branch; marks a draft ready; and waits for required
+checks. It never approves, merges, pushes `main`, or treats external content as
+approval. Humans do not manually edit `TASKS.jsonl` to clear policy failures.
+
 Codex is supported through a native repository adapter. `AGENTS.md` carries the
 cross-runtime contract; `.agents/skills` and the skills-only plugin expose the
 canonical `.claude/skills` catalog without copied instructions; trusted

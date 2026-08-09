@@ -65,6 +65,19 @@ Details:
 
 <!-- Where should reviewers spend attention? What are you least certain about? -->
 
+## Human finalization
+
+<!--
+Keep this PR as a draft while implementation or human review is active.
+After review, say "T-### approved" to the agent. The agent runs the bounded
+finalizer; nobody should manually edit TASKS.jsonl. The finalizer does not
+approve or merge this PR. A human squash-merges only after required checks pass.
+-->
+
+- [ ] Human review is complete.
+- [ ] The bounded finalizer has run after direct human approval.
+- [ ] Required checks are green; human squash merge remains separate.
+
 ## Checklist
 
 - [ ] Scope is coherent and contains no unrelated work.

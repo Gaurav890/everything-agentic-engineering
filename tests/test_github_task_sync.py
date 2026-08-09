@@ -89,7 +89,10 @@ class GitHubTaskSyncTests(unittest.TestCase):
 
     def test_ready_pr_requires_done_task(self) -> None:
         tasks = [task("T-100", status="review", issues=["#26"])]
-        with self.assertRaisesRegex(github_task_sync.TaskSyncError, "not 'done'"):
+        with self.assertRaisesRegex(
+            github_task_sync.TaskSyncError,
+            "Do not edit TASKS.jsonl manually.*T-100 approved.*finalize-pr.sh T-100 --yes",
+        ):
             github_task_sync.validate_pr(
                 "feat(T-100): add sync",
                 body("T-100", "Closes #26"),

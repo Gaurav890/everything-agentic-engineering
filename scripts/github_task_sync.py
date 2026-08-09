@@ -278,8 +278,11 @@ def validate_pr(
         )
     if ready and task.get("status") != "done":
         raise TaskSyncError(
-            f"PR references {title_id}, but its status is {task.get('status')!r}, not 'done'. "
-            f"Run finish-task.sh and prepare-merge.sh for {title_id} before final review."
+            f"This PR was marked Ready for review before {title_id} was finalized; "
+            f"its task status is {task.get('status')!r}, not 'done'. "
+            "Do not edit TASKS.jsonl manually. After human review, ask your agent "
+            f"'{title_id} approved' or run ./scripts/finalize-pr.sh {title_id} --yes. "
+            "To continue implementation instead, convert the PR back to draft."
         )
 
     if tracking["mode"] == "not_required":
