@@ -619,8 +619,8 @@ human approval.
 
 **Commit/PR**
 
-Issue #30 owns the human discussion. Commit and pull-request references are
-recorded after publication.
+Implementation commit `15f82d1`; draft PR #31; issue #30 owns the human
+discussion.
 
 **Remaining risk**
 
