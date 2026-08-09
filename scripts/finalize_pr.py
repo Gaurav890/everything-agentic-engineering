@@ -38,7 +38,9 @@ def run_command(command: list[str]) -> str:
         raise FinalizationError(
             f"Command failed: {' '.join(command)}" + (f"\n{detail}" if detail else "")
         )
-    return completed.stdout.strip()
+    # Preserve porcelain output exactly. Leading spaces encode Git's index and
+    # worktree status columns; stripping them corrupts path parsing.
+    return completed.stdout
 
 
 def read_tasks(root: Path) -> list[dict]:

@@ -7,6 +7,8 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -94,6 +96,20 @@ class PRFinalizationTests(unittest.TestCase):
     def assert_no_approval_or_merge(self, calls: list[list[str]]) -> None:
         self.assertFalse(any(call[:3] == ["gh", "pr", "merge"] for call in calls))
         self.assertFalse(any(call[:3] == ["gh", "pr", "review"] for call in calls))
+
+    def test_command_output_preserves_git_porcelain_status_columns(self) -> None:
+        completed = SimpleNamespace(
+            returncode=0,
+            stdout=" M docs/40-execution/TASKS.jsonl\n",
+            stderr="",
+        )
+        with patch.object(finalize_pr.subprocess, "run", return_value=completed):
+            output = finalize_pr.run_command(["git", "status", "--porcelain=v1"])
+        self.assertEqual(output, " M docs/40-execution/TASKS.jsonl\n")
+        self.assertEqual(
+            finalize_pr.changed_paths(output),
+            {"docs/40-execution/TASKS.jsonl"},
+        )
 
     def test_dry_run_performs_only_read_only_validation(self) -> None:
         self.write_task()
