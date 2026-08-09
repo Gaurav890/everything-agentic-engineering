@@ -259,6 +259,8 @@ Use:
 - `./scripts/verify.sh quick`
 - `./scripts/verify.sh full`
 - `./scripts/mcp-doctor.sh`
+- `./scripts/runtime-doctor.sh` — advisory Claude Code and Codex version report
+- `./scripts/runtime-doctor.sh --strict` — fail closed for managed environments
 - `./scripts/codex-doctor.sh`
 - `./scripts/codex-doctor.sh --strict-runtime` — require the documented Codex
   plugin baseline on a developer machine

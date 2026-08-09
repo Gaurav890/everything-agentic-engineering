@@ -16,11 +16,17 @@ This file is the cross-runtime contract and is loaded natively by Codex.
   symbolic link; do not maintain a copied second catalog.
 - `.codex-plugin/plugin.json` packages the same catalog as a skills-only Codex
   plugin.
+- `.agentic/runtime-baselines.json` records reviewed Claude Code and Codex
+  version floors and optional capability gates; `runtime-doctor.sh` reports
+  them without installing or enabling anything.
 - Run `./scripts/codex-doctor.sh` after Codex adapter changes.
 
 The committed Codex adapter must not choose models/providers, add credentials,
 register external MCP execution, enable network access, widen sandboxes, or
 bypass approvals. Those require explicit, separately reviewed authority.
+Runtime compatibility never implies permission to enable self-hosted or
+cross-session execution, install plugins, opt into an MCP protocol, or
+automatically approve actions.
 
 ## Default team
 

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "runtimes": {
+    "claude": {
+      "command": "claude",
+      "recommended_minimum": "2.1.225",
+      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.225",
+      "capabilities": [
+        {
+          "id": "worktree-and-background-hook-isolation",
+          "minimum": "2.1.222",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "shell-and-workflow-permission-hardening",
+          "minimum": "2.1.223",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "filesystem-deny-and-cross-session-hardening",
+          "minimum": "2.1.224",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "self-hosted-environments",
+          "minimum": "2.1.224",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "cross-session-messaging",
+          "minimum": "2.1.225",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "archive-plugin-source",
+          "minimum": "2.1.224",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "agents-workspace-trust",
+          "minimum": "2.1.225",
+          "default_enabled": true,
+          "human_approval_required": false
+        }
+      ]
+    },
+    "codex": {
+      "command": "codex",
+      "recommended_minimum": "0.147.0",
+      "source": "https://learn.chatgpt.com/docs/changelog#codex-cli-01470",
+      "capabilities": [
+        {
+          "id": "portable-agent-plugins",
+          "minimum": "0.147.0",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "mcp-2026-07-28",
+          "minimum": "0.147.0",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "approve-for-me",
+          "minimum": "0.147.0",
+          "default_enabled": false,
+          "human_approval_required": true
+        }
+      ]
+    }
+  }
+}
