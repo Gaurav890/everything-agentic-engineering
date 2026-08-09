@@ -22,11 +22,12 @@ optional capability and actual tool upgrade as an explicit human decision.
 - Added deterministic policy, version, JSON, and fail-closed tests.
 - Restored the exact locked dependency set offline with zero downloads.
 - Full repository verification passes across all ten stages.
+- Maintainer inspection completed and the final preparation gate passed.
 
 ## In progress
 
-- No implementation work remains; the prepared change awaits the standard
-  independent inspection gates.
+- No implementation work remains; the prepared checkpoint awaits protected
+  checks and maintainer-controlled integration.
 
 ## Blockers
 
@@ -53,10 +54,11 @@ optional capability and actual tool upgrade as an explicit human decision.
 - All 24 task records pass the GitHub tracking contract.
 - Showcase lint, typecheck, and model tests pass.
 - Full repository verification passes after the task moved to `review`.
+- The final preparation gate passed after human inspection.
 
 ## Exact next action
 
-Inspect the prepared change through the standard repository gates. Treat any
+After the protected checks pass, use the documented squash strategy. Treat any
 runtime upgrade or optional capability activation as separate approved work.
 
 ## Relevant files

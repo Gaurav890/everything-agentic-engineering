@@ -231,7 +231,7 @@ actions after this branch is merged.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** REVIEW
+**Outcome AT FINAL VERIFICATION:** DONE ON TASK BRANCH
 
 **Change**
 
@@ -616,11 +616,12 @@ human approval.
 - Full repository verification passes all ten stages, including 24-task
   tracking validation, security hooks, design tokens, Showcase lint,
   typecheck, and tests.
+- Maintainer inspection completed before the final preparation gate wrote
+  `done` on the task branch.
 
 **Commit/PR**
 
-Implementation commit `15f82d1`; draft PR #31; issue #30 owns the human
-discussion.
+Implementation commit `15f82d1`; PR #31; issue #30 owns the human discussion.
 
 **Remaining risk**
 
