@@ -23,20 +23,25 @@ Create a branch:
 ./scripts/new-branch.sh feat T-014 password-reset
 ```
 
-Before requesting final review:
+Before human review:
 
 ```bash
 ./scripts/pr-ready.sh T-014
 ./scripts/finish-task.sh T-014
+# commit and push the review-state update; keep the PR draft
 ```
 
-When the implementation is final and ready for the last review/check cycle:
+After the reviewer directly says `T-014 approved`:
 
 ```bash
-./scripts/prepare-merge.sh T-014
+./scripts/finalize-pr.sh T-014 --dry-run
+./scripts/finalize-pr.sh T-014 --yes
 ```
 
-Commit that task-state update in the PR. `main` becomes the durable source of truth only when the PR is actually merged.
+The bounded finalizer prepares and pushes the task-state update, marks a draft
+ready, and waits for checks. Do not manually edit `TASKS.jsonl`. The finalizer
+never approves or merges; a human squash-merges after checks are green. `main`
+becomes the durable source of truth only when the PR is actually merged.
 
 ## Rules
 

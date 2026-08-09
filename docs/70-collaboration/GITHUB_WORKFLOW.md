@@ -295,26 +295,43 @@ A pull request is ready to merge only when all applicable items are true:
 - `CURRENT_STATE.md`, `PROGRESS.md`, `HANDOFF.md`, and task state are updated when the project truth changed.
 - The branch is not knowingly stale in a way that invalidates verification.
 
-Run before requesting final review:
+Run when implementation is verified and ready for human review:
 
 ```bash
 ./scripts/pr-ready.sh T-014
 ./scripts/finish-task.sh T-014
 # commit the review-state update
+# push it and keep the pull request as a draft while review is active
 ```
 
-When the implementation is final and the PR is ready for its last review/check cycle:
+The reviewer inspects the PR and, when satisfied, gives one explicit instruction:
+
+```text
+T-014 approved
+```
+
+The orchestrator then runs the bounded finalizer:
 
 ```bash
-./scripts/prepare-merge.sh T-014
-# commit this final task-state update; then complete final review/checks and merge
+./scripts/finalize-pr.sh T-014 --dry-run
+./scripts/finalize-pr.sh T-014 --yes
 ```
 
+It confirms the branch, clean worktree, task state, PR identity, GitHub login,
+and issue/task/PR contract. It reuses full verification, writes `done`, stages
+and commits only `TASKS.jsonl`, pushes the task branch, marks a draft ready,
+and waits for required checks. It never approves or merges the PR. The final
+squash merge remains a separate human action.
+
+See [Pull-request finalization](PR_FINALIZATION.md) for the authority boundary,
+failure behavior, and recovery guide.
+
 The PR policy validates task and issue references for draft and ready pull
-requests. A ready PR must also reference a task marked `done` in the branch's
-`TASKS.jsonl`. Draft PRs may remain `in_progress` or `review` while feedback is
-active, but they still cannot drift from their task's issue contract. Before
-requesting final review, run `prepare-merge.sh` and commit the durable state.
+requests. Draft PRs may remain `in_progress` or `review` while feedback is
+active. A ready PR must reference a task prepared as `done` on its branch. If
+someone marks the PR ready too early and the policy turns red, do not edit
+`TASKS.jsonl`: either convert the PR back to draft to continue work, or finish
+human review and run the finalizer. Its push retriggers the check.
 
 ## 12. Merge strategy
 
@@ -399,7 +416,11 @@ needs_human
 failed_safe
 ```
 
-`finish-task.sh` moves a task to `review` after verification. Before final merge, `prepare-merge.sh` writes `done` on the task branch; because `main` is the source of truth, the task becomes durably done only when that PR lands in `main`.
+`finish-task.sh` moves a task to `review` after verification. After direct human
+approval, `finalize-pr.sh` uses the low-level `prepare-merge.sh` gate to write
+`done`, commit and push only the ledger change, mark the PR ready, and wait for
+checks. Because `main` is the source of truth, the task becomes durably done
+only when that PR lands in `main`.
 
 ## 16. The default answer to common workflow questions
 
@@ -415,5 +436,6 @@ failed_safe
 | Merge with failing checks? | No. |
 | Default merge method? | Squash merge. |
 | Delete merged branches? | Yes. |
-| Mark task done before merge? | Yes, on the task branch after final verification; it becomes authoritative only after merge. |
+| Manually edit task status to unblock a PR? | No. Review, say `T-### approved`, and let the bounded finalizer prepare it. |
+| Mark task done before merge? | The finalizer writes it on the approved task branch; it becomes authoritative only after merge. |
 | Copy GitHub status into the ledger automatically? | No. Validate and report drift; keep authority explicit. |

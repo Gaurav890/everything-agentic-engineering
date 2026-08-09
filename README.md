@@ -620,6 +620,7 @@ Also included:
 - Worktree utilities
 - PR-readiness scripts
 - Merge preparation
+- Human-approved, one-command PR finalization with dry-run and fail-closed staging
 - Hotfix guidance
 - Protected `main` recommendations
 
@@ -666,6 +667,30 @@ After a human merges the PR:
 Closeout verifies the task on the live default branch, its merged PR, issue
 state, and volatile handoff text. It reports exact local cleanup commands but
 never runs them, so dirty or unrelated work remains protected.
+
+### One clear path from review to merge
+
+Keep the pull request as a draft while feedback is active. After reviewing the
+files, the human gives one direct instruction:
+
+```text
+T-014 approved
+```
+
+The agent then runs:
+
+```bash
+./scripts/finalize-pr.sh T-014 --dry-run
+./scripts/finalize-pr.sh T-014 --yes
+```
+
+The finalizer verifies the branch, task, pull request, and clean workspace;
+runs the existing full gate; commits and pushes only the task-ledger update;
+marks a draft ready; and waits for required checks. It never approves or
+merges the pull request. Nobody should manually edit `TASKS.jsonl` to clear a
+red policy check, and the final squash merge remains a human action.
+
+Read the [finalization and recovery guide](docs/70-collaboration/PR_FINALIZATION.md).
 
 ### PR naming
 

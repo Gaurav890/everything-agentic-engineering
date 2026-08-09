@@ -95,6 +95,7 @@ python3 -m unittest discover -s tests -p 'test_initializer.py'
 python3 -m unittest discover -s tests -p 'test_task_engine.py'
 python3 -m unittest discover -s tests -p 'test_github_task_sync.py'
 python3 -m unittest discover -s tests -p 'test_post_merge_closeout.py'
+python3 -m unittest discover -s tests -p 'test_pr_finalization.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null

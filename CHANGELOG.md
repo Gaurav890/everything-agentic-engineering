@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A human-approved PR finalizer with dry-run, clean-worktree and PR identity
+  checks, ledger-only staging, recovery from an already-ready PR, required-
+  check waiting, and explicit guarantees that it never approves or merges.
 - A machine-readable Claude Code and Codex runtime policy plus a read-only
   advisory/strict/JSON doctor that separates compatibility from authority and
   keeps optional self-hosted, cross-session, plugin, MCP, and automatic-

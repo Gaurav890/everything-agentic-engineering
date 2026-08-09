@@ -48,9 +48,11 @@ if task is None:
 status = task.get("status")
 if status != "done":
     raise SystemExit(
-        f"PR references {task_id}, but its status is {status!r}, not 'done'.\n"
-        f"Run finish-task.sh and prepare-merge.sh for {task_id}, commit the "
-        "durable-state update, then request final review again."
+        f"This PR was marked Ready for review before {task_id} was finalized; "
+        f"its task status is {status!r}, not 'done'.\n"
+        "Do not edit TASKS.jsonl manually. After human review, ask your agent "
+        f"'{task_id} approved' or run ./scripts/finalize-pr.sh {task_id} --yes. "
+        "To continue implementation instead, convert the PR back to draft."
     )
 
 print(f"PR task state accepted: {task_id} is done")

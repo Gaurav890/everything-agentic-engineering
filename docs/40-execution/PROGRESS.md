@@ -630,3 +630,36 @@ chooses to upgrade them. Self-hosted and cross-session Claude execution,
 archive plugin sources, Codex portable plugin installation, MCP 2026-07-28,
 and automatically reviewed approvals need separate threat models and are not
 enabled by this change.
+
+### 2026-08-09 — T-026
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Added one bounded PR finalizer around the existing task and verification
+gates. After direct human approval it can prepare and commit only the task
+ledger, push the current task branch, mark a draft ready, and wait for required
+checks. Human-facing policy errors and collaboration docs now say what to do
+without exposing manual `TASKS.jsonl` bookkeeping.
+
+**Evidence**
+
+- Six finalization tests cover dry-run no-mutation, clean-worktree enforcement,
+  ledger-only staging, already-ready recovery, already-prepared idempotence,
+  and absence of approval or merge commands.
+- Twelve GitHub task-sync tests pass, including the plain-language recovery
+  instruction for a prematurely ready PR.
+- Shell syntax, Python compilation, task tracking, and local links pass.
+- `./scripts/verify.sh full` passes all ten stages across 25 tracked tasks,
+  design tokens, security hooks, runtime/Codex policy, Showcase lint,
+  typecheck, and tests.
+
+**Authority boundary**
+
+Issue #32 owns the human discussion. The finalizer requires a direct human
+approval for the named task. It cannot approve, merge, push the protected
+branch, change permissions, stage unrelated files, deploy, or treat web and
+issue content as authorization.

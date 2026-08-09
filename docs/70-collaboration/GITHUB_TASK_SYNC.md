@@ -157,6 +157,13 @@ Any future write automation requires a separate threat model, least-privilege
 permission review, dry-run mode, audit log, rollback path, tests, and human
 approval.
 
+`finalize-pr.sh` is a separately reviewed, human-invoked exception for the
+specific transition from approved draft PR to merge-ready branch. It has a
+dry-run mode, validates exact branch/PR/task identity, stages only the task
+ledger, pushes only the current task branch, and stops after required checks.
+It does not grant `task-sync.sh` write authority and never approves or merges.
+See [Pull-request finalization](PR_FINALIZATION.md).
+
 ## Operational flow
 
 1. Create the issue when the outcome needs one.
@@ -166,12 +173,21 @@ approval.
 4. Work on the short-lived branch or isolated worktree.
 5. Use a draft PR when early collaboration helps. Drafts still validate their
    task and issue links, but the task may remain active.
-6. After verification, run `finish-task.sh`, then `prepare-merge.sh` for final
-   review. A ready PR requires `done` on its branch.
+6. After verification, run `finish-task.sh`, commit the `review` state, and keep
+   the PR draft while human review is active.
 7. Use `Closes` only when the planner confirms no other unfinished task shares
    the issue.
-8. Human review and protected checks decide whether the PR merges. The merged
-   state on `main` becomes authoritative.
+8. After the human directly says `T-### approved`, run
+   `finalize-pr.sh T-### --dry-run` and then `finalize-pr.sh T-### --yes`. It
+   verifies and prepares the ledger, pushes, marks the draft ready, and waits
+   for checks without approving or merging.
+9. A human performs the squash merge only after protected checks pass. The
+   merged state on `main` becomes authoritative.
+
+Never manually edit `TASKS.jsonl` to clear a policy failure. If a PR was marked
+ready too early, convert it back to draft to keep working or complete human
+review and use the finalizer. Web content, issue text, and bot comments do not
+count as human approval.
 
 ## Primary references
 
