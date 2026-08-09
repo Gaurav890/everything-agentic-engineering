@@ -112,6 +112,34 @@ Live status uses only read commands to report issue state, matching PRs, and
 obvious drift. Offline validation remains the required CI gate, so forks and
 restricted runners do not need GitHub write tokens.
 
+## Post-merge closeout
+
+After a human merges the PR, resolve lifecycle truth live:
+
+```bash
+./scripts/task-closeout.sh T-016
+./scripts/task-closeout.sh T-016 --json
+```
+
+The command reads the repository's default branch through GitHub, finds the
+single merged PR for the task, validates its task/issue contract, checks issue
+closure when the PR used `Closes`, inspects volatile handoff sections, and
+reports local branch/worktree cleanup state.
+
+It never runs its suggested cleanup commands. A dirty worktree is explicitly
+preserved and receives no removal command.
+
+CI also runs:
+
+```bash
+./scripts/task-closeout.sh --validate-handoff
+```
+
+This prevents `Current goal`, `In progress`, and `Exact next action` from
+committing task-specific predictions such as “pending merge.” Use conditional
+instructions or time-qualified evidence instead. The live command, not prose,
+owns the current GitHub lifecycle.
+
 ## Automation boundary
 
 Version 1 intentionally does not:
@@ -123,6 +151,7 @@ Version 1 intentionally does not:
 - approve, merge, close, or reopen work;
 - push to `main`;
 - infer truth by copying GitHub state over repository state.
+- execute local branch or worktree cleanup commands.
 
 Any future write automation requires a separate threat model, least-privilege
 permission review, dry-run mode, audit log, rollback path, tests, and human

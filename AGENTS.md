@@ -78,6 +78,11 @@ The deterministic `task-sync.sh` contract validates relationships and reports
 live drift read-only. It never grants an agent authority to update issues,
 tasks, PRs, approvals, or merges.
 
+After merge, `task-closeout.sh` resolves current default-branch and GitHub
+truth, detects transient handoff claims, and reports local cleanup commands.
+Agents must not execute those commands automatically or encode predicted PR
+outcomes as durable facts.
+
 ## Parallelization rules
 
 1. Build a dependency DAG before parallel write-heavy work.

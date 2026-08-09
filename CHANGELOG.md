@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A read-only post-merge closeout report that verifies default-branch task
+  truth, merged PRs, closing issue state, volatile handoff claims, and safe
+  local cleanup targets without performing any mutation.
 - A deterministic GitHub Issue ↔ task ↔ PR contract with explicit issue-free
   exceptions, multi-task closure safety, task-planner guidance, required
   offline policy validation, and optional read-only live drift inspection.
