@@ -268,6 +268,7 @@ interaction-design
 agentic-ux
 design-system
 design-tokens
+design-engineering-quality
 responsive-audit
 accessibility-audit
 design-system-audit
@@ -291,6 +292,9 @@ stale. External additions are phase specialists, not aesthetic authority:
 - UI UX Pro Max, Taste Skill, or Impeccable for the appropriate phase;
 - shadcn, 21st.dev, Aceternity, or Figma tooling for components/translation;
 - Vercel framework guidance for engineering and audit quality;
+- [Emil Kowalski's design-engineering suite](https://github.com/emilkowalski/skills)
+  for precisely routed UI craft, purposeful motion, prototyping, library
+  selection, and Sonner work;
 - Anthropic `frontend-design` only as optional supplementary design intelligence.
 
 Run:
@@ -298,6 +302,11 @@ Run:
 ```bash
 ./agentic setup skills
 ```
+
+This explicit command is profile-aware. `design-critical` installs the reviewed
+Emil Kowalski collection for Claude Code and Codex; web and mobile guidance is
+installed only for active surfaces. Installation makes skills available—the
+router still selects only the smallest relevant capability.
 
 The principle:
 
@@ -810,10 +819,17 @@ PRODUCT INTENT
 - Tokens encode approved decisions; they never invent the direction.
 - Anthropic `frontend-design` is optional supplementary intelligence, not the
   default art director.
+- Emil Kowalski's `emil-design-eng` is the preferred installed craft pass for
+  substantial design-critical web UI. Its focused motion, prototyping,
+  library-selection, and Sonner skills run only when their exact trigger is
+  active; the collection is never invoked wholesale.
 - The project design system wins every conflict.
 
 The builder cannot certify its own work. Playwright evidence, focused audits,
 and an independent critic evaluate the running product before polish and ship.
+Motion must explain causality, continuity, feedback, hierarchy, or state and
+must preserve interruption, performance, accessibility, and reduced-motion
+behavior. The router may correctly decide not to animate.
 
 ### Design-token architecture
 
@@ -1178,7 +1194,7 @@ Profiles are composable decisions, not one oversized default:
 | `core` | Durable context, tasks, verification, and collaboration |
 | `web-next` | Next.js surface, frontend owner, React guidance, Playwright |
 | `mobile-expo` | Expo surface, mobile owner, React Native guidance |
-| `design-critical` | Product-design router, tokens, and running-UI evidence |
+| `design-critical` | Product-design router, tokens, Emil design-engineering craft routing, and running-UI evidence |
 | `research-enabled` | Researcher, source ledger, Perplexity, Firecrawl, Playwright |
 | `backend-supabase` | Supabase as the selected backend |
 | `backend-convex` | Convex as the selected backend |

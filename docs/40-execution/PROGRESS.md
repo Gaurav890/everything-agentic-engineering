@@ -730,3 +730,41 @@ Issue #36 owns the human discussion. Recovery does not infer approval, accept
 general dirty state, stage unrelated files, push `main`, approve, merge,
 deploy, widen permissions, or turn check absence into success. The maintainer
 still reviews first and performs the final squash merge separately.
+
+### 2026-08-10 — T-029
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Reviewed all ten skills in Emil Kowalski's design-engineering repository and
+integrated them as a profile-aware external craft layer. Added a local
+`design-engineering-quality` router, exact phase/trigger metadata, a pinned
+reviewed installer for Claude Code and Codex, non-mutating install preview,
+purpose-first motion gates, and explicit-only controls for live variants,
+library selection, and strict animation review. Anthropic `frontend-design`
+remains supplementary and is no longer part of the default external install.
+
+**Evidence**
+
+- The manifest covers each upstream skill exactly once with source, license,
+  reviewed commit, phase, trigger, and activation policy.
+- Profile tests prove the collection is active for `design-critical` and absent
+  from a web-only profile.
+- Installer preview proves web guidance and the pinned Emil collection are
+  selected while inactive mobile guidance is omitted.
+- The new local skill passes the platform skill validator.
+- Full repository verification passes all ten stages across 28 tracked tasks,
+  28 shared local skills, profiles, tokens, security hooks, runtime/Codex
+  policy, local links, Showcase lint, typecheck, and tests.
+
+**Authority boundary**
+
+Issue #38 owns the human discussion. Upstream code was inspected as untrusted
+data and was not installed, executed, or copied into this repository during
+implementation. Profile selection never installs skills. The explicit setup
+command uses the reviewed commit, and future updates require a new review and
+pull request. The project brief, approved design system, tokens, accessibility,
+Playwright evidence, independent evaluator, and human merge remain authoritative.

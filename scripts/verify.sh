@@ -15,6 +15,7 @@ python3 -m json.tool .codex/hooks.json >/dev/null
 python3 -m json.tool .codex-plugin/plugin.json >/dev/null
 python3 -m json.tool .agentic/project.json >/dev/null
 python3 -m json.tool .agentic/resources.json >/dev/null
+python3 -m json.tool .agentic/external-skills.json >/dev/null
 python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
 python3 -m json.tool .agentic/commands.json >/dev/null
 for f in .agentic/profiles/*.json; do
@@ -92,6 +93,7 @@ python3 -m compileall -q scripts tests
 
 echo "[5/10] Run profile and initializer tests"
 python3 -m unittest discover -s tests -p 'test_profile_engine.py'
+python3 -m unittest discover -s tests -p 'test_external_design_skills.py'
 python3 -m unittest discover -s tests -p 'test_initializer.py'
 python3 -m unittest discover -s tests -p 'test_task_engine.py'
 python3 -m unittest discover -s tests -p 'test_github_task_sync.py'

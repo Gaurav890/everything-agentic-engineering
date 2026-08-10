@@ -22,6 +22,12 @@ artifacts, required UI states, and responsive supervision.
 Substantial frontend work uses the project design system as authority and
 requires running-product evidence plus independent evaluation.
 
+When `design-critical` is active, Emil Kowalski's reviewed ten-skill external
+collection is available as a profile-aware design-engineering craft layer.
+`design-engineering-quality` routes `emil-design-eng` or one exact specialist;
+it never invokes the collection wholesale or replaces product discovery,
+approved directions, tokens, accessibility, Playwright, or the final evaluator.
+
 ## Mobile
 
 The same phase routing applies while preserving native platform conventions.
@@ -42,6 +48,12 @@ aliases, missing aliases, and required WCAG contrast failures.
 Project capabilities are selected in `.agentic/project.json` and resolved
 through non-destructive profile tooling. The doctor reports drift; it does not
 install or remove resources.
+
+`.agentic/external-skills.json` records the Emil collection's complete
+ten-skill inventory, source URLs, reviewed commit, MIT license, triggers,
+phases, activation gates, and pinned install command. External installation is
+an explicit `./agentic setup skills` action for active profiles and targets both
+Claude Code and Codex globally. It has a non-mutating `--dry-run` preview.
 
 The guided initializer offers safe presets or manual selection and previews
 active profiles, inactive profiles, required capabilities, retained inactive
@@ -130,7 +142,8 @@ verification flows.
 
 ## Verification
 
-The full suite validates local skills, profiles, initialization, token
+The full suite validates local skills, external design-skill provenance and
+routing, profiles, initialization, token
 generation, security hooks, local documentation links, collaboration policy,
 evidence bundles when present, and project-defined checks. Signalroom also has
 production builds, model tests, Playwright interaction tests, and axe
@@ -147,7 +160,8 @@ and Codex doctor reuse without requiring either runtime in portable CI.
 ## Known incomplete work
 
 - Signalroom is a static reference experience, not a connected agent runtime.
-- Optional external design skills are not bundled or auto-installed.
+- Optional external design skills are not bundled or installed by profile
+  selection; the explicit setup command installs only active, reviewed groups.
 - The initializer intentionally does not delete inactive template inventory;
   cleanup remains a separate explicit decision.
 - The reviewed screen recording still requires a maintainer to capture it.

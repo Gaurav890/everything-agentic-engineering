@@ -26,7 +26,14 @@ Inspect durable artifacts and the running product before routing.
 - Approved direction without reusable encoding: add `design-tokens`.
 - Existing mature UI: inspect first; use extraction/documentation externally when available.
 - Approved Figma: translate through Figma MCP/Code Connect when installed.
-- Existing implementation refinement: skip upstream phases that remain valid; iterate live.
+- Substantial design-critical implementation or refinement: add
+  `design-engineering-quality`; when Emil Kowalski's suite is installed, route
+  `emil-design-eng` as a craft pass and only the smallest relevant specialist.
+- Existing implementation refinement: skip upstream phases that remain valid;
+  iterate live.
+- Motion work: route the exact motion capability only after purpose,
+  interruption, performance, and reduced-motion behavior are clear. “Do not
+  animate” is a valid result.
 - Before release: route applicable audits, `performance-ux`, independent `design-critic`, `polish`, and `design-ops`.
 
 Never rerun a phase merely because a skill exists. State:
@@ -42,3 +49,7 @@ Do not route canonical design-system or token changes while
 
 The project design system is authoritative. Anthropic `frontend-design` is one
 optional input during design-direction exploration, never the default aesthetic.
+Emil Kowalski's external collection is an optional design-engineering craft
+layer, not a replacement for discovery, strategy, approved directions, tokens,
+accessibility, Playwright evidence, or the independent evaluator. `prototype`,
+`pick-ui-library`, and `review-animations` require explicit human invocation.

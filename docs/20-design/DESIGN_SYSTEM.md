@@ -100,6 +100,17 @@ grids, gutters, navigation dimensions, and breakpoint behavior.
 
 Respect `prefers-reduced-motion`.
 
+Motion must explain causality, continuity, feedback, hierarchy, or state. Record
+its purpose, property choice, duration/easing, interruption/reversal behavior,
+performance constraints, and reduced-motion result. Prefer the least expensive
+implementation that communicates the change. “Do not animate” is an approved
+outcome when motion would be decorative or distracting.
+
+When Emil Kowalski's external design-engineering suite is installed, use the
+local `design-engineering-quality` contract to route one relevant craft or
+motion capability. The suite does not define this product's visual identity,
+tokens, or interaction model.
+
 ## Interaction
 
 Define flows, feedback, validation, selection, interruption, undo, recovery, and
@@ -139,6 +150,8 @@ Examples:
 - meaningless animation,
 - tiny low-contrast text,
 - icon-only controls without accessible labels.
+- animation added only to make the interface feel “premium”.
+- copied motion or component-library aesthetics that bypass project tokens.
 
 ## Verification
 

@@ -137,6 +137,13 @@ canonical design-system and token changes. External skills remain specialist
 inputs; the project brief, design system, and tokens remain authoritative. A
 separate evaluator owns final critique of the running experience.
 
+For substantial design-critical web UI, route `design-engineering-quality`.
+Emil Kowalski's external suite may add implementation craft when installed, but
+the router selects only the minimum capability. It never replaces upstream
+product work, approved art direction, accessibility, Playwright evidence, or
+the independent evaluator. Prototyping, library selection, and strict animation
+review remain explicit human-invocation routes.
+
 ## Agent result contract
 
 Every specialist returns:

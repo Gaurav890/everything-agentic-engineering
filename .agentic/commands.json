@@ -15,7 +15,7 @@
   "commands": [
     {"path": ["setup", "bootstrap"], "target": "scripts/bootstrap.sh", "summary": "Validate prerequisites and prepare a local checkout", "usage": "./agentic setup bootstrap", "impact": "local_write"},
     {"path": ["setup", "init"], "target": "scripts/init-project.sh", "summary": "Configure a project from an approved starter preset", "usage": "./agentic setup init [initializer options]", "impact": "local_write"},
-    {"path": ["setup", "skills"], "target": "scripts/install-skills.sh", "summary": "Install the reviewed optional external skill set", "usage": "./agentic setup skills", "impact": "external_install"},
+    {"path": ["setup", "skills"], "target": "scripts/install-skills.sh", "summary": "Install reviewed external skills required by active profiles", "usage": "./agentic setup skills [--dry-run]", "impact": "external_install"},
     {"path": ["profile", "resolve"], "target": "scripts/profile-resolve.sh", "summary": "Resolve the active profile manifest", "usage": "./agentic profile resolve", "impact": "read_only"},
     {"path": ["profile", "doctor"], "target": "scripts/profile-doctor.sh", "summary": "Report profile drift without installing or removing resources", "usage": "./agentic profile doctor", "impact": "read_only"},
     {"path": ["profile", "preview"], "target": "scripts/profile-preview.sh", "summary": "Preview a profile selection before applying it", "usage": "./agentic profile preview <comma-separated-profiles>", "impact": "read_only"},

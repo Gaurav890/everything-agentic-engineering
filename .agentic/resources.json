@@ -38,6 +38,12 @@
       "description": "DTCG-compatible design-token source",
       "detect": [{"type": "path", "value": "packages/design-tokens"}]
     },
+    "emil-design-engineering": {
+      "kind": "external-skill",
+      "description": "Emil Kowalski design-engineering, motion, prototyping, and UI-craft suite",
+      "catalog_only_when_inactive": true,
+      "detect": []
+    },
     "react-guidance": {
       "kind": "external-skill",
       "description": "React/Next.js engineering guidance",

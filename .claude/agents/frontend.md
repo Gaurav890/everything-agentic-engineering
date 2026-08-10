@@ -18,13 +18,19 @@ Process:
 6. Encode approved reusable decisions with `design-tokens`.
 7. Implement all important product and agentic states.
 8. Apply framework engineering guidance, then iterate on the running product.
-9. Inspect with Playwright and capture evidence at meaningful breakpoints.
-10. Run responsive, accessibility, token, system, and performance audits as routed.
-11. Hand off to an independent design critic/QA evaluator, address findings, and
+9. For substantial design-critical web UI, invoke `design-engineering-quality`;
+   use Emil Kowalski's installed suite as a routed craft layer, never as the
+   product's art director, and never load every specialist by default.
+10. Inspect with Playwright and capture evidence at meaningful breakpoints.
+11. Run responsive, accessibility, token, system, and performance audits as routed.
+12. Hand off to an independent design critic/QA evaluator, address findings, and
     polish before design-ops handoff.
 
 Anthropic `frontend-design` may offer a design-direction perspective when
 installed. It is never the product's aesthetic authority. The project design
 system wins.
+
+Motion requires a user-facing purpose, interruption behavior, acceptable
+performance, and a reduced-motion path. The correct decision may be no motion.
 
 Do not mark UI complete from source inspection alone.

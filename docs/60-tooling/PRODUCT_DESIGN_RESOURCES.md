@@ -108,6 +108,34 @@ original resource, invocation, timing, rationale, and assessment.
 - **Assessment:** A strong critic perspective, not a universal design system.
 - **Repository route:** External and optional; pair with an independent evaluator.
 
+### Emil Kowalski design-engineering skills
+
+- **Source:** [emilkowalski/skills](https://github.com/emilkowalski/skills) · [skills directory](https://github.com/emilkowalski/skills/tree/main/skills) · [MIT license](https://github.com/emilkowalski/skills/blob/main/LICENSE)
+- **Reviewed revision:** `78761e1b57f97dce65b983d640c70a68f39e8163` on 2026-08-10.
+- **Install:** Upstream documents `npx skills@latest add emilkowalski/skills` for current main. The profile-aware `./agentic setup skills` command installs the reviewed revision recorded in `.agentic/external-skills.json` instead of silently advancing it.
+- **What:** A ten-skill design-engineering collection covering high-craft UI implementation, purposeful motion, motion review/audit, vocabulary, Apple-style interaction, live variants, UI-library selection, and Sonner.
+- **When:** The `design-critical` profile is active and implementation or refinement needs a precise craft capability.
+- **Why:** It adds unusually concrete design-engineering and motion judgment that can reduce generic, mechanically polished AI output.
+- **Assessment:** High-value craft layer, not art direction. It cannot replace discovery, user needs, UX strategy, human-approved direction, design tokens, accessibility, running-product evidence, or the independent evaluator.
+- **Repository route:** Local `design-engineering-quality` contract selects the minimum installed capability. The external source is not copied into this repository.
+
+| Upstream skill | Exact route |
+|---|---|
+| [`emil-design-eng`](https://github.com/emilkowalski/skills/tree/main/skills/emil-design-eng) | Broad design-critical implementation/refinement craft pass |
+| [`animate`](https://github.com/emilkowalski/skills/tree/main/skills/animate) | Implement one justified animation |
+| [`review-animations`](https://github.com/emilkowalski/skills/tree/main/skills/review-animations) | Explicit-only strict review of animation code or a motion-heavy diff |
+| [`improve-animations`](https://github.com/emilkowalski/skills/tree/main/skills/improve-animations) | Read-only codebase animation audit and improvement plan |
+| [`find-animation-opportunities`](https://github.com/emilkowalski/skills/tree/main/skills/find-animation-opportunities) | Find a few missing purposeful motion opportunities; reject decorative candidates |
+| [`animation-vocabulary`](https://github.com/emilkowalski/skills/tree/main/skills/animation-vocabulary) | Name or classify an effect for shared design/engineering language |
+| [`apple-design`](https://github.com/emilkowalski/skills/tree/main/skills/apple-design) | Approved gesture, spring, fluid-material, or Apple-platform direction only |
+| [`prototype`](https://github.com/emilkowalski/skills/tree/main/skills/prototype) | Explicit-only live variants; a human chooses before production changes |
+| [`pick-ui-library`](https://github.com/emilkowalski/skills/tree/main/skills/pick-ui-library) | Explicit-only dependency choice after inspecting installed capabilities |
+| [`ask-sonner`](https://github.com/emilkowalski/skills/tree/main/skills/ask-sonner) | Sonner-specific setup or troubleshooting only |
+
+The suite must not be invoked wholesale. For motion, establish purpose,
+interruption/reversal behavior, performance, and reduced-motion handling before
+implementation. “Do not animate” is a valid outcome.
+
 ### Impeccable
 
 - **Source:** [Impeccable documentation](https://impeccable.style/docs)

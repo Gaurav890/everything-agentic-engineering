@@ -55,8 +55,33 @@ set +a
 ./agentic setup skills
 ```
 
+Preview the exact profile-aware commands without installing anything:
+
+```bash
+./agentic setup skills --dry-run
+```
+
 The project-local skills require no Codex copy step. Codex discovers the same
 catalog through `.agents/skills`.
+
+This is an explicit external-install action. It reads the selected project
+profiles and installs only their reviewed skill groups into the current user's
+Claude Code and Codex skill directories:
+
+- `web-next`: Vercel React and web-design guidance;
+- `mobile-expo`: Vercel React Native guidance;
+- `design-critical`: Emil Kowalski's ten-skill design-engineering collection.
+
+The Emil installer is pinned to the reviewed commit in
+`.agentic/external-skills.json`. A later upstream update requires a new source
+review, manifest revision, and normal pull request rather than silently changing
+the installed instructions.
+
+Profile selection and `profile doctor` never install anything. The Emil suite
+remains externally maintained and is routed one capability at a time through
+`design-engineering-quality`. Anthropic `frontend-design` is supplementary and
+is intentionally not part of the default install; the installer prints its
+separate opt-in command.
 
 ## 5. Check MCPs
 

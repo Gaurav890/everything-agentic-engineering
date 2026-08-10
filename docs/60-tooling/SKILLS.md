@@ -54,8 +54,10 @@ Do not rerun phases whose outputs exist, remain valid, and match the current tas
 | Tokens | `design-tokens` | tailwind-design-system when Tailwind is active |
 | Components | project design system | shadcn registry/MCP; 21st.dev; Aceternity |
 | Design-to-code | project design system | Figma MCP Implement Design; Code Connect |
-| Live iteration | frontend agent | Impeccable Live |
-| Audits | `responsive-audit`, `accessibility-audit`, `design-system-audit`, `token-audit` | relevant specialist audit skills |
+| Design engineering | `design-engineering-quality` | Emil Kowalski `emil-design-eng` plus one precisely routed specialist |
+| Live iteration | frontend agent, `design-engineering-quality` | Impeccable Live; Emil `prototype` only when explicitly requested |
+| Motion | `design-engineering-quality` | Emil `animate`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `animation-vocabulary`, or `apple-design` according to the exact trigger |
+| Audits | `responsive-audit`, `accessibility-audit`, `design-system-audit`, `token-audit` | relevant specialist audit skills; Emil strict animation review only when explicitly requested |
 | Engineering | framework rules | Vercel React/Next.js or React Native guidance |
 | Performance | `performance-ux` | Impeccable Optimize |
 | Critique | `design-critic` | Impeccable Critique; Taste Skill |
@@ -73,6 +75,12 @@ Do not rerun phases whose outputs exist, remain valid, and match the current tas
 - Imported components are structural donors.
 - Anthropic `frontend-design` is optional supplementary design intelligence. It
   is never the default aesthetic and may be skipped.
+- Emil Kowalski's design-engineering collection is a reviewed optional craft
+  layer for the `design-critical` profile. `emil-design-eng` is a broad
+  implementation/refinement perspective; its nine specialists are routed by
+  exact task, never invoked as one bundle.
+- `prototype`, `pick-ui-library`, and `review-animations` remain explicit-only.
+  Motion is never mandatory; “do not animate” is a valid routed result.
 - Vercel engineering and audit guidance improves implementation quality; it does
   not define visual identity.
 - The project design system wins every conflict.
@@ -97,6 +105,7 @@ Avoid:
 - copying external skill implementations into this repository without need;
 - using a component registry as art direction;
 - treating automated accessibility or performance output as complete evidence.
+- invoking an entire external collection when one focused capability is enough.
 
 ## Core engineering skills
 
