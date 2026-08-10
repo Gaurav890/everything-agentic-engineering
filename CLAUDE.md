@@ -108,7 +108,7 @@ Rules:
 - Delete merged branches.
 - A task moves to `review` after implementation verification. Keep the PR draft
   while human review is active. After the human directly approves the task,
-  run `finalize-pr.sh <TASK-ID> --yes`; it verifies and writes `done`, commits
+  run `./agentic pr finalize <TASK-ID> --yes`; it verifies and writes `done`, commits
   and pushes only the ledger update, marks a draft ready, and waits for checks.
   It never approves or merges the PR. The task becomes durably done only when
   that PR lands in `main`.
@@ -265,26 +265,30 @@ Agent confidence is not evidence.
 
 ## 15. Commands
 
-Use:
-- `./scripts/verify.sh quick`
-- `./scripts/verify.sh full`
-- `./scripts/mcp-doctor.sh`
-- `./scripts/runtime-doctor.sh` — advisory Claude Code and Codex version report
-- `./scripts/runtime-doctor.sh --strict` — fail closed for managed environments
-- `./scripts/codex-doctor.sh`
-- `./scripts/codex-doctor.sh --strict-runtime` — require the documented Codex
-  plugin baseline on a developer machine
-- `./scripts/start-task.sh <TASK-ID>`
-- `./scripts/new-branch.sh <type> <TASK-ID> <slug>`
-- `./scripts/create-worktree.sh <TASK-ID> <slug> [type] [base]`
-- `./scripts/task-plan.sh <TASK-ID>`
-- `./scripts/task-start.sh <TASK-ID> --yes`
-- `./scripts/pr-ready.sh <TASK-ID>`
-- `./scripts/finish-task.sh <TASK-ID>` — moves task to `review` after full verification
-- `./scripts/finalize-pr.sh <TASK-ID> --dry-run` — shows the approved finalization plan without mutation
-- `./scripts/finalize-pr.sh <TASK-ID> --yes` — after direct human approval, verifies, prepares, commits, pushes, marks ready, and waits for checks; never approves or merges
-- `./scripts/prepare-merge.sh <TASK-ID>` — low-level ledger gate used by the finalizer; humans should not normally call it directly
-- `./scripts/task-closeout.sh <TASK-ID>` — read-only post-merge verification and local cleanup guidance
+Use the registry-backed `./agentic` interface. Start with:
+
+- `./agentic --help`
+- `./agentic commands` or `./agentic commands --json`
+- `./agentic verify quick`
+- `./agentic verify full`
+- `./agentic doctor mcp`
+- `./agentic doctor runtime [--strict]`
+- `./agentic doctor codex [--strict-runtime]`
+- `./agentic workspace branch <type> <TASK-ID> <slug>`
+- `./agentic workspace worktree <TASK-ID> <slug> [type] [base]`
+- `./agentic task plan <TASK-ID>`
+- `./agentic task start <TASK-ID> --yes`
+- `./agentic task finish <TASK-ID>` — moves a verified task to `review`
+- `./agentic pr ready <TASK-ID>`
+- `./agentic pr finalize <TASK-ID> --dry-run`
+- `./agentic pr finalize <TASK-ID> --yes` — after direct human approval; never approves or merges
+- `./agentic task closeout <TASK-ID>` — read-only post-merge truth and cleanup guidance
+
+`.agentic/commands.json` is the command source of truth. Existing
+`./scripts/*.sh` entry points remain compatibility paths for downstream users
+and internal automation. Do not invoke internal policy helpers directly unless
+maintaining the command system itself. Security hooks are never routed through
+the convenience CLI.
 
 If a project adds framework-specific commands, document them in `docs/30-engineering/DEVELOPER_COMMANDS.md`.
 

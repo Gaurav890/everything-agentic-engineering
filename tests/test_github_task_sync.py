@@ -91,7 +91,7 @@ class GitHubTaskSyncTests(unittest.TestCase):
         tasks = [task("T-100", status="review", issues=["#26"])]
         with self.assertRaisesRegex(
             github_task_sync.TaskSyncError,
-            "Do not edit TASKS.jsonl manually.*T-100 approved.*finalize-pr.sh T-100 --yes",
+            "Do not edit TASKS.jsonl manually.*T-100 approved.*agentic pr finalize T-100 --yes",
         ):
             github_task_sync.validate_pr(
                 "feat(T-100): add sync",

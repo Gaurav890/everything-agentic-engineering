@@ -20,22 +20,22 @@ issue/task → branch → implementation → verification → PR → review → 
 Create a branch:
 
 ```bash
-./scripts/new-branch.sh feat T-014 password-reset
+./agentic workspace branch feat T-014 password-reset
 ```
 
 Before human review:
 
 ```bash
-./scripts/pr-ready.sh T-014
-./scripts/finish-task.sh T-014
+./agentic pr ready T-014
+./agentic task finish T-014
 # commit and push the review-state update; keep the PR draft
 ```
 
 After the reviewer directly says `T-014 approved`:
 
 ```bash
-./scripts/finalize-pr.sh T-014 --dry-run
-./scripts/finalize-pr.sh T-014 --yes
+./agentic pr finalize T-014 --dry-run
+./agentic pr finalize T-014 --yes
 ```
 
 The bounded finalizer prepares and pushes the task-state update, marks a draft
@@ -53,5 +53,12 @@ becomes the durable source of truth only when the PR is actually merged.
 - Update durable state when project truth changes.
 - Use squash merge by default.
 - Delete merged branches.
+
+## Command discovery
+
+Run `./agentic --help` for the supported command groups or
+`./agentic commands --json` for a machine-readable list. Existing
+`./scripts/*.sh` paths remain compatible during the migration, but new
+documentation and contributor workflows should use `./agentic`.
 
 See `docs/70-collaboration/GITHUB_WORKFLOW.md` for the complete operating model.

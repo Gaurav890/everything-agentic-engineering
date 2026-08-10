@@ -285,7 +285,7 @@ def print_plan(plan: dict) -> None:
         print("\nREADY")
         print(
             "Start after review:\n"
-            f"  ./scripts/task-start.sh {task['id']} "
+            f"  ./agentic task start {task['id']} "
             f"--slug {plan['suggested_slug']} --mode {plan['recommended_mode']} --yes"
         )
 

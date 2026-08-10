@@ -34,10 +34,21 @@ Turn an idea into:
 git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
 cp .env.example .env
-./scripts/bootstrap.sh
-./scripts/init-project.sh
-./scripts/runtime-doctor.sh
+./agentic setup bootstrap
+./agentic setup init
+./agentic doctor runtime
 ```
+
+One entry point replaces the need to memorize dozens of script names:
+
+```bash
+./agentic --help
+./agentic commands
+```
+
+The underlying scripts remain compatible for existing users and CI, while the
+registry keeps public workflows, internal policy helpers, legacy adapters, and
+security hooks explicitly separated.
 
 In one guided path, the starter:
 
@@ -56,7 +67,7 @@ After product discovery and task decomposition create a ready task such as
 `T-101`, inspect it without changing the workspace:
 
 ```bash
-./scripts/task-plan.sh T-101
+./agentic task plan T-101
 ```
 
 The planner is read-only. Workspace creation requires explicit confirmation,
@@ -285,7 +296,7 @@ stale. External additions are phase specialists, not aesthetic authority:
 Run:
 
 ```bash
-./scripts/install-skills.sh
+./agentic setup skills
 ```
 
 The principle:
@@ -306,10 +317,10 @@ The starter catalogs web, mobile, backend, research, and design capabilities,
 but `.agentic/project.json` determines which profiles are active.
 
 ```bash
-./scripts/init-project.sh
-./scripts/profile-resolve.sh
-./scripts/profile-doctor.sh
-./scripts/profile-preview.sh web-next,design-critical,research-enabled
+./agentic setup init
+./agentic profile resolve
+./agentic profile doctor
+./agentic profile preview web-next,design-critical,research-enabled
 ```
 
 Profile selection is non-destructive: it does not silently install tools or
@@ -320,8 +331,8 @@ profiles, clearly lists what stays inactive, and changes only
 `.agentic/project.json` after confirmation.
 
 ```bash
-./scripts/init-project.sh --list-presets
-./scripts/init-project.sh --name my-saas --preset web-supabase --dry-run
+./agentic setup init --list-presets
+./agentic setup init --name my-saas --preset web-supabase --dry-run
 ```
 
 If you choose web without mobile, mobile agents and guidance stay inactive.
@@ -333,8 +344,8 @@ safe and reversible.
 ### Turn a task into a safe workspace
 
 ```bash
-./scripts/task-plan.sh T-009
-./scripts/task-start.sh T-009 --yes
+./agentic task plan T-009
+./agentic task start T-009 --yes
 ```
 
 The planner checks dependencies, active profiles, agent routing, exclusive file
@@ -537,7 +548,7 @@ Mobile agent assumes API C
 For isolated parallel coding:
 
 ```bash
-./scripts/create-worktree.sh T-014 password-reset agent main
+./agentic workspace worktree T-014 password-reset agent main
 ```
 
 Codex desktop can also create a dedicated managed worktree for each task. Use
@@ -642,14 +653,14 @@ agent/T-014-password-reset
 Create a branch:
 
 ```bash
-./scripts/new-branch.sh feat T-014 password-reset
+./agentic workspace branch feat T-014 password-reset
 ```
 
 Plan and validate the issue relationship:
 
 ```bash
-./scripts/task-sync.sh plan T-014
-./scripts/task-sync.sh validate-ledger
+./agentic task sync plan T-014
+./agentic task sync validate-ledger
 ```
 
 One issue may decompose into several tasks. Intermediate PRs use `Relates to`;
@@ -661,7 +672,7 @@ merge, or copy GitHub state over durable repository truth.
 After a human merges the PR:
 
 ```bash
-./scripts/task-closeout.sh T-014
+./agentic task closeout T-014
 ```
 
 Closeout verifies the task on the live default branch, its merged PR, issue
@@ -680,8 +691,8 @@ T-014 approved
 The agent then runs:
 
 ```bash
-./scripts/finalize-pr.sh T-014 --dry-run
-./scripts/finalize-pr.sh T-014 --yes
+./agentic pr finalize T-014 --dry-run
+./agentic pr finalize T-014 --yes
 ```
 
 The finalizer verifies the branch, task, pull request, and clean workspace;
@@ -922,10 +933,17 @@ types, and tests.
 
 ```text
 .
+├── agentic                       # Unified contributor command interface
 ├── CLAUDE.md
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── .mcp.json
+│
+├── .agentic/
+│   ├── commands.json             # Public commands + complete shell inventory
+│   ├── project.json
+│   ├── resources.json
+│   └── profiles/
 │
 ├── .github/
 │   ├── workflows/
@@ -976,7 +994,7 @@ types, and tests.
 │   ├── types/
 │   └── ui/
 │
-└── scripts/
+└── scripts/                      # Implementations and compatibility adapters
 ```
 
 ---
@@ -1021,6 +1039,9 @@ Add more infrastructure only when a real limitation appears.
 
 ## Quick start
 
+The examples below use the supported `./agentic` interface. Run
+`./agentic --help` whenever you need to discover a workflow.
+
 ### 1. Clone
 
 ```bash
@@ -1031,14 +1052,14 @@ cd everything-agentic-engineering
 ### 2. Choose the project capabilities
 
 ```bash
-./scripts/init-project.sh
+./agentic setup init
 ```
 
 This does not install or remove anything. Review the proposed manifest, then
 run:
 
 ```bash
-./scripts/profile-doctor.sh
+./agentic profile doctor
 ```
 
 ### 3. Configure environment
@@ -1052,19 +1073,19 @@ Add the API keys for the MCP services you plan to use.
 ### 4. Bootstrap
 
 ```bash
-./scripts/bootstrap.sh
+./agentic setup bootstrap
 ```
 
 ### 5. Check your MCP setup
 
 ```bash
-./scripts/mcp-doctor.sh
+./agentic doctor mcp
 ```
 
 ### 6. Verify the harness
 
 ```bash
-./scripts/verify.sh full
+./agentic verify full
 ```
 
 This runs profile and initializer tests, token generation, security-hook tests,
@@ -1082,7 +1103,7 @@ claude
 Codex:
 
 ```bash
-./scripts/codex-doctor.sh
+./agentic doctor codex
 codex
 ```
 

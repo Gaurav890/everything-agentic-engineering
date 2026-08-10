@@ -21,20 +21,20 @@ test ! -e .env || {
   exit 1
 }
 
-./scripts/bootstrap.sh
+./agentic setup bootstrap
 test -f .env || {
   echo "Bootstrap did not create .env from the example." >&2
   exit 1
 }
 
-./scripts/init-project.sh --list-presets >/dev/null
-./scripts/init-project.sh \
+./agentic setup init --list-presets >/dev/null
+./agentic setup init \
   --name release-smoke \
   --preset web-supabase \
   --dry-run >/dev/null
-./scripts/profile-resolve.sh >/dev/null
-./scripts/profile-doctor.sh >/dev/null
-./scripts/release-check.sh
+./agentic profile resolve >/dev/null
+./agentic profile doctor >/dev/null
+./agentic release check
 
 git diff --exit-code -- . ':!.env' >/dev/null || {
   echo "Onboarding changed tracked files in a clean checkout." >&2

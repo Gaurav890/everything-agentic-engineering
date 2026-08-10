@@ -27,9 +27,9 @@ Every release must have:
 4. Run:
 
    ```bash
-   ./scripts/release-check.sh v0.1.0
-   ./scripts/release-smoke-test.sh
-   ./scripts/verify.sh full
+   ./agentic release check v0.1.0
+   ./agentic release smoke
+   ./agentic verify full
    ```
 
 5. Open a pull request and merge only after checks and review pass.

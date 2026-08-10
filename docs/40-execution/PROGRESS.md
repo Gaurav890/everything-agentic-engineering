@@ -663,3 +663,36 @@ Issue #32 owns the human discussion. The finalizer requires a direct human
 approval for the named task. It cannot approve, merge, push the protected
 branch, change permissions, stage unrelated files, deploy, or treat web and
 issue content as authorization.
+
+### 2026-08-09 — T-027
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Added one registry-backed `./agentic` interface for contributor workflows.
+Twenty-three supported commands are grouped by purpose, while every shell file
+is explicitly classified as public, internal, compatibility, or security hook.
+Primary onboarding and collaboration documentation now teaches the unified
+interface. Existing direct script paths remain compatible.
+
+**Evidence**
+
+- Eight command-interface tests cover complete shell inventory, unique public
+  mappings, internal and hook isolation, grouped help, JSON discovery, exact
+  argument forwarding, and executable entry-point behavior.
+- Every one of the repository's 30 shell files is classified exactly once.
+- The release smoke test exercises the unified interface in a disposable clean
+  checkout while preserving existing compatibility paths.
+- Full repository verification passes all ten stages across 26 tracked tasks,
+  command registry checks, design tokens, security hooks, runtime/Codex policy,
+  local documentation links, Showcase lint, typecheck, and tests.
+
+**Authority boundary**
+
+Issue #34 owns the human discussion. This phase does not delete or relocate
+scripts, bypass security hooks, install external capabilities, widen runtime
+authority, deploy, approve, or merge a pull request. Any later script removal
+requires a separately reviewed, release-backed deprecation decision.

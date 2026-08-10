@@ -281,7 +281,7 @@ def validate_pr(
             f"This PR was marked Ready for review before {title_id} was finalized; "
             f"its task status is {task.get('status')!r}, not 'done'. "
             "Do not edit TASKS.jsonl manually. After human review, ask your agent "
-            f"'{title_id} approved' or run ./scripts/finalize-pr.sh {title_id} --yes. "
+            f"'{title_id} approved' or run ./agentic pr finalize {title_id} --yes. "
             "To continue implementation instead, convert the PR back to draft."
         )
 

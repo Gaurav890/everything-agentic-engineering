@@ -49,8 +49,15 @@ capabilities, and external setup. It writes only the profile manifest after
 explicit confirmation. Unselected mobile, web, research, backend, or
 design-critical capabilities are not routed or treated as project requirements.
 
-Task-ledger work can be inspected with `task-plan.sh` and prepared with
-`task-start.sh`. The launcher checks dependency completion, active-profile
+Contributor workflows are exposed through one registry-backed `./agentic`
+interface. `.agentic/commands.json` classifies all 30 shell files as public,
+internal, compatibility, or security-hook surfaces. The 23 supported public
+workflows are grouped by setup, profile, task, pull request, workspace, doctor,
+tokens, release, and verification. Existing direct script paths remain
+compatible; no script or hook has been deleted or relocated.
+
+Task-ledger work can be inspected with `./agentic task plan` and prepared with
+`./agentic task start`. The launcher checks dependency completion, active-profile
 compatibility, specialist routing, exclusive file ownership, verification
 gates, and base-branch freshness. Planning is read-only and workspace creation
 requires explicit confirmation.
@@ -62,12 +69,12 @@ is deterministic and offline; optional live status uses read-only GitHub
 commands and cannot edit issues, tasks, pull requests, or repository state.
 
 Post-merge closeout is resolved live rather than predicted in committed prose.
-`task-closeout.sh` reads the default branch and GitHub state, verifies the
+`./agentic task closeout` reads the default branch and GitHub state, verifies the
 merged task/PR/issue contract, detects stale volatile handoff claims, and
 reports safe local worktree/branch cleanup commands without executing them.
 
 PR finalization is a separate, human-approved gate. A direct task approval can
-invoke `finalize-pr.sh`, which validates the clean branch, open PR, task and
+invoke `./agentic pr finalize`, which validates the clean branch, open PR, task and
 issue contract; reuses full verification; stages and commits only the task
 ledger; pushes the task branch; marks a draft ready; and waits for required
 checks. It never approves, merges, pushes `main`, or treats external content as

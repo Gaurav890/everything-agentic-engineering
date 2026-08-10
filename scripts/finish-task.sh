@@ -33,5 +33,5 @@ if not found:
 path.write_text("\n".join(json.dumps(t, sort_keys=False) for t in tasks) + "\n")
 print(f"Marked {task_id} ready for review after full verification.")
 print("Next: commit and push the review-state change, then keep the PR draft while human review is active.")
-print(f"After direct human approval, run finalize-pr.sh {task_id} --dry-run and then --yes. Do not edit TASKS.jsonl manually.")
+print(f"After direct human approval, run ./agentic pr finalize {task_id} --dry-run and then --yes. Do not edit TASKS.jsonl manually.")
 PY

@@ -18,7 +18,7 @@ Before opening write-capable workspaces, record:
 Use:
 
 ```bash
-./scripts/task-plan.sh T-101
+./agentic task plan T-101
 ```
 
 Planning is read-only. Fix missing dependencies, inactive profiles, or file
@@ -42,9 +42,9 @@ stable enough to branch from or has merged.
 After each task exists in `TASKS.jsonl` and passes planning:
 
 ```bash
-./scripts/task-start.sh T-101 --mode worktree --yes
-./scripts/task-start.sh T-102 --mode worktree --yes
-./scripts/task-start.sh T-103 --mode worktree --yes
+./agentic task start T-101 --mode worktree --yes
+./agentic task start T-102 --mode worktree --yes
+./agentic task start T-103 --mode worktree --yes
 ```
 
 The launcher prints each worktree path. Open each path in a separate terminal
@@ -76,7 +76,7 @@ The lower-level command remains available when the reviewed plan requires an
 explicit branch type or base:
 
 ```bash
-./scripts/create-worktree.sh T-102 enterprise-auth feat main
+./agentic workspace worktree T-102 enterprise-auth feat main
 ```
 
 ## Codex desktop worktrees

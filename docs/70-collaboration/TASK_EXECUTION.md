@@ -7,8 +7,8 @@ approval.
 ## Plan first
 
 ```bash
-./scripts/task-plan.sh T-009
-./scripts/task-plan.sh T-009 --json
+./agentic task plan T-009
+./agentic task plan T-009 --json
 ```
 
 The plan reports:
@@ -29,7 +29,7 @@ Planning is read-only.
 ## Start after review
 
 ```bash
-./scripts/task-start.sh T-009 --yes
+./agentic task start T-009 --yes
 ```
 
 The launcher derives a kebab-case slug and chooses:
@@ -40,7 +40,7 @@ The launcher derives a kebab-case slug and chooses:
 Override only when the plan justifies it:
 
 ```bash
-./scripts/task-start.sh T-009 \
+./agentic task start T-009 \
   --slug task-execution-launcher \
   --mode worktree \
   --type feat \
@@ -89,15 +89,15 @@ The launcher includes the deterministic issue/task plan. Inspect the same
 contract directly with:
 
 ```bash
-./scripts/task-sync.sh validate-ledger
-./scripts/task-sync.sh plan T-009
-./scripts/task-sync.sh status T-009
+./agentic task sync validate-ledger
+./agentic task sync plan T-009
+./agentic task sync status T-009
 ```
 
 `status` is an optional read-only live inspection. CI uses offline ledger and
 PR-payload validation and does not need GitHub write authority. See
 [`GITHUB_TASK_SYNC.md`](GITHUB_TASK_SYNC.md).
 
-After merge, run `./scripts/task-closeout.sh T-009`. It reads authoritative
+After merge, run `./agentic task closeout T-009`. It reads authoritative
 GitHub/default-branch state, reports stale handoff claims, and prints optional
 local cleanup commands. It never executes those commands.

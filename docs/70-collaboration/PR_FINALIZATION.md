@@ -32,13 +32,13 @@ settings, or perform any unrelated action.
 Preview the exact plan without mutation:
 
 ```bash
-./scripts/finalize-pr.sh T-014 --dry-run
+./agentic pr finalize T-014 --dry-run
 ```
 
 After direct human approval, execute the bounded plan:
 
 ```bash
-./scripts/finalize-pr.sh T-014 --yes
+./agentic pr finalize T-014 --yes
 ```
 
 The explicit `--yes` makes the mutation boundary visible in logs and prevents
@@ -113,7 +113,7 @@ branch and wait for the current checks.
 After the human merges, run:
 
 ```bash
-./scripts/task-closeout.sh T-014
+./agentic task closeout T-014
 ```
 
 Closeout verifies merged truth and reports optional cleanup without performing
