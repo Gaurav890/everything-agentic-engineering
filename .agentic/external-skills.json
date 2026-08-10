@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "automatic_install": false,
+    "vendor_source": false,
+    "invoke_all_by_default": false,
+    "project_design_system_wins": true
+  },
+  "collections": {
+    "emilkowalski-design-engineering": {
+      "status": "optional_external",
+      "profiles": ["design-critical"],
+      "default_external_design_implementation_skill": "emil-design-eng",
+      "anthropic_frontend_design_policy": "secondary_opt_in",
+      "source_repository": "https://github.com/emilkowalski/skills",
+      "source_path": "skills",
+      "reviewed_commit": "78761e1b57f97dce65b983d640c70a68f39e8163",
+      "reviewed_at": "2026-08-10",
+      "license": "MIT",
+      "license_url": "https://github.com/emilkowalski/skills/blob/main/LICENSE",
+      "install_command": "npx skills@latest add emilkowalski/skills",
+      "reviewed_install_command": "npx skills@latest add https://github.com/emilkowalski/skills/tree/78761e1b57f97dce65b983d640c70a68f39e8163",
+      "skills": [
+        {
+          "name": "emil-design-eng",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/emil-design-eng",
+          "phases": ["implementation", "live-iteration", "polish"],
+          "activation": "routed_when_installed",
+          "trigger": "Substantial design-critical web UI implementation or refinement that needs high-craft composition, interaction, and restraint."
+        },
+        {
+          "name": "animate",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/animate",
+          "phases": ["implementation", "live-iteration"],
+          "activation": "routed_when_installed",
+          "trigger": "Implement one justified animation after its purpose, properties, interruption behavior, and reduced-motion fallback are known."
+        },
+        {
+          "name": "review-animations",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/review-animations",
+          "phases": ["audits", "independent-critique"],
+          "activation": "explicit_only",
+          "trigger": "Review animation code or a motion-heavy diff against strict motion standards."
+        },
+        {
+          "name": "improve-animations",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/improve-animations",
+          "phases": ["audits", "polish"],
+          "activation": "routed_when_installed",
+          "trigger": "Audit an existing codebase's animation system and produce a read-only, implementation-ready improvement plan."
+        },
+        {
+          "name": "find-animation-opportunities",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/find-animation-opportunities",
+          "phases": ["interaction-design", "polish"],
+          "activation": "routed_when_installed",
+          "trigger": "Find a small number of missing, purposeful motion opportunities; reject decorative candidates."
+        },
+        {
+          "name": "animation-vocabulary",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/animation-vocabulary",
+          "phases": ["design-system", "design-ops"],
+          "activation": "routed_when_installed",
+          "trigger": "Name or classify a motion effect so design and engineering share precise vocabulary."
+        },
+        {
+          "name": "apple-design",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/apple-design",
+          "phases": ["design-directions", "interaction-design", "implementation"],
+          "activation": "conditional",
+          "trigger": "The approved direction specifically calls for tactile gestures, spring physics, fluid materials, or Apple-platform conventions."
+        },
+        {
+          "name": "prototype",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/prototype",
+          "phases": ["design-directions", "live-iteration"],
+          "activation": "explicit_only",
+          "trigger": "A human explicitly asks for multiple genuinely different live variants and will choose before production changes."
+        },
+        {
+          "name": "pick-ui-library",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/pick-ui-library",
+          "phases": ["component-translation", "implementation"],
+          "activation": "explicit_only",
+          "trigger": "A human explicitly requests a dependency recommendation after installed project capabilities have been inspected."
+        },
+        {
+          "name": "ask-sonner",
+          "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/ask-sonner",
+          "phases": ["implementation"],
+          "activation": "conditional",
+          "trigger": "The project already uses Sonner or the approved task is specifically about Sonner setup or troubleshooting."
+        }
+      ]
+    }
+  }
+}

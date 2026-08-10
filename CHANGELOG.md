@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Profile-aware Emil Kowalski design-engineering integration with a reviewed,
+  pinned ten-skill manifest; a local anti-slop/motion router; explicit-only
+  prototyping, library-selection, and animation-review gates; Claude Code and
+  Codex installation; and deterministic coverage tests.
 - Resumable PR finalization that recovers only an exact interrupted task-ledger
   transition, re-verifies it before commit, and waits a bounded interval for
   GitHub to register required checks before reporting a safe retry.

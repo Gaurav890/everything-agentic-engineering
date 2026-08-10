@@ -32,11 +32,17 @@ framework demo.
 - UI UX Pro Max or equivalent: broad exploration and alternative generation.
 - 21st.dev, Aceternity, shadcn registries: component/interaction discovery.
 - Taste Skill or Impeccable: anti-slop critique and refinement.
+- Emil Kowalski `emil-design-eng`: high-craft implementation/refinement when
+  installed; specialist motion, prototyping, library, and Sonner skills route
+  only when their exact trigger is active.
 - Motion references: interaction inspiration when motion serves comprehension.
 - Anthropic `frontend-design`: optional supplementary design intelligence only.
 - Vercel engineering/audit skills: implementation quality, not visual identity.
 
 The project brief and `docs/20-design/DESIGN_SYSTEM.md` always win.
+Emil's suite does not choose the product aesthetic, authorize a dependency, or
+make motion mandatory. Use `design-engineering-quality` to select the minimum
+capability and preserve explicit-only gates.
 
 ## Structural-donor rule
 

@@ -107,6 +107,9 @@ Suggested:
 External skills:
 - route product-design phases through `product-design-router`
 - install discovery, strategy, taste, component, or Figma specialists only when routed
+- when `design-critical` is active, `./agentic setup skills` installs Emil
+  Kowalski's reviewed collection for Claude Code and Codex; route it through
+  `design-engineering-quality`, never as one bundle
 - use react-best-practices for engineering
 - use web-design-guidelines as one audit input
 - use frontend-design only as optional supplementary direction intelligence

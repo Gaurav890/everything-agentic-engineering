@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Engineering Quality"
+  short_description: "Route Emil Kowalski design and motion craft skills"
+  default_prompt: "Route this UI task through the smallest relevant design-engineering quality capability while preserving the project design system."

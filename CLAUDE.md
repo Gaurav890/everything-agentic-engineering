@@ -195,6 +195,12 @@ as the default visual identity.
   canonical design-system or token changes.
 - The project design system wins when external guidance conflicts.
 - Anthropic `frontend-design` is optional supplementary design intelligence.
+- For substantial design-critical web UI, route `design-engineering-quality`.
+  When Emil Kowalski's reviewed external suite is installed, use
+  `emil-design-eng` as the first external design implementation/refinement
+  skill—not Anthropic `frontend-design`—and
+  invoke only the motion, prototyping, library, or Sonner specialist whose exact
+  trigger is active. Never load the whole suite by default.
 - Build loading, empty, error, sparse, dense, disabled, success, and relevant
   agentic states.
 - Inspect the running product with Playwright at meaningful breakpoints.
@@ -202,6 +208,9 @@ as the default visual identity.
 
 Do not ship generic AI-generated patterns by default. Use product-specific
 hierarchy, typography, composition, interaction, content, motion, and restraint.
+Motion must communicate a user-facing purpose and include interruption,
+performance, accessibility, and reduced-motion behavior; no motion is often the
+correct choice.
 
 ## 10. Backend quality bar
 

@@ -13,11 +13,21 @@
 - Let tokens encode approved decisions; never use tokens to invent the design.
 - The project design system overrides external skills and library aesthetics.
 - Treat Anthropic `frontend-design` as optional supplementary intelligence.
+- For substantial design-critical web UI, invoke `design-engineering-quality`.
+  When Emil Kowalski's external suite is installed, use `emil-design-eng` for
+  the first external implementation/craft pass and route at most the exact
+  specialist justified by the task. Do not start with Anthropic
+  `frontend-design`; it is secondary and opt-in.
+- Do not invoke the whole Emil suite, treat it as visual authority, or let it
+  replace discovery, approved directions, tokens, audits, Playwright, or the
+  independent evaluator.
 - Design loading, empty, error, sparse, dense, disabled, and success states.
 - For agentic products, design planning, running, streaming, approval,
   interruption, partial success, failure, retry, provenance, and handoff states.
 - Use semantic HTML and visible focus states.
 - Respect reduced-motion preferences.
+- Add motion only when it explains causality, continuity, feedback, hierarchy,
+  or state; “no animation” is an acceptable design decision.
 - Make URL state deep-linkable when appropriate.
 - Verify important pages at mobile, tablet, and desktop breakpoints.
 - Audit responsiveness, accessibility, token use, design-system coherence, and
