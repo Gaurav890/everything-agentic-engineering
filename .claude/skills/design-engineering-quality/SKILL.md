@@ -20,6 +20,9 @@ review and verification.
 
 Do not invoke the entire collection. Select one primary capability and at most
 one focused specialist unless the human explicitly requests broader exploration.
+For substantial design-critical web UI, `emil-design-eng` is the first external
+design implementation/refinement skill when installed. Do not start with
+Anthropic `frontend-design`; keep it secondary and opt-in.
 
 | Need | Route when installed |
 |---|---|

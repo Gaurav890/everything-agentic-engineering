@@ -74,11 +74,13 @@ Do not rerun phases whose outputs exist, remain valid, and match the current tas
 - References are ingredients, not templates.
 - Imported components are structural donors.
 - Anthropic `frontend-design` is optional supplementary design intelligence. It
-  is never the default aesthetic and may be skipped.
+  is never the default aesthetic or starting implementation skill and may be
+  skipped.
 - Emil Kowalski's design-engineering collection is a reviewed optional craft
   layer for the `design-critical` profile. `emil-design-eng` is a broad
-  implementation/refinement perspective; its nine specialists are routed by
-  exact task, never invoked as one bundle.
+  implementation/refinement perspective and the default first external design
+  implementation skill when installed; its nine specialists are routed by exact
+  task, never invoked as one bundle.
 - `prototype`, `pick-ui-library`, and `review-animations` remain explicit-only.
   Motion is never mandatory; “do not animate” is a valid routed result.
 - Vercel engineering and audit guidance improves implementation quality; it does

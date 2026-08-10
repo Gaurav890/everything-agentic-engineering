@@ -116,7 +116,7 @@ original resource, invocation, timing, rationale, and assessment.
 - **What:** A ten-skill design-engineering collection covering high-craft UI implementation, purposeful motion, motion review/audit, vocabulary, Apple-style interaction, live variants, UI-library selection, and Sonner.
 - **When:** The `design-critical` profile is active and implementation or refinement needs a precise craft capability.
 - **Why:** It adds unusually concrete design-engineering and motion judgment that can reduce generic, mechanically polished AI output.
-- **Assessment:** High-value craft layer, not art direction. It cannot replace discovery, user needs, UX strategy, human-approved direction, design tokens, accessibility, running-product evidence, or the independent evaluator.
+- **Assessment:** High-value craft layer, not art direction. After the approved direction exists, `emil-design-eng` is the preferred first external design implementation skill. Anthropic `frontend-design` stays secondary and opt-in. The suite cannot replace discovery, user needs, UX strategy, human-approved direction, design tokens, accessibility, running-product evidence, or the independent evaluator.
 - **Repository route:** Local `design-engineering-quality` contract selects the minimum installed capability. The external source is not copied into this repository.
 
 | Upstream skill | Exact route |

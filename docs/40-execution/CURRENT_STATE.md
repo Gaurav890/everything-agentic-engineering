@@ -24,8 +24,10 @@ requires running-product evidence plus independent evaluation.
 
 When `design-critical` is active, Emil Kowalski's reviewed ten-skill external
 collection is available as a profile-aware design-engineering craft layer.
-`design-engineering-quality` routes `emil-design-eng` or one exact specialist;
-it never invokes the collection wholesale or replaces product discovery,
+`design-engineering-quality` routes `emil-design-eng` as the first external
+design implementation skill or one exact specialist; Anthropic
+`frontend-design` remains secondary and opt-in. The router never invokes the
+collection wholesale or replaces product discovery,
 approved directions, tokens, accessibility, Playwright, or the final evaluator.
 
 ## Mobile

@@ -197,7 +197,8 @@ as the default visual identity.
 - Anthropic `frontend-design` is optional supplementary design intelligence.
 - For substantial design-critical web UI, route `design-engineering-quality`.
   When Emil Kowalski's reviewed external suite is installed, use
-  `emil-design-eng` as a high-craft implementation/refinement perspective and
+  `emil-design-eng` as the first external design implementation/refinement
+  skill—not Anthropic `frontend-design`—and
   invoke only the motion, prototyping, library, or Sonner specialist whose exact
   trigger is active. Never load the whole suite by default.
 - Build loading, empty, error, sparse, dense, disabled, success, and relevant

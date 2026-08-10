@@ -43,6 +43,11 @@ class ExternalDesignSkillsTests(unittest.TestCase):
         self.assertEqual(self.collection["install_command"], "npx skills@latest add emilkowalski/skills")
         self.assertIn(self.collection["reviewed_commit"], self.collection["reviewed_install_command"])
         self.assertEqual(self.collection["profiles"], ["design-critical"])
+        self.assertEqual(
+            self.collection["default_external_design_implementation_skill"],
+            "emil-design-eng",
+        )
+        self.assertEqual(self.collection["anthropic_frontend_design_policy"], "secondary_opt_in")
 
     def test_external_suite_is_never_automatic_or_vendored(self) -> None:
         policy = self.manifest["policy"]

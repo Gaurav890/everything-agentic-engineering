@@ -297,6 +297,10 @@ stale. External additions are phase specialists, not aesthetic authority:
   selection, and Sonner work;
 - Anthropic `frontend-design` only as optional supplementary design intelligence.
 
+For substantial `design-critical` web UI, `emil-design-eng` is the default first
+external implementation/craft skill after the approved direction exists.
+Anthropic `frontend-design` is secondary, opt-in, and never the starting skill.
+
 Run:
 
 ```bash
@@ -820,7 +824,8 @@ PRODUCT INTENT
 - Anthropic `frontend-design` is optional supplementary intelligence, not the
   default art director.
 - Emil Kowalski's `emil-design-eng` is the preferred installed craft pass for
-  substantial design-critical web UI. Its focused motion, prototyping,
+  substantial design-critical web UI and the first external design
+  implementation skill. Its focused motion, prototyping,
   library-selection, and Sonner skills run only when their exact trigger is
   active; the collection is never invoked wholesale.
 - The project design system wins every conflict.

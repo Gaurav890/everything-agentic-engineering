@@ -15,7 +15,9 @@
 - Treat Anthropic `frontend-design` as optional supplementary intelligence.
 - For substantial design-critical web UI, invoke `design-engineering-quality`.
   When Emil Kowalski's external suite is installed, use `emil-design-eng` for
-  craft and route at most the exact specialist justified by the task.
+  the first external implementation/craft pass and route at most the exact
+  specialist justified by the task. Do not start with Anthropic
+  `frontend-design`; it is secondary and opt-in.
 - Do not invoke the whole Emil suite, treat it as visual authority, or let it
   replace discovery, approved directions, tokens, audits, Playwright, or the
   independent evaluator.

@@ -10,6 +10,8 @@
     "emilkowalski-design-engineering": {
       "status": "optional_external",
       "profiles": ["design-critical"],
+      "default_external_design_implementation_skill": "emil-design-eng",
+      "anthropic_frontend_design_policy": "secondary_opt_in",
       "source_repository": "https://github.com/emilkowalski/skills",
       "source_path": "skills",
       "reviewed_commit": "78761e1b57f97dce65b983d640c70a68f39e8163",

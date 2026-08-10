@@ -28,7 +28,9 @@ Inspect durable artifacts and the running product before routing.
 - Approved Figma: translate through Figma MCP/Code Connect when installed.
 - Substantial design-critical implementation or refinement: add
   `design-engineering-quality`; when Emil Kowalski's suite is installed, route
-  `emil-design-eng` as a craft pass and only the smallest relevant specialist.
+  `emil-design-eng` as the first external design implementation/craft pass and
+  only the smallest relevant specialist. Do not start implementation with
+  Anthropic `frontend-design`.
 - Existing implementation refinement: skip upstream phases that remain valid;
   iterate live.
 - Motion work: route the exact motion capability only after purpose,
@@ -49,6 +51,8 @@ Do not route canonical design-system or token changes while
 
 The project design system is authoritative. Anthropic `frontend-design` is one
 optional input during design-direction exploration, never the default aesthetic.
+It is secondary and opt-in; `emil-design-eng` is the preferred first external
+design implementation skill for substantial `design-critical` web UI.
 Emil Kowalski's external collection is an optional design-engineering craft
 layer, not a replacement for discovery, strategy, approved directions, tokens,
 accessibility, Playwright evidence, or the independent evaluator. `prototype`,

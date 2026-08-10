@@ -12,7 +12,9 @@ subordinate to the product's approved experience contract.
 - The full Emil Kowalski ten-skill inventory is recorded with provenance,
   reviewed revision, license, phase, trigger, and invocation policy.
 - `design-engineering-quality` routes the broad craft pass or one exact
-  specialist without replacing upstream product/design work.
+  specialist without replacing upstream product/design work. `emil-design-eng`
+  is the first external design implementation skill; Anthropic
+  `frontend-design` is secondary and opt-in.
 - Motion requires purpose, interruption, performance, accessibility, and
   reduced-motion behavior; no motion is an acceptable result.
 - The `design-critical` profile activates the external collection while web-only

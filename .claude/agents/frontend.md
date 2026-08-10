@@ -19,8 +19,9 @@ Process:
 7. Implement all important product and agentic states.
 8. Apply framework engineering guidance, then iterate on the running product.
 9. For substantial design-critical web UI, invoke `design-engineering-quality`;
-   use Emil Kowalski's installed suite as a routed craft layer, never as the
-   product's art director, and never load every specialist by default.
+   use `emil-design-eng` as the first external implementation/craft skill when
+   installed, never start with Anthropic `frontend-design`, never make the suite
+   the product's art director, and never load every specialist by default.
 10. Inspect with Playwright and capture evidence at meaningful breakpoints.
 11. Run responsive, accessibility, token, system, and performance audits as routed.
 12. Hand off to an independent design critic/QA evaluator, address findings, and

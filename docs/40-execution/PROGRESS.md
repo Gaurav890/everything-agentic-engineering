@@ -745,7 +745,8 @@ integrated them as a profile-aware external craft layer. Added a local
 reviewed installer for Claude Code and Codex, non-mutating install preview,
 purpose-first motion gates, and explicit-only controls for live variants,
 library selection, and strict animation review. Anthropic `frontend-design`
-remains supplementary and is no longer part of the default external install.
+remains secondary/opt-in and is no longer the starting implementation skill or
+part of the default external install.
 
 **Evidence**
 
