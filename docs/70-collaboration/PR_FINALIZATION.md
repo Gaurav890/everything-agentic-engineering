@@ -48,7 +48,8 @@ an incomplete command from changing the branch.
 
 1. Validates the task ID and current task branch.
 2. Requires a clean worktree and task state `review` or already-prepared
-   `done`.
+   `done`. The only dirty state it can recover is the exact `review` to `done`
+   ledger transition left by an interrupted finalizer.
 3. Confirms GitHub authentication and the open PR's branch, base, title, task,
    and issue contract.
 4. Reuses `prepare-merge.sh`, which runs full repository verification before
@@ -59,7 +60,8 @@ an incomplete command from changing the branch.
 7. Pushes the current task branch, never `main`.
 8. Marks the PR ready only when it is currently a draft. If someone marked it
    ready too early, the new push simply retriggers the required checks.
-9. Waits for required checks and then stops.
+9. Polls for up to 55 seconds for GitHub to register at least one check, then
+   waits for the registered checks and stops.
 
 ## What it never does
 
@@ -103,12 +105,20 @@ Do not fix this by editing `TASKS.jsonl`.
 Dry-run and precondition failures make no changes. If full verification fails,
 the task remains in `review`. If an unexpected file changes during
 verification, the finalizer refuses to stage or commit anything and reports
-the paths for inspection. If GitHub checks fail, the PR remains open and
-unmerged for diagnosis.
+the paths for inspection. If the process stops after `prepare-merge.sh` writes
+`done` but before the ledger commit completes, rerun the same finalizer command.
+It accepts only that task's exact `review` to `done` transition, re-runs full
+verification, and rejects unrelated files or any additional ledger edit.
 
-Running the finalizer again is safe when the task is already prepared as
-`done`: it does not create another ledger commit, but it can push the current
-branch and wait for the current checks.
+After a push or Ready transition, GitHub can briefly report no checks while it
+creates workflow runs. The finalizer waits a bounded 55 seconds for check
+registration before reporting a safe retry. If checks fail or registration
+times out, the PR remains open and unmerged for diagnosis.
+
+Running the finalizer again is safe after any supported checkpoint: an exact
+uncommitted or staged ledger transition is verified and committed; an already
+committed `done` task is not recommitted; and a pushed or already-ready PR is
+checked again. Recovery never approves or merges.
 
 After the human merges, run:
 

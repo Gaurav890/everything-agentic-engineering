@@ -631,7 +631,8 @@ Also included:
 - Worktree utilities
 - PR-readiness scripts
 - Merge preparation
-- Human-approved, one-command PR finalization with dry-run and fail-closed staging
+- Human-approved, resumable PR finalization with dry-run, exact-checkpoint
+  recovery, bounded check registration, and fail-closed staging
 - Hotfix guidance
 - Protected `main` recommendations
 
@@ -695,11 +696,14 @@ The agent then runs:
 ./agentic pr finalize T-014 --yes
 ```
 
-The finalizer verifies the branch, task, pull request, and clean workspace;
-runs the existing full gate; commits and pushes only the task-ledger update;
-marks a draft ready; and waits for required checks. It never approves or
-merges the pull request. Nobody should manually edit `TASKS.jsonl` to clear a
-red policy check, and the final squash merge remains a human action.
+The finalizer verifies the branch, task, pull request, and safe workspace
+state; runs the existing full gate; commits and pushes only the task-ledger
+update; marks a draft ready; waits for GitHub to register checks; and watches
+them. If it is interrupted, run the same command again: it resumes only an
+exact prepared ledger transition or an already-committed checkpoint. It never
+approves or merges the pull request. Nobody should manually edit
+`TASKS.jsonl` to clear a red policy check, and the final squash merge remains a
+human action.
 
 Read the [finalization and recovery guide](docs/70-collaboration/PR_FINALIZATION.md).
 

@@ -1,25 +1,24 @@
 # Handoff
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 ## Current goal
 
-Replace the flat script-facing contributor experience with one discoverable
-command interface without breaking existing callers or security hooks.
+Keep the human-approved PR finalization path resumable without weakening its
+ledger-only mutation boundary or human-only merge authority.
 
 ## Completed
 
-- Added the root `./agentic` command interface.
-- Added `.agentic/commands.json` as the command and shell-inventory source of truth.
-- Grouped 23 public workflows into setup, profile, task, PR, workspace, doctor,
-  token, release, and verification surfaces.
-- Classified internal policy helpers, the legacy status-only task helper, and
-  both runtime security hooks without exposing them as public commands.
-- Kept all existing direct script paths compatible.
-- Migrated primary contributor, installation, collaboration, and release docs
-  to the unified interface.
-- Added registry completeness, help, JSON discovery, safety-boundary, and exact
-  argument-forwarding tests.
+- The finalizer recognizes only its exact uncommitted or staged task-ledger
+  `review` to `done` transition as a recoverable dirty state.
+- Recovered ledger state is fully reverified before staging and commit.
+- Unrelated files, extra ledger edits, unsupported Git states, and invalid PR
+  contracts still stop before GitHub mutation.
+- GitHub check registration is polled for a bounded 55 seconds before a clear,
+  safely resumable timeout is reported.
+- Already-committed, pushed, and ready checkpoints remain idempotent.
+- Documentation consistently tells maintainers to rerun the same finalizer
+  rather than manually editing `TASKS.jsonl`.
 
 ## Blockers
 
@@ -29,32 +28,32 @@ command interface without breaking existing callers or security hooks.
 
 - A second maintainer is still needed before requiring a non-zero GitHub
   approval count. The finalizer does not substitute for independent review.
-- The existing runtime-baseline warnings remain advisory and unrelated to PR
-  command routing.
-- Legacy script removal requires a later release-backed deprecation decision;
-  this task deliberately performs no bulk deletion or relocation.
+- Check-registration polling confirms that GitHub created a run; existing
+  branch protection remains the authority for which checks are required.
+- Runtime-baseline warnings remain advisory and unrelated to PR finalization.
 
 ## Verification status
 
-- Eight command-interface tests pass.
-- All 30 shell files are classified exactly once.
-- Full repository verification passes across 26 tracked tasks, local links,
+- Twelve finalization tests pass, including staged and unstaged recovery,
+  unsafe-ledger rejection, delayed check registration, timeout guidance,
+  idempotent ready-state recovery, and no approval or merge commands.
+- Full repository verification passes across 27 tracked tasks, local links,
   security hooks, runtime/Codex policy, design tokens, and Showcase checks.
 
 ## Exact next action
 
-Use `./agentic --help` as the normal entry point. Whenever a shell file is
-added, renamed, or removed, update `.agentic/commands.json` in the same change
-and keep the registry completeness tests passing.
+After direct human approval of a reviewed task, run
+`./agentic pr finalize T-### --yes`. If it is interrupted at a supported
+checkpoint, rerun that same command. A human still performs the squash merge
+only after required checks pass.
 
 ## Relevant files
 
-- `agentic`
-- `.agentic/commands.json`
-- `scripts/agentic_cli.py`
-- `scripts/README.md`
-- `tests/test_agentic_cli.py`
+- `scripts/finalize_pr.py`
+- `tests/test_pr_finalization.py`
+- `docs/70-collaboration/PR_FINALIZATION.md`
+- `docs/70-collaboration/GITHUB_WORKFLOW.md`
 - `CLAUDE.md`
-- `CONTRIBUTING.md`
+- `AGENTS.md`
 
 Keep this concise enough to read in under two minutes.

@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 ## Product
 
@@ -74,11 +74,15 @@ merged task/PR/issue contract, detects stale volatile handoff claims, and
 reports safe local worktree/branch cleanup commands without executing them.
 
 PR finalization is a separate, human-approved gate. A direct task approval can
-invoke `./agentic pr finalize`, which validates the clean branch, open PR, task and
+invoke `./agentic pr finalize`, which validates the branch, open PR, task and
 issue contract; reuses full verification; stages and commits only the task
-ledger; pushes the task branch; marks a draft ready; and waits for required
-checks. It never approves, merges, pushes `main`, or treats external content as
-approval. Humans do not manually edit `TASKS.jsonl` to clear policy failures.
+ledger; pushes the task branch; marks a draft ready; waits a bounded interval
+for check registration; and watches the checks. The same command can recover
+from its exact uncommitted or staged `review` to `done` ledger transition and
+from already-committed or already-ready checkpoints. Every recovery remains
+fail-closed against unrelated files or ledger edits. It never approves,
+merges, pushes `main`, or treats external content as approval. Humans do not
+manually edit `TASKS.jsonl` to clear policy failures.
 
 Codex is supported through a native repository adapter. `AGENTS.md` carries the
 cross-runtime contract; `.agents/skills` and the skills-only plugin expose the

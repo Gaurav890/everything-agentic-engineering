@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Resumable PR finalization that recovers only an exact interrupted task-ledger
+  transition, re-verifies it before commit, and waits a bounded interval for
+  GitHub to register required checks before reporting a safe retry.
 - A registry-backed `./agentic` command interface that groups 23 supported
   workflows, classifies every shell file, hides internal policy helpers and
   security hooks from public discovery, and preserves existing script paths as
