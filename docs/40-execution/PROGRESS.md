@@ -696,3 +696,37 @@ Issue #34 owns the human discussion. This phase does not delete or relocate
 scripts, bypass security hooks, install external capabilities, widen runtime
 authority, deploy, approve, or merge a pull request. Any later script removal
 requires a separately reviewed, release-backed deprecation decision.
+
+### 2026-08-10 — T-028
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Made the human-approved PR finalizer resumable across its real interruption
+points. It now recognizes only the exact task-ledger `review` to `done`
+transition it prepares, re-runs full verification before committing recovered
+state, and safely resumes already-committed or already-ready checkpoints. It
+also waits a bounded 55 seconds for GitHub to register checks before reporting
+a clear retry instead of failing immediately on `no checks reported`.
+
+**Evidence**
+
+- Twelve finalization tests cover clean execution, dry-run behavior, staged and
+  unstaged recovery, unrelated worktree and ledger rejection, delayed and
+  missing check registration, ready-state recovery, idempotent prepared state,
+  and absence of approval or merge commands.
+- Twenty-four combined finalizer and task-policy tests pass.
+- Full repository verification passes all ten stages across 27 tracked tasks,
+  security hooks, runtime/Codex policy, design tokens, local links, Showcase
+  lint, typecheck, and model tests.
+- Locked worktree dependencies were restored offline with zero downloads.
+
+**Authority boundary**
+
+Issue #36 owns the human discussion. Recovery does not infer approval, accept
+general dirty state, stage unrelated files, push `main`, approve, merge,
+deploy, widen permissions, or turn check absence into success. The maintainer
+still reviews first and performs the final squash merge separately.

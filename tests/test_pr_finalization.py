@@ -33,11 +33,16 @@ class FakeRunner:
         is_draft: bool = True,
         dirty_before: str = "",
         dirty_after: str = " M docs/40-execution/TASKS.jsonl",
+        head_status: str = "review",
+        check_rollups: list[list[dict]] | None = None,
     ) -> None:
         self.root = root
         self.is_draft = is_draft
         self.dirty_before = dirty_before
         self.dirty_after = dirty_after
+        self.head_status = head_status
+        self.check_rollups = check_rollups or [[{"name": "policy"}]]
+        self.check_poll_count = 0
         self.prepared = False
         self.calls: list[list[str]] = []
 
@@ -47,7 +52,18 @@ class FakeRunner:
             return "feat/T-100-finalize"
         if command == ["git", "status", "--porcelain=v1"]:
             return self.dirty_after if self.prepared else self.dirty_before
-        if command[:3] == ["gh", "pr", "view"]:
+        if command == [
+            "gh",
+            "pr",
+            "view",
+            "42",
+            "--json",
+            "statusCheckRollup",
+        ]:
+            index = min(self.check_poll_count, len(self.check_rollups) - 1)
+            self.check_poll_count += 1
+            return json.dumps({"statusCheckRollup": self.check_rollups[index]})
+        if command == ["gh", "pr", "view", "--json", finalize_pr.PR_FIELDS]:
             return json.dumps(
                 {
                     "number": 42,
@@ -60,6 +76,8 @@ class FakeRunner:
                     "body": "## Linked work\n\n- Issue: Closes #32\n- Task: T-100\n",
                 }
             )
+        if command == ["git", "show", f"HEAD:{finalize_pr.LEDGER.as_posix()}"]:
+            return json.dumps(task_record(self.head_status)) + "\n"
         if command[0:2] == ["bash", str(self.root / "scripts/prepare-merge.sh")]:
             path = self.root / finalize_pr.LEDGER
             record = json.loads(path.read_text().strip())
@@ -87,10 +105,20 @@ class PRFinalizationTests(unittest.TestCase):
             json.dumps(task_record(status)) + "\n"
         )
 
-    def finalize(self, runner: FakeRunner, *, dry_run: bool = False) -> dict:
+    def finalize(
+        self,
+        runner: FakeRunner,
+        *,
+        dry_run: bool = False,
+        sleeper=lambda _seconds: None,
+    ) -> dict:
         with redirect_stdout(io.StringIO()):
             return finalize_pr.finalize(
-                "T-100", root=self.root, runner=runner, dry_run=dry_run
+                "T-100",
+                root=self.root,
+                runner=runner,
+                sleeper=sleeper,
+                dry_run=dry_run,
             )
 
     def assert_no_approval_or_merge(self, calls: list[list[str]]) -> None:
@@ -179,6 +207,87 @@ class PRFinalizationTests(unittest.TestCase):
             self.finalize(runner)
         self.assertFalse(any(call[0] == "gh" for call in runner.calls))
         self.assertFalse(any("prepare-merge.sh" in " ".join(call) for call in runner.calls))
+
+    def test_interrupted_unstaged_ledger_transition_is_reverified_and_resumed(self) -> None:
+        self.write_task("done")
+        runner = FakeRunner(
+            self.root,
+            dirty_before=" M docs/40-execution/TASKS.jsonl",
+            head_status="review",
+            is_draft=False,
+        )
+        self.finalize(runner)
+        self.assertIn(
+            ["bash", str(self.root / "scripts/verify.sh"), "full"], runner.calls
+        )
+        self.assertFalse(any("prepare-merge.sh" in " ".join(call) for call in runner.calls))
+        self.assertIn(["git", "add", "--", str(finalize_pr.LEDGER)], runner.calls)
+        self.assertIn(
+            ["git", "commit", "-m", "docs(T-100): prepare task for merge"],
+            runner.calls,
+        )
+        self.assertIn(["git", "push", "origin", "HEAD"], runner.calls)
+        self.assert_no_approval_or_merge(runner.calls)
+
+    def test_interrupted_staged_ledger_transition_is_resumable(self) -> None:
+        self.write_task("done")
+        runner = FakeRunner(
+            self.root,
+            dirty_before="M  docs/40-execution/TASKS.jsonl",
+            head_status="review",
+            is_draft=False,
+        )
+        self.finalize(runner)
+        self.assertIn(
+            ["git", "commit", "-m", "docs(T-100): prepare task for merge"],
+            runner.calls,
+        )
+        self.assert_no_approval_or_merge(runner.calls)
+
+    def test_changed_ledger_content_is_not_treated_as_recovery(self) -> None:
+        changed = task_record("done")
+        changed["title"] = "Manual unrelated ledger edit"
+        (self.root / finalize_pr.LEDGER).write_text(json.dumps(changed) + "\n")
+        runner = FakeRunner(
+            self.root,
+            dirty_before=" M docs/40-execution/TASKS.jsonl",
+            head_status="review",
+        )
+        with self.assertRaisesRegex(finalize_pr.FinalizationError, "must be clean"):
+            self.finalize(runner)
+        self.assertFalse(any(call[0] == "gh" for call in runner.calls))
+        self.assert_no_approval_or_merge(runner.calls)
+
+    def test_check_registration_is_polled_before_watch(self) -> None:
+        self.write_task("done")
+        runner = FakeRunner(
+            self.root,
+            is_draft=False,
+            check_rollups=[[], [], [{"name": "policy"}]],
+        )
+        sleeps: list[float] = []
+        self.finalize(runner, sleeper=sleeps.append)
+        self.assertEqual(runner.check_poll_count, 3)
+        self.assertEqual(sleeps, [5.0, 5.0])
+        self.assertIn(
+            ["gh", "pr", "checks", "42", "--watch", "--fail-fast"],
+            runner.calls,
+        )
+
+    def test_missing_check_registration_stops_with_safe_retry_guidance(self) -> None:
+        self.write_task("done")
+        runner = FakeRunner(self.root, is_draft=False, check_rollups=[[]])
+        with self.assertRaisesRegex(
+            finalize_pr.FinalizationError, "rerun this finalizer safely"
+        ):
+            self.finalize(runner)
+        self.assertEqual(
+            runner.check_poll_count, finalize_pr.CHECK_REGISTRATION_ATTEMPTS
+        )
+        self.assertFalse(
+            any(call[:3] == ["gh", "pr", "checks"] for call in runner.calls)
+        )
+        self.assert_no_approval_or_merge(runner.calls)
 
     def test_already_prepared_task_is_idempotent_and_does_not_recommit(self) -> None:
         self.write_task("done")

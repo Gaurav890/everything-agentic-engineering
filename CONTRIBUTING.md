@@ -39,9 +39,11 @@ After the reviewer directly says `T-014 approved`:
 ```
 
 The bounded finalizer prepares and pushes the task-state update, marks a draft
-ready, and waits for checks. Do not manually edit `TASKS.jsonl`. The finalizer
-never approves or merges; a human squash-merges after checks are green. `main`
-becomes the durable source of truth only when the PR is actually merged.
+ready, waits for GitHub to register checks, and watches them. If interrupted,
+rerun the same command; it resumes only its exact prepared checkpoint. Do not
+manually edit `TASKS.jsonl`. The finalizer never approves or merges; a human
+squash-merges after checks are green. `main` becomes the durable source of
+truth only when the PR is actually merged.
 
 ## Rules
 

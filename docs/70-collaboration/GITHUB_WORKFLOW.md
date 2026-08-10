@@ -322,11 +322,13 @@ The orchestrator then runs the bounded finalizer:
 ./agentic pr finalize T-014 --yes
 ```
 
-It confirms the branch, clean worktree, task state, PR identity, GitHub login,
-and issue/task/PR contract. It reuses full verification, writes `done`, stages
-and commits only `TASKS.jsonl`, pushes the task branch, marks a draft ready,
-and waits for required checks. It never approves or merges the PR. The final
-squash merge remains a separate human action.
+It confirms the branch, safe worktree state, task state, PR identity, GitHub
+login, and issue/task/PR contract. It reuses full verification, writes `done`,
+stages and commits only `TASKS.jsonl`, pushes the task branch, marks a draft
+ready, waits briefly for GitHub to register checks, and then watches them. If
+interrupted, rerun the same command: it resumes only the exact prepared ledger
+transition or an already-committed checkpoint. It never approves or merges the
+PR. The final squash merge remains a separate human action.
 
 See [Pull-request finalization](PR_FINALIZATION.md) for the authority boundary,
 failure behavior, and recovery guide.
@@ -423,9 +425,10 @@ failed_safe
 
 `./agentic task finish` moves a task to `review` after verification. After direct human
 approval, `./agentic pr finalize` uses the low-level `prepare-merge.sh` gate to write
-`done`, commit and push only the ledger change, mark the PR ready, and wait for
-checks. Because `main` is the source of truth, the task becomes durably done
-only when that PR lands in `main`.
+`done`, commit and push only the ledger change, mark the PR ready, wait for
+check registration, and watch the checks. The same command safely resumes an
+exact interrupted checkpoint. Because `main` is the source of truth, the task
+becomes durably done only when that PR lands in `main`.
 
 ## 16. The default answer to common workflow questions
 

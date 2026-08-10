@@ -4,10 +4,12 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Callable
 
@@ -19,6 +21,9 @@ LEDGER = Path("docs/40-execution/TASKS.jsonl")
 TASK_PATTERN = re.compile(r"T-[0-9]{3,}")
 PR_FIELDS = "number,url,isDraft,state,headRefName,baseRefName,title,body"
 Runner = Callable[[list[str]], str]
+Sleeper = Callable[[float], None]
+CHECK_REGISTRATION_ATTEMPTS = 12
+CHECK_REGISTRATION_DELAY_SECONDS = 5.0
 
 
 class FinalizationError(RuntimeError):
@@ -63,17 +68,80 @@ def changed_paths(status: str) -> set[str]:
     return paths
 
 
-def require_clean(runner: Runner) -> None:
+def parse_tasks(raw: str, source: str) -> list[dict]:
+    tasks: list[dict] = []
+    for line_number, line in enumerate(raw.splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            task = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise FinalizationError(
+                f"Invalid task JSON in {source} at line {line_number}: {exc}"
+            ) from exc
+        if not isinstance(task, dict):
+            raise FinalizationError(
+                f"Invalid task record in {source} at line {line_number}"
+            )
+        tasks.append(task)
+    return tasks
+
+
+def is_exact_prepared_transition(
+    task_id: str, root: Path, runner: Runner, status: str
+) -> bool:
+    lines = [line for line in status.splitlines() if line.strip()]
+    if len(lines) != 1 or changed_paths(status) != {str(LEDGER)}:
+        return False
+
+    # Accept only the two interruption points created by this finalizer: the
+    # ledger was written but not staged, or staged but not committed.
+    if lines[0][:2] not in {" M", "M "}:
+        return False
+
+    raw_head = runner(["git", "show", f"HEAD:{LEDGER.as_posix()}"])
+    head_tasks = parse_tasks(raw_head, f"HEAD:{LEDGER}")
+    working_tasks = read_tasks(root)
+    if len(head_tasks) != len(working_tasks):
+        return False
+
+    try:
+        head_task = github_task_sync.get_task(head_tasks, task_id)
+        working_task = github_task_sync.get_task(working_tasks, task_id)
+    except github_task_sync.TaskSyncError:
+        return False
+
+    expected_task = copy.deepcopy(head_task)
+    expected_task["status"] = "done"
+    if head_task.get("status") != "review" or working_task != expected_task:
+        return False
+
+    expected_tasks = copy.deepcopy(head_tasks)
+    for index, candidate in enumerate(expected_tasks):
+        if candidate.get("id") == task_id:
+            expected_tasks[index] = expected_task
+            break
+    return working_tasks == expected_tasks
+
+
+def worktree_state(task_id: str, root: Path, runner: Runner) -> str:
     status = runner(["git", "status", "--porcelain=v1"])
-    if status.strip():
-        paths = ", ".join(sorted(changed_paths(status)))
-        raise FinalizationError(
-            "The worktree must be clean before PR finalization. "
-            f"Commit or restore the current changes first: {paths}"
-        )
+    if not status.strip():
+        return "clean"
+    if is_exact_prepared_transition(task_id, root, runner, status):
+        return "prepared_ledger"
+
+    paths = ", ".join(sorted(changed_paths(status))) or "unknown"
+    raise FinalizationError(
+        "The worktree must be clean before PR finalization, except for an exact "
+        f"interrupted {task_id} review-to-done ledger transition. Inspect or "
+        f"restore these changes first: {paths}"
+    )
 
 
-def current_context(task_id: str, root: Path, runner: Runner) -> tuple[dict, dict, str]:
+def current_context(
+    task_id: str, root: Path, runner: Runner
+) -> tuple[dict, dict, str, str]:
     if not TASK_PATTERN.fullmatch(task_id):
         raise FinalizationError("Task ID must use the form T-###")
 
@@ -84,7 +152,7 @@ def current_context(task_id: str, root: Path, runner: Runner) -> tuple[dict, dic
         raise FinalizationError(f"Refusing to finalize from protected branch: {branch}")
 
     runner(["bash", str(root / "scripts/check-branch-name.sh"), branch])
-    require_clean(runner)
+    recovery_state = worktree_state(task_id, root, runner)
 
     task = read_task(root, task_id)
     if task.get("status") not in {"review", "done"}:
@@ -121,15 +189,22 @@ def current_context(task_id: str, root: Path, runner: Runner) -> tuple[dict, dic
     if f"({task_id})" not in pull_request.get("title", ""):
         raise FinalizationError(f"The pull-request title must reference {task_id}")
 
-    return task, pull_request, branch
+    return task, pull_request, branch, recovery_state
 
 
-def print_plan(task_id: str, task: dict, pull_request: dict, branch: str) -> None:
-    action = (
-        "verify and prepare the task ledger, commit it, and push the branch"
-        if task.get("status") == "review"
-        else "push the already prepared branch"
-    )
+def print_plan(
+    task_id: str,
+    task: dict,
+    pull_request: dict,
+    branch: str,
+    recovery_state: str,
+) -> None:
+    if recovery_state == "prepared_ledger":
+        action = "re-verify and commit the exact interrupted task-ledger transition"
+    elif task.get("status") == "review":
+        action = "verify and prepare the task ledger, commit it, and push the branch"
+    else:
+        action = "push the already prepared branch"
     ready_action = (
         "mark the draft pull request ready for review"
         if pull_request.get("isDraft")
@@ -146,14 +221,102 @@ def print_plan(task_id: str, task: dict, pull_request: dict, branch: str) -> Non
     print("  This command never approves or merges the pull request.")
 
 
-def finalize(task_id: str, *, root: Path = ROOT, runner: Runner = run_command, dry_run: bool) -> dict:
-    task, pull_request, branch = current_context(task_id, root, runner)
-    print_plan(task_id, task, pull_request, branch)
+def commit_prepared_ledger(task_id: str, runner: Runner) -> None:
+    status = runner(["git", "status", "--porcelain=v1"])
+    paths = changed_paths(status)
+    if paths != {str(LEDGER)}:
+        found = ", ".join(sorted(paths)) or "none"
+        raise FinalizationError(
+            "Final verification changed files outside the task ledger; refusing to "
+            f"stage or commit. Changed paths: {found}"
+        )
+    runner(["git", "add", "--", str(LEDGER)])
+    staged = set(
+        filter(
+            None,
+            runner(["git", "diff", "--cached", "--name-only"]).splitlines(),
+        )
+    )
+    if staged != {str(LEDGER)}:
+        found = ", ".join(sorted(staged)) or "none"
+        raise FinalizationError(
+            "Only the task ledger may be staged by PR finalization. "
+            f"Staged paths: {found}"
+        )
+    runner(
+        [
+            "git",
+            "commit",
+            "-m",
+            f"docs({task_id}): prepare task for merge",
+        ]
+    )
+
+
+def wait_for_registered_checks(
+    pull_request_number: int,
+    runner: Runner,
+    *,
+    sleeper: Sleeper,
+    attempts: int = CHECK_REGISTRATION_ATTEMPTS,
+    delay_seconds: float = CHECK_REGISTRATION_DELAY_SECONDS,
+) -> None:
+    if attempts < 1:
+        raise FinalizationError("Check-registration attempts must be positive")
+
+    for attempt in range(1, attempts + 1):
+        raw = runner(
+            [
+                "gh",
+                "pr",
+                "view",
+                str(pull_request_number),
+                "--json",
+                "statusCheckRollup",
+            ]
+        )
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise FinalizationError(
+                "GitHub returned invalid required-check JSON"
+            ) from exc
+        checks = payload.get("statusCheckRollup")
+        if isinstance(checks, list) and checks:
+            return
+        if attempt < attempts:
+            sleeper(delay_seconds)
+
+    wait_seconds = max(0, attempts - 1) * delay_seconds
+    raise FinalizationError(
+        "GitHub did not register any pull-request checks within "
+        f"{wait_seconds:g} seconds. The branch remains pushed and unmerged; "
+        "rerun this finalizer safely after GitHub registers the checks."
+    )
+
+
+def finalize(
+    task_id: str,
+    *,
+    root: Path = ROOT,
+    runner: Runner = run_command,
+    sleeper: Sleeper = time.sleep,
+    dry_run: bool,
+) -> dict:
+    task, pull_request, branch, recovery_state = current_context(
+        task_id, root, runner
+    )
+    print_plan(task_id, task, pull_request, branch, recovery_state)
     if dry_run:
         print("Dry run complete. No mutation was performed.")
         return {"dry_run": True, "task_id": task_id, "pull_request": pull_request}
 
-    if task.get("status") == "review":
+    if recovery_state == "prepared_ledger":
+        output = runner(["bash", str(root / "scripts/verify.sh"), "full"])
+        if output:
+            print(output)
+        commit_prepared_ledger(task_id, runner)
+    elif task.get("status") == "review":
         output = runner(["bash", str(root / "scripts/prepare-merge.sh"), task_id])
         if output:
             print(output)
@@ -162,39 +325,12 @@ def finalize(task_id: str, *, root: Path = ROOT, runner: Runner = run_command, d
             raise FinalizationError(
                 f"prepare-merge.sh did not write status=done for {task_id}"
             )
-        status = runner(["git", "status", "--porcelain=v1"])
-        paths = changed_paths(status)
-        if paths != {str(LEDGER)}:
-            found = ", ".join(sorted(paths)) or "none"
-            raise FinalizationError(
-                "Final verification changed files outside the task ledger; refusing to "
-                f"stage or commit. Changed paths: {found}"
-            )
-        runner(["git", "add", "--", str(LEDGER)])
-        staged = set(
-            filter(
-                None,
-                runner(["git", "diff", "--cached", "--name-only"]).splitlines(),
-            )
-        )
-        if staged != {str(LEDGER)}:
-            found = ", ".join(sorted(staged)) or "none"
-            raise FinalizationError(
-                "Only the task ledger may be staged by PR finalization. "
-                f"Staged paths: {found}"
-            )
-        runner(
-            [
-                "git",
-                "commit",
-                "-m",
-                f"docs({task_id}): prepare task for merge",
-            ]
-        )
+        commit_prepared_ledger(task_id, runner)
 
     runner(["git", "push", "origin", "HEAD"])
     if pull_request.get("isDraft"):
         runner(["gh", "pr", "ready", str(pull_request["number"])])
+    wait_for_registered_checks(pull_request["number"], runner, sleeper=sleeper)
     runner(["gh", "pr", "checks", str(pull_request["number"]), "--watch", "--fail-fast"])
 
     print("Required checks passed. The PR is prepared for a human squash merge.")
