@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A registry-backed `./agentic` command interface that groups 23 supported
+  workflows, classifies every shell file, hides internal policy helpers and
+  security hooks from public discovery, and preserves existing script paths as
+  compatibility adapters during a measured migration.
 - A human-approved PR finalizer with dry-run, clean-worktree and PR identity
   checks, ledger-only staging, recovery from an already-ready PR, required-
   check waiting, and explicit guarantees that it never approves or merges.

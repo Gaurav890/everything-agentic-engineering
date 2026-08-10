@@ -19,7 +19,7 @@ This file is the cross-runtime contract and is loaded natively by Codex.
 - `.agentic/runtime-baselines.json` records reviewed Claude Code and Codex
   version floors and optional capability gates; `runtime-doctor.sh` reports
   them without installing or enabling anything.
-- Run `./scripts/codex-doctor.sh` after Codex adapter changes.
+- Run `./agentic doctor codex` after Codex adapter changes.
 
 The committed Codex adapter must not choose models/providers, add credentials,
 register external MCP execution, enable network access, widen sandboxes, or
@@ -76,7 +76,7 @@ Do not spawn several writable in-session subagents into the same checkout.
    links its task, requirements, acceptance criteria, and evidence.
 5. Workers move implemented tasks to `review` and keep the PR draft during
    human review. After a direct human approval such as `T-026 approved`, the
-   orchestrator runs `finalize-pr.sh T-026 --yes`. The finalizer may verify,
+   orchestrator runs `./agentic pr finalize T-026 --yes`. The finalizer may verify,
    prepare and commit the ledger, push the task branch, mark a draft ready, and
    wait for checks. It never approves or merges. Only the merged state on
    `main` is authoritative.
@@ -92,10 +92,22 @@ The deterministic `task-sync.sh` contract validates relationships and reports
 live drift read-only. It never grants an agent authority to update issues,
 tasks, PRs, approvals, or merges.
 
-After merge, `task-closeout.sh` resolves current default-branch and GitHub
+After merge, `./agentic task closeout` resolves current default-branch and GitHub
 truth, detects transient handoff claims, and reports local cleanup commands.
 Agents must not execute those commands automatically or encode predicted PR
 outcomes as durable facts.
+
+## Command routing
+
+Use `./agentic` as the contributor-facing command surface and
+`.agentic/commands.json` as its machine-readable registry. Agents should
+discover supported operations through `./agentic --help` or
+`./agentic commands --json` instead of guessing script filenames.
+
+Direct shell scripts remain compatibility targets and internal implementation
+details during the migration. Never expose internal policy helpers or runtime
+security hooks as ordinary contributor commands, and never route around a hook
+through the convenience layer.
 
 ## Parallelization rules
 

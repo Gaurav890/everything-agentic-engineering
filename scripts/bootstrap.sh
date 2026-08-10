@@ -13,7 +13,7 @@ for cmd in git node npx python3; do
   fi
 done
 
-chmod +x .claude/hooks/*.sh scripts/*.sh
+chmod +x agentic .claude/hooks/*.sh scripts/*.sh
 
 if [ ! -f .env ]; then
   cp .env.example .env
@@ -27,6 +27,7 @@ python3 -m json.tool .codex/hooks.json >/dev/null
 python3 -m json.tool .codex-plugin/plugin.json >/dev/null
 python3 -m json.tool .agentic/project.json >/dev/null
 python3 -m json.tool .agentic/resources.json >/dev/null
+python3 -m json.tool .agentic/commands.json >/dev/null
 for f in .agentic/profiles/*.json; do
   python3 -m json.tool "$f" >/dev/null
 done
@@ -43,8 +44,9 @@ echo "Bootstrap complete."
 echo "Next:"
 echo "  1. Add PERPLEXITY_API_KEY and FIRECRAWL_API_KEY to .env"
 echo "  2. Export them into your shell"
-echo "  3. Run ./scripts/install-skills.sh"
-echo "  4. Review .agentic/project.json and run ./scripts/profile-doctor.sh"
-echo "  5. Run ./scripts/mcp-doctor.sh"
-echo "  6. If using Codex, review .codex/ and run ./scripts/codex-doctor.sh"
+echo "  3. Run ./agentic setup skills"
+echo "  4. Review .agentic/project.json and run ./agentic profile doctor"
+echo "  5. Run ./agentic doctor mcp"
+echo "  6. If using Codex, review .codex/ and run ./agentic doctor codex"
 echo "  7. Open docs/ as an Obsidian vault"
+echo "  8. Run ./agentic --help to discover all supported workflows"

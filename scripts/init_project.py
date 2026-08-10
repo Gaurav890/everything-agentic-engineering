@@ -187,7 +187,7 @@ def run(args: argparse.Namespace) -> int:
     temporary.write_text(json.dumps(manifest, indent=2) + "\n")
     temporary.replace(profile_engine.PROJECT_PATH)
     print("Updated .agentic/project.json.")
-    print("Next: run ./scripts/profile-doctor.sh and review the external setup list.")
+    print("Next: run ./agentic profile doctor and review the external setup list.")
     return 0
 
 

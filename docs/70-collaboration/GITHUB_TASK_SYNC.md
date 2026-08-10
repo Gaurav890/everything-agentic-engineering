@@ -86,26 +86,26 @@ after a PR with a supported closing keyword is merged into the default branch.
 Validate the complete local ledger:
 
 ```bash
-./scripts/task-sync.sh validate-ledger
+./agentic task sync validate-ledger
 ```
 
 Ask what relationship a task's PR should use:
 
 ```bash
-./scripts/task-sync.sh plan T-016
+./agentic task sync plan T-016
 ```
 
 The normal task planner includes the same guidance:
 
 ```bash
-./scripts/task-plan.sh T-016
+./agentic task plan T-016
 ```
 
 Inspect live GitHub state without changing it:
 
 ```bash
-./scripts/task-sync.sh status T-016
-./scripts/task-sync.sh status T-016 --json
+./agentic task sync status T-016
+./agentic task sync status T-016 --json
 ```
 
 Live status uses only read commands to report issue state, matching PRs, and
@@ -117,8 +117,8 @@ restricted runners do not need GitHub write tokens.
 After a human merges the PR, resolve lifecycle truth live:
 
 ```bash
-./scripts/task-closeout.sh T-016
-./scripts/task-closeout.sh T-016 --json
+./agentic task closeout T-016
+./agentic task closeout T-016 --json
 ```
 
 The command reads the repository's default branch through GitHub, finds the
@@ -132,7 +132,7 @@ preserved and receives no removal command.
 CI also runs:
 
 ```bash
-./scripts/task-closeout.sh --validate-handoff
+./agentic task closeout --validate-handoff
 ```
 
 This prevents `Current goal`, `In progress`, and `Exact next action` from

@@ -37,7 +37,7 @@ Before requesting review:
 - Keep the PR description current.
 - Self-review the entire diff.
 - Remove accidental debug code and unrelated changes.
-- Run `./scripts/pr-ready.sh <TASK-ID>`.
+- Run `./agentic pr ready <TASK-ID>`.
 - Attach visual evidence for UI work.
 - Call out migrations, auth, security, data, API, or deployment impact.
 - Link the issue and task.

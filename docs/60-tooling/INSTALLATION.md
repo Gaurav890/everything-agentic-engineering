@@ -1,5 +1,9 @@
 # Installation
 
+Use `./agentic --help` as the command index. The implementation scripts remain
+available for compatibility, but the unified interface is the supported path
+for new contributors and agents.
+
 ## Requirements
 
 - Git
@@ -42,13 +46,13 @@ set +a
 ## 3. Bootstrap
 
 ```bash
-./scripts/bootstrap.sh
+./agentic setup bootstrap
 ```
 
 ## 4. Install selected skills
 
 ```bash
-./scripts/install-skills.sh
+./agentic setup skills
 ```
 
 The project-local skills require no Codex copy step. Codex discovers the same
@@ -57,7 +61,7 @@ catalog through `.agents/skills`.
 ## 5. Check MCPs
 
 ```bash
-./scripts/mcp-doctor.sh
+./agentic doctor mcp
 ```
 
 Inside Claude Code, also use:
@@ -78,7 +82,7 @@ permissions.
 For either adapter:
 
 ```bash
-./scripts/runtime-doctor.sh
+./agentic doctor runtime
 ```
 
 Use `--strict` for a managed developer image or release validation and `--json`
@@ -87,7 +91,7 @@ for inventory tooling. The doctor is read-only.
 For Codex:
 
 ```bash
-./scripts/codex-doctor.sh
+./agentic doctor codex
 ```
 
 Review project hooks with `/hooks` before trusting them.

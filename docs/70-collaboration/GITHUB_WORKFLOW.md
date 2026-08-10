@@ -2,6 +2,11 @@
 
 This repository uses a lightweight trunk-based workflow built around a protected `main` branch, short-lived task branches, pull requests, automated checks, and durable project context.
 
+Contributor examples use the unified `./agentic` interface. Discover commands
+with `./agentic --help`; `.agentic/commands.json` is the machine-readable
+registry. Direct shell scripts remain compatible but are no longer the primary
+user interface.
+
 The default path is:
 
 ```text
@@ -54,13 +59,13 @@ Canonical format:
 Use:
 
 ```bash
-./scripts/new-branch.sh feat T-014 password-reset
+./agentic workspace branch feat T-014 password-reset
 ```
 
 For parallel agent coding, use a worktree:
 
 ```bash
-./scripts/create-worktree.sh T-014 password-reset agent main
+./agentic workspace worktree T-014 password-reset agent main
 ```
 
 ### When not to create a branch
@@ -124,7 +129,7 @@ Issue: Relates to #128
 Task: T-016
 ```
 
-Run `./scripts/task-sync.sh plan T-016` to get the relationship from the
+Run `./agentic task sync plan T-016` to get the relationship from the
 ledger. The policy validates the PR body against that contract. Historical
 tasks already marked `done` do not require migration. See
 [`GITHUB_TASK_SYNC.md`](GITHUB_TASK_SYNC.md) for the complete authority,
@@ -146,8 +151,8 @@ Before coding:
 Recommended commands:
 
 ```bash
-./scripts/task-plan.sh T-014
-./scripts/task-start.sh T-014 --yes
+./agentic task plan T-014
+./agentic task start T-014 --yes
 ```
 
 The task launcher checks dependencies, active profiles, file ownership, agent
@@ -159,13 +164,13 @@ The lower-level branch commands remain available:
 ```bash
 git switch main
 git pull --ff-only origin main
-./scripts/new-branch.sh feat T-014 password-reset
+./agentic workspace branch feat T-014 password-reset
 ```
 
 Or, for an agent worktree:
 
 ```bash
-./scripts/create-worktree.sh T-014 password-reset agent main
+./agentic workspace worktree T-014 password-reset agent main
 ```
 
 ## 5. Commit discipline
@@ -298,8 +303,8 @@ A pull request is ready to merge only when all applicable items are true:
 Run when implementation is verified and ready for human review:
 
 ```bash
-./scripts/pr-ready.sh T-014
-./scripts/finish-task.sh T-014
+./agentic pr ready T-014
+./agentic task finish T-014
 # commit the review-state update
 # push it and keep the pull request as a draft while review is active
 ```
@@ -313,8 +318,8 @@ T-014 approved
 The orchestrator then runs the bounded finalizer:
 
 ```bash
-./scripts/finalize-pr.sh T-014 --dry-run
-./scripts/finalize-pr.sh T-014 --yes
+./agentic pr finalize T-014 --dry-run
+./agentic pr finalize T-014 --yes
 ```
 
 It confirms the branch, clean worktree, task state, PR identity, GitHub login,
@@ -363,7 +368,7 @@ Enable a merge queue only when repository traffic is high enough that many appro
 
 After the PR lands:
 
-1. Run `./scripts/task-closeout.sh T-014` to resolve merged `main`, PR, issue,
+1. Run `./agentic task closeout T-014` to resolve merged `main`, PR, issue,
    handoff, and local cleanup state.
 2. Review its optional cleanup commands. Run them manually only when their
    exact worktree and branch targets are clean and correct.
@@ -416,8 +421,8 @@ needs_human
 failed_safe
 ```
 
-`finish-task.sh` moves a task to `review` after verification. After direct human
-approval, `finalize-pr.sh` uses the low-level `prepare-merge.sh` gate to write
+`./agentic task finish` moves a task to `review` after verification. After direct human
+approval, `./agentic pr finalize` uses the low-level `prepare-merge.sh` gate to write
 `done`, commit and push only the ledger change, mark the PR ready, and wait for
 checks. Because `main` is the source of truth, the task becomes durably done
 only when that PR lands in `main`.

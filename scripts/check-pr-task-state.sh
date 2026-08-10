@@ -51,7 +51,7 @@ if status != "done":
         f"This PR was marked Ready for review before {task_id} was finalized; "
         f"its task status is {status!r}, not 'done'.\n"
         "Do not edit TASKS.jsonl manually. After human review, ask your agent "
-        f"'{task_id} approved' or run ./scripts/finalize-pr.sh {task_id} --yes. "
+        f"'{task_id} approved' or run ./agentic pr finalize {task_id} --yes. "
         "To continue implementation instead, convert the PR back to draft."
     )
 
