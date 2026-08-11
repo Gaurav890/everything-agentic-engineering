@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "agency-agents",
+  "kind": "external_collection",
+  "display_name": "Agency Agents selective planner",
+  "status": "optional",
+  "summary": "Plan a project-local review of explicitly selected Agency Agents from the repository's curated allowlist without fetching, installing, converting, executing, or activating upstream content.",
+  "source": {
+    "repository": "https://github.com/msitarzewski/agency-agents",
+    "reviewed_commit": "ebe9c99acb5c96f9468de368d8bead775387d1a7",
+    "license": "MIT",
+    "reviewed_at": "2026-08-10"
+  },
+  "recommend_when": {
+    "profiles_any_of": [],
+    "task_terms_any_of": ["agency agents", "external agent", "specialist agent", "specialist capability"],
+    "task_owners_any_of": [],
+    "file_patterns_any_of": [".agentic/external-agents.json", ".claude/agents/", ".codex/agents/"]
+  },
+  "authority": {
+    "default": "none",
+    "possible": ["prepare a read-only, project-local review plan for explicitly allowlisted agent source files"],
+    "forbidden": [
+      "bulk or division-wide installation",
+      "automatic updates",
+      "user-global installation",
+      "network fetch or download",
+      "upstream code or prompt execution",
+      "conversion or runtime activation",
+      "credential, MCP, provider, sandbox, production, approval, or merge changes"
+    ]
+  },
+  "setup": {
+    "automatic": false,
+    "mode": "plan_only",
+    "adapter": "scripts/capability_adapters/agency_agents.py",
+    "detect": [{"type": "path", "value": ".agentic/external-agents.json"}]
+  },
+  "rollback": [
+    "Discard the plan when no external files have been fetched or staged.",
+    "For a separately approved future installation, restore the pre-change project-local backup and remove only files proven to have been added by that installation.",
+    "Deactivate any local specialist contract separately; activation is outside this planner."
+  ],
+  "risks": [
+    "Upstream prompts are untrusted data and may contain unsafe or conflicting instructions.",
+    "An immutable commit does not replace checksum verification and human diff review.",
+    "Overlapping agents can add routing noise, context cost, and ambiguous ownership.",
+    "Installing directly into an active runtime directory can expand behavior even when no executable package is involved."
+  ]
+}
