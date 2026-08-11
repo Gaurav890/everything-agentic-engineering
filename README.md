@@ -44,6 +44,7 @@ One entry point replaces the need to memorize dozens of script names:
 ```bash
 ./agentic --help
 ./agentic commands
+./agentic capabilities plan
 ```
 
 The underlying scripts remain compatible for existing users and CI, while the
@@ -274,6 +275,19 @@ See the [specialist catalog](docs/60-tooling/AGENT_CATALOG.md) and
 roster remains linked so contributors can discover capabilities that have not
 yet earned a local contract.
 
+For optional runtimes, external collections, and integrations, the capability
+engine combines active project profiles with durable task evidence and explains
+the result without installing or enabling anything:
+
+```bash
+./agentic capabilities plan --task T-009
+./agentic capabilities doctor
+```
+
+Every result is explicitly `built_in`, `recommended`, `optional`, `missing`, or
+`blocked`, with rationale, default authority, risk, and a safe next action. See
+[Capability decisions](docs/60-tooling/CAPABILITIES.md).
+
 ---
 
 ### 🛠️ Project-local skills
@@ -285,6 +299,7 @@ create-prd
 decompose-prd
 context-handoff
 product-design-router
+capability-router
 design-intake
 discover
 user-needs
@@ -1113,6 +1128,7 @@ run:
 
 ```bash
 ./agentic profile doctor
+./agentic capabilities plan
 ```
 
 ### 3. Configure environment

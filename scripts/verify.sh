@@ -19,6 +19,9 @@ python3 -m json.tool .agentic/external-skills.json >/dev/null
 python3 -m json.tool .agentic/external-agents.json >/dev/null
 python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
 python3 -m json.tool .agentic/commands.json >/dev/null
+for f in .agentic/capabilities/*.json; do
+  python3 -m json.tool "$f" >/dev/null
+done
 for f in .agentic/profiles/*.json; do
   python3 -m json.tool "$f" >/dev/null
 done
@@ -102,6 +105,7 @@ python3 -m unittest discover -s tests -p 'test_github_task_sync.py'
 python3 -m unittest discover -s tests -p 'test_post_merge_closeout.py'
 python3 -m unittest discover -s tests -p 'test_pr_finalization.py'
 python3 -m unittest discover -s tests -p 'test_agentic_cli.py'
+python3 -m unittest discover -s tests -p 'test_capability_engine.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null
@@ -123,6 +127,7 @@ fi
 ./agentic --help >/dev/null
 ./agentic commands --json | python3 -m json.tool >/dev/null
 ./agentic agents doctor >/dev/null
+./agentic capabilities doctor >/dev/null
 
 if ./scripts/profile-preview.sh backend-supabase,backend-convex >/dev/null 2>&1; then
   echo "Profile conflict check unexpectedly passed" >&2

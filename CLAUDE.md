@@ -141,6 +141,13 @@ Never install, remove, or delete resources merely because a profile changed.
 Use `profile-doctor.sh` to detect drift and require explicit approval for
 external installation or destructive cleanup.
 
+Before recommending an optional runtime, external collection, tool, or
+integration, use `./agentic capabilities plan --task T-###`. Treat
+`built_in`, `recommended`, `optional`, `missing`, and `blocked` as advisory
+decisions with explicit evidence and authority boundaries. The engine never
+executes adapters or grants permission to install, authenticate, enable, widen
+authority, modify production, approve, or merge.
+
 Default orchestration:
 - Product ambiguity → `product`
 - Architecture or data boundaries → `architect`
@@ -302,6 +309,7 @@ Use the registry-backed `./agentic` interface. Start with:
 - `./agentic pr finalize <TASK-ID> --dry-run`
 - `./agentic pr finalize <TASK-ID> --yes` — after direct human approval; never approves or merges
 - `./agentic task closeout <TASK-ID>` — read-only post-merge truth and cleanup guidance
+- `./agentic capabilities <list|show|plan|doctor> [arguments]` — read-only capability decisions
 
 `.agentic/commands.json` is the command source of truth. Existing
 `./scripts/*.sh` entry points remain compatibility paths for downstream users

@@ -146,6 +146,12 @@ review remain explicit human-invocation routes.
 
 ## Specialist capability routing
 
+Before proposing a new runtime, external collection, tool, or integration, run
+`./agentic capabilities plan --task T-###`. Its state and authority summary are
+advisory: the router never installs, executes, authenticates, enables, or
+grants authority. Keep optional capabilities inactive when evidence does not
+justify them; `missing` requires a separate human-reviewed setup decision.
+
 During non-trivial task planning, run `./agentic agents recommend T-###` or use
 the specialist recommendations already included by `./agentic task plan`.
 `.agentic/external-agents.json` is the reviewed contract catalog; the complete

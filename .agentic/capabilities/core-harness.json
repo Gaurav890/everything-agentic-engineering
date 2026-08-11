@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "core-harness",
+  "kind": "built_in",
+  "display_name": "Core engineering harness",
+  "status": "built_in",
+  "summary": "Durable context, task planning, verification, collaboration policy, and safe command routing.",
+  "source": {
+    "repository": "https://github.com/Gaurav890/everything-agentic-engineering",
+    "reviewed_commit": "23c182034a1b282e2e506e1d92890055aa317c09",
+    "license": "MIT",
+    "reviewed_at": "2026-08-10"
+  },
+  "recommend_when": {
+    "profiles_any_of": ["core"],
+    "task_terms_any_of": [],
+    "task_owners_any_of": [],
+    "file_patterns_any_of": []
+  },
+  "authority": {
+    "default": "none",
+    "possible": ["repository-local read and write operations allowed by the active task"],
+    "forbidden": ["automatic external installation", "credential or provider changes", "production mutation", "self-approval or merge"]
+  },
+  "setup": {
+    "automatic": false,
+    "mode": "plan_only",
+    "adapter": null,
+    "detect": [
+      {"type": "path", "value": "CLAUDE.md"},
+      {"type": "path", "value": "AGENTS.md"},
+      {"type": "path", "value": ".agentic/commands.json"}
+    ]
+  },
+  "rollback": ["Revert the reviewed repository commit through the normal pull-request workflow."],
+  "risks": ["Changing core policy or command routing can affect every downstream project workflow."]
+}

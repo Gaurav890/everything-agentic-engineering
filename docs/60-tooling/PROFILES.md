@@ -17,6 +17,18 @@ Selection changes only the manifest. It never installs packages, enables MCPs,
 or removes files. The doctor reports missing/external resources and
 present-but-inactive resources for review.
 
+Profiles state the project shape; the read-only capability engine combines
+that durable selection with task evidence to explain what is built in,
+recommended, optional, missing, or blocked:
+
+```bash
+./agentic capabilities plan --task T-###
+./agentic capabilities doctor
+```
+
+The result is advice, not activation. Capability adapters are plan-only and
+remain separately human-reviewed. See [Capability decisions](CAPABILITIES.md).
+
 The guided initializer asks plain-language questions about web, mobile, backend,
 design importance, research, and agentic UX. It previews the exact manifest and
 requires confirmation before writing.
