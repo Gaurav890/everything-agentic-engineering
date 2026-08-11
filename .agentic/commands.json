@@ -14,6 +14,7 @@
   ],
   "commands": [
     {"path": ["agents"], "target": "scripts/agent-broker.sh", "summary": "Discover, route, activate, and validate reviewed specialist contracts", "usage": "./agentic agents <list|show|recommend|activate|deactivate|doctor> [arguments]", "impact": "read_only_or_confirmed_manifest_write"},
+    {"path": ["capabilities"], "target": "scripts/capabilities.sh", "summary": "Explain built-in, recommended, optional, missing, and blocked capabilities", "usage": "./agentic capabilities <list|show|plan|doctor> [arguments]", "impact": "read_only"},
     {"path": ["setup", "bootstrap"], "target": "scripts/bootstrap.sh", "summary": "Validate prerequisites and prepare a local checkout", "usage": "./agentic setup bootstrap", "impact": "local_write"},
     {"path": ["setup", "init"], "target": "scripts/init-project.sh", "summary": "Configure a project from an approved starter preset", "usage": "./agentic setup init [initializer options]", "impact": "local_write"},
     {"path": ["setup", "skills"], "target": "scripts/install-skills.sh", "summary": "Install reviewed external skills required by active profiles", "usage": "./agentic setup skills [--dry-run]", "impact": "external_install"},
@@ -44,6 +45,7 @@
     {"path": "scripts/agent-broker.sh", "classification": "public", "canonical_command": "agents"},
     {"path": "scripts/bootstrap.sh", "classification": "public", "canonical_command": "setup bootstrap"},
     {"path": "scripts/build-design-tokens.sh", "classification": "public", "canonical_command": "tokens build"},
+    {"path": "scripts/capabilities.sh", "classification": "public", "canonical_command": "capabilities"},
     {"path": "scripts/check-branch-name.sh", "classification": "internal", "reason": "Policy helper invoked by CI and higher-level workflows"},
     {"path": "scripts/check-pr-task-state.sh", "classification": "internal", "reason": "Policy helper invoked by CI"},
     {"path": "scripts/check-pr-title.sh", "classification": "internal", "reason": "Policy helper invoked by CI"},

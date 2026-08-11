@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A strict, read-only capability decision engine that combines active profiles
+  and durable task evidence into built-in, recommended, optional, missing, or
+  blocked states with provenance, authority limits, risks, and safe next steps;
+  it validates but never executes plan-only adapters.
 - A deterministic specialist capability broker with reviewed Agency Agents
   provenance, profile-aware task routing, reversible manifest activation,
   required risk reviews, local-role fallback, independent-evaluator evidence,
@@ -19,7 +23,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Resumable PR finalization that recovers only an exact interrupted task-ledger
   transition, re-verifies it before commit, and waits a bounded interval for
   GitHub to register required checks before reporting a safe retry.
-- A registry-backed `./agentic` command interface that groups 23 supported
+- A registry-backed `./agentic` command interface that groups 24 supported
   workflows, classifies every shell file, hides internal policy helpers and
   security hooks from public discovery, and preserves existing script paths as
   compatibility adapters during a measured migration.

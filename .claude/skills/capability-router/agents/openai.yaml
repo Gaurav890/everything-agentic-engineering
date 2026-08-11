@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capability Router"
+  short_description: "Choose the smallest justified capability safely"
+  default_prompt: "Use $capability-router to decide which project capability this task needs and explain the safe next action."
