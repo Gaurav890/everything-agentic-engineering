@@ -38,6 +38,17 @@ Additional evidence:
 
 -
 
+## Specialist routing
+
+<!-- Copy the relevant result from `./agentic agents recommend T-###`. -->
+
+- Capability / contract: <!-- none justified, or specialist-id -->
+- Why selected: <!-- task evidence -->
+- Accountable owner: <!-- one owner -->
+- Authority granted: <!-- normally advisory/review only; never implied -->
+- Deliverable / evidence: <!-- artifact, test, review, or report -->
+- Independent evaluator: <!-- role or not applicable with reason -->
+
 ## UI evidence
 
 <!-- For substantial UI changes: screenshots/video for relevant breakpoints and states. Delete if not applicable. -->

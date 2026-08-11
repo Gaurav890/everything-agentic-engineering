@@ -248,6 +248,32 @@ The system does **not** launch ten agents for every task.
 
 > **Parallelize independent outputs, not shared state.**
 
+The reviewed specialist catalog is operational, not shelfware. Task planning
+automatically routes narrow expertise for authentication, payments, privacy,
+reliability, incidents, internationalization, accessibility, design finish,
+multi-agent systems, and other evidence-backed needs:
+
+```bash
+./agentic agents list
+./agentic agents show identity-access
+./agentic agents recommend T-009
+```
+
+The broker keeps one accountable owner, uses local roles first, and records the
+required deliverable and independent evaluator. It does **not** bulk-install or
+execute the upstream collection. Optional activation is a reversible project-
+manifest preference and grants no new authority:
+
+```bash
+./agentic agents activate identity-access --dry-run
+./agentic agents activate identity-access --yes
+```
+
+See the [specialist catalog](docs/60-tooling/AGENT_CATALOG.md) and
+[routing contract](docs/60-tooling/SPECIALIST_ROUTING.md). The full upstream
+roster remains linked so contributors can discover capabilities that have not
+yet earned a local contract.
+
 ---
 
 ### 🛠️ Project-local skills
@@ -281,6 +307,7 @@ research-ledger
 parallel-plan
 loop-engineering
 security-gate
+specialist-router
 ```
 
 External skills are deliberately restrained rather than maximized.
@@ -361,9 +388,10 @@ safe and reversible.
 ./agentic task start T-009 --yes
 ```
 
-The planner checks dependencies, active profiles, agent routing, exclusive file
-ownership, and verification gates. Starting requires confirmation and creates a
-short-lived branch or isolated worktree; it does not implement or merge the
+The planner checks dependencies, active profiles, accountable ownership,
+specialist capability matches, exclusive file ownership, and verification
+gates. Starting requires confirmation and creates a short-lived branch or
+isolated worktree; it does not implement, install external agents, or merge the
 task.
 
 This is the real read-only planner running against the completed Signalroom

@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import profile_engine  # noqa: E402
 import github_task_sync  # noqa: E402
+import agent_broker  # noqa: E402
 
 ACTIVE_STATUSES = {"in_progress", "review"}
 STARTABLE_STATUSES = {"backlog", "ready", "blocked"}
@@ -196,10 +197,24 @@ def build_plan(task_id: str, tasks: list[dict], active_profiles: list[str]) -> d
             "Other active tasks exist; use an isolated worktree after ownership checks pass"
         )
 
+    try:
+        specialist_manifest = agent_broker.load_manifest(ROOT)
+        project = agent_broker.load_project(ROOT)
+        specialist_recommendations = agent_broker.recommend_for_task(
+            task,
+            specialist_manifest,
+            active_profiles,
+            project.get("specialists", []),
+        )
+    except agent_broker.BrokerError as exc:
+        specialist_recommendations = []
+        blockers.append(f"Specialist routing contract: {exc}")
+
     slug = slugify(task.get("title", task_id))
     return {
         "task": task,
         "recommended_agent": AGENT_BY_OWNER.get(task.get("owner"), task.get("owner")),
+        "specialist_recommendations": specialist_recommendations,
         "github_tracking": github_tracking,
         "dependency_states": dependency_states,
         "profile_checks": profile_checks,
@@ -271,6 +286,21 @@ def print_plan(plan: dict) -> None:
     print("\nVerification gates:")
     for gate in task.get("verification", []):
         print(f"  - {gate}")
+
+    print("\nSpecialist capabilities:")
+    if plan["specialist_recommendations"]:
+        for specialist in plan["specialist_recommendations"]:
+            mark = "REQUIRED" if specialist["required"] else "RECOMMENDED"
+            print(f"  - {mark}: {specialist['name']} ({specialist['id']})")
+            print(f"    reason: {'; '.join(specialist['reason'])}")
+            print(f"    mode: {specialist['mode']}; authority: {specialist['authority']}")
+            print(
+                "    local role(s): "
+                + ", ".join(specialist["local_roles"])
+                + f"; evaluator: {specialist['evaluator']}"
+            )
+    else:
+        print("  - none justified by current task evidence")
 
     print(f"\nRecommended execution: {plan['recommended_mode']}")
     print(f"Suggested slug: {plan['suggested_slug']}")

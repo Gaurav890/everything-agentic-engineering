@@ -16,6 +16,7 @@ python3 -m json.tool .codex-plugin/plugin.json >/dev/null
 python3 -m json.tool .agentic/project.json >/dev/null
 python3 -m json.tool .agentic/resources.json >/dev/null
 python3 -m json.tool .agentic/external-skills.json >/dev/null
+python3 -m json.tool .agentic/external-agents.json >/dev/null
 python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
 python3 -m json.tool .agentic/commands.json >/dev/null
 for f in .agentic/profiles/*.json; do
@@ -96,6 +97,7 @@ python3 -m unittest discover -s tests -p 'test_profile_engine.py'
 python3 -m unittest discover -s tests -p 'test_external_design_skills.py'
 python3 -m unittest discover -s tests -p 'test_initializer.py'
 python3 -m unittest discover -s tests -p 'test_task_engine.py'
+python3 -m unittest discover -s tests -p 'test_agent_broker.py'
 python3 -m unittest discover -s tests -p 'test_github_task_sync.py'
 python3 -m unittest discover -s tests -p 'test_post_merge_closeout.py'
 python3 -m unittest discover -s tests -p 'test_pr_finalization.py'
@@ -120,6 +122,7 @@ fi
 ./scripts/profile-preview.sh web-next,design-critical,research-enabled >/dev/null
 ./agentic --help >/dev/null
 ./agentic commands --json | python3 -m json.tool >/dev/null
+./agentic agents doctor >/dev/null
 
 if ./scripts/profile-preview.sh backend-supabase,backend-convex >/dev/null 2>&1; then
   echo "Profile conflict check unexpectedly passed" >&2

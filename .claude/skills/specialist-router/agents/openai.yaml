@@ -1,0 +1,4 @@
+interface:
+  display_name: "Specialist Router"
+  short_description: "Route reviewed task expertise"
+  default_prompt: "Use $specialist-router to select the smallest justified specialist contract and require its evidence."

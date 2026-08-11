@@ -769,3 +769,38 @@ implementation. Profile selection never installs skills. The explicit setup
 command uses the reviewed commit, and future updates require a new review and
 pull request. The project brief, approved design system, tokens, accessibility,
 Playwright evidence, independent evaluator, and human merge remain authoritative.
+
+### 2026-08-10 — T-030
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Added a deterministic specialist capability broker backed by 14 curated Agency
+Agents contracts. Task planning now selects only capabilities justified by
+task evidence and active profiles, preserves one accountable local owner,
+declares required deliverables and independent evaluators, and records explicit
+risk-review gates. Contributors can discover the full upstream roster while
+optionally activating only a reviewed local contract.
+
+**Evidence**
+
+- Broker tests cover pinned provenance, MIT licensing, safe policy, security,
+  payment, design, accessibility, i18n, no-match, explicit-routing, JSON,
+  reversible activation, fail-closed doctor, and no external execution.
+- Task-planner and command-registry tests verify operational routing through
+  the unified `./agentic` interface.
+- `specialist-router` passes the platform skill validator.
+- Full repository verification passes all ten stages across 29 tracked tasks,
+  29 shared local skills, profiles, tokens, security hooks, runtime/Codex
+  policy, local links, Showcase lint, typecheck, and tests.
+
+**Authority boundary**
+
+Issue #40 owns the human discussion. The broker does not vendor, install, or
+execute Agency Agents; select a model; add tools or credentials; widen network
+or sandbox permissions; deploy; approve; or merge. Activation changes only the
+project manifest. Prime Agent runtime integration remains a separate future
+architecture and security decision.

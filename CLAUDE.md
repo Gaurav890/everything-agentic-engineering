@@ -154,6 +154,14 @@ Default orchestration:
 
 Do not spawn specialists for trivial single-step tasks.
 
+For non-trivial task planning, use the deterministic specialist broker through
+`./agentic task plan T-###` or `./agentic agents recommend T-###`. Route only
+the smallest capability justified by task evidence. A `REQUIRED` risk match
+must produce its declared review artifact or record a direct human exception.
+Activation changes only the project manifest: it never installs upstream code
+or expands runtime authority. Keep one accountable owner and a separate final
+evaluator, then record specialist selection and evidence in the PR.
+
 ## 8. Research tool routing
 
 Use the MCP stack intentionally:

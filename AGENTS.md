@@ -144,6 +144,27 @@ product work, approved art direction, accessibility, Playwright evidence, or
 the independent evaluator. Prototyping, library selection, and strict animation
 review remain explicit human-invocation routes.
 
+## Specialist capability routing
+
+During non-trivial task planning, run `./agentic agents recommend T-###` or use
+the specialist recommendations already included by `./agentic task plan`.
+`.agentic/external-agents.json` is the reviewed contract catalog; the complete
+upstream roster remains discoverable through `./agentic agents list`.
+
+- Route the smallest justified capability, not an entire collection.
+- Keep one accountable implementation owner.
+- Prefer the named local role; activation records preference but never installs
+  or executes upstream agent prompts.
+- Do not omit a risk specialist marked `REQUIRED` without a documented human
+  decision.
+- Preserve an evaluator independent from the builder.
+- Record selection, authority, deliverable, evidence, and evaluator in the PR.
+
+Activating a contract changes only `.agentic/project.json`; it grants no new
+tools, credentials, network, sandbox, deployment, production, approval, or
+merge authority. Read `docs/60-tooling/SPECIALIST_ROUTING.md` for the operating
+contract.
+
 ## Agent result contract
 
 Every specialist returns:
