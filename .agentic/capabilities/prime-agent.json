@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "prime-agent",
+  "kind": "runtime",
+  "display_name": "Prime Agent",
+  "status": "optional",
+  "summary": "Disabled-by-default planning contract for long-running, scheduled, persistent-goal, and bounded multi-agent work; this repository never installs or enables Prime Agent.",
+  "source": {
+    "repository": "https://github.com/PrimeIntellect-ai/prime-agent",
+    "reviewed_commit": "71ca6cfd1a2f7205ca0ec1baa65d10d0ed88f6e8",
+    "license": "MIT",
+    "reviewed_at": "2026-08-10"
+  },
+  "recommend_when": {
+    "profiles_any_of": [],
+    "task_terms_any_of": ["long-running agent", "persistent goal", "scheduled agent", "recurring research", "background agent", "continual harness", "multi-session agent"],
+    "task_owners_any_of": [],
+    "file_patterns_any_of": ["docs/60-tooling/SELF_IMPROVEMENT_LOOP.md"]
+  },
+  "authority": {
+    "default": "none",
+    "possible": ["read an explicitly scoped repository", "write an isolated task worktree", "run bounded local verification", "start bounded subagents", "run a separately approved schedule"],
+    "forbidden": ["automatic installation or update", "automatic login, credential, provider, or model changes", "automatic MCP, network, or sandbox changes", "unbounded execution or subagents", "production mutation or deployment", "approval bypass, pull-request approval, or merge", "treating Prime Agent as a security sandbox"]
+  },
+  "setup": {
+    "automatic": false,
+    "mode": "plan_only",
+    "adapter": "scripts/capability_adapters/prime_agent.py",
+    "detect": [
+      {"type": "command", "value": "prime-agent"}
+    ]
+  },
+  "rollback": [
+    "Stop the approved session and its dedicated process group.",
+    "Disable any separately approved schedule before removing runtime files.",
+    "Preserve evidence and inspect the isolated worktree before cleanup.",
+    "Revoke only session-specific credentials after resolving their exact scope.",
+    "Remove only exact, human-confirmed isolated runtime and worktree paths.",
+    "Leave main, branch protections, approvals, and production unchanged."
+  ],
+  "risks": [
+    "Prime Agent executes model-generated Python and commands with the user's permissions.",
+    "Prime Agent workers and kernels are execution environments, not a security sandbox.",
+    "Long-running sessions and schedules increase cost, drift, stale-context, and runaway-execution risk.",
+    "Subagents multiply authority, token usage, and conflicting-write risk without strict ownership and budgets.",
+    "Credentials, providers, network access, and production systems require separate least-privilege review."
+  ]
+}
