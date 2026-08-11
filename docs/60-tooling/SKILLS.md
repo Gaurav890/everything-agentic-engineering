@@ -9,6 +9,11 @@ Use a small phase-based system, not a pile of overlapping aesthetic prompts.
 Local skills own routing, contracts, durable outputs, and fallbacks. Third-party
 skills remain externally installed and are invoked only for the phase they serve.
 
+Specialist engineering and review capabilities are routed separately through
+`specialist-router` and `.agentic/external-agents.json`. They are local
+contracts around reviewed expertise, not installed skill bundles. See
+[`SPECIALIST_ROUTING.md`](SPECIALIST_ROUTING.md).
+
 The canonical repository skill content lives under `.claude/skills`. Codex
 discovers the same catalog through `.agents/skills`, and the Codex plugin uses
 the root `skills` link. Both links are validated so the adapters cannot drift.
@@ -120,6 +125,7 @@ The non-design local skills remain:
 - `parallel-plan`
 - `loop-engineering`
 - `security-gate`
+- `specialist-router`
 - `self-improvement-loop`
 - `codex-adapter`
 

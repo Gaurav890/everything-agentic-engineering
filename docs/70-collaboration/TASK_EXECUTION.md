@@ -17,6 +17,8 @@ The plan reports:
 - the reviewed GitHub issue contract and whether the PR should relate or close;
 - dependency state;
 - recommended specialist agent;
+- routed specialist capability contracts, rationale, authority, deliverables,
+  and evaluator;
 - compatibility with active project profiles;
 - exclusive file ownership and collisions;
 - verification gates;
@@ -25,6 +27,15 @@ The plan reports:
 - blockers and the exact reviewed start command.
 
 Planning is read-only.
+
+Inspect specialist routing independently with:
+
+```bash
+./agentic agents recommend T-009
+```
+
+No match is a valid result. A required match is a review gate, not a new writer
+or a permission grant. Record the routed result in the PR template.
 
 ## Start after review
 

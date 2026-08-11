@@ -8,6 +8,7 @@
     "design-critical",
     "research-enabled"
   ],
+  "specialists": [],
   "policy": {
     "allow_automatic_install": false,
     "allow_automatic_removal": false

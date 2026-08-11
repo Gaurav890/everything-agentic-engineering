@@ -64,10 +64,10 @@ explicit confirmation. Unselected mobile, web, research, backend, or
 design-critical capabilities are not routed or treated as project requirements.
 
 Contributor workflows are exposed through one registry-backed `./agentic`
-interface. `.agentic/commands.json` classifies all 30 shell files as public,
-internal, compatibility, or security-hook surfaces. The 23 supported public
+interface. `.agentic/commands.json` classifies all 31 shell files as public,
+internal, compatibility, or security-hook surfaces. The 24 supported public
 workflows are grouped by setup, profile, task, pull request, workspace, doctor,
-tokens, release, and verification. Existing direct script paths remain
+specialist agents, tokens, release, and verification. Existing direct script paths remain
 compatible; no script or hook has been deleted or relocated.
 
 Task-ledger work can be inspected with `./agentic task plan` and prepared with
@@ -75,6 +75,14 @@ Task-ledger work can be inspected with `./agentic task plan` and prepared with
 compatibility, specialist routing, exclusive file ownership, verification
 gates, and base-branch freshness. Planning is read-only and workspace creation
 requires explicit confirmation.
+
+Reviewed external specialist expertise is operational through
+`.agentic/external-agents.json`, `specialist-router`, and `./agentic agents`.
+The broker exposes the complete upstream source roster, routes 14 curated
+contracts from task evidence and active profiles, keeps one accountable local
+owner, and specifies required artifacts plus independent evaluators. Optional
+activation changes only `.agentic/project.json`; it never installs or executes
+upstream agents or expands runtime authority.
 
 New unfinished tasks also carry an explicit GitHub tracking contract: required
 issue references or a reviewed issue-free reason. The task planner reports

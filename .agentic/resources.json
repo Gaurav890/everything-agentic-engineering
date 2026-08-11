@@ -6,6 +6,14 @@
       "description": "Constitution, task ledger, verification, and durable context",
       "detect": [{"type": "path", "value": "CLAUDE.md"}]
     },
+    "specialist-broker": {
+      "kind": "local",
+      "description": "Reviewed specialist discovery, task routing, activation, and evidence contracts",
+      "detect": [
+        {"type": "path", "value": ".agentic/external-agents.json"},
+        {"type": "path", "value": ".claude/skills/specialist-router/SKILL.md"}
+      ]
+    },
     "web-surface": {
       "kind": "surface",
       "description": "Web application workspace",

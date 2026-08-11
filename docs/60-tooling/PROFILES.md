@@ -74,6 +74,23 @@ Resources shared by several profiles remain required until no selected profile
 references them. Optional template surfaces may remain cataloged without being
 active.
 
+## Specialist contracts
+
+The core profile includes the local specialist broker, not every upstream
+agent. `./agentic task plan` routes contracts whose triggers and profile gates
+match the task. A web-only project never receives mobile-only routing; an app
+without design-critical work does not receive the design finish gate.
+
+```bash
+./agentic agents list
+./agentic agents recommend T-009
+./agentic agents doctor
+```
+
+Optional `activate` and `deactivate` operations update only the `specialists`
+array in `.agentic/project.json`. They do not change profiles, install external
+code, or grant tools and permissions.
+
 ## Available profiles
 
 Choose only what the product genuinely needs.

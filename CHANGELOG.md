@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A deterministic specialist capability broker with reviewed Agency Agents
+  provenance, profile-aware task routing, reversible manifest activation,
+  required risk reviews, local-role fallback, independent-evaluator evidence,
+  and no automatic external installation or runtime-authority expansion.
 - Profile-aware Emil Kowalski design-engineering integration with a reviewed,
   pinned ten-skill manifest; a local anti-slop/motion router; explicit-only
   prototyping, library-selection, and animation-review gates; Claude Code and

@@ -22,10 +22,12 @@ def task(
     files: list[str] | None = None,
     verification: list[str] | None = None,
     tracking: dict | None = None,
+    title: str | None = None,
+    specialist_ids: list[str] | None = None,
 ) -> dict:
-    return {
+    record = {
         "id": task_id,
-        "title": f"Add capability {task_id}",
+        "title": title or f"Add capability {task_id}",
         "goal": "Test task planning",
         "requirement_ids": ["FR-001"],
         "acceptance_ids": ["AC-001"],
@@ -42,6 +44,9 @@ def task(
             "reason": "Unit-test fixture",
         },
     }
+    if specialist_ids is not None:
+        record["specialist_ids"] = specialist_ids
+    return record
 
 
 class TaskEngineTests(unittest.TestCase):
@@ -155,6 +160,19 @@ class TaskEngineTests(unittest.TestCase):
         plan = task_engine.build_plan("T-100", tasks, ["core"])
         self.assertEqual(plan["github_tracking"]["issues"][0]["ref"], "#77")
         self.assertTrue(plan["github_tracking"]["issues"][0]["may_close"])
+
+    def test_plan_exposes_required_risk_specialist(self) -> None:
+        tasks = [task("T-100", title="Add OAuth authorization and RBAC")]
+        plan = task_engine.build_plan("T-100", tasks, ["core"])
+        self.assertEqual("identity-access", plan["specialist_recommendations"][0]["id"])
+        self.assertTrue(plan["specialist_recommendations"][0]["required"])
+
+    def test_plan_honors_explicit_specialist_contract(self) -> None:
+        tasks = [task("T-100", specialist_ids=["multi-agent-systems"])]
+        plan = task_engine.build_plan("T-100", tasks, ["core"])
+        self.assertEqual(
+            "multi-agent-systems", plan["specialist_recommendations"][0]["id"]
+        )
 
 
 if __name__ == "__main__":
