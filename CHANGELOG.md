@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- An additive Agent Plugins 1.0 portable, skills-only package with a closed
+  root manifest, contained fixed-location skill discovery, an offline doctor,
+  deterministic tests, and an explicit separation from Codex-native metadata
+  and project-local MCP configuration.
 - A strict, read-only capability decision engine that combines active profiles
   and durable task evidence into built-in, recommended, optional, missing, or
   blocked states with provenance, authority limits, risks, and safe next steps;

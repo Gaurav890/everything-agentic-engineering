@@ -40,8 +40,9 @@ reuses that baseline so version policy cannot drift between scripts.
 | `.codex/hooks.json` | Codex lifecycle wiring for reviewed safety scripts |
 | `.agents/skills` | Codex repository skill discovery |
 | `.claude/skills` | Canonical local skill content shared by both adapters |
-| `.codex-plugin/plugin.json` | Skills-only plugin package metadata |
-| `skills` | Plugin-facing link to the canonical skill catalog |
+| `plugin.json` | Agent Plugins 1.0 portable manifest |
+| `skills` | Portable fixed-location link to the canonical skill catalog |
+| `.codex-plugin/plugin.json` | Separate Codex-native compatibility and interface metadata |
 
 Codex officially supports symlinked repository skills. Both links are checked
 by the doctor and CI so Claude, Codex, and the plugin cannot silently diverge.
@@ -120,18 +121,28 @@ making the in-session specialist roles writable.
 ## Skills and plugin packaging
 
 Codex discovers the project skills directly through `.agents/skills`. The
-skills-only plugin manifest exposes the same catalog through `skills`; it does
-not bundle MCP servers, apps, credentials, or lifecycle hooks.
+Agent Plugins 1.0 portable core exposes the same catalog through the fixed
+`skills/` location. The existing `.codex-plugin/plugin.json` remains a separate
+Codex-native compatibility surface during the additive migration. Neither
+package bundles MCP servers, apps, credentials, or lifecycle hooks.
 
-Validate packaging with:
+Validate the portable package with:
+
+```bash
+./agentic doctor plugin
+```
+
+Validate the Codex-native compatibility package with the installed
+plugin-creator skill when maintaining that surface:
 
 ```bash
 python3 /path/to/plugin-creator/scripts/validate_plugin.py .
 ```
 
-The repository manifest is the package source. Publishing to a marketplace,
-changing installation policy, or enabling external capabilities remains a
-separate reviewed release action.
+The root `plugin.json` is the portable package source. Read
+[Agent Plugins packaging](AGENT_PLUGINS.md) for the compatibility boundary.
+Publishing to a marketplace, changing installation policy, or enabling
+external capabilities remains a separate reviewed release action.
 
 ## MCP and external services
 
@@ -152,7 +163,7 @@ use.
 - The adapter supports parallel workspaces but does not start concurrent
   feature branches without reviewed tasks and ownership.
 - Plugin marketplace publication is not automatic.
-- Portable plugin installation, MCP 2026-07-28 opt-in, and
+- Portable plugin installation, portable MCP packaging, MCP 2026-07-28 opt-in, and
   `--approve-for-me` remain disabled by default and require separate human
   approval; runtime compatibility alone does not authorize them.
 - Enterprise administrators may constrain plugins, hooks, concurrency,

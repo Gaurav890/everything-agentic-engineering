@@ -309,3 +309,43 @@ this file.
 - **Decision/PR:** Documentation-only proposal. Human approval remains required
   for runtime upgrades, agent modes, permission policy, workflow changes, or
   managed settings.
+
+### L-2026-08-12-01 — Agent Plugins 1.0 establishes a portable skills and MCP package format
+
+- **State:** trial
+- **Event date:** 2026-08-06; GitHub availability announced 2026-08-12
+- **Discovered:** 2026-08-13
+- **Domains:** Agent Plugins, Agent Skills, MCP, Codex, portability, enterprise governance
+- **Sources:** `https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md`
+  (canonical specification, highest authority);
+  `https://github.com/agentplugins/agent-plugins-example`
+  (canonical example and migration guide, high authority);
+  `https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/`
+  (first-party GitHub availability announcement, high authority)
+- **Change:** Agent Plugins 1.0 defines a required closed root `plugin.json`,
+  fixed `skills/` discovery, optional root `mcp.json`, path containment, and
+  reverse-domain client extensions. The core has no portable hooks, commands,
+  arbitrary interface fields, OAuth configuration, or secret-reference field.
+- **Repository relevance:** The repository already exposed skills through a
+  root link but placed Codex-specific package metadata under `.codex-plugin/`
+  and used fields that are invalid in the portable closed manifest. Its
+  project `.mcp.json` also depends on client-specific environment expansion.
+- **Existing coverage:** partial
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 4 / risk 2 /
+  maintenance 2 / novelty 5
+- **Recommendation:** add the portable manifest and offline containment checks
+  additively, retain the working Codex-native surface, and defer portable MCP
+  entries until a separate server/client credential and protocol review.
+- **Affected artifacts:** root `plugin.json`, `skills/`, Codex packaging docs,
+  compatibility/security docs, plugin doctor, tests, and durable state
+- **Acceptance and verification:** Closed manifest; no inline components;
+  contained immediate-child skill discovery; native manifest remains valid;
+  project `.mcp.json` is not presented as portable; targeted and full
+  repository verification pass.
+- **Uncertainty:** Portable package conformance does not prove that every
+  client implements identical installation, trust, MCP, or extension behavior.
+  Codex-native compatibility is retained until client-specific tests justify
+  removal.
+- **Decision/PR:** T-034 is an additive implementation trial. Publishing,
+  installation, portable MCP execution, credentials, authority changes,
+  approval, and merge remain human-controlled and out of scope.

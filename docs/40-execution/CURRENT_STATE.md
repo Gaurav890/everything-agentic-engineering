@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-10
+Last updated: 2026-08-13
 
 ## Product
 
@@ -64,8 +64,8 @@ explicit confirmation. Unselected mobile, web, research, backend, or
 design-critical capabilities are not routed or treated as project requirements.
 
 Contributor workflows are exposed through one registry-backed `./agentic`
-interface. `.agentic/commands.json` classifies all 31 shell files as public,
-internal, compatibility, or security-hook surfaces. The 24 supported public
+interface. `.agentic/commands.json` classifies all 33 shell files as public,
+internal, compatibility, or security-hook surfaces. The 26 supported public
 workflows are grouped by setup, profile, task, pull request, workspace, doctor,
 specialist agents, tokens, release, and verification. Existing direct script paths remain
 compatible; no script or hook has been deleted or relocated.
@@ -107,12 +107,20 @@ merges, pushes `main`, or treats external content as approval. Humans do not
 manually edit `TASKS.jsonl` to clear policy failures.
 
 Codex is supported through a native repository adapter. `AGENTS.md` carries the
-cross-runtime contract; `.agents/skills` and the skills-only plugin expose the
-canonical `.claude/skills` catalog without copied instructions; trusted
-project configuration bounds context and concurrency; Codex hooks reuse the
-reviewed destructive-command and secret-scan scripts. The adapter intentionally
-does not select models/providers, add credentials or MCP execution, enable
-network access, widen sandboxes, or bypass approvals.
+cross-runtime contract; `.agents/skills` exposes the canonical
+`.claude/skills` catalog without copied instructions; trusted project
+configuration bounds context and concurrency; Codex hooks reuse the reviewed
+destructive-command and secret-scan scripts. The adapter intentionally does not
+select models/providers, add credentials or MCP execution, enable network
+access, widen sandboxes, or bypass approvals.
+
+Root `plugin.json` and fixed-location `skills/` provide an additive Agent
+Plugins 1.0 portable, skills-only core. `.codex-plugin/plugin.json` remains a
+separate Codex-native compatibility manifest. The offline plugin doctor checks
+the closed manifest, semantic version, immediate skill discovery, and path
+containment. Project `.mcp.json` is not copied into portable `mcp.json` because
+its client-specific environment references are not a portable credential
+contract.
 
 Seven project-scoped Codex custom agents cover read-only product planning,
 architecture, research, design critique, security review, adversarial QA, and
@@ -160,8 +168,9 @@ production builds, model tests, Playwright interaction tests, and axe
 accessibility checks; browser tests run as a dedicated GitHub Actions gate.
 
 Codex verification additionally validates shared skill discovery, project
-configuration authority boundaries, hook wiring, plugin metadata, default and
-strict runtime-doctor behavior, and Codex `apply_patch` secret scanning.
+configuration authority boundaries, hook wiring, separate native and portable
+plugin metadata, portable path containment, default and strict runtime-doctor
+behavior, and Codex `apply_patch` secret scanning.
 
 Runtime compatibility verification validates the machine-readable policy,
 stable-versus-prerelease comparison, advisory and strict outcomes, JSON output,
@@ -178,8 +187,10 @@ and Codex doctor reuse without requiring either runtime in portable CI.
 - Social platforms may cache older repository preview metadata after updates.
 - Write-capable Codex specialist roles are intentionally not committed;
   parallel writers use separate task branches and worktrees.
-- Codex plugin marketplace publication and installation policy remain explicit
-  release actions.
+- Portable and Codex-native plugin marketplace publication and installation
+  policy remain explicit release actions.
+- Portable MCP packaging remains incomplete until server transport, protocol,
+  credential, and client compatibility are independently verified.
 - The developer machine inspected for T-025 reports Claude Code 2.1.220 and a
   Codex 0.146.0 prerelease build, both below the recommended baselines. The
   repository reports this drift but does not upgrade developer tooling.

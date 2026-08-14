@@ -32,6 +32,9 @@ Do not indiscriminately load every Markdown file.
 - Codex adapter and parallel-terminal guidance: `.codex/`,
   `docs/60-tooling/CODEX.md`, and
   `docs/70-collaboration/PARALLEL_TERMINALS.md`
+- Portable Agent Plugins package contract: root `plugin.json`, `skills/`, and
+  `docs/60-tooling/AGENT_PLUGINS.md`; client-native compatibility remains
+  separate and cannot expand authority implicitly
 
 When files disagree, do not guess. Surface the conflict and resolve it in the owning artifact.
 

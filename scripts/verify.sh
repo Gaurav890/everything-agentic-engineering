@@ -13,6 +13,7 @@ python3 -m json.tool .mcp.json >/dev/null
 python3 -m json.tool .claude/settings.json >/dev/null
 python3 -m json.tool .codex/hooks.json >/dev/null
 python3 -m json.tool .codex-plugin/plugin.json >/dev/null
+python3 -m json.tool plugin.json >/dev/null
 python3 -m json.tool .agentic/project.json >/dev/null
 python3 -m json.tool .agentic/resources.json >/dev/null
 python3 -m json.tool .agentic/external-skills.json >/dev/null
@@ -142,9 +143,11 @@ python3 -m unittest discover -s tests -p 'test_design_tokens.py'
 echo "[7/10] Test deterministic security hooks"
 python3 -m unittest discover -s tests -p 'test_security_hooks.py'
 python3 -m unittest discover -s tests -p 'test_codex_adapter.py'
+python3 -m unittest discover -s tests -p 'test_agent_plugin.py'
 python3 -m unittest discover -s tests -p 'test_runtime_compatibility.py'
 ./scripts/runtime-doctor.sh
 ./scripts/codex-doctor.sh
+./scripts/agent-plugin-doctor.sh
 
 echo "[8/10] Validate collaboration and community contracts"
 for required in \

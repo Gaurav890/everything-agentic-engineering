@@ -8,7 +8,8 @@
 | Linux / GitHub Actions | Supported | Full verification runs on Ubuntu |
 | Windows | Best effort | Use WSL until PowerShell wrappers exist |
 | Claude Code | Supported | Native `.claude/` agents, rules, skills, and hooks |
-| Codex | Native adapter | `AGENTS.md`, shared repo skills, trusted project config/hooks, doctor, and skills-only plugin manifest |
+| Codex | Native adapter | `AGENTS.md`, shared repo skills, trusted project config/hooks, doctor, and separate Codex-native manifest |
+| Agent Plugins 1.0 | Portable skills-only core | Root `plugin.json` plus fixed `skills/`; no packaged MCP server or implicit authority |
 | Other coding agents | Adaptable | Must honor repository source-of-truth and safety contracts |
 
 ## Profiles
@@ -122,6 +123,9 @@ include a migration note.
   parallel writes still require separate branches and worktrees.
 - The Codex plugin manifest is package-ready but marketplace publication and
   installation policy remain explicit release actions.
+- The Agent Plugins 1.0 core is additive and skills-only. Portable MCP
+  packaging, client-by-client installation tests, and removal of native
+  compatibility files remain separately reviewed work.
 
 See the [v0.1.0 release notes](../releases/v0.1.0.md) for the exact public
 preview scope.

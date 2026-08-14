@@ -64,13 +64,21 @@ class CodexAdapterTests(unittest.TestCase):
         )
         self.assertRegex(config, r"(?m)^hooks\s*=\s*true\s*$")
 
-    def test_plugin_is_skills_only_and_strict_semver(self) -> None:
+    def test_codex_native_plugin_is_skills_only_and_strict_semver(self) -> None:
         plugin = json.loads((ROOT / ".codex-plugin/plugin.json").read_text())
         self.assertEqual(plugin["name"], "everything-agentic-engineering")
         self.assertEqual(plugin["skills"], "./skills/")
         self.assertRegex(plugin["version"], r"^\d+\.\d+\.\d+$")
         for key in ("hooks", "mcpServers", "apps"):
             self.assertNotIn(key, plugin)
+
+    def test_codex_native_and_portable_manifests_do_not_drift(self) -> None:
+        portable = json.loads((ROOT / "plugin.json").read_text())
+        codex = json.loads((ROOT / ".codex-plugin/plugin.json").read_text())
+        self.assertEqual(portable["name"], codex["name"])
+        self.assertEqual(portable["version"], codex["version"])
+        self.assertNotIn("skills", portable)
+        self.assertIn("skills", codex)
 
     def test_codex_hooks_reuse_reviewed_safety_scripts(self) -> None:
         hooks = json.loads((ROOT / ".codex/hooks.json").read_text())

@@ -14,12 +14,15 @@ This file is the cross-runtime contract and is loaded natively by Codex.
 - Codex project configuration and hooks live under `.codex/`.
 - `.agents/skills` exposes the canonical `.claude/skills` catalog to Codex by
   symbolic link; do not maintain a copied second catalog.
-- `.codex-plugin/plugin.json` packages the same catalog as a skills-only Codex
-  plugin.
+- Root `plugin.json` and `skills/` define the Agent Plugins 1.0 portable,
+  skills-only core. `.codex-plugin/plugin.json` remains a separate Codex-native
+  compatibility manifest during the additive migration; neither manifest may
+  silently override the other.
 - `.agentic/runtime-baselines.json` records reviewed Claude Code and Codex
   version floors and optional capability gates; `runtime-doctor.sh` reports
   them without installing or enabling anything.
 - Run `./agentic doctor codex` after Codex adapter changes.
+- Run `./agentic doctor plugin` after portable package or shared-skill changes.
 
 The committed Codex adapter must not choose models/providers, add credentials,
 register external MCP execution, enable network access, widen sandboxes, or

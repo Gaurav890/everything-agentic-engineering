@@ -1,23 +1,23 @@
 # Handoff
 
-Last updated: 2026-08-10
+Last updated: 2026-08-13
 
 ## Current goal
 
-Make reviewed specialist expertise discoverable and operational without
-creating agent bloat, duplicate ownership, or implicit runtime authority.
+Adopt the Agent Plugins 1.0 portable package contract without breaking the
+existing Codex-native adapter or widening plugin/MCP authority.
 
 ## Completed
 
-- Fourteen reviewed Agency Agents capabilities have pinned provenance,
-  profiles, triggers, authority, deliverables, evaluators, and non-use rules.
-- `./agentic agents` lists, explains, recommends, activates, deactivates, and
-  validates local specialist contracts with human-confirmed mutation only.
-- `./agentic task plan` includes specialist rationale and review evidence.
-- Required security, payments, privacy, incident, accessibility, agent-trust,
-  and multi-agent matches cannot silently disappear from the plan.
-- The full upstream roster remains linked; no upstream agent is installed,
-  copied, or executed by the broker.
+- T-031 added the read-only capability decision engine.
+- T-032 added the disabled, plan-only Prime Agent adapter.
+- T-033 added the project-local, plan-only selective Agency Agents installer.
+- Root `plugin.json` now carries only Agent Plugins 1.0 portable metadata.
+- Root `skills/` remains the contained fixed discovery path for the canonical
+  project-local skill catalog.
+- `.codex-plugin/plugin.json` remains a separate Codex-native compatibility
+  surface, and `.mcp.json` remains project-local.
+- `./agentic doctor plugin` validates the portable contract offline.
 
 ## Blockers
 
@@ -25,34 +25,32 @@ creating agent bloat, duplicate ownership, or implicit runtime authority.
 
 ## Unresolved decisions
 
-- Future Agency Agents revisions or new local contracts require a new source,
-  license, routing, safety, and evidence review.
-- Prime Agent execution-runtime adoption remains out of scope and would need a
-  separate architecture and threat-model decision.
-- Activation remains optional because local roles can execute every contract.
+- Portable MCP packaging requires a separate compatibility matrix for the
+  selected servers, transports, protocol revisions, credentials, and clients.
+- Native compatibility files may be removed only after every supported client
+  passes installation and discovery tests.
+- Publishing or installation remains a human-owned release decision.
 
 ## Verification status
 
-- Broker routing, profile gates, JSON output, reversible activation, command
-  discovery, and task-plan integration tests pass.
-- `specialist-router` passes the platform skill validator.
-- Full repository verification passes all ten stages across 29 tracked tasks,
-  29 shared local skills, profiles, tokens, security hooks, runtime/Codex
-  policy, local links, Showcase lint, typecheck, and tests.
+- Portable manifest, skill containment, native-manifest drift, project-MCP
+  separation, command discovery, and negative-fixture tests pass locally.
+- Full repository verification passes all ten stages across profiles, tokens,
+  security hooks, runtime/Codex policy, local links, and Showcase checks.
 
 ## Exact next action
 
-Use `./agentic task plan T-###` on the next reviewed task and record any routed
-specialist's authority, deliverable, evidence, and independent evaluator.
+Run `./agentic doctor plugin` whenever portable package metadata or shared
+skills change. Treat any portable MCP proposal as a separate compatibility
+decision rather than copying `.mcp.json` into root `mcp.json`.
 
 ## Relevant files
 
-- `.agentic/external-agents.json`
-- `.agentic/project.json`
-- `.claude/skills/specialist-router/SKILL.md`
-- `docs/60-tooling/AGENT_CATALOG.md`
-- `docs/60-tooling/SPECIALIST_ROUTING.md`
-- `scripts/agent_broker.py`
-- `tests/test_agent_broker.py`
+- `plugin.json`
+- `.codex-plugin/plugin.json`
+- `skills/`
+- `docs/60-tooling/AGENT_PLUGINS.md`
+- `scripts/validate_agent_plugin.py`
+- `tests/test_agent_plugin.py`
 
 Keep this concise enough to read in under two minutes.

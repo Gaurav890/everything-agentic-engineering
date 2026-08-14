@@ -804,3 +804,43 @@ execute Agency Agents; select a model; add tools or credentials; widen network
 or sandbox permissions; deploy; approve; or merge. Activation changes only the
 project manifest. Prime Agent runtime integration remains a separate future
 architecture and security decision.
+
+### 2026-08-13 — T-034
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Added an additive Agent Plugins 1.0 portable, skills-only core through root
+`plugin.json` and the existing contained `skills/` catalog. Kept
+`.codex-plugin/plugin.json` as a separately validated Codex-native
+compatibility surface. Added a read-only package doctor, closed-manifest and
+path-containment validation, negative fixtures, version-parity checks, command
+discovery, bootstrap integration, and a migration/security guide.
+
+**Evidence**
+
+- Seven portable-plugin tests cover the valid repository, closed manifest,
+  package-version parity, Codex-native separation, project-MCP separation,
+  escaping skill symlinks, and gated portable MCP entries.
+- Eleven Codex adapter tests verify the native package remains valid and cannot
+  drift from the portable package name or version.
+- `./agentic doctor plugin --json` returns machine-readable inventory for 30
+  contained skills and reports no packaged MCP configuration.
+- `./agentic verify full` passes all ten verification stages, including command
+  registry validation, design tokens, security hooks, runtime/Codex policy,
+  local links, release checks, Showcase lint/typecheck, and tests.
+- Locked dependencies were restored from the local pnpm cache with zero
+  downloads before the application checks.
+
+**Authority boundary**
+
+This is packaging and validation only. It does not publish, install, enable,
+execute, authenticate, add credentials, configure portable MCP servers, widen
+runtime or sandbox authority, approve, or merge. Root `.mcp.json` remains a
+project configuration, not a portable package. A separate compatibility review
+is required before any portable MCP server entry is added. The GitHub connector
+could not create a tracking issue, so the complete bounded issue-free reason is
+recorded in the task and must be reproduced exactly in the PR.
