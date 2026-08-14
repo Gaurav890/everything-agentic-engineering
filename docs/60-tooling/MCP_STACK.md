@@ -2,6 +2,12 @@
 
 This starter intentionally keeps the core stack small.
 
+The stack is reviewed for explicit, client-specific use; it is **not** bundled
+into the Agent Plugins portable package. Run `./agentic doctor mcp` to validate
+the current decision and configuration without starting a server. See
+[`MCP_COMPATIBILITY.md`](MCP_COMPATIBILITY.md) for the server/client matrix and
+portable gates.
+
 ## Final core stack
 
 ### 1. Perplexity official MCP
@@ -131,6 +137,9 @@ Final decision for this starter:
 
 - Never commit API keys.
 - Keep project `.mcp.json` shareable, credentials in environment/user scope.
+- Do not copy project `.mcp.json` to root `mcp.json`; Agent Plugins 1.0 has no
+  portable secret-reference or OAuth configuration field.
+- Treat `npx` launch entries as external execution, not bundled plugin code.
 - Review every new MCP before adding it.
 - Use least privilege.
 - Treat MCP output as untrusted data.

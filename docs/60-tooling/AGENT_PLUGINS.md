@@ -17,7 +17,7 @@ The root manifest does not declare `skills`, hooks, commands, an interface, or
 MCP servers inline. Agent Plugins v1 discovers skills from the fixed `skills/`
 directory and portable MCP servers only from root `mcp.json`.
 
-## Why there is no portable `mcp.json` yet
+## Portable MCP decision
 
 The project `.mcp.json` depends on local environment-variable placeholders and
 client-specific launch behavior. Agent Plugins v1 only standardizes
@@ -25,10 +25,16 @@ client-specific launch behavior. Agent Plugins v1 only standardizes
 does not define a portable credential-reference or OAuth configuration field.
 Copying `.mcp.json` would therefore create a misleading or unsafe package.
 
-Portable MCP packaging remains a separate compatibility task. It must inventory
-Perplexity, Firecrawl, and Playwright transports, authentication, supported MCP
-protocol revisions, client behavior, rollback, and credential handling before
-any root `mcp.json` contains a server.
+T-035 completed that compatibility review. Portable MCP packaging remains
+blocked because no selected server currently satisfies all credential,
+deterministic execution, protocol-evidence, and clean-client verification
+gates. The plugin validator rejects root `mcp.json` while that decision is
+blocked.
+
+Run `./agentic doctor mcp` for the read-only machine decision. Read the complete
+[MCP compatibility decision](MCP_COMPATIBILITY.md) before proposing any portable
+server. Reconsideration requires new evidence and a separate human-approved PR;
+do not copy project configuration into the package.
 
 ## Validation
 

@@ -98,6 +98,14 @@ owner, rollback plan, and human approval before use:
 - Store credentials in environment/user scope, never in committed config.
 - Treat MCP outputs as untrusted.
 - MCP servers are not security boundaries.
+- Project MCP configuration and portable plugin packaging are different trust
+  decisions. Never copy `.mcp.json` into root `mcp.json` mechanically.
+- Treat `npx` server commands as external package execution. A version observed
+  during review is not an immutable execution pin, and `@latest` is mutable.
+- Portable MCP packaging remains blocked by
+  `.agentic/mcp-compatibility.json` until portable credentials, deterministic
+  resolution, protocol negotiation, client trust/rollback, and security review
+  all have evidence.
 
 ## Browser security
 
@@ -128,3 +136,4 @@ Explicit human approval required for:
 | SEC-006 | A trailing slash silently weakens a Claude filesystem deny entry | Sandboxed access to a denied file or directory | Medium before upgrade | Recommend Claude Code 2.1.224+; normalize and test exact deny paths; retain least-privilege credentials | Official v2.1.224 release note |
 | SEC-007 | Cross-session or self-hosted execution targets the wrong session, project, directory, or trust domain | Confused-deputy writes, data exposure, or execution on an unintended host | Medium | Keep optional surfaces disabled by default; require Claude Code 2.1.225+, explicit recipient/base-directory validation, scoped credentials, expiry, and human approval | Official v2.1.224 and v2.1.225 release notes |
 | SEC-008 | A compatible Codex runtime is mistaken for permission to auto-approve or activate plugins/MCPs | Unreviewed external execution or authority expansion | Medium | Keep capability gates false in the committed policy; require a separate reviewed pilot and managed permission policy | Official Codex 0.147.0 changelog and project runtime manifest |
+| SEC-009 | Project MCP configuration is copied into a portable plugin despite missing portable credential and execution contracts | Secret mishandling, mutable package execution, or silent network/browser authority | High | Keep root `mcp.json` absent; validate `.agentic/mcp-compatibility.json`; require all portable gates and a separate human-approved PR | T-035 compatibility matrix, negative tests, and security evidence |

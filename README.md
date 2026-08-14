@@ -434,7 +434,19 @@ assessments.
 
 ## MCP stack
 
-The project includes three core MCP capabilities.
+The project includes three reviewed core MCP capabilities. They are configured
+per client and used only after explicit setup; they are **not** bundled into the
+portable plugin.
+
+```bash
+./agentic doctor mcp
+```
+
+This read-only check validates the server, credential-reference, client, and
+portable-package boundaries without installing or starting anything. The
+current portable decision is blocked until every credential, deterministic
+execution, protocol, client-trust, and rollback gate has evidence. Read the
+[compatibility matrix](docs/60-tooling/MCP_COMPATIBILITY.md).
 
 ### 🔎 Perplexity
 
@@ -1149,7 +1161,8 @@ run:
 cp .env.example .env
 ```
 
-Add the API keys for the MCP services you plan to use.
+Add API keys only for MCP services you explicitly plan and are authorized to
+use. Profile selection and plugin installation do not enable those services.
 
 ### 4. Bootstrap
 
@@ -1196,7 +1209,8 @@ permissions, configure credentials, or start external MCP servers. Read the
 Compatible Agent Plugins 1.0 clients discover the same skills through the
 fixed root `skills/` location. Client installation remains explicit and
 human-controlled; the portable package does not include the project's MCP
-servers.
+servers. `./agentic doctor mcp` explains the evidence-backed block and the exact
+conditions required before that decision can change.
 
 It also discovers seven project-scoped, read-only specialist roles for product
 planning, architecture, research, design critique, security review, QA, and

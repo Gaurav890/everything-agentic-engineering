@@ -134,16 +134,22 @@ def validate_skills(plugin_root: Path) -> list[str]:
 
 
 def validate_mcp_boundary(plugin_root: Path) -> bool:
-    """Validate only the portable top-level MCP envelope when one is introduced.
-
-    T-034 intentionally ships no portable MCP configuration. A future MCP task
-    must extend this validator with per-transport and credential tests before
-    adding mcp.json.
-    """
+    """Fail closed against the reviewed portable MCP packaging decision."""
 
     mcp_path = plugin_root / "mcp.json"
     if not mcp_path.exists():
         return False
+    compatibility_path = plugin_root / ".agentic/mcp-compatibility.json"
+    if compatibility_path.is_file():
+        compatibility = _load_object(compatibility_path)
+        decision = compatibility.get("decision")
+        if (
+            isinstance(decision, dict)
+            and decision.get("portable_packaging") == "blocked"
+        ):
+            raise PluginValidationError(
+                "mcp.json must remain absent while portable MCP packaging is blocked"
+            )
     if not mcp_path.is_file() or not _inside(plugin_root, mcp_path.resolve()):
         raise PluginValidationError("mcp.json must be a regular file inside the plugin root")
     payload = _load_object(mcp_path)

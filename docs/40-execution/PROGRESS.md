@@ -844,3 +844,36 @@ project configuration, not a portable package. A separate compatibility review
 is required before any portable MCP server entry is added. The GitHub connector
 could not create a tracking issue, so the complete bounded issue-free reason is
 recorded in the task and must be reproduced exactly in the PR.
+
+### 2026-08-14 — T-035
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Added a machine-readable compatibility policy and read-only doctor for the
+Perplexity, Firecrawl, and Playwright MCP servers across Agent Plugins 1.0,
+Claude Code, and Codex. Portable packaging is fail-closed while the project
+retains explicit client-specific configuration and routing.
+
+**Evidence**
+
+- Primary-source provenance records reviewed package versions and source blobs.
+- Compatibility tests cover project configuration, environment references,
+  isolated browser mode, client claims, portable-manifest absence, and JSON
+  redaction.
+- The required identity/access security review documents principals, trust
+  boundaries, blocking findings, and verified controls.
+- Full repository verification passes all ten stages, including 34 task
+  records, compatibility and plugin negative fixtures, design tokens, security
+  hooks, local links, evidence bundles, Showcase lint, typecheck, and tests.
+
+**Authority boundary**
+
+Issue #49 owns the decision. No package was installed or executed, no server was
+started or contacted, no credential value was read, and no protocol, network,
+sandbox, browser, deployment, production, approval, or merge authority was
+enabled. A new human-approved task is required before portable packaging can be
+reconsidered.

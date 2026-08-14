@@ -1,0 +1,15 @@
+{
+  "task_id": "T-035",
+  "acceptance_ids": ["AC-001"],
+  "ui_change": false,
+  "builder": "architect",
+  "evaluator": "security-reviewer",
+  "commands": [
+    "python3 -m unittest tests.test_mcp_compatibility tests.test_agent_plugin",
+    "./agentic doctor mcp",
+    "./agentic doctor mcp --json",
+    "./agentic verify full"
+  ],
+  "artifacts": ["security-review.md"],
+  "verdict": "PASS_WITH_PORTABLE_PACKAGING_BLOCKED"
+}

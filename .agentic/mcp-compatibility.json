@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-14",
+  "decision": {
+    "portable_packaging": "blocked",
+    "root_mcp_manifest": "absent",
+    "reason": "No selected server currently satisfies the combined portable credential, deterministic execution, protocol-evidence, and client-validation gates.",
+    "human_approval_required": true
+  },
+  "agent_plugins": {
+    "version": "1.0.0",
+    "schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+    "source": "https://agent-plugins.org/specification",
+    "portable_transports": [
+      "stdio",
+      "streamable-http",
+      "sse"
+    ],
+    "credential_reference_supported": false,
+    "oauth_configuration_supported": false,
+    "allowed_placeholders": [
+      "PLUGIN_ROOT",
+      "PLUGIN_DATA"
+    ]
+  },
+  "protocol": {
+    "target_revision": "2026-07-28",
+    "source": "https://modelcontextprotocol.io/specification/2026-07-28",
+    "adoption": "human_gated",
+    "runtime_availability_is_authority": false
+  },
+  "clients": {
+    "claude-code": {
+      "configuration": ".mcp.json",
+      "source": "https://code.claude.com/docs/en/mcp",
+      "transports": [
+        "stdio",
+        "streamable-http",
+        "sse"
+      ],
+      "credential_handling": [
+        "environment expansion",
+        "headers",
+        "client-managed OAuth"
+      ],
+      "portable_plugin_mcp_verified": false
+    },
+    "codex": {
+      "configuration": ".codex/config.toml or user configuration",
+      "source": "https://developers.openai.com/codex/mcp",
+      "transports": [
+        "stdio",
+        "streamable-http"
+      ],
+      "credential_handling": [
+        "env_vars",
+        "bearer_token_env_var",
+        "client-managed OAuth"
+      ],
+      "portable_plugin_mcp_verified": false
+    }
+  },
+  "servers": {
+    "perplexity": {
+      "official_source": "https://github.com/perplexityai/modelcontextprotocol",
+      "package": "@perplexity-ai/mcp-server",
+      "observed_version": "1.2.0",
+      "source_blob": "0c971ae713fdce756ca61e525d3904504f2654b3",
+      "runtime": {
+        "command": "npx",
+        "minimum_node": "18",
+        "package_bundled": false
+      },
+      "transports": [
+        "stdio",
+        "streamable-http"
+      ],
+      "project_transport": "stdio",
+      "credential_environment": [
+        "PERPLEXITY_API_KEY"
+      ],
+      "credential_required_for_project_contract": true,
+      "declared_protocol_revision": null,
+      "sdk_evidence": "@modelcontextprotocol/sdk ^1.29.0",
+      "verified_target_revision": false,
+      "portable_decision": "blocked",
+      "blockers": [
+        "Agent Plugins 1.0 has no portable secret-reference field",
+        "the configured npx package is external and not bundled with the plugin",
+        "the target protocol revision is not declared and has not been negotiated in a credential-free test",
+        "portable plugin MCP behavior is not verified across supported clients"
+      ]
+    },
+    "firecrawl": {
+      "official_source": "https://github.com/firecrawl/firecrawl-mcp-server",
+      "package": "firecrawl-mcp",
+      "observed_version": "3.24.0",
+      "source_blob": "009c58bcff35c8110200fe563e75f500a4c9dd6a",
+      "runtime": {
+        "command": "npx",
+        "minimum_node": "22",
+        "package_bundled": false
+      },
+      "transports": [
+        "stdio",
+        "streamable-http",
+        "sse"
+      ],
+      "project_transport": "stdio",
+      "credential_environment": [
+        "FIRECRAWL_API_KEY"
+      ],
+      "credential_required_for_project_contract": true,
+      "declared_protocol_revision": null,
+      "sdk_evidence": "fastmcp 4.3.2",
+      "verified_target_revision": false,
+      "portable_decision": "blocked",
+      "blockers": [
+        "Agent Plugins 1.0 has no portable secret-reference or OAuth configuration field",
+        "the configured npx package is external and not bundled with the plugin",
+        "the keyless hosted surface is rate-limited and does not preserve the configured full-tool contract",
+        "the target protocol revision is not declared and has not been negotiated in a credential-free test",
+        "portable plugin MCP behavior is not verified across supported clients"
+      ]
+    },
+    "playwright": {
+      "official_source": "https://github.com/microsoft/playwright-mcp",
+      "package": "@playwright/mcp",
+      "observed_version": "0.0.79",
+      "source_blob": "8ffbac3da702b8450afe750ab16b0c9cb8f40350",
+      "runtime": {
+        "command": "npx",
+        "minimum_node": "18",
+        "package_bundled": false
+      },
+      "transports": [
+        "stdio",
+        "sse"
+      ],
+      "project_transport": "stdio",
+      "credential_environment": [],
+      "credential_required_for_project_contract": false,
+      "declared_protocol_revision": "2025-12-11 registry schema",
+      "sdk_evidence": "@modelcontextprotocol/sdk ^1.25.2 (development dependency)",
+      "verified_target_revision": false,
+      "portable_decision": "blocked",
+      "blockers": [
+        "the project configuration resolves @playwright/mcp@latest at execution time",
+        "the package and browser runtime are external and not bundled with the plugin",
+        "Playwright MCP is explicitly not a security boundary",
+        "the target protocol revision is not declared and has not been negotiated in an isolated test",
+        "portable plugin MCP behavior is not verified across supported clients"
+      ]
+    }
+  },
+  "reconsider_when": [
+    "Agent Plugins defines a portable client-managed credential reference or every supported client proves compatible authorization discovery",
+    "server execution is bundled or immutably resolved without an install-at-launch path",
+    "the target protocol revision is declared or passes credential-free negotiation tests",
+    "Claude Code and Codex portable plugin MCP discovery, trust, disable, and rollback behavior pass clean-client tests"
+  ]
+}

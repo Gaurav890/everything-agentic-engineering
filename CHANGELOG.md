@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A machine-readable Perplexity, Firecrawl, Playwright, Claude Code, Codex, and
+  Agent Plugins MCP compatibility matrix plus a read-only doctor, provenance
+  snapshots, clean-client test plan, negative fixtures, and fail-closed
+  portable-package gate.
 - An additive Agent Plugins 1.0 portable, skills-only package with a closed
   root manifest, contained fixed-location skill discovery, an offline doctor,
   deterministic tests, and an explicit separation from Codex-native metadata
@@ -63,6 +67,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Security
 
+- Portable MCP packaging remains blocked until credential references,
+  deterministic package resolution, protocol negotiation, client trust and
+  rollback, and independent security evidence all pass; no MCP was installed,
+  authenticated, contacted, or executed during the review.
 - Claude Code 2.1.224–2.1.225 version guidance for filesystem-deny,
   cross-session, self-hosted, workspace-trust, and OAuth hardening, with
   optional runtime surfaces disabled by default.
