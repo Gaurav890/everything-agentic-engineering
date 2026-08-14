@@ -121,6 +121,17 @@ For Codex:
 
 Review project hooks with `/hooks` before trusting them.
 
+For a compatible Agent Plugins 1.0 client, validate the portable skills-only
+package before testing it:
+
+```bash
+./agentic doctor plugin
+```
+
+The doctor does not install or publish the plugin. Root `plugin.json` is the
+portable manifest; `.codex-plugin/plugin.json` is a separate Codex-native
+compatibility file. Project `.mcp.json` is not portable plugin configuration.
+
 ## 7. Open Obsidian
 
 Open the `docs/` folder as a vault.

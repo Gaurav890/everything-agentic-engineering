@@ -29,4 +29,5 @@
 # /.claude/                 @your-org/agent-platform
 # /.codex/                  @your-org/agent-platform
 # /.agents/                 @your-org/agent-platform
+# /plugin.json              @your-org/repo-maintainers @your-org/agent-platform
 # /.codex-plugin/           @your-org/repo-maintainers @your-org/agent-platform

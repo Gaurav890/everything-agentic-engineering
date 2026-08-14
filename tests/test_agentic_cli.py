@@ -98,6 +98,7 @@ class AgenticCliTests(unittest.TestCase):
         self.assertIn("workspace worktree", names)
         self.assertIn("agents", names)
         self.assertIn("capabilities", names)
+        self.assertIn("doctor plugin", names)
         self.assertNotIn("prepare merge", names)
 
     def test_arguments_are_forwarded_as_a_list_without_shell_evaluation(self) -> None:

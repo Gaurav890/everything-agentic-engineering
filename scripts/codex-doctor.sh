@@ -35,6 +35,7 @@ required_files=(
   .codex/config.toml
   .codex/hooks.json
   .codex-plugin/plugin.json
+  plugin.json
   .claude/skills/codex-adapter/SKILL.md
 )
 
@@ -45,6 +46,12 @@ for path in "${required_files[@]}"; do
     fail "$path is missing"
   fi
 done
+
+if ./scripts/agent-plugin-doctor.sh >/dev/null; then
+  pass "Agent Plugins 1.0 portable core is valid"
+else
+  fail "Agent Plugins 1.0 portable core is invalid"
+fi
 
 for path in .agents/skills skills; do
   if [ -L "$path" ] && [ -d "$path" ]; then

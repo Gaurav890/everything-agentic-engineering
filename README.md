@@ -64,6 +64,17 @@ Codex meet the repository's reviewed baselines but never installs, upgrades, or
 enables them. Managed environments can use `--strict`; inventory systems can
 use `--json`.
 
+The repository also exposes its canonical local skills as an additive,
+skills-only [Agent Plugins 1.0 package](docs/60-tooling/AGENT_PLUGINS.md).
+Validate it without installing or publishing anything:
+
+```bash
+./agentic doctor plugin
+```
+
+Portable `plugin.json`, Codex-native `.codex-plugin/plugin.json`, and
+project-local `.mcp.json` are intentionally separate contracts.
+
 After product discovery and task decomposition create a ready task such as
 `T-101`, inspect it without changing the workspace:
 
@@ -1006,6 +1017,7 @@ types, and tests.
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── .mcp.json
+├── plugin.json                   # Agent Plugins 1.0 portable manifest
 │
 ├── .agentic/
 │   ├── commands.json             # Public commands + complete shell inventory
@@ -1034,7 +1046,7 @@ types, and tests.
 │   └── skills -> ../.claude/skills
 │
 ├── .codex-plugin/
-│   └── plugin.json
+│   └── plugin.json               # Separate Codex-native metadata
 │
 ├── skills -> .claude/skills
 │
@@ -1181,6 +1193,11 @@ Codex reads `AGENTS.md` and discovers the same local skills through
 permissions, configure credentials, or start external MCP servers. Read the
 [Codex adapter guide](docs/60-tooling/CODEX.md).
 
+Compatible Agent Plugins 1.0 clients discover the same skills through the
+fixed root `skills/` location. Client installation remains explicit and
+human-controlled; the portable package does not include the project's MCP
+servers.
+
 It also discovers seven project-scoped, read-only specialist roles for product
 planning, architecture, research, design critique, security review, QA, and
 integration review. Use these subagents for parallel analysis; use separate
@@ -1307,7 +1324,8 @@ Potential future directions:
 - [x] Visual regression pipeline for the Showcase's required states
 - [ ] Security scanner integrations
 - [ ] Additional evaluation patterns
-- [x] Codex-native instructions, shared skills, hooks, doctor, and plugin manifest
+- [x] Codex-native instructions, shared skills, hooks, doctor, and compatibility manifest
+- [x] Agent Plugins 1.0 portable, skills-only package with offline validation
 - [x] Codex-specific read-only subagent role adapters
 - [ ] Example production application built entirely with the harness
 - [ ] Community-contributed skills, agents, and project profiles

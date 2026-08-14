@@ -68,6 +68,7 @@ Recommended ownership boundaries:
 /.claude/                agent-harness maintainers
 /.codex/                 agent-harness and security maintainers
 /.agents/                agent-harness maintainers
+/plugin.json             release and agent-harness maintainers
 /.codex-plugin/          release and agent-harness maintainers
 ```
 

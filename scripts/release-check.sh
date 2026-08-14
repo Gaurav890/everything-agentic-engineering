@@ -7,6 +7,17 @@ cd "$ROOT"
 PACKAGE_VERSION="$(
   node -e "const p=require('./package.json'); process.stdout.write(p.version)"
 )"
+PORTABLE_PLUGIN_VERSION="$(
+  node -e "const p=require('./plugin.json'); process.stdout.write(p.version)"
+)"
+CODEX_PLUGIN_VERSION="$(
+  node -e "const p=require('./.codex-plugin/plugin.json'); process.stdout.write(p.version)"
+)"
+if [ "$PORTABLE_PLUGIN_VERSION" != "$PACKAGE_VERSION" ] || \
+   [ "$CODEX_PLUGIN_VERSION" != "$PACKAGE_VERSION" ]; then
+  echo "Package, portable plugin, and Codex-native plugin versions must match." >&2
+  exit 1
+fi
 EXPECTED_TAG="v${PACKAGE_VERSION}"
 REQUESTED_TAG="${1:-$EXPECTED_TAG}"
 

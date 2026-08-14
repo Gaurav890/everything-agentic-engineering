@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "everything-agentic-engineering",
+  "version": "0.1.0",
+  "description": "Durable product, design, engineering, verification, and collaboration skills for compatible AI agents.",
+  "author": {
+    "name": "Gaurav890",
+    "url": "https://github.com/Gaurav890"
+  },
+  "homepage": "https://github.com/Gaurav890/everything-agentic-engineering",
+  "repository": "https://github.com/Gaurav890/everything-agentic-engineering",
+  "license": "MIT",
+  "keywords": [
+    "agentic-engineering",
+    "agent-skills",
+    "product-design",
+    "software-development",
+    "worktrees"
+  ]
+}

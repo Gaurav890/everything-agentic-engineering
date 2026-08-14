@@ -84,6 +84,10 @@ owner, rollback plan, and human approval before use:
 - Claude cross-session messaging and recipient/session identity;
 - Claude archive plugin sources, including HTTPS origin and SHA-256 pinning;
 - Codex portable plugin installation and marketplace policy;
+- Agent Plugins 1.0 client installation and marketplace policy, including
+  client-specific trust, discovery, update, and rollback behavior;
+- portable MCP packaging, transport support, literal package configuration,
+  and client-managed authorization behavior;
 - Codex MCP 2026-07-28 opt-in and server compatibility;
 - Codex `--approve-for-me` or any equivalent automatic approval mode.
 
