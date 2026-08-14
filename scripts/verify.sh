@@ -19,6 +19,7 @@ python3 -m json.tool .agentic/resources.json >/dev/null
 python3 -m json.tool .agentic/external-skills.json >/dev/null
 python3 -m json.tool .agentic/external-agents.json >/dev/null
 python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
+python3 -m json.tool .agentic/mcp-compatibility.json >/dev/null
 python3 -m json.tool .agentic/commands.json >/dev/null
 for f in .agentic/capabilities/*.json; do
   python3 -m json.tool "$f" >/dev/null
@@ -144,10 +145,12 @@ echo "[7/10] Test deterministic security hooks"
 python3 -m unittest discover -s tests -p 'test_security_hooks.py'
 python3 -m unittest discover -s tests -p 'test_codex_adapter.py'
 python3 -m unittest discover -s tests -p 'test_agent_plugin.py'
+python3 -m unittest discover -s tests -p 'test_mcp_compatibility.py'
 python3 -m unittest discover -s tests -p 'test_runtime_compatibility.py'
 ./scripts/runtime-doctor.sh
 ./scripts/codex-doctor.sh
 ./scripts/agent-plugin-doctor.sh
+./scripts/mcp-doctor.sh --json | python3 -m json.tool >/dev/null
 
 echo "[8/10] Validate collaboration and community contracts"
 for required in \

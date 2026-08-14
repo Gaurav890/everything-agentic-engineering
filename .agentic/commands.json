@@ -31,7 +31,7 @@
     {"path": ["pr", "finalize"], "target": "scripts/finalize-pr.sh", "summary": "After direct human approval, prepare a PR for merge", "usage": "./agentic pr finalize <TASK-ID> [--dry-run|--yes]", "impact": "git_and_github_write"},
     {"path": ["workspace", "branch"], "target": "scripts/new-branch.sh", "summary": "Create a policy-compliant short-lived branch", "usage": "./agentic workspace branch <type> <TASK-ID> <slug> [base]", "impact": "git_write"},
     {"path": ["workspace", "worktree"], "target": "scripts/create-worktree.sh", "summary": "Create an isolated task worktree", "usage": "./agentic workspace worktree <TASK-ID> <slug> [type] [base]", "impact": "git_write"},
-    {"path": ["doctor", "mcp"], "target": "scripts/mcp-doctor.sh", "summary": "Check MCP configuration without revealing secret values", "usage": "./agentic doctor mcp", "impact": "read_only"},
+    {"path": ["doctor", "mcp"], "target": "scripts/mcp-doctor.sh", "summary": "Validate project and portable MCP compatibility without starting servers", "usage": "./agentic doctor mcp [--json]", "impact": "read_only"},
     {"path": ["doctor", "plugin"], "target": "scripts/agent-plugin-doctor.sh", "summary": "Validate the Agent Plugins 1.0 portable package contract", "usage": "./agentic doctor plugin [--json]", "impact": "read_only"},
     {"path": ["doctor", "runtime"], "target": "scripts/runtime-doctor.sh", "summary": "Report Claude Code and Codex runtime compatibility", "usage": "./agentic doctor runtime [runtime options]", "impact": "read_only"},
     {"path": ["doctor", "codex"], "target": "scripts/codex-doctor.sh", "summary": "Validate the Codex adapter and safety contract", "usage": "./agentic doctor codex [--strict-runtime]", "impact": "read_only"},

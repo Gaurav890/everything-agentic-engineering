@@ -89,6 +89,30 @@ class AgentPluginTests(unittest.TestCase):
             with self.assertRaisesRegex(PluginValidationError, "separately reviewed"):
                 validate_plugin(root)
 
+    def test_repository_decision_rejects_even_an_empty_root_mcp_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / ".agentic").mkdir()
+            (root / "plugin.json").write_text(
+                json.dumps({"$schema": PLUGIN_SCHEMA, "name": "fixture-plugin"})
+            )
+            (root / ".agentic/mcp-compatibility.json").write_text(
+                json.dumps({"decision": {"portable_packaging": "blocked"}})
+            )
+            (root / "mcp.json").write_text(
+                json.dumps(
+                    {
+                        "$schema": (
+                            "https://agent-plugins.org/schemas/1.0.0/"
+                            "mcp.schema.json"
+                        ),
+                        "mcpServers": {},
+                    }
+                )
+            )
+            with self.assertRaisesRegex(PluginValidationError, "must remain absent"):
+                validate_plugin(root)
+
 
 if __name__ == "__main__":
     unittest.main()

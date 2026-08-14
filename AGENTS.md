@@ -23,6 +23,9 @@ This file is the cross-runtime contract and is loaded natively by Codex.
   them without installing or enabling anything.
 - Run `./agentic doctor codex` after Codex adapter changes.
 - Run `./agentic doctor plugin` after portable package or shared-skill changes.
+- Run `./agentic doctor mcp` after MCP policy or project configuration changes.
+  Project `.mcp.json` must not be copied into portable root `mcp.json`; the
+  machine compatibility policy remains authoritative and fail-closed.
 
 The committed Codex adapter must not choose models/providers, add credentials,
 register external MCP execution, enable network access, widen sandboxes, or

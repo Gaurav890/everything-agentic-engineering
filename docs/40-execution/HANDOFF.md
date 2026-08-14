@@ -1,11 +1,11 @@
 # Handoff
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 ## Current goal
 
-Adopt the Agent Plugins 1.0 portable package contract without breaking the
-existing Codex-native adapter or widening plugin/MCP authority.
+Review and merge the evidence-backed portable MCP compatibility decision
+without enabling or packaging any server.
 
 ## Completed
 
@@ -18,6 +18,11 @@ existing Codex-native adapter or widening plugin/MCP authority.
 - `.codex-plugin/plugin.json` remains a separate Codex-native compatibility
   surface, and `.mcp.json` remains project-local.
 - `./agentic doctor plugin` validates the portable contract offline.
+- T-035 records the Perplexity, Firecrawl, Playwright, Claude Code, and Codex
+  compatibility matrix in `.agentic/mcp-compatibility.json`.
+- `./agentic doctor mcp` validates the decision and project configuration
+  without reading secret values, starting servers, or making network requests.
+- Root `mcp.json` is absent and rejected while portable packaging is blocked.
 
 ## Blockers
 
@@ -25,24 +30,24 @@ existing Codex-native adapter or widening plugin/MCP authority.
 
 ## Unresolved decisions
 
-- Portable MCP packaging requires a separate compatibility matrix for the
-  selected servers, transports, protocol revisions, credentials, and clients.
+- Portable MCP packaging may be reconsidered only after every gate in
+  `MCP_COMPATIBILITY.md` passes clean-client and security review.
 - Native compatibility files may be removed only after every supported client
   passes installation and discovery tests.
 - Publishing or installation remains a human-owned release decision.
 
 ## Verification status
 
-- Portable manifest, skill containment, native-manifest drift, project-MCP
-  separation, command discovery, and negative-fixture tests pass locally.
-- Full repository verification passes all ten stages across profiles, tokens,
-  security hooks, runtime/Codex policy, local links, and Showcase checks.
+- Compatibility and portable-plugin unit tests pass, including negative
+  fixtures for literal credentials, unknown servers, premature client claims,
+  and blocked root manifests.
+- Full repository verification passes all ten stages; T-035 is in `review`.
 
 ## Exact next action
 
-Run `./agentic doctor plugin` whenever portable package metadata or shared
-skills change. Treat any portable MCP proposal as a separate compatibility
-decision rather than copying `.mcp.json` into root `mcp.json`.
+Keep portable MCP packaging blocked until every documented gate has evidence.
+Any future proposal must be a new human-approved task; never copy `.mcp.json`
+into root `mcp.json`.
 
 ## Relevant files
 
@@ -50,6 +55,10 @@ decision rather than copying `.mcp.json` into root `mcp.json`.
 - `.codex-plugin/plugin.json`
 - `skills/`
 - `docs/60-tooling/AGENT_PLUGINS.md`
+- `.agentic/mcp-compatibility.json`
+- `docs/60-tooling/MCP_COMPATIBILITY.md`
+- `docs/50-evals/evidence/T-035/security-review.md`
+- `scripts/mcp_compatibility.py`
 - `scripts/validate_agent_plugin.py`
 - `tests/test_agent_plugin.py`
 

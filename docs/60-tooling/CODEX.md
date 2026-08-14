@@ -155,6 +155,17 @@ project configuration only when the active profile requires them. Preserve the
 routing in `docs/60-tooling/MCP_STACK.md` and run the relevant doctor before
 use.
 
+```bash
+./agentic doctor mcp
+./agentic doctor mcp --json
+```
+
+The doctor validates the shared compatibility decision without invoking Codex,
+reading secret values, or starting a server. Do not translate `.mcp.json`
+mechanically: Codex has its own stdio/Streamable HTTP and credential contracts,
+and portable plugin MCP behavior has not passed clean-client verification.
+See [MCP compatibility](MCP_COMPATIBILITY.md).
+
 ## Known boundaries
 
 - The Codex roles intentionally translate only safe read-heavy specialist
@@ -163,9 +174,10 @@ use.
 - The adapter supports parallel workspaces but does not start concurrent
   feature branches without reviewed tasks and ownership.
 - Plugin marketplace publication is not automatic.
-- Portable plugin installation, portable MCP packaging, MCP 2026-07-28 opt-in, and
-  `--approve-for-me` remain disabled by default and require separate human
-  approval; runtime compatibility alone does not authorize them.
+- Portable plugin installation, portable MCP packaging, MCP 2026-07-28 opt-in,
+  and `--approve-for-me` remain disabled by default and require separate human
+  approval. Portable MCP packaging is additionally fail-closed by the reviewed
+  compatibility policy; runtime compatibility alone does not authorize it.
 - Enterprise administrators may constrain plugins, hooks, concurrency,
   permissions, models, network access, or MCP sources beyond repository
   defaults.

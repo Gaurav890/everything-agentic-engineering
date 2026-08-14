@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 ## Product
 
@@ -122,6 +122,13 @@ containment. Project `.mcp.json` is not copied into portable `mcp.json` because
 its client-specific environment references are not a portable credential
 contract.
 
+Portable MCP compatibility is now machine-readable in
+`.agentic/mcp-compatibility.json`. Perplexity, Firecrawl, and Playwright remain
+reviewed client-specific capabilities, while root `mcp.json` is absent and
+fail-closed. `./agentic doctor mcp` validates the server provenance,
+environment-reference boundary, isolated Playwright mode, client matrix, and
+blocked portable decision without reading secret values or starting servers.
+
 Seven project-scoped Codex custom agents cover read-only product planning,
 architecture, research, design critique, security review, adversarial QA, and
 integration review. They add context specialization without adding runtime
@@ -189,8 +196,9 @@ and Codex doctor reuse without requiring either runtime in portable CI.
   parallel writers use separate task branches and worktrees.
 - Portable and Codex-native plugin marketplace publication and installation
   policy remain explicit release actions.
-- Portable MCP packaging remains incomplete until server transport, protocol,
-  credential, and client compatibility are independently verified.
+- Portable MCP packaging is intentionally blocked until portable credentials,
+  deterministic execution, target-protocol negotiation, clean-client trust and
+  rollback behavior, and independent security review all have evidence.
 - The developer machine inspected for T-025 reports Claude Code 2.1.220 and a
   Codex 0.146.0 prerelease build, both below the recommended baselines. The
   repository reports this drift but does not upgrade developer tooling.

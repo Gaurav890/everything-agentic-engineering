@@ -12,15 +12,28 @@ This starter intentionally uses primary sources for technical integration decisi
 
 ## Perplexity
 
-- Official `perplexityai/modelcontextprotocol` repository.
+- Official `perplexityai/modelcontextprotocol` repository:
+  `https://github.com/perplexityai/modelcontextprotocol`
 
 ## Firecrawl
 
-- Official `firecrawl/firecrawl-mcp-server` repository.
+- Official `firecrawl/firecrawl-mcp-server` repository:
+  `https://github.com/firecrawl/firecrawl-mcp-server`
 
 ## Playwright
 
-- Official `microsoft/playwright-mcp` repository.
+- Official `microsoft/playwright-mcp` repository:
+  `https://github.com/microsoft/playwright-mcp`
+
+## MCP compatibility and packaging
+
+- Agent Plugins 1.0 specification: `https://agent-plugins.org/specification`
+- MCP 2026-07-28 specification:
+  `https://modelcontextprotocol.io/specification/2026-07-28`
+- Claude Code MCP documentation: `https://code.claude.com/docs/en/mcp`
+- Codex MCP documentation: `https://developers.openai.com/codex/mcp`
+- Reviewed decision and provenance snapshot:
+  [`MCP_COMPATIBILITY.md`](MCP_COMPATIBILITY.md)
 
 ## Skills
 
