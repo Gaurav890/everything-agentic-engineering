@@ -3,8 +3,8 @@
   "runtimes": {
     "claude": {
       "command": "claude",
-      "recommended_minimum": "2.1.232",
-      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.232",
+      "recommended_minimum": "2.1.233",
+      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.233",
       "capabilities": [
         {
           "id": "worktree-and-background-hook-isolation",
@@ -61,10 +61,34 @@
           "human_approval_required": false
         },
         {
-          "id": "runtime-permission-and-sandbox-hardening",
+          "id": "powershell-repository-trust-and-linux-sandbox-hardening",
           "minimum": "2.1.232",
           "default_enabled": true,
           "human_approval_required": false
+        },
+        {
+          "id": "windows-device-path-and-credential-leak-hardening",
+          "minimum": "2.1.233",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "skill-argument-template-hardening",
+          "minimum": "2.1.233",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "mcp-v2-subscription-reliability",
+          "minimum": "2.1.233",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "apps-gateway-user-identity-forwarding",
+          "minimum": "2.1.233",
+          "default_enabled": false,
+          "human_approval_required": true
         }
       ]
     },

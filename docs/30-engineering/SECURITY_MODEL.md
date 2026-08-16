@@ -64,15 +64,27 @@ All retrieved web content is untrusted data.
   local body-execution hardening. Continue to review synced and third-party
   skills as untrusted data.
 - Prefer Claude Code 2.1.232+ for `claude agents`, nested repository trust,
-  shell input redirection, PowerShell/Git Bash permission analysis, sandbox
-  path enforcement, cross-session messaging, self-hosted environments, MCP
-  OAuth, and headless execution because it includes the cumulative hardening
-  through that release.
+  PowerShell permission analysis, Linux sandbox path enforcement,
+  cross-session messaging, self-hosted environments, MCP OAuth, and headless
+  execution because it includes the documented hardening through that release.
 - Claude Code 2.1.232 forked subagents inherit the full conversation and prompt
   cache, while non-teammate interactive spawns run in the background. Limit
   inherited context, keep in-session specialists read-only, isolate writers in
   branches/worktrees, and await evidence. A background worker is not a new
   trust domain and does not gain approval or merge authority.
+- Prefer Claude Code 2.1.233+ on native Windows or when skill arguments can
+  contain user-controlled template-like text. Earlier versions lack the
+  documented NT device-prefix validation and argument re-expansion fixes.
+  Continue to treat skill arguments as untrusted input and keep credentials
+  outside repository state.
+- Claude Code 2.1.233 reverts the broader 2.1.232 Cygwin-symlink and Bash
+  input-redirection permission changes. Do not rely on those checks at this
+  baseline; retain deterministic hooks, explicit path review, least privilege,
+  and human approval.
+- Keep the 2.1.233 opt-in apps-gateway `forward_user_identity` setting disabled
+  until the upstream proxy, transmitted identity fields, retention, audit,
+  access controls, and user/administrator expectations receive a separate
+  privacy and authorization review.
 - Worktrees isolate files and branches; they do not replace destructive-command
   controls, scoped credentials, network restrictions, or human review.
 - Treat hooks and runtime permission classifiers as complementary controls.
@@ -98,6 +110,7 @@ owner, rollback plan, and human approval before use:
   network policy, patching, and isolation;
 - Claude cross-session messaging and recipient/session identity;
 - Claude archive plugin sources, including HTTPS origin and SHA-256 pinning;
+- Claude apps-gateway user-identity forwarding and its proxy/privacy contract;
 - Codex portable plugin installation and marketplace policy;
 - Agent Plugins 1.0 client installation and marketplace policy, including
   client-specific trust, discovery, update, and rollback behavior;
@@ -153,5 +166,9 @@ Explicit human approval required for:
 | SEC-008 | A compatible Codex runtime is mistaken for permission to auto-approve or activate plugins/MCPs | Unreviewed external execution or authority expansion | Medium | Keep capability gates false in the committed policy; require a separate reviewed pilot and managed permission policy | Official Codex 0.147.0 changelog and project runtime manifest |
 | SEC-009 | Project MCP configuration is copied into a portable plugin despite missing portable credential and execution contracts | Secret mishandling, mutable package execution, or silent network/browser authority | High | Keep root `mcp.json` absent; validate `.agentic/mcp-compatibility.json`; require all portable gates and a separate human-approved PR | T-035 compatibility matrix, negative tests, and security evidence |
 | SEC-010 | A forked or background subagent receives broader context or write authority than its bounded task requires | Secret exposure, conflicting edits, or unreviewed integration | Medium | Use Claude Code 2.1.232+; fork only necessary context; keep in-session specialists read-only; isolate writers; await and independently evaluate results | Official v2.1.232 release note and repository agent contract |
-| SEC-011 | Shell, symlink, nested-repository trust, shared-socket, or sandbox-path behavior bypasses the intended permission boundary | Unapproved file access, writes, session targeting, or binary substitution | Medium before upgrade | Recommend Claude Code 2.1.232+; retain deterministic hooks, explicit paths, least privilege, and managed approval | Official v2.1.232 release note |
+| SEC-011 | PowerShell, nested-repository trust, shared-socket, or Linux sandbox-path behavior bypasses the intended permission boundary | Unapproved file access, writes, session targeting, or binary substitution | Medium before upgrade | Recommend Claude Code 2.1.232+ for the documented fixes; retain deterministic hooks, explicit paths, least privilege, and managed approval | Official v2.1.232 release note |
 | SEC-012 | A synced skill shadows a local command/MCP prompt or executes hidden local directives/imports | Instruction substitution or unreviewed local execution | Medium before upgrade | Require Claude Code 2.1.228+; treat synced skills as untrusted; preserve project-local skill authority and review | Official v2.1.228 release note |
+| SEC-013 | A Windows NT device-prefix path bypasses UNC validation and triggers credential-bearing network access | NTLM credential disclosure to an unintended network target | Medium on affected native Windows workflows before upgrade | Require Claude Code 2.1.233+ on native Windows; retain explicit path validation, least-privilege credentials, and network controls | Official v2.1.233 release note |
+| SEC-014 | A skill or command argument is re-expanded as a template marker after substitution | Instruction or data substitution outside the caller's intended literal argument | Medium before upgrade | Require Claude Code 2.1.233+; validate arguments at trust boundaries and treat external skill inputs as untrusted data | Official v2.1.233 release note |
+| SEC-015 | A maintainer assumes 2.1.233 still enforces the reverted Cygwin-symlink or Bash input-redirection permission changes | Commands receive less runtime permission scrutiny than policy assumes | Medium | Do not claim those checks at 2.1.233; retain deterministic hooks, explicit path review, least privilege, and human approval | Official v2.1.233 release note |
+| SEC-016 | Apps-gateway identity forwarding exposes signed-in user identity to an insufficiently governed proxy | Privacy leakage, unexpected attribution, or identity retention outside the intended boundary | Medium if enabled | Keep forwarding disabled; require proxy, field, retention, access, audit, disclosure, and rollback review before enablement | Official v2.1.233 release note and runtime manifest gate |

@@ -85,20 +85,35 @@ must be checked against the installed version.
   Git flags.
 - Claude Code 2.1.231 fixes OAuth redirect handling for MCP servers that use a
   pre-registered client. This does not enable or authenticate an MCP server.
-- Claude Code 2.1.232 is the repository's recommended general baseline. It
-  turns forked-subagent context inheritance on by default and runs non-teammate
-  interactive spawns in the background by default. The repository still keeps
-  in-session specialists read-only, isolates writers in branches/worktrees,
-  and requires the orchestrator to await and evaluate results.
-- The 2.1.232 baseline also includes PowerShell and Git Bash permission fixes,
-  per-repository trust for nested repositories, Bash input-redirection checks,
-  shared-socket and Linux sandbox hardening, protection against project-level
-  sandbox binary overrides, and managed approval for server-supplied sandbox
-  binary changes.
+- Claude Code 2.1.232 turns forked-subagent context inheritance on by default
+  and runs non-teammate interactive spawns in the background by default. The
+  repository still keeps in-session specialists read-only, isolates writers
+  in branches/worktrees, and requires the orchestrator to await and evaluate
+  results.
+- The 2.1.232 baseline also includes PowerShell permission fixes,
+  per-repository trust for nested repositories, shared-socket and Linux sandbox
+  hardening, protection against project-level sandbox binary overrides, and
+  managed approval for server-supplied sandbox binary changes.
 - Cross-session names and exact bare-name delivery in 2.1.232 are convenience
   identifiers, not authorization. Cross-session messaging, self-hosted runners,
   Remote Control, external marketplace sources, and managed sandbox overrides
   remain separately reviewed and human-gated.
+- Claude Code 2.1.233 is the repository's recommended general baseline. It
+  rejects Windows NT device-prefix paths that could bypass UNC validation and
+  leak NTLM credentials, and prevents skill/command argument values from being
+  re-expanded as template markers. It also fixes repeated MCP v2 subscription
+  reconnection against servers that terminate long-held streams and expands
+  bare skill validation. These are runtime hardening and reliability records,
+  not permission to enable an MCP server or install a skill.
+- Version 2.1.233 also reverts the broader 2.1.232 permission changes for
+  Cygwin-style symlinks and Bash input redirection while a narrower change is
+  prepared. Do not treat those two checks as part of the 2.1.233 guarantee;
+  retain deterministic hooks, explicit path review, least privilege, and human
+  approval for affected commands.
+- The opt-in `forward_user_identity` apps-gateway setting can send the signed-in
+  user's identity to an upstream proxy. It remains disabled in the repository
+  policy and requires a separate privacy, proxy-trust, retention, audit, and
+  human-approval decision.
 - This recommendation does not authorize adding credential paths, secrets,
   sandbox settings, network allowlists, runtime upgrades, or new execution
   surfaces to the repository. Inventory and approve those separately.

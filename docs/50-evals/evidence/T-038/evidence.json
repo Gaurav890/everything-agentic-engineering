@@ -1,0 +1,16 @@
+{
+  "task_id": "T-038",
+  "acceptance_ids": ["AC-001"],
+  "ui_change": false,
+  "builder": "security",
+  "evaluator": "security-reviewer",
+  "commands": [
+    "python3 -m unittest tests.test_runtime_compatibility",
+    "./scripts/runtime-doctor.sh --strict --claude-version 2.1.232 --codex-version 0.147.0",
+    "./scripts/runtime-doctor.sh --strict --claude-version 2.1.233 --codex-version 0.147.0",
+    "./scripts/runtime-doctor.sh --json --claude-version 2.1.233 --codex-version 0.147.0",
+    "./agentic verify full"
+  ],
+  "artifacts": ["security-review.md"],
+  "verdict": "PASS"
+}

@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-15
+Last updated: 2026-08-16
 
 ## Product
 
@@ -147,14 +147,18 @@ worktree.
 Claude Code and Codex compatibility is defined in
 `.agentic/runtime-baselines.json` and reported by `runtime-doctor.sh` in
 advisory, strict, or JSON form. The doctor is read-only and keeps version
-availability separate from optional capability approval. Claude Code 2.1.232
-is the recommended tested baseline. Its full-context fork and background-spawn
-defaults remain bounded by the repository contract: in-session specialists are
-read-only, writers use isolated branches/worktrees, and delegated work requires
-observed evidence. Claude self-hosted and cross-session execution, Remote
+availability separate from optional capability approval. Claude Code 2.1.233
+is the recommended tested baseline, adding Windows NT device-prefix validation,
+literal skill-argument substitution, and MCP v2 subscription reliability while
+explicitly excluding the reverted Cygwin-symlink and Bash input-redirection
+permission changes from the tested guarantee. The full-context fork and
+background-spawn defaults remain bounded by the repository contract:
+in-session specialists are read-only, writers use isolated branches/worktrees,
+and delegated work requires observed evidence. Claude self-hosted and
+cross-session execution, Remote
 Control, archive and dynamic marketplace sources, Codex portable plugin
-installation, MCP 2026-07-28 opt-in, and automatically reviewed approvals are
-not enabled by the committed policy.
+installation, MCP 2026-07-28 opt-in, apps-gateway identity forwarding, and
+automatically reviewed approvals are not enabled by the committed policy.
 
 GitHub `main` protection requires the `verify` and `policy` checks, an up-to-date
 branch, linear history, and resolved review conversations. It applies to
