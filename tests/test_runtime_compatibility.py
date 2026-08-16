@@ -54,9 +54,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.220",
+            "2.1.231",
             "--codex-version",
-            "0.146.1",
+            "0.147.0",
         )
         self.assertEqual(result.returncode, 1)
         self.assertIn("FAIL", result.stdout)
@@ -65,7 +65,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.225",
+            "2.1.232",
             "--codex-version",
             "codex-cli 0.147.0",
         )
@@ -76,7 +76,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--json",
             "--claude-version",
-            "2.1.225",
+            "2.1.232",
             "--codex-version",
             "0.147.0",
         )
@@ -85,6 +85,33 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         self.assertTrue(report["ok"])
         self.assertFalse(report["mutation_performed"])
         self.assertEqual([item["id"] for item in report["runtimes"]], ["claude", "codex"])
+
+    def test_claude_baseline_records_changed_subagent_defaults_without_expanding_authority(self) -> None:
+        manifest = load_manifest(MANIFEST)
+        claude = manifest["runtimes"]["claude"]
+        self.assertEqual(claude["recommended_minimum"], "2.1.232")
+        self.assertTrue(claude["source"].endswith("/v2.1.232"))
+
+        capabilities = {item["id"]: item for item in claude["capabilities"]}
+        self.assertEqual(
+            capabilities["subagent-fork-and-background-behavior"]["minimum"],
+            "2.1.232",
+        )
+        self.assertEqual(
+            capabilities["synced-skill-and-marketplace-boundary-hardening"]["minimum"],
+            "2.1.228",
+        )
+        self.assertEqual(
+            capabilities["runtime-permission-and-sandbox-hardening"]["minimum"],
+            "2.1.232",
+        )
+        self.assertFalse(capabilities["cross-session-messaging"]["default_enabled"])
+        self.assertTrue(
+            capabilities["cross-session-messaging"]["human_approval_required"]
+        )
+        for capability in capabilities.values():
+            if capability["human_approval_required"]:
+                self.assertFalse(capability["default_enabled"])
 
     def test_invalid_optional_capability_fails_closed(self) -> None:
         fixture = ROOT / ".cache/runtime-policy-invalid.json"

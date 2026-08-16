@@ -69,6 +69,20 @@ MCP server or network authority, and do not self-approve. Use Codex's built-in
 `explorer` for general code mapping and the normal foreground worker for a
 single implementation task.
 
+Claude Code 2.1.232 changed two orchestration defaults: a forked subagent can
+inherit the full conversation and prompt cache, and non-teammate interactive
+spawns run in the background. The repository contract still controls use:
+inherit only necessary context, keep in-session specialists read-only, assign
+write-capable workers isolated branches/worktrees, and wait for evidence before
+integration. Background execution is not independent ownership, approval, or
+completion. Every background worker needs a bounded timeout/retry budget and a
+terminal state (`DONE`, `BLOCKED`, `NEEDS_HUMAN`, or `FAILED_SAFE`); missing or
+interrupted results fail closed and are never integrated.
+
+Cross-session names and exact bare-name delivery are not identity proofs.
+Cross-session messaging remains disabled by default and requires a separate
+human-reviewed authority decision.
+
 Parallel write-heavy work requires a separate branch and worktree per owner.
 Do not spawn several writable in-session subagents into the same checkout.
 

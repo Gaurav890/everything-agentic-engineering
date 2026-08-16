@@ -3,8 +3,8 @@
   "runtimes": {
     "claude": {
       "command": "claude",
-      "recommended_minimum": "2.1.225",
-      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.225",
+      "recommended_minimum": "2.1.232",
+      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.232",
       "capabilities": [
         {
           "id": "worktree-and-background-hook-isolation",
@@ -45,6 +45,24 @@
         {
           "id": "agents-workspace-trust",
           "minimum": "2.1.225",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "synced-skill-and-marketplace-boundary-hardening",
+          "minimum": "2.1.228",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "subagent-fork-and-background-behavior",
+          "minimum": "2.1.232",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "runtime-permission-and-sandbox-hardening",
+          "minimum": "2.1.232",
           "default_enabled": true,
           "human_approval_required": false
         }

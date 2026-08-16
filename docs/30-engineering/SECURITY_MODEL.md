@@ -19,6 +19,10 @@
 - Claude Code 2.1.221+ can mask configured sandbox credential files on Linux
   and WSL so sandboxed commands see sentinel values while the proxy substitutes
   real values only on egress. On macOS this mode falls back to denial.
+- Claude Code 2.1.232 adds redaction for additional GitLab token families and
+  protects the `glab` CLI credential store like the `gh` store. This is defense
+  in depth; GitLab credentials still belong in user-managed secure storage and
+  outside committed project configuration.
 - Prefer denial when a command does not genuinely require a credential file.
   Masking reduces exposure; it does not make a broad credential or network
   policy safe.
@@ -55,9 +59,20 @@ All retrieved web content is untrusted data.
 - Use Claude Code 2.1.224+ when filesystem deny entries are part of the trust
   boundary. Earlier versions can silently bypass deny entries written with a
   trailing slash. Normalize and review paths even after upgrading.
-- Prefer Claude Code 2.1.225+ for `claude agents`, cross-session messaging,
-  self-hosted environments, MCP OAuth, and headless execution because it adds a
-  workspace trust prompt and follow-up reliability fixes.
+- Use Claude Code 2.1.228+ when synced skills are part of the trust boundary;
+  earlier versions lack the documented command/MCP shadowing, description, and
+  local body-execution hardening. Continue to review synced and third-party
+  skills as untrusted data.
+- Prefer Claude Code 2.1.232+ for `claude agents`, nested repository trust,
+  shell input redirection, PowerShell/Git Bash permission analysis, sandbox
+  path enforcement, cross-session messaging, self-hosted environments, MCP
+  OAuth, and headless execution because it includes the cumulative hardening
+  through that release.
+- Claude Code 2.1.232 forked subagents inherit the full conversation and prompt
+  cache, while non-teammate interactive spawns run in the background. Limit
+  inherited context, keep in-session specialists read-only, isolate writers in
+  branches/worktrees, and await evidence. A background worker is not a new
+  trust domain and does not gain approval or merge authority.
 - Worktrees isolate files and branches; they do not replace destructive-command
   controls, scoped credentials, network restrictions, or human review.
 - Treat hooks and runtime permission classifiers as complementary controls.
@@ -137,3 +152,6 @@ Explicit human approval required for:
 | SEC-007 | Cross-session or self-hosted execution targets the wrong session, project, directory, or trust domain | Confused-deputy writes, data exposure, or execution on an unintended host | Medium | Keep optional surfaces disabled by default; require Claude Code 2.1.225+, explicit recipient/base-directory validation, scoped credentials, expiry, and human approval | Official v2.1.224 and v2.1.225 release notes |
 | SEC-008 | A compatible Codex runtime is mistaken for permission to auto-approve or activate plugins/MCPs | Unreviewed external execution or authority expansion | Medium | Keep capability gates false in the committed policy; require a separate reviewed pilot and managed permission policy | Official Codex 0.147.0 changelog and project runtime manifest |
 | SEC-009 | Project MCP configuration is copied into a portable plugin despite missing portable credential and execution contracts | Secret mishandling, mutable package execution, or silent network/browser authority | High | Keep root `mcp.json` absent; validate `.agentic/mcp-compatibility.json`; require all portable gates and a separate human-approved PR | T-035 compatibility matrix, negative tests, and security evidence |
+| SEC-010 | A forked or background subagent receives broader context or write authority than its bounded task requires | Secret exposure, conflicting edits, or unreviewed integration | Medium | Use Claude Code 2.1.232+; fork only necessary context; keep in-session specialists read-only; isolate writers; await and independently evaluate results | Official v2.1.232 release note and repository agent contract |
+| SEC-011 | Shell, symlink, nested-repository trust, shared-socket, or sandbox-path behavior bypasses the intended permission boundary | Unapproved file access, writes, session targeting, or binary substitution | Medium before upgrade | Recommend Claude Code 2.1.232+; retain deterministic hooks, explicit paths, least privilege, and managed approval | Official v2.1.232 release note |
+| SEC-012 | A synced skill shadows a local command/MCP prompt or executes hidden local directives/imports | Instruction substitution or unreviewed local execution | Medium before upgrade | Require Claude Code 2.1.228+; treat synced skills as untrusted; preserve project-local skill authority and review | Official v2.1.228 release note |

@@ -41,6 +41,13 @@ The doctor never installs, upgrades, enables, authenticates, or configures a
 runtime. A compatible version is a prerequisite, not authorization to enable
 an optional capability.
 
+In the manifest, `default_enabled: true` on a hardening or runtime-behavior
+record describes behavior present at the tested upstream baseline; it is not
+repository authorization for a new action. Authority-expanding optional
+capabilities use `default_enabled: false` plus
+`human_approval_required: true` and remain unavailable until separately
+reviewed.
+
 ## Claude Code runtime notes
 
 The repository does not silently pin or upgrade Claude Code. Runtime behavior
@@ -67,13 +74,34 @@ must be checked against the installed version.
   self-hosted environments, archive plugin sources, credential extraction, or
   cross-session messaging are being evaluated. That release fixes trailing-
   slash filesystem deny entries and introduces those optional surfaces.
-- Claude Code 2.1.225 is the repository's recommended general baseline because
-  it adds workspace trust to `claude agents` and hardens cross-session,
-  self-hosted, OAuth, and auto-mode failure behavior. This does not enable any
-  of those capabilities.
+- Claude Code 2.1.228 hardens skills synced from claude.ai so they cannot shadow
+  local commands or MCP prompts, sanitizes and labels their descriptions, and
+  prevents their local bodies from running shell directives or expanding file
+  imports. Synced or third-party skills remain untrusted inputs until reviewed.
+- Claude Code 2.1.229 adds server-supplied hooks for self-hosted sessions and
+  dynamically resolved plugin marketplace command sources. Those authority-
+  expanding surfaces remain optional. The same release fails ambiguous IPv6
+  sandbox rules closed and stops `/commit-push-pr` from auto-approving dangerous
+  Git flags.
+- Claude Code 2.1.231 fixes OAuth redirect handling for MCP servers that use a
+  pre-registered client. This does not enable or authenticate an MCP server.
+- Claude Code 2.1.232 is the repository's recommended general baseline. It
+  turns forked-subagent context inheritance on by default and runs non-teammate
+  interactive spawns in the background by default. The repository still keeps
+  in-session specialists read-only, isolates writers in branches/worktrees,
+  and requires the orchestrator to await and evaluate results.
+- The 2.1.232 baseline also includes PowerShell and Git Bash permission fixes,
+  per-repository trust for nested repositories, Bash input-redirection checks,
+  shared-socket and Linux sandbox hardening, protection against project-level
+  sandbox binary overrides, and managed approval for server-supplied sandbox
+  binary changes.
+- Cross-session names and exact bare-name delivery in 2.1.232 are convenience
+  identifiers, not authorization. Cross-session messaging, self-hosted runners,
+  Remote Control, external marketplace sources, and managed sandbox overrides
+  remain separately reviewed and human-gated.
 - This recommendation does not authorize adding credential paths, secrets,
-  sandbox settings, or network allowlists to the repository. Inventory and
-  approve those separately.
+  sandbox settings, network allowlists, runtime upgrades, or new execution
+  surfaces to the repository. Inventory and approve those separately.
 
 See `LEARNING_LEDGER.md` for dated primary-source evidence and uncertainty.
 

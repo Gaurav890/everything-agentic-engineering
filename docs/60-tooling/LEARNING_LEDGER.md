@@ -349,3 +349,54 @@ this file.
 - **Decision/PR:** T-034 is an additive implementation trial. Publishing,
   installation, portable MCP execution, credentials, authority changes,
   approval, and merge remain human-controlled and out of scope.
+
+### L-2026-08-14-01 — Claude Code 2.1.232 changes subagent defaults and closes cumulative runtime boundary gaps
+
+- **State:** trial
+- **Event dates:** 2026-08-11 through 2026-08-13
+- **Discovered:** 2026-08-14
+- **Domains:** Claude Code, subagents, context inheritance, background work,
+  skills, shell permissions, sandboxing, repository trust, cross-session messaging, MCP
+- **Sources:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.228`,
+  `https://github.com/anthropics/claude-code/releases/tag/v2.1.229`,
+  `https://github.com/anthropics/claude-code/releases/tag/v2.1.231`, and
+  `https://github.com/anthropics/claude-code/releases/tag/v2.1.232`
+  (first-party releases, high authority)
+- **Change:** v2.1.228 hardens synced skills against local command/MCP
+  shadowing and local body execution. v2.1.229 hardens IPv6 sandbox parsing
+  and dangerous Git flags while adding optional self-hosted hooks and dynamic
+  marketplace command sources. v2.1.231 fixes pre-registered MCP OAuth redirect
+  handling. v2.1.232 makes forked subagents inherit the full conversation and
+  prompt cache by default, backgrounds non-teammate interactive spawns, and
+  fixes PowerShell, Git Bash symlink, nested-repository trust, Bash redirection,
+  shared-socket, Linux sandbox, and sandbox-binary override boundaries.
+- **Repository relevance:** The harness uses skills, shell commands,
+  worktrees, read-only specialists, background delegation, MCP clients, and
+  cross-runtime policy. The new defaults directly affect context minimization,
+  ownership, completion evidence, and compatibility guidance.
+- **Existing coverage:** partial; prior entries covered 2.1.221–2.1.225. This
+  entry is deduplicated to material changes in 2.1.228–2.1.232 and does not
+  repeat unrelated UI or provider fixes.
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 5 / risk 1 /
+  maintenance 1 / novelty 5
+- **Recommendation:** raise the read-only advisory and tested Claude Code floor
+  to 2.1.232. Preserve the project contract: fork only necessary context, keep
+  in-session specialists read-only, isolate writers, await evidence, and keep
+  self-hosted, cross-session, Remote Control, marketplace command, MCP, and
+  sandbox-setting authority separately human-gated.
+- **Affected artifacts:** `.agentic/runtime-baselines.json`, `CLAUDE.md`,
+  `AGENTS.md`, `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/60-tooling/COMPATIBILITY.md`, runtime tests, and durable state
+- **Acceptance and verification:** strict simulation rejects 2.1.231 and
+  accepts 2.1.232; advisory and JSON output remain read-only; optional
+  capability gates remain false and human-controlled; full repository
+  verification passes.
+- **Uncertainty:** The release notes do not publish CVEs, complete exploit
+  prerequisites, or a full affected-version floor. A fixed behavior therefore
+  proves only that earlier versions lack the documented fix, not that every
+  earlier installation is exploitable. Runtime availability also does not prove
+  configuration or authorization.
+- **Decision/PR:** T-036 is a bounded compatibility-policy trial. It does not
+  install or upgrade a runtime, enable a capability, change settings, expand
+  credentials/network/sandbox authority, deploy, approve, or merge. Human
+  approval remains required before finalization and landing.

@@ -71,6 +71,16 @@ Before parallel work, produce:
 
 Use read-only subagents freely for exploration, review, research, test analysis, and threat modeling.
 
+Claude Code 2.1.232 forks inherit the full conversation and prompt cache, and
+non-teammate interactive spawns run in the background by default. Treat those
+as context and scheduling behavior, not extra authority or evidence of
+completion. Fork only when the child genuinely needs that context; never use a
+fork to expose unrelated secrets or bypass bounded ownership. Await and inspect
+every delegated result before integration. Give background work a bounded
+timeout and retry budget plus a terminal state: `DONE`, `BLOCKED`,
+`NEEDS_HUMAN`, or `FAILED_SAFE`. Missing or interrupted results fail closed and
+are never integrated.
+
 In Codex, route those bounded responsibilities through the reviewed read-only
 roles under `.codex/agents/`. Do not use an in-session subagent as a substitute
 for an independently owned implementation workspace.
@@ -84,6 +94,10 @@ For parallel code changes:
   worktrees do not race on coordination state.
 - Give every write-capable worker a separate branch and worktree; keep
   in-session Codex specialist roles read-only.
+
+Cross-session names and bare-name message delivery are convenience identifiers,
+not authentication or authorization. Cross-session messaging remains disabled
+by default and human-gated in the runtime policy.
 
 Use agent teams only when workers genuinely need peer-to-peer coordination. Do not use them merely because the task is large.
 
