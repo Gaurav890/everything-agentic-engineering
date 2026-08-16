@@ -1,28 +1,32 @@
 # Handoff
 
-Last updated: 2026-08-14
+Last updated: 2026-08-15
 
 ## Current goal
 
-Review the evidence-backed Claude Code 2.1.232 advisory baseline and its
-subagent, context, permission, and sandbox boundaries before human finalization.
+Review the safe downstream project generator before human finalization.
 
 ## Completed
 
-- The machine-readable Claude Code recommended minimum and primary source now
-  point to v2.1.232.
-- Compatibility guidance covers the v2.1.228 synced-skill hardening, v2.1.229
-  sandbox and Git safety changes, v2.1.231 MCP OAuth fix, and v2.1.232 defaults
-  plus cumulative security fixes.
-- The repository contract explicitly bounds full-context forks and background
-  spawns with least context, read-only in-session specialists, isolated writers,
-  timeout/retry budgets, terminal states, fail-closed interruption, and
-  independent evidence.
-- Cross-session names remain convenience identifiers, not identity or
-  authorization. Optional cross-session, self-hosted, MCP, marketplace, Remote
-  Control, sandbox-setting, approval, and merge authority remains human-gated.
-- The independent security review passed with all non-blocking corrections
-  applied. Accessibility was not applicable because no UI changed.
+- `./agentic setup create` previews or materializes a new project outside the
+  starter checkout using presets or manual profile selection.
+- Generation uses reviewed tracked files plus explicit profile path rules; it
+  excludes Git state, secrets, dependencies, caches, build output, Signalroom,
+  source evidence, launch assets, release artifacts, and source execution state.
+- Project identity, profile manifest, provenance, README, package/plugin
+  metadata, environment placeholders, and durable execution ledgers are reset.
+- Generated `.mcp.json` is empty. Dependency, skill, plugin, MCP, runtime,
+  backend, authentication, deployment, approval, and merge work remains a
+  separate reviewed decision.
+- Failure rollback removes only the previously absent destination created by
+  that exact invocation; existing destinations and paths inside the starter are
+  rejected before writing.
+- Rollback records the created directory identity and refuses deletion if the
+  destination path is replaced during generation.
+- Generation requires a valid Git checkout and resolves every planned source
+  entry before destination creation and immediately before copy. Escaping
+  parent or leaf symlinks, absolute link targets, and symlinked output ancestors
+  fail closed.
 
 ## Blockers
 
@@ -30,36 +34,40 @@ subagent, context, permission, and sandbox boundaries before human finalization.
 
 ## Unresolved decisions
 
-- Runtime installation or upgrade remains a developer/enterprise-managed
-  decision outside this task.
-- Optional authority-expanding Claude Code capabilities require separate tasks,
-  threat models, rollback plans, and human approval.
-- Release notes do not publish CVEs or a complete affected-version floor; do
-  not infer universal exploitability for earlier versions.
+- The generator intentionally does not initialize Git or install project
+  dependencies; the project owner performs those steps after inspecting the
+  generated project.
+- Profile catalogs and on-demand local skills remain available in generated
+  projects, while inactive application surfaces and their owners/rules are
+  omitted.
 
 ## Verification status
 
-- Runtime tests reject Claude Code 2.1.231 and accept 2.1.232 in strict mode.
-- Advisory and JSON reports remain read-only and declare no mutation.
-- The T-036 evidence bundle and independent security review validate.
+- Twenty-two focused generator and command-routing tests pass.
+- Web, mobile, core, and research generation paths validate offline.
+- Dry-run, destination containment, existing-destination preservation, profile
+  selection, empty MCP state, and generated-project verification are covered.
+- Generated verification rejects automatic install/removal permission changes
+  and non-empty specialist activation.
 - Full repository verification passes all ten stages.
 
 ## Exact next action
 
-For any task that reaches human review, follow the bounded finalization contract
-in `docs/70-collaboration/GITHUB_WORKFLOW.md`. Direct human approval authorizes
-only ledger finalization for that task; squash merge remains a separate human
-action.
+For work that reaches human review, use the bounded finalization contract in
+`docs/70-collaboration/GITHUB_WORKFLOW.md`. Human approval authorizes only the
+linked task-ledger transition; squash merge remains a separate human action.
 
 ## Relevant files
 
-- `.agentic/runtime-baselines.json`
+- `.agentic/generator.json`
+- `.agentic/commands.json`
+- `scripts/project_generator.py`
+- `scripts/verify_generated_project.py`
+- `scripts/create-project.sh`
+- `tests/test_project_generator.py`
+- `docs/60-tooling/PROJECT_GENERATOR.md`
+- `docs/50-evals/evidence/T-037/security-review.md`
 - `CLAUDE.md`
 - `AGENTS.md`
-- `docs/30-engineering/SECURITY_MODEL.md`
-- `docs/60-tooling/COMPATIBILITY.md`
-- `docs/60-tooling/LEARNING_LEDGER.md`
-- `docs/50-evals/evidence/T-036/security-review.md`
-- `tests/test_runtime_compatibility.py`
 
 Keep this concise enough to read in under two minutes.

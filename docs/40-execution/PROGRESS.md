@@ -913,3 +913,48 @@ runtime; change models, providers, permissions, credentials, network, sandbox,
 or managed settings; enable self-hosted, cross-session, Remote Control, MCP,
 plugin, marketplace, production, approval, or merge authority; or treat a
 compatible version as authorization. Human review and merge remain separate.
+
+### 2026-08-15 — T-037
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Added a confirmation-gated downstream project generator that materializes a
+clean, profile-specific project in a new directory without pruning or mutating
+the starter checkout. It rewrites project identity and provenance, resets
+durable execution state, excludes inactive application surfaces and source
+history, and keeps all external capability setup pending.
+
+**Evidence**
+
+- Twenty-two focused tests cover dry-run no-mutation behavior, web/mobile/core/
+  research profile selection, destination containment, existing-destination
+  preservation, empty MCP configuration, identity rewriting, and generated-
+  project offline verification.
+- Negative tests also require a Git-index copy source and reject sensitive file
+  names, traversal in generator configuration, escaping leaf symlinks, and
+  files reached through escaping symlinked parents before destination creation.
+- A rollback identity-replacement test proves that failure cleanup preserves a
+  different directory placed at the destination path instead of deleting it.
+- Generated verification fails when automatic capability mutation is enabled
+  or an external specialist is activated in the generated project manifest.
+- The machine-readable generation plan reports selected and resolved profiles,
+  included and excluded managed paths, pending external setup, source version
+  and commit, dirty-state disclosure, and authority boundaries.
+- Full repository verification passes all ten stages, including JSON/JSONL,
+  command registry, shell/Python syntax, profiles, design tokens, security
+  hooks, local links, evidence bundles, Showcase lint/typecheck, and tests.
+- The T-037 security review covers path, copy, rollback, secret, symlink,
+  profile, integration, and error boundaries.
+
+**Authority boundary**
+
+Issue #53 owns the change. Generation writes only a previously absent
+destination outside the source checkout and rolls back only that exact new
+directory on failure. It does not copy Git history or secret state; install or
+enable dependencies, external skills, plugins, MCP servers, runtimes, or
+backends; authenticate; widen network or sandbox authority; initialize Git;
+deploy; modify production; approve; or merge.
