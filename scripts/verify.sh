@@ -8,6 +8,26 @@ export PYTHONPYCACHEPREFIX="$ROOT/.cache/python"
 
 echo "== Verification: $MODE =="
 
+if [ -f .agentic/generated-project.json ]; then
+  echo "Generated downstream project detected."
+  python3 scripts/verify_generated_project.py
+  for f in .claude/hooks/*.sh scripts/*.sh; do
+    bash -n "$f"
+  done
+  python3 -m compileall -q scripts
+  ./agentic --help >/dev/null
+  ./agentic profile resolve >/dev/null
+  if [ -f package.json ] && command -v pnpm >/dev/null 2>&1; then
+    for script in lint typecheck test; do
+      if node -e "const p=require('./package.json'); process.exit(p.scripts&&p.scripts['$script']?0:1)"; then
+        pnpm "$script"
+      fi
+    done
+  fi
+  echo "Generated project verification complete."
+  exit 0
+fi
+
 echo "[1/10] Validate JSON"
 python3 -m json.tool .mcp.json >/dev/null
 python3 -m json.tool .claude/settings.json >/dev/null
@@ -21,6 +41,7 @@ python3 -m json.tool .agentic/external-agents.json >/dev/null
 python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
 python3 -m json.tool .agentic/mcp-compatibility.json >/dev/null
 python3 -m json.tool .agentic/commands.json >/dev/null
+python3 -m json.tool .agentic/generator.json >/dev/null
 for f in .agentic/capabilities/*.json; do
   python3 -m json.tool "$f" >/dev/null
 done
@@ -108,6 +129,7 @@ python3 -m unittest discover -s tests -p 'test_post_merge_closeout.py'
 python3 -m unittest discover -s tests -p 'test_pr_finalization.py'
 python3 -m unittest discover -s tests -p 'test_agentic_cli.py'
 python3 -m unittest discover -s tests -p 'test_capability_engine.py'
+python3 -m unittest discover -s tests -p 'test_project_generator.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null

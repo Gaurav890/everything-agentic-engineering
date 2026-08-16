@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-14
+Last updated: 2026-08-15
 
 ## Product
 
@@ -63,9 +63,18 @@ capabilities, and external setup. It writes only the profile manifest after
 explicit confirmation. Unselected mobile, web, research, backend, or
 design-critical capabilities are not routed or treated as project requirements.
 
+The downstream project generator materializes a clean, profile-specific project
+in a previously absent directory outside the starter checkout. It copies only
+reviewed tracked assets, removes inactive application surfaces, rewrites project
+identity and provenance, resets execution history, and leaves external setup
+pending. It does not prune the starter, copy Git or secret state, install
+dependencies or capabilities, enable MCP servers, initialize Git, or expand
+runtime authority. Generated projects have a dedicated offline verification
+mode through the same `./agentic verify full` interface.
+
 Contributor workflows are exposed through one registry-backed `./agentic`
-interface. `.agentic/commands.json` classifies all 33 shell files as public,
-internal, compatibility, or security-hook surfaces. The 26 supported public
+interface. `.agentic/commands.json` classifies all 34 shell files as public,
+internal, compatibility, or security-hook surfaces. The 27 supported public
 workflows are grouped by setup, profile, task, pull request, workspace, doctor,
 specialist agents, tokens, release, and verification. Existing direct script paths remain
 compatible; no script or hook has been deleted or relocated.
@@ -192,8 +201,9 @@ and Codex doctor reuse without requiring either runtime in portable CI.
 - Signalroom is a static reference experience, not a connected agent runtime.
 - Optional external design skills are not bundled or installed by profile
   selection; the explicit setup command installs only active, reviewed groups.
-- The initializer intentionally does not delete inactive template inventory;
-  cleanup remains a separate explicit decision.
+- Existing-copy initialization intentionally does not delete inactive template
+  inventory. New products can instead use the downstream generator, which
+  omits inactive application surfaces without mutating the starter checkout.
 - The reviewed screen recording still requires a maintainer to capture it.
 - Social platforms may cache older repository preview metadata after updates.
 - Write-capable Codex specialist roles are intentionally not committed;

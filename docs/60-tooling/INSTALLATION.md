@@ -23,6 +23,22 @@ git clone <your-repo>
 cd <your-repo>
 ```
 
+To create a clean downstream project instead of adapting the starter in place,
+preview a profile-specific generation plan:
+
+```bash
+./agentic setup create \
+  --name "My Product" \
+  --destination ../my-product \
+  --preset web-supabase \
+  --dry-run
+```
+
+Repeat with `--yes` only after review. The destination must not exist. The
+generator copies no Git history or secrets, enables no MCP server, and installs
+nothing. Continue the remaining installation steps inside the generated
+directory. See [Downstream project generator](PROJECT_GENERATOR.md).
+
 ## 2. Secrets
 
 ```bash

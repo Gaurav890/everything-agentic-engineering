@@ -17,6 +17,22 @@ Selection changes only the manifest. It never installs packages, enables MCPs,
 or removes files. The doctor reports missing/external resources and
 present-but-inactive resources for review.
 
+When starting a separate product, use the downstream generator instead of
+pruning this checkout:
+
+```bash
+./agentic setup create \
+  --name "My Product" \
+  --destination ../my-product \
+  --preset web-supabase \
+  --dry-run
+```
+
+`setup create` applies the same resolver to a new destination, includes only
+profile-relevant application surfaces, resets starter history, leaves external
+capabilities unconfigured, and validates the result. Read
+[Downstream project generator](PROJECT_GENERATOR.md).
+
 Profiles state the project shape; the read-only capability engine combines
 that durable selection with task evidence to explain what is built in,
 recommended, optional, missing, or blocked:
@@ -39,6 +55,10 @@ agents do not route work to them and they are not project requirements. Their
 template files remain in the starter so profile changes stay reversible.
 Removing cataloged files is a separate, explicit cleanup decision—never an
 initializer side effect.
+
+For a new project, generation is the supported cleanup boundary: it creates a
+separate directory from an allowlisted copy plan. It never removes inactive
+files from an existing project or starter checkout.
 
 Start from a preset when the shape is familiar:
 
@@ -192,4 +212,5 @@ web/mobile/backend/design/research profiles instead.
 - Profile selection changes only `.agentic/project.json`.
 - External skills and MCPs remain separately permissioned.
 - Cleanup is advisory in this version; no automatic deletion exists.
+- New-project generation is copy-only and refuses existing destinations.
 - User-owned files are never classified as safe to remove by inference alone.

@@ -8,6 +8,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A confirmation-gated downstream project generator with profile-specific
+  surface selection, tracked-file allowlisting, identity and provenance
+  rewriting, starter-history reset, empty external integration configuration,
+  rollback of its own new destination, and offline generated-project
+  verification.
 - A machine-readable Perplexity, Firecrawl, Playwright, Claude Code, Codex, and
   Agent Plugins MCP compatibility matrix plus a read-only doctor, provenance
   snapshots, clean-client test plan, negative fixtures, and fail-closed

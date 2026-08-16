@@ -1,0 +1,16 @@
+{
+  "task_id": "T-037",
+  "acceptance_ids": ["AC-001"],
+  "ui_change": false,
+  "builder": "orchestrator",
+  "evaluator": "security-reviewer",
+  "commands": [
+    "python3 -m py_compile scripts/project_generator.py scripts/verify_generated_project.py tests/test_project_generator.py",
+    "python3 -m unittest tests.test_project_generator tests.test_agentic_cli",
+    "bash -n scripts/create-project.sh scripts/verify.sh",
+    "./agentic setup create --name Review-Web --destination /private/tmp/eae-t037-review-web --preset web --dry-run",
+    "./agentic verify full"
+  ],
+  "artifacts": ["security-review.md"],
+  "verdict": "PASS"
+}

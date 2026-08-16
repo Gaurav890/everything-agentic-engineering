@@ -161,6 +161,14 @@ Never install, remove, or delete resources merely because a profile changed.
 Use `profile-doctor.sh` to detect drift and require explicit approval for
 external installation or destructive cleanup.
 
+For a new downstream product, prefer `./agentic setup create` over pruning the
+starter in place. The generator must write only to a previously absent
+destination outside the source checkout, copy reviewed tracked assets, reset
+starter-specific execution history, and validate the result. It must never
+overlay an existing directory, copy Git state or secrets, install external
+capabilities, enable MCP servers, initialize Git, or mutate the source. See
+`docs/60-tooling/PROJECT_GENERATOR.md`.
+
 Before recommending an optional runtime, external collection, tool, or
 integration, use `./agentic capabilities plan --task T-###`. Treat
 `built_in`, `recommended`, `optional`, `missing`, and `blocked` as advisory
@@ -323,6 +331,7 @@ Use the registry-backed `./agentic` interface. Start with:
 - `./agentic commands` or `./agentic commands --json`
 - `./agentic verify quick`
 - `./agentic verify full`
+- `./agentic setup create --name <name> --destination <path> [profile options] [--dry-run|--yes]`
 - `./agentic doctor mcp`
 - `./agentic doctor runtime [--strict]`
 - `./agentic doctor codex [--strict-runtime]`

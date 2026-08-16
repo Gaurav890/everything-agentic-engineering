@@ -33,10 +33,12 @@ Turn an idea into:
 ```bash
 git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
-cp .env.example .env
-./agentic setup bootstrap
-./agentic setup init
-./agentic doctor runtime
+./agentic setup create \
+  --name "My Product" \
+  --destination ../my-product \
+  --preset web-supabase \
+  --dry-run
+# Review the plan, then repeat with --yes.
 ```
 
 One entry point replaces the need to memorize dozens of script names:
@@ -54,10 +56,11 @@ security hooks explicitly separated.
 In one guided path, the starter:
 
 1. explains which capabilities your project actually needs;
-2. keeps irrelevant web, mobile, backend, research, or design surfaces inactive;
-3. records the selection in a machine-readable project manifest;
-4. validates the environment without silently installing or deleting tools;
-5. turns a durable task into a reviewed branch or worktree plan.
+2. creates a separate project without altering the starter checkout;
+3. excludes irrelevant application surfaces and starter history;
+4. records profiles, identity, provenance, and pending external setup;
+5. verifies the generated project without silently installing tools;
+6. turns a durable task into a reviewed branch or worktree plan.
 
 The runtime doctor is advisory by default: it reports whether Claude Code and
 Codex meet the repository's reviewed baselines but never installs, upgrades, or
@@ -404,6 +407,23 @@ profiles, clearly lists what stays inactive, and changes only
 If you choose web without mobile, mobile agents and guidance stay inactive.
 Nothing is installed or deleted automatically, so profile selection remains
 safe and reversible.
+
+For a brand-new product, generate a clean sibling project instead of manually
+deleting starter files:
+
+```bash
+./agentic setup create \
+  --name "My Product" \
+  --destination ../my-product \
+  --preset web-supabase \
+  --dry-run
+```
+
+The plan shows every profile-managed path included or excluded. Re-run with
+`--yes` only after review. Generation refuses existing destinations, copies no
+Git history or secrets, resets starter execution history, keeps MCP servers
+disabled, installs nothing, and validates the result. Read the
+[downstream project generator guide](docs/60-tooling/PROJECT_GENERATOR.md).
 
 ![Actual non-destructive project profile preview](docs/assets/demo/01-project-profiles.gif)
 
@@ -1141,21 +1161,47 @@ git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
 ```
 
-### 2. Choose the project capabilities
+### 2. Create a clean downstream project
+
+```bash
+./agentic setup create \
+  --name "My Product" \
+  --destination ../my-product \
+  --preset web-supabase \
+  --dry-run
+```
+
+Review the included and excluded paths, then repeat with `--yes` and enter the
+new project:
+
+```bash
+./agentic setup create \
+  --name "My Product" \
+  --destination ../my-product \
+  --preset web-supabase \
+  --yes
+cd ../my-product
+```
+
+The generator never modifies the starter or overlays an existing directory.
+
+### 3. Confirm the project capabilities
+
+```bash
+./agentic profile resolve
+./agentic profile doctor
+```
+
+To adapt an existing copy without generating a new directory, use the
+manifest-only initializer instead:
 
 ```bash
 ./agentic setup init
 ```
 
-This does not install or remove anything. Review the proposed manifest, then
-run:
+Neither workflow installs or enables external capabilities.
 
-```bash
-./agentic profile doctor
-./agentic capabilities plan
-```
-
-### 3. Configure environment
+### 4. Configure environment
 
 ```bash
 cp .env.example .env
@@ -1164,19 +1210,19 @@ cp .env.example .env
 Add API keys only for MCP services you explicitly plan and are authorized to
 use. Profile selection and plugin installation do not enable those services.
 
-### 4. Bootstrap
+### 5. Bootstrap
 
 ```bash
 ./agentic setup bootstrap
 ```
 
-### 5. Check your MCP setup
+### 6. Check your MCP setup
 
 ```bash
 ./agentic doctor mcp
 ```
 
-### 6. Verify the harness
+### 7. Verify the harness
 
 ```bash
 ./agentic verify full
@@ -1186,7 +1232,7 @@ This runs profile and initializer tests, token generation, security-hook tests,
 Codex adapter drift tests, documentation-link checks, policy checks, and
 project-defined checks.
 
-### 7. Open your coding agent
+### 8. Open your coding agent
 
 Claude Code:
 
@@ -1217,7 +1263,7 @@ planning, architecture, research, design critique, security review, QA, and
 integration review. Use these subagents for parallel analysis; use separate
 task worktrees—not writable in-session subagents—for parallel implementation.
 
-### 8. Start with an idea
+### 9. Start with an idea
 
 Try:
 
@@ -1331,6 +1377,7 @@ A few rules drive the entire project:
 Potential future directions:
 
 - [x] Interactive project initializer CLI with safe presets and previews
+- [x] Non-destructive downstream project generator with profile-specific surfaces
 - [x] Selectable web, mobile, backend, design, and research profiles
 - [x] Reviewed branch/worktree creation from `TASKS.jsonl`
 - [x] Deterministic GitHub Issue ↔ Task ↔ PR validation and read-only drift reporting
