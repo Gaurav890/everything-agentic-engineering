@@ -138,8 +138,12 @@ worktree.
 Claude Code and Codex compatibility is defined in
 `.agentic/runtime-baselines.json` and reported by `runtime-doctor.sh` in
 advisory, strict, or JSON form. The doctor is read-only and keeps version
-availability separate from optional capability approval. Claude self-hosted
-and cross-session execution, archive plugin sources, Codex portable plugin
+availability separate from optional capability approval. Claude Code 2.1.232
+is the recommended tested baseline. Its full-context fork and background-spawn
+defaults remain bounded by the repository contract: in-session specialists are
+read-only, writers use isolated branches/worktrees, and delegated work requires
+observed evidence. Claude self-hosted and cross-session execution, Remote
+Control, archive and dynamic marketplace sources, Codex portable plugin
 installation, MCP 2026-07-28 opt-in, and automatically reviewed approvals are
 not enabled by the committed policy.
 

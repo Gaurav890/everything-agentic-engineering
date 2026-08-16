@@ -4,25 +4,25 @@ Last updated: 2026-08-14
 
 ## Current goal
 
-Review and merge the evidence-backed portable MCP compatibility decision
-without enabling or packaging any server.
+Review the evidence-backed Claude Code 2.1.232 advisory baseline and its
+subagent, context, permission, and sandbox boundaries before human finalization.
 
 ## Completed
 
-- T-031 added the read-only capability decision engine.
-- T-032 added the disabled, plan-only Prime Agent adapter.
-- T-033 added the project-local, plan-only selective Agency Agents installer.
-- Root `plugin.json` now carries only Agent Plugins 1.0 portable metadata.
-- Root `skills/` remains the contained fixed discovery path for the canonical
-  project-local skill catalog.
-- `.codex-plugin/plugin.json` remains a separate Codex-native compatibility
-  surface, and `.mcp.json` remains project-local.
-- `./agentic doctor plugin` validates the portable contract offline.
-- T-035 records the Perplexity, Firecrawl, Playwright, Claude Code, and Codex
-  compatibility matrix in `.agentic/mcp-compatibility.json`.
-- `./agentic doctor mcp` validates the decision and project configuration
-  without reading secret values, starting servers, or making network requests.
-- Root `mcp.json` is absent and rejected while portable packaging is blocked.
+- The machine-readable Claude Code recommended minimum and primary source now
+  point to v2.1.232.
+- Compatibility guidance covers the v2.1.228 synced-skill hardening, v2.1.229
+  sandbox and Git safety changes, v2.1.231 MCP OAuth fix, and v2.1.232 defaults
+  plus cumulative security fixes.
+- The repository contract explicitly bounds full-context forks and background
+  spawns with least context, read-only in-session specialists, isolated writers,
+  timeout/retry budgets, terminal states, fail-closed interruption, and
+  independent evidence.
+- Cross-session names remain convenience identifiers, not identity or
+  authorization. Optional cross-session, self-hosted, MCP, marketplace, Remote
+  Control, sandbox-setting, approval, and merge authority remains human-gated.
+- The independent security review passed with all non-blocking corrections
+  applied. Accessibility was not applicable because no UI changed.
 
 ## Blockers
 
@@ -30,36 +30,36 @@ without enabling or packaging any server.
 
 ## Unresolved decisions
 
-- Portable MCP packaging may be reconsidered only after every gate in
-  `MCP_COMPATIBILITY.md` passes clean-client and security review.
-- Native compatibility files may be removed only after every supported client
-  passes installation and discovery tests.
-- Publishing or installation remains a human-owned release decision.
+- Runtime installation or upgrade remains a developer/enterprise-managed
+  decision outside this task.
+- Optional authority-expanding Claude Code capabilities require separate tasks,
+  threat models, rollback plans, and human approval.
+- Release notes do not publish CVEs or a complete affected-version floor; do
+  not infer universal exploitability for earlier versions.
 
 ## Verification status
 
-- Compatibility and portable-plugin unit tests pass, including negative
-  fixtures for literal credentials, unknown servers, premature client claims,
-  and blocked root manifests.
-- Full repository verification passes all ten stages; T-035 is in `review`.
+- Runtime tests reject Claude Code 2.1.231 and accept 2.1.232 in strict mode.
+- Advisory and JSON reports remain read-only and declare no mutation.
+- The T-036 evidence bundle and independent security review validate.
+- Full repository verification passes all ten stages.
 
 ## Exact next action
 
-Keep portable MCP packaging blocked until every documented gate has evidence.
-Any future proposal must be a new human-approved task; never copy `.mcp.json`
-into root `mcp.json`.
+For any task that reaches human review, follow the bounded finalization contract
+in `docs/70-collaboration/GITHUB_WORKFLOW.md`. Direct human approval authorizes
+only ledger finalization for that task; squash merge remains a separate human
+action.
 
 ## Relevant files
 
-- `plugin.json`
-- `.codex-plugin/plugin.json`
-- `skills/`
-- `docs/60-tooling/AGENT_PLUGINS.md`
-- `.agentic/mcp-compatibility.json`
-- `docs/60-tooling/MCP_COMPATIBILITY.md`
-- `docs/50-evals/evidence/T-035/security-review.md`
-- `scripts/mcp_compatibility.py`
-- `scripts/validate_agent_plugin.py`
-- `tests/test_agent_plugin.py`
+- `.agentic/runtime-baselines.json`
+- `CLAUDE.md`
+- `AGENTS.md`
+- `docs/30-engineering/SECURITY_MODEL.md`
+- `docs/60-tooling/COMPATIBILITY.md`
+- `docs/60-tooling/LEARNING_LEDGER.md`
+- `docs/50-evals/evidence/T-036/security-review.md`
+- `tests/test_runtime_compatibility.py`
 
 Keep this concise enough to read in under two minutes.

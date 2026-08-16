@@ -877,3 +877,39 @@ started or contacted, no credential value was read, and no protocol, network,
 sandbox, browser, deployment, production, approval, or merge authority was
 enabled. A new human-approved task is required before portable packaging can be
 reconsidered.
+
+### 2026-08-14 — T-036
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Raised the machine-readable, read-only Claude Code advisory baseline from
+2.1.225 to 2.1.232. Added explicit repository contracts for full-context
+subagent forks, background execution, terminal states, synced-skill boundaries,
+nested repository trust, shell input redirection, shared-socket and sandbox
+hardening, and cross-session identity/authorization limits.
+
+**Evidence**
+
+- First-party release notes for v2.1.228, v2.1.229, v2.1.231, and v2.1.232 are
+  recorded with dates, relevance, confidence, deduplication, and uncertainty.
+- Runtime tests reject Claude Code 2.1.231 and accept 2.1.232 in strict mode.
+- JSON reporting declares `mutation_performed: false`; all optional capabilities
+  remain disabled and human-gated.
+- An independent security evaluator passed the identity, authorization,
+  multi-agent, context, failure, and mutation boundaries after four
+  non-blocking corrections were applied.
+- Full repository verification passes all ten stages across 35 tracked tasks,
+  security hooks, runtime/Codex policy, design tokens, local links, evidence
+  bundles, Showcase lint, typecheck, and tests.
+
+**Authority boundary**
+
+Issue #51 owns the baseline decision. This task does not install or upgrade a
+runtime; change models, providers, permissions, credentials, network, sandbox,
+or managed settings; enable self-hosted, cross-session, Remote Control, MCP,
+plugin, marketplace, production, approval, or merge authority; or treat a
+compatible version as authorization. Human review and merge remain separate.

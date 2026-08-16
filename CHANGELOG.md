@@ -67,6 +67,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Security
 
+- Claude Code 2.1.232 is now the tested advisory baseline, with explicit
+  contracts for full-context subagent forks, background spawn completion,
+  synced-skill boundaries, nested repository trust, shell/redirection and
+  sandbox hardening, and no automatic runtime or authority change.
 - Portable MCP packaging remains blocked until credential references,
   deterministic package resolution, protocol negotiation, client trust and
   rollback, and independent security evidence all pass; no MCP was installed,
