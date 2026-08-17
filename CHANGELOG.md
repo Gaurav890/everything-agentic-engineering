@@ -72,6 +72,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Security
 
+- Claude Code 2.1.233 is now the tested advisory baseline, adding Windows NT
+  device-prefix validation against an NTLM credential-leak vector and literal
+  skill-argument substitution, plus version-qualified MCP v2 reliability
+  guidance. The policy explicitly excludes the release's reverted
+  Cygwin-symlink and Bash input-redirection permission changes and keeps
+  apps-gateway identity forwarding disabled pending separate review.
 - Claude Code 2.1.232 is now the tested advisory baseline, with explicit
   contracts for full-context subagent forks, background spawn completion,
   synced-skill boundaries, nested repository trust, shell/redirection and

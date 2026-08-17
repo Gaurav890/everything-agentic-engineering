@@ -958,3 +958,35 @@ directory on failure. It does not copy Git history or secret state; install or
 enable dependencies, external skills, plugins, MCP servers, runtimes, or
 backends; authenticate; widen network or sandbox authority; initialize Git;
 deploy; modify production; approve; or merge.
+
+### 2026-08-16 — T-038
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED
+
+**Change**
+
+Raised the read-only Claude Code advisory baseline from 2.1.232 to 2.1.233.
+Recorded the Windows NT device-prefix credential boundary, literal
+skill-argument substitution, MCP v2 subscription reliability, the reverted
+Cygwin-symlink and Bash input-redirection permission changes, and the disabled
+apps-gateway identity-forwarding surface.
+
+**Evidence**
+
+- The source ledger records the exact first-party release, date, authority,
+  relevance, deduplication, confidence, and uncertainty.
+- Eight targeted tests reject 2.1.232, accept 2.1.233, preserve read-only JSON
+  output, and require identity forwarding to remain disabled and human-gated.
+- An independent read-only security review found and resolved the reverted
+  permission overclaim and missing identity/privacy gate, then returned PASS.
+- Full repository verification passes all ten stages.
+
+**Authority boundary**
+
+Issue #55 owns human review. This task does not install or upgrade a runtime;
+enable identity forwarding, MCP, plugins, self-hosted or cross-session work;
+change models, providers, credentials, network, sandbox, or managed settings;
+deploy; modify production; approve; or merge. Compatibility remains a
+prerequisite, not authorization.

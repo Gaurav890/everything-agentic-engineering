@@ -400,3 +400,50 @@ this file.
   install or upgrade a runtime, enable a capability, change settings, expand
   credentials/network/sandbox authority, deploy, approve, or merge. Human
   approval remains required before finalization and landing.
+
+### L-2026-08-16-01 — Claude Code 2.1.233 closes Windows path and skill-argument boundaries
+
+- **State:** trial
+- **Event date:** 2026-08-14
+- **Discovered:** 2026-08-16
+- **Domains:** Claude Code, Windows, credentials, skills, MCP, runtime compatibility
+- **Source:** `https://github.com/anthropics/claude-code/releases/tag/v2.1.233`
+  (first-party release, high authority)
+- **Change:** v2.1.233 rejects Windows NT device-prefix paths that could bypass
+  UNC validation and leak NTLM credentials, and prevents skill/command argument
+  values from being re-expanded as template markers. It also fixes repeated MCP
+  v2 subscription reconnection against servers that terminate long-held streams
+  and validates bare skill directories more completely. The same release adds
+  opt-in apps-gateway user-identity forwarding and reverts the broader 2.1.232
+  permission changes for Cygwin-style symlinks and Bash input redirection.
+- **Repository relevance:** The starter supports native runtime adapters,
+  external and project-local skills, Windows on a best-effort basis, and
+  project-scoped MCP clients. The path and argument fixes strengthen existing
+  trust boundaries; the MCP fix improves reliability without changing the
+  repository's blocked portable-MCP decision.
+- **Existing coverage / duplicate status:** new relative to the 2.1.232 entry.
+  Unrelated UI, gateway, provider, and self-hosted performance changes are
+  intentionally omitted.
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 4 / risk 1 /
+  maintenance 1 / novelty 4
+- **Recommendation:** raise the read-only advisory and tested Claude Code floor
+  to 2.1.233. Record the Windows path, literal argument, and MCP v2 reliability
+  behaviors without installing a runtime, enabling an MCP server, or expanding
+  credential, network, sandbox, plugin, approval, or production authority.
+  Record the two reverted permission changes as exclusions and keep identity
+  forwarding disabled pending a separate privacy and proxy-trust review.
+- **Affected artifacts:** `.agentic/runtime-baselines.json`,
+  `docs/30-engineering/SECURITY_MODEL.md`,
+  `docs/60-tooling/COMPATIBILITY.md`, runtime tests, and durable state
+- **Acceptance and verification:** strict simulation rejects 2.1.232 and
+  accepts 2.1.233; advisory and JSON output remain read-only; optional
+  capability gates remain false and human-controlled; tests preserve the
+  input-redirection regression warning; full repository verification passes.
+- **Uncertainty:** The release notes do not publish a CVE, exploit prerequisites,
+  or a complete affected-version range for the NTLM vector. The MCP note proves
+  a documented client reliability fix, not compatibility with every server or
+  authorization to connect one.
+- **Decision/PR:** T-038 is a bounded compatibility-policy trial. Issue #55
+  owns human review. Installation, configuration, capability activation,
+  credentials, network/sandbox authority, approval, deployment, production,
+  and merge remain out of scope.

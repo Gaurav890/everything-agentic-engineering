@@ -54,7 +54,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.231",
+            "2.1.232",
             "--codex-version",
             "0.147.0",
         )
@@ -65,7 +65,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.232",
+            "2.1.233",
             "--codex-version",
             "codex-cli 0.147.0",
         )
@@ -76,7 +76,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--json",
             "--claude-version",
-            "2.1.232",
+            "2.1.233",
             "--codex-version",
             "0.147.0",
         )
@@ -89,8 +89,8 @@ class RuntimeCompatibilityTests(unittest.TestCase):
     def test_claude_baseline_records_changed_subagent_defaults_without_expanding_authority(self) -> None:
         manifest = load_manifest(MANIFEST)
         claude = manifest["runtimes"]["claude"]
-        self.assertEqual(claude["recommended_minimum"], "2.1.232")
-        self.assertTrue(claude["source"].endswith("/v2.1.232"))
+        self.assertEqual(claude["recommended_minimum"], "2.1.233")
+        self.assertTrue(claude["source"].endswith("/v2.1.233"))
 
         capabilities = {item["id"]: item for item in claude["capabilities"]}
         self.assertEqual(
@@ -102,9 +102,32 @@ class RuntimeCompatibilityTests(unittest.TestCase):
             "2.1.228",
         )
         self.assertEqual(
-            capabilities["runtime-permission-and-sandbox-hardening"]["minimum"],
+            capabilities[
+                "powershell-repository-trust-and-linux-sandbox-hardening"
+            ]["minimum"],
             "2.1.232",
         )
+        self.assertEqual(
+            capabilities["windows-device-path-and-credential-leak-hardening"][
+                "minimum"
+            ],
+            "2.1.233",
+        )
+        self.assertEqual(
+            capabilities["skill-argument-template-hardening"]["minimum"],
+            "2.1.233",
+        )
+        self.assertEqual(
+            capabilities["mcp-v2-subscription-reliability"]["minimum"],
+            "2.1.233",
+        )
+        identity_forwarding = capabilities["apps-gateway-user-identity-forwarding"]
+        self.assertEqual(identity_forwarding["minimum"], "2.1.233")
+        self.assertFalse(identity_forwarding["default_enabled"])
+        self.assertTrue(identity_forwarding["human_approval_required"])
+        compatibility = (ROOT / "docs/60-tooling/COMPATIBILITY.md").read_text()
+        self.assertIn("reverts", compatibility)
+        self.assertIn("Bash input redirection", compatibility)
         self.assertFalse(capabilities["cross-session-messaging"]["default_enabled"])
         self.assertTrue(
             capabilities["cross-session-messaging"]["human_approval_required"]
