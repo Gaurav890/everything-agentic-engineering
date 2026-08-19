@@ -26,7 +26,7 @@ Turn an idea into:
 
 ---
 
-## From clone to an agent-ready task
+## Build a design-first web project
 
 ![Everything Agentic Engineering quick-start flow](docs/assets/quickstart-flow.svg)
 
@@ -34,14 +34,44 @@ Turn an idea into:
 git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
 ./agentic setup create \
-  --name "My Product" \
-  --destination ../my-product \
-  --preset web-supabase \
+  --name "My Portfolio" \
+  --destination ../my-portfolio \
+  --preset web \
   --dry-run
-# Review the plan, then repeat with --yes.
+# Review the exact copy plan, then repeat with --yes.
+
+cd ../my-portfolio
+pnpm install
+./agentic design intake
+pnpm dev
 ```
 
-One entry point replaces the need to memorize dozens of script names:
+The browser opens a real portfolio with the same realistic content rendered as
+three materially different systems:
+
+- `editorial-signal` — authored, typographic, and case-study led;
+- `kinetic-index` — high-contrast, motion-led, and unconventional;
+- `quiet-material` — warm, tactile, and deliberately calm.
+
+Compare them live on desktop and mobile. A human design owner then approves one
+direction—or requests a synthesis—before it becomes canonical:
+
+```bash
+./agentic design approve editorial-signal --yes
+./agentic tokens build
+pnpm test
+```
+
+This is the shortest supported web path. It does not begin with a blank page,
+generic hero, or card grid. It begins with a product-specific choice that is
+compiled into tokens and checked in the running experience.
+
+Core interaction motion and a reduced-motion path are already present. Motion,
+GSAP, Rive/canvas, and React Three Fiber are escalation tiers—not a dependency
+pile. Add one only when the approved direction, user value, device budget, and
+fallback justify it. “No 3D” is often the better design decision.
+
+One entry point exposes the deeper engineering system when you need it:
 
 ```bash
 ./agentic --help
@@ -55,12 +85,14 @@ security hooks explicitly separated.
 
 In one guided path, the starter:
 
-1. explains which capabilities your project actually needs;
-2. creates a separate project without altering the starter checkout;
-3. excludes irrelevant application surfaces and starter history;
-4. records profiles, identity, provenance, and pending external setup;
-5. verifies the generated project without silently installing tools;
-6. turns a durable task into a reviewed branch or worktree plan.
+1. creates a separate project without altering the starter checkout;
+2. excludes irrelevant application surfaces and starter history;
+3. asks only the design questions that constrain this product;
+4. makes three directions visible before implementation locks in an aesthetic;
+5. records profiles, identity, provenance, approval, and pending external setup;
+6. turns approved design decisions into DTCG-compatible outputs;
+7. verifies the generated project without silently enabling external tools;
+8. turns durable work into a reviewed branch or worktree plan.
 
 The runtime doctor is advisory by default: it reports whether Claude Code and
 Codex meet the repository's reviewed baselines but never installs, upgrades, or
@@ -89,7 +121,8 @@ The planner is read-only. Workspace creation requires explicit confirmation,
 and implementation, merging, deployment, and release remain separate human
 decisions.
 
-Read the [installation guide](docs/60-tooling/INSTALLATION.md), follow the
+Read the [portfolio golden path](docs/60-tooling/PORTFOLIO_GOLDEN_PATH.md), the
+[installation guide](docs/60-tooling/INSTALLATION.md), follow the
 [60-second demo](docs/80-showcase/DEMO_SCRIPT.md), or review the
 [v0.1.0 limitations](docs/60-tooling/COMPATIBILITY.md#known-limitations-in-v010).
 

@@ -5,9 +5,10 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev:showcase": "pnpm --filter @eae/showcase dev",
-    "build": "pnpm --filter @eae/showcase build",
-    "lint": "pnpm --filter @eae/showcase lint",
-    "typecheck": "pnpm --filter @eae/showcase typecheck",
-    "test": "pnpm --filter @eae/showcase test"
+    "dev:web": "pnpm --filter @everything-agentic/web dev",
+    "build": "pnpm --filter @eae/showcase build && pnpm --filter @everything-agentic/web build",
+    "lint": "pnpm --filter @eae/showcase lint && pnpm --filter @everything-agentic/web lint",
+    "typecheck": "pnpm --filter @eae/showcase typecheck && pnpm --filter @everything-agentic/web typecheck",
+    "test": "pnpm --filter @eae/showcase test && pnpm --filter @everything-agentic/web test"
   }
 }

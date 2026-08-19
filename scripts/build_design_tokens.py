@@ -10,6 +10,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+import design_engine
+
 ROOT = Path(__file__).resolve().parents[1]
 TOKEN_ROOT = ROOT / "packages/design-tokens/tokens"
 GENERATED_ROOT = ROOT / "packages/design-tokens/generated"
@@ -277,7 +279,7 @@ def generate_preview(tokens: dict[str, dict[str, Any]]) -> str:
 """
 
 
-def generate(tokens: dict[str, dict[str, Any]]) -> tuple[str, str, str, str]:
+def generate(tokens: dict[str, dict[str, Any]]) -> tuple[str, str, str, str, str]:
     base: list[str] = []
     light: list[str] = []
     dark: list[str] = []
@@ -327,7 +329,7 @@ def generate(tokens: dict[str, dict[str, Any]]) -> tuple[str, str, str, str]:
         + json.dumps(dark_theme, indent=2, sort_keys=True)
         + " as const;\n\nexport type NativeTheme = typeof lightTheme;\n"
     )
-    return css, ts, native, generate_preview(tokens)
+    return css, ts, native, generate_preview(tokens), design_engine.render_direction_css()
 
 
 def main() -> int:
@@ -336,12 +338,13 @@ def main() -> int:
     args = parser.parse_args()
     tokens = load_tokens()
     validate(tokens)
-    css, ts, native, preview = generate(tokens)
+    css, ts, native, preview, direction = generate(tokens)
     expected = {
         GENERATED_ROOT / "tokens.css": css,
         GENERATED_ROOT / "tokens.ts": ts,
         GENERATED_ROOT / "tokens.native.ts": native,
         GENERATED_ROOT / "tokens.preview.html": preview,
+        GENERATED_ROOT / "direction.css": direction,
     }
     if args.check:
         stale = [str(path.relative_to(ROOT)) for path, text in expected.items() if not path.exists() or path.read_text() != text]

@@ -25,7 +25,7 @@ class DesignTokenTests(unittest.TestCase):
         self.assertEqual(value["colorSpace"], "srgb")
 
     def test_css_and_typescript_are_generated(self) -> None:
-        css, typescript, native, preview = build_design_tokens.generate(self.tokens)
+        css, typescript, native, preview, direction = build_design_tokens.generate(self.tokens)
         self.assertIn(":root {", css)
         self.assertIn('[data-theme="dark"]', css)
         self.assertIn("--eae-color-text-primary", css)
@@ -39,6 +39,7 @@ class DesignTokenTests(unittest.TestCase):
         self.assertIn("export const darkTheme", native)
         self.assertIn("Design token specimen", preview)
         self.assertIn("Required contrast pairs", preview)
+        self.assertIn("No direction approved", direction)
 
     def test_component_tokens_resolve_per_mode(self) -> None:
         light = build_design_tokens.resolve(

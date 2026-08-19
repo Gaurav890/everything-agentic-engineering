@@ -56,10 +56,10 @@ profile-specific path rules:
 
 | Selection | Included surface |
 |---|---|
-| `web-next` | `apps/web`, web owner/rules, shared app packages |
+| `web-next` | runnable portfolio direction lab, UI behavior primitives, web owner/rules, shared app packages |
 | `mobile-expo` | `apps/mobile`, mobile owner/rules, shared app packages |
 | backend profile | API/database/shared packages and backend owner/rules |
-| `design-critical` | DTCG design-token package |
+| `design-critical` | intake/approval state, three DTCG-compatible directions, design command, and token package |
 | `research-enabled` | Research owner/rules and credential placeholders |
 
 Signalroom, historical evidence, launch assets, release artifacts, source
@@ -72,6 +72,8 @@ The generated project receives:
 - selected `.agentic/project.json` profiles;
 - `.agentic/generated-project.json` provenance and path decisions;
 - project-specific package and plugin identities;
+- runnable root web scripts when `web-next` is active;
+- reset design intake and direction state when `design-critical` is active;
 - an empty task ledger;
 - reset current-state, progress, handoff, risk, and blocker files;
 - an empty `.mcp.json` so no server is enabled implicitly;
@@ -123,16 +125,19 @@ cd ../my-product
 Generated-project mode validates identity, provenance, selected/excluded
 surfaces, empty MCP configuration, empty task state, JSON, symlink containment,
 disabled automatic installation/removal, empty specialist activation, shell
-syntax, Python syntax, command discovery, and profile resolution. Project
-application checks begin after the product adds its framework code and scripts.
+syntax, Python syntax, command discovery, and profile resolution. When
+dependencies are not installed, verification reports package checks as pending.
+After `pnpm install`, the same command runs lint, typecheck, and UI contract
+tests for the runnable web surface.
 
 ## After generation
 
-1. Read `README.md`, `CLAUDE.md`, and `AGENTS.md` in the new project.
-2. Complete `docs/00-vision/NORTH_STAR.md`.
-3. Create the first PRD and task graph.
-4. Run `./agentic profile doctor` and review missing external setup.
-5. Run `./agentic setup skills --dry-run` only if a selected profile requires
+1. Read the generated `README.md`, then run `pnpm install` for a web project.
+2. Run `./agentic design intake` and compare the live directions with `pnpm dev`.
+3. Record human direction approval before canonical implementation.
+4. Complete `docs/00-vision/NORTH_STAR.md`, then create the first PRD and task graph.
+5. Run `./agentic profile doctor` and review missing external setup.
+6. Run `./agentic setup skills --dry-run` only if a selected profile requires
    reviewed external skills.
-6. Review MCP and backend setup separately before enabling anything.
-7. Initialize a new Git repository only when ready to own that project.
+7. Review MCP and backend setup separately before enabling anything.
+8. Initialize a new Git repository only when ready to own that project.

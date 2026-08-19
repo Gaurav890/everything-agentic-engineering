@@ -5,6 +5,12 @@ Status: Draft
 This artifact records design intent and constraints before visual directions or
 tokens are approved. It is not a screen specification.
 
+For a generated design-critical project, run `./agentic design intake`. The
+short adaptive interview records its machine-readable result in
+`.agentic/design-intake.json`; summarize only the material rationale here. The
+command asks about palette intent, typography, density, motion, required modes,
+and advanced 2D/3D only because those choices materially change the system.
+
 ## Intake mode and authority
 
 - Mode: greenfield | existing brand | redesign

@@ -1,0 +1,28 @@
+{
+  "name": "@everything-agentic/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "predev": "python3 ../../scripts/build_design_tokens.py",
+    "dev": "next dev",
+    "prebuild": "python3 ../../scripts/build_design_tokens.py",
+    "build": "next build",
+    "prelint": "next typegen",
+    "lint": "tsc --noEmit",
+    "pretypecheck": "next typegen",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@everything-agentic/ui": "workspace:*",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.2"
+  }
+}

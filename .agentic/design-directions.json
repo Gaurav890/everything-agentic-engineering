@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "directions": [
+    {
+      "id": "editorial-signal",
+      "name": "Editorial Signal",
+      "thesis": "A precise editorial portfolio where typography, pacing, and decisive red accents make the work feel authored.",
+      "best_for": ["product designers", "creative technologists", "case-study storytelling"],
+      "motion": "Restrained reveals, typographic wipes, and directional hover cues.",
+      "tokens": {
+        "color.background.canvas": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.96, 0.94, 0.89], "alpha": 1}},
+        "color.background.surface": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.89, 0.86, 0.79], "alpha": 1}},
+        "color.text.primary": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.08, 0.07, 0.06], "alpha": 1}},
+        "color.text.secondary": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.32, 0.29, 0.25], "alpha": 1}},
+        "color.action.primary.default": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.78, 0.13, 0.06], "alpha": 1}},
+        "font.family.display": {"$type": "fontFamily", "$value": ["Iowan Old Style", "Baskerville", "Georgia", "serif"]},
+        "radius.lg": {"$type": "dimension", "$value": {"value": 0, "unit": "px"}},
+        "duration.normal": {"$type": "duration", "$value": {"value": 180, "unit": "ms"}}
+      }
+    },
+    {
+      "id": "kinetic-index",
+      "name": "Kinetic Index",
+      "thesis": "A high-contrast, motion-led portfolio that feels like a live creative index rather than a polite template.",
+      "best_for": ["interaction designers", "motion portfolios", "experimental studios"],
+      "motion": "Continuous ambient geometry, elastic emphasis, and high-energy project transitions.",
+      "tokens": {
+        "color.background.canvas": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.035, 0.04, 0.035], "alpha": 1}},
+        "color.background.surface": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.09, 0.10, 0.085], "alpha": 1}},
+        "color.text.primary": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.94, 1, 0.89], "alpha": 1}},
+        "color.text.secondary": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.68, 0.72, 0.65], "alpha": 1}},
+        "color.action.primary.default": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.68, 1, 0.16], "alpha": 1}},
+        "font.family.display": {"$type": "fontFamily", "$value": ["Arial Black", "Helvetica Neue", "Arial", "sans-serif"]},
+        "radius.lg": {"$type": "dimension", "$value": {"value": 24, "unit": "px"}},
+        "duration.normal": {"$type": "duration", "$value": {"value": 320, "unit": "ms"}}
+      }
+    },
+    {
+      "id": "quiet-material",
+      "name": "Quiet Material",
+      "thesis": "A warm, tactile portfolio with calm hierarchy and small material details that reward close attention.",
+      "best_for": ["service designers", "systems thinkers", "research-rich portfolios"],
+      "motion": "Soft spatial continuity, material shifts, and low-amplitude feedback.",
+      "tokens": {
+        "color.background.canvas": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.90, 0.93, 0.86], "alpha": 1}},
+        "color.background.surface": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.81, 0.86, 0.76], "alpha": 1}},
+        "color.text.primary": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.08, 0.13, 0.16], "alpha": 1}},
+        "color.text.secondary": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.27, 0.34, 0.34], "alpha": 1}},
+        "color.action.primary.default": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.08, 0.32, 0.34], "alpha": 1}},
+        "font.family.display": {"$type": "fontFamily", "$value": ["Avenir Next", "Avenir", "Trebuchet MS", "sans-serif"]},
+        "radius.lg": {"$type": "dimension", "$value": {"value": 18, "unit": "px"}},
+        "duration.normal": {"$type": "duration", "$value": {"value": 240, "unit": "ms"}}
+      }
+    }
+  ]
+}

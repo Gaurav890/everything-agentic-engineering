@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-16
+Last updated: 2026-08-19
 
 ## Product
 
@@ -17,10 +17,22 @@ Signalroom under `apps/showcase` is the reference AI-native product. It
 demonstrates agent runs, protected approvals, interruption, recovery, durable
 artifacts, required UI states, and responsive supervision.
 
+The web profile now materializes a runnable portfolio golden path instead of a
+placeholder surface. A short local intake records product-specific palette,
+typography, density, motion, mode, and advanced-canvas constraints. The running
+app compares Editorial Signal, Kinetic Index, and Quiet Material using the same
+realistic content; none becomes canonical until human approval is recorded.
+
 ## Web
 
 Substantial frontend work uses the project design system as authority and
 requires running-product evidence plus independent evaluation.
+
+`apps/web` is a buildable Next.js experience with accessible direction controls,
+responsive composition, purposeful core motion, and a reduced-motion path.
+`packages/ui` contains behavior primitives rather than a visual theme. Advanced
+2D, 3D, timeline, or gesture runtimes remain opt-in escalation tiers after an
+approved direction and performance budget.
 
 When `design-critical` is active, Emil Kowalski's reviewed ten-skill external
 collection is available as a profile-aware design-engineering craft layer.
@@ -44,6 +56,10 @@ TypeScript, React Native theme outputs, and an inspectable token specimen.
 Component tokens consume stable semantic roles; light and dark themes override
 those roles. The build fails on theme parity drift, direct component-to-theme
 aliases, missing aliases, and required WCAG contrast failures.
+
+Candidate direction packs use DTCG `$type`/`$value` structures in
+`.agentic/design-directions.json`. `./agentic design` records intake and explicit
+approval; token generation emits `direction.css` only for the approved pack.
 
 ## Integrations
 
@@ -72,11 +88,16 @@ dependencies or capabilities, enable MCP servers, initialize Git, or expand
 runtime authority. Generated projects have a dedicated offline verification
 mode through the same `./agentic verify full` interface.
 
+Generated web projects receive runnable root scripts, the live portfolio
+direction lab, reset intake/approval state, project identity environment
+placeholders, and a one-path README. Offline verification validates structure;
+after `pnpm install`, package lint, typecheck, and UI contract tests are active.
+
 Contributor workflows are exposed through one registry-backed `./agentic`
-interface. `.agentic/commands.json` classifies all 34 shell files as public,
-internal, compatibility, or security-hook surfaces. The 27 supported public
+interface. `.agentic/commands.json` classifies all 35 shell files as public,
+internal, compatibility, or security-hook surfaces. The 28 supported public
 workflows are grouped by setup, profile, task, pull request, workspace, doctor,
-specialist agents, tokens, release, and verification. Existing direct script paths remain
+specialist agents, design, tokens, release, and verification. Existing direct script paths remain
 compatible; no script or hook has been deleted or relocated.
 
 Task-ledger work can be inspected with `./agentic task plan` and prepared with

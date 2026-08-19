@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "not_started",
+  "answers": {
+    "product_type": null,
+    "audience": null,
+    "personality": null,
+    "color_intent": null,
+    "color_expression": null,
+    "typography": null,
+    "density": null,
+    "motion": null,
+    "advanced_canvas": null,
+    "required_modes": null,
+    "constraints": null
+  }
+}

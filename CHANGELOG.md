@@ -8,6 +8,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A runnable UI-first portfolio golden path with a short adaptive intake, three
+  materially different live directions, explicit human approval/reset,
+  DTCG-compatible compiled direction overrides, semantic UI primitives,
+  purposeful motion, responsive/reduced-motion contracts, and generated-project
+  scripts that replace the former placeholder web surface.
 - A confirmation-gated downstream project generator with profile-specific
   surface selection, tracked-file allowlisting, identity and provenance
   rewriting, starter-history reset, empty external integration configuration,

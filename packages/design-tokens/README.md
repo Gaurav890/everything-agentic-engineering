@@ -40,11 +40,17 @@ This validates aliases and writes:
 
 ```text
 generated/
+├── direction.css
 ├── tokens.css
 ├── tokens.ts
 ├── tokens.native.ts
 └── tokens.preview.html
 ```
+
+`direction.css` is empty until `.agentic/design.json` records an explicitly
+approved direction. It then contains only the selected DTCG-compatible semantic
+overrides from `.agentic/design-directions.json`; candidate directions do not
+silently become canonical.
 
 Generated files are build artifacts and are not edited or committed. CI
 regenerates and tests them from the canonical DTCG sources.
