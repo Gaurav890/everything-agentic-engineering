@@ -9,6 +9,8 @@
     "build": "pnpm --filter @eae/showcase build && pnpm --filter @everything-agentic/web build",
     "lint": "pnpm --filter @eae/showcase lint && pnpm --filter @everything-agentic/web lint",
     "typecheck": "pnpm --filter @eae/showcase typecheck && pnpm --filter @everything-agentic/web typecheck",
-    "test": "pnpm --filter @eae/showcase test && pnpm --filter @everything-agentic/web test"
+    "test": "pnpm --filter @eae/showcase test && pnpm --filter @everything-agentic/web test",
+    "test:web:e2e": "pnpm --dir apps/web build && pnpm --dir apps/web test:e2e",
+    "test:web:visual": "pnpm --dir apps/web build && pnpm --dir apps/web test:visual"
   }
 }

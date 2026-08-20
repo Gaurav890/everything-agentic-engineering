@@ -4,7 +4,7 @@ Last updated: 2026-08-19
 
 ## Current goal
 
-Independently evaluate the latest portfolio golden path before adoption.
+Finish the human-reviewed Linux baseline loop for the web quality gate.
 
 ## Completed
 
@@ -15,12 +15,17 @@ Independently evaluate the latest portfolio golden path before adoption.
 - Added responsive, focus, reduced-motion, UI contract, generator, and command
   checks.
 - Put the web golden path first in the README and generated project README.
+- Added Playwright coverage for every direction at desktop and mobile sizes,
+  including keyboard, selection, axe, overflow, and reduced-motion contracts.
+- Added a fail-closed Linux visual workflow with reviewable candidate and
+  failure artifacts.
+- Fixed the low-contrast step indexes exposed by the new axe scan.
 
 ## Blockers
 
-- No implementation blocker.
-- Independent design critique and human pull-request review are intentionally
-  separate from the builder's verification.
+- No code or local verification blocker.
+- Linux baseline candidates must be generated in CI and inspected by a human;
+  automatic generation is not visual approval.
 
 ## Unresolved decisions
 
@@ -33,17 +38,21 @@ Independently evaluate the latest portfolio golden path before adoption.
 
 ## Verification status
 
-- Full ten-stage repository verification passes.
-- Focused design/generator/CLI tests, web UI contract tests, TypeScript, and a
-  production build pass.
-- The live desktop and 390 × 844 mobile experience was inspected with no
-  horizontal overflow; direction controls update their pressed state.
+- Web unit tests, project-generator tests, the production build, and the new
+  Playwright interaction/accessibility suite pass locally.
+- The live desktop and 390 x 844 mobile experience was inspected across all
+  three directions with no horizontal overflow or browser errors.
+- The independent critic returned code-level PASS after keyboard, flaky-test,
+  clipboard-state, and reduced-motion findings were resolved.
+- Full repository verification must be rerun after the final T-040 evidence
+  and state updates.
 
 ## Exact next action
 
-Have a separate design critic review all three running directions and the
-proposed change. After findings are addressed, direct human approval may run the
-bounded finalizer for the linked task. Landing remains a separate human action.
+Open the draft pull request so Ubuntu CI can produce the six Linux baseline
+candidates. Inspect those images, commit only approved baselines, rerun normal
+comparison, and then request direct human task approval. Landing remains a
+separate human action.
 
 ## Relevant files
 
@@ -51,6 +60,10 @@ bounded finalizer for the linked task. Landing remains a separate human action.
 - `packages/ui/`
 - `.agentic/design-directions.json`
 - `scripts/design_engine.py`
+- `.github/workflows/web-quality.yml`
+- `apps/web/playwright.config.ts`
+- `apps/web/tests/portfolio.spec.ts`
+- `apps/web/tests/visual.spec.ts`
 - `docs/60-tooling/PORTFOLIO_GOLDEN_PATH.md`
 - `tests/test_design_engine.py`
 - `tests/test_project_generator.py`

@@ -1025,3 +1025,43 @@ the review context. This task does not install or execute external skills,
 enable MCP servers, use credentials, deploy, modify production, make advanced
 2D/3D dependencies mandatory, approve its own direction, approve its own pull
 request, or merge. A separate design critic and human reviewer remain required.
+
+### 2026-08-19 — T-040
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED LOCALLY; LINUX BASELINE REVIEW PENDING
+
+**Change**
+
+Added a web-specific Playwright quality gate covering all three portfolio
+directions at desktop and mobile sizes. The gate separates behavioral,
+accessibility, responsive, reduced-motion, and screenshot evidence; generated
+web projects retain it while non-web profiles omit it.
+
+**Evidence so far**
+
+- Eleven interaction/accessibility checks pass with one expected desktop skip
+  for the mobile-only overflow contract.
+- The axe scan found a real low-contrast step-index defect; the implementation
+  was corrected and the suite then passed.
+- The production build and fourteen focused downstream-generator tests pass.
+- Live browser inspection confirmed every direction at desktop and 390 x 844,
+  no mobile horizontal overflow, and no browser warnings or errors.
+- The Linux workflow generates candidate baselines when none exist and then
+  fails closed instead of treating generation as approval.
+- The independent critic returned code-level PASS after the keyboard and flaky
+  visual-test blockers were resolved; full repository verification passes.
+
+**Remaining evidence**
+
+Ubuntu CI must generate the six canonical baseline candidates. A human must
+inspect and approve them before they are committed and compared by normal CI.
+Final repository verification must be rerun after that evidence is committed
+before the task can move to human approval.
+
+**Authority boundary**
+
+Issue #58 owns the review contract. This task does not silently update visual
+baselines, approve its own evidence or pull request, deploy, modify production,
+enable external capabilities, merge, or push `main`.

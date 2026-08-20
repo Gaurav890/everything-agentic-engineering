@@ -1,0 +1,116 @@
+name: Web quality
+
+on:
+  workflow_dispatch:
+    inputs:
+      update_visual_baselines:
+        description: Generate Linux baseline candidates for human review
+        required: false
+        default: false
+        type: boolean
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "packages/ui/**"
+      - "packages/design-tokens/**"
+      - "scripts/build_design_tokens.py"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/web-quality.yml"
+  push:
+    branches: [main]
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  web-quality:
+    name: web-quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web starter
+        run: pnpm --filter @everything-agentic/web build
+
+      - name: Install browser
+        working-directory: apps/web
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run interaction and accessibility tests
+        working-directory: apps/web
+        run: pnpm test:e2e
+
+      - name: Detect approved Linux baselines
+        id: baselines
+        working-directory: apps/web
+        shell: bash
+        run: |
+          if find tests/visual.spec.ts-snapshots -type f -name '*-linux.png' -print -quit 2>/dev/null | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compare approved visual baselines
+        if: >-
+          steps.baselines.outputs.present == 'true' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines)
+        working-directory: apps/web
+        run: pnpm test:visual
+
+      - name: Generate visual baseline candidates
+        if: >-
+          steps.baselines.outputs.present != 'true' ||
+          (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines)
+        working-directory: apps/web
+        run: pnpm test:visual:update
+
+      - name: Upload visual baseline candidates
+        if: >-
+          steps.baselines.outputs.present != 'true' ||
+          (github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines)
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-visual-baselines-linux
+          path: apps/web/tests/visual.spec.ts-snapshots/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Require reviewed baselines
+        if: >-
+          steps.baselines.outputs.present != 'true' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines)
+        run: |
+          echo "::error::No approved Linux visual baselines are committed. Review the web-visual-baselines-linux artifact, commit approved images, and rerun CI."
+          exit 1
+
+      - name: Upload visual failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-visual-failure
+          path: |
+            apps/web/test-results/
+            apps/web/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7

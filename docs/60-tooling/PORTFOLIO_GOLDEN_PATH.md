@@ -62,6 +62,32 @@ every screen.
 Reset returns to comparison and removes compiled overrides. It does not delete
 content, rewrite product flows, or pretend tokens can repair interaction design.
 
+## Prove the running result
+
+After dependencies and the Chromium test browser are installed:
+
+```bash
+pnpm --filter @everything-agentic/web install:browsers
+pnpm test:web:e2e
+pnpm test:web:visual
+```
+
+The gate covers all three directions at desktop and mobile sizes. It also checks
+keyboard entry, explicit selection, automated accessibility findings, mobile
+overflow, and reduced-motion behavior. Screenshot assertions run with motion
+disabled in a fixed Ubuntu environment so comparisons remain reproducible.
+
+Normal pull requests compare approved baselines and never rewrite them. If a
+new project or intentional redesign needs baselines, CI uploads
+`web-visual-baselines-linux` candidates. A human reviews those images before
+committing them; generation alone is not approval. Failed comparisons upload
+actual, expected, diff, trace, and report evidence where available.
+
+This follows Playwright's official
+[visual-comparison](https://playwright.dev/docs/test-snapshots) and
+[CI](https://playwright.dev/docs/ci) guidance while keeping the repository's
+separate-review contract authoritative.
+
 ## Motion escalation ladder
 
 Start at the lowest tier that communicates the approved experience:
@@ -89,7 +115,9 @@ Frontend completion requires:
 - reduced-motion and performance checks;
 - responsive, accessibility, token, and system audits;
 - a separate critic who did not build the interface;
-- Playwright evidence from the running product.
+- Playwright evidence from the running product;
+- approved Linux baselines for every shipped direction and target viewport;
+- no unreviewed `--update-snapshots` output committed as a shortcut.
 
 The builder may fix critic findings. The builder may not certify its own visual
 quality from source inspection.
