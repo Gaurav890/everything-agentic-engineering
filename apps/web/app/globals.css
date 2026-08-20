@@ -15,6 +15,7 @@ a { color: inherit; }
   color: #000;
 }
 .skip-link:focus { transform: translateY(0); }
+.copy-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 .experience {
   --canvas: #f4efe3;
@@ -181,7 +182,7 @@ a { color: inherit; }
 .about-grid > p { margin: 0; font-size: clamp(20px, 2vw, 30px); line-height: 1.4; }
 .about ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid color-mix(in srgb, var(--canvas) 24%, transparent); }
 .about li { display: grid; grid-template-columns: 42px 1fr; padding: 17px 0; border-bottom: 1px solid color-mix(in srgb, var(--canvas) 24%, transparent); }
-.about li span { color: var(--accent); font-size: 11px; }
+.about li span { color: var(--canvas); font-size: 11px; font-weight: 700; }
 
 footer { position: relative; z-index: 1; padding: 80px 34px 36px; }
 footer p { margin: 0 0 10px; color: var(--muted); }
