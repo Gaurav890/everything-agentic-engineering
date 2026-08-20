@@ -9,6 +9,7 @@
     {"name": "pr", "summary": "Prepare and finalize pull requests"},
     {"name": "workspace", "summary": "Create isolated branches and worktrees"},
     {"name": "doctor", "summary": "Check runtime and integration health"},
+    {"name": "design", "summary": "Run intake, compare live directions, and record explicit approval"},
     {"name": "tokens", "summary": "Build and validate design-token outputs"},
     {"name": "release", "summary": "Validate release readiness"}
   ],
@@ -36,6 +37,7 @@
     {"path": ["doctor", "plugin"], "target": "scripts/agent-plugin-doctor.sh", "summary": "Validate the Agent Plugins 1.0 portable package contract", "usage": "./agentic doctor plugin [--json]", "impact": "read_only"},
     {"path": ["doctor", "runtime"], "target": "scripts/runtime-doctor.sh", "summary": "Report Claude Code and Codex runtime compatibility", "usage": "./agentic doctor runtime [runtime options]", "impact": "read_only"},
     {"path": ["doctor", "codex"], "target": "scripts/codex-doctor.sh", "summary": "Validate the Codex adapter and safety contract", "usage": "./agentic doctor codex [--strict-runtime]", "impact": "read_only"},
+    {"path": ["design"], "target": "scripts/design.sh", "summary": "Run the bounded design intake, direction comparison, approval, reset, and validation workflow", "usage": "./agentic design <intake|preview|approve|reset|status|check> [arguments]", "impact": "read_only_or_confirmed_local_write"},
     {"path": ["verify"], "target": "scripts/verify.sh", "summary": "Run repository verification", "usage": "./agentic verify [quick|full]", "impact": "local_build"},
     {"path": ["tokens", "build"], "target": "scripts/build-design-tokens.sh", "summary": "Generate or check design-token outputs", "usage": "./agentic tokens build [--check]", "impact": "local_build"},
     {"path": ["release", "check"], "target": "scripts/release-check.sh", "summary": "Validate the release contract for a semantic tag", "usage": "./agentic release check [tag]", "impact": "read_only"},
@@ -55,6 +57,7 @@
     {"path": "scripts/codex-doctor.sh", "classification": "public", "canonical_command": "doctor codex"},
     {"path": "scripts/create-worktree.sh", "classification": "public", "canonical_command": "workspace worktree"},
     {"path": "scripts/create-project.sh", "classification": "public", "canonical_command": "setup create"},
+    {"path": "scripts/design.sh", "classification": "public", "canonical_command": "design"},
     {"path": "scripts/finalize-pr.sh", "classification": "public", "canonical_command": "pr finalize"},
     {"path": "scripts/finish-task.sh", "classification": "public", "canonical_command": "task finish"},
     {"path": "scripts/init-project.sh", "classification": "public", "canonical_command": "setup init"},

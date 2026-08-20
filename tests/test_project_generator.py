@@ -67,6 +67,8 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse((destination / "apps/mobile").exists())
             self.assertFalse((destination / "apps/showcase").exists())
             self.assertTrue((destination / "packages/design-tokens").is_dir())
+            self.assertTrue((destination / "apps/web/package.json").is_file())
+            self.assertTrue((destination / "apps/web/app/portfolio-lab.tsx").is_file())
             self.assertFalse((destination / ".git").exists())
             self.assertFalse((destination / "docs/50-evals/evidence").exists())
             self.assertEqual(
@@ -76,6 +78,16 @@ class ProjectGeneratorTests(unittest.TestCase):
             manifest = json.loads((destination / ".agentic/project.json").read_text())
             self.assertEqual("Example Web", manifest["project"]["name"])
             self.assertEqual(["web-next", "design-critical"], manifest["profiles"])
+            package = json.loads((destination / "package.json").read_text())
+            self.assertEqual(
+                "pnpm --filter @everything-agentic/web dev",
+                package["scripts"]["dev"],
+            )
+            design = json.loads((destination / ".agentic/design.json").read_text())
+            self.assertEqual("needs_approval", design["status"])
+            self.assertIsNone(design["approved_direction"])
+            intake = json.loads((destination / ".agentic/design-intake.json").read_text())
+            self.assertEqual("not_started", intake["status"])
             self.assertEqual("", (destination / "docs/40-execution/TASKS.jsonl").read_text())
             verification = subprocess.run(
                 [str(destination / "agentic"), "verify", "full"],
@@ -121,6 +133,9 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertFalse((destination / "apps").exists())
             self.assertFalse((destination / "packages/design-tokens").exists())
+            self.assertFalse((destination / ".agentic/design.json").exists())
+            self.assertFalse((destination / ".agentic/design-intake.json").exists())
+            self.assertFalse((destination / ".agentic/design-directions.json").exists())
             self.assertFalse((destination / ".claude/agents/frontend.md").exists())
             self.assertFalse((destination / ".claude/agents/mobile.md").exists())
             self.assertFalse((destination / ".claude/agents/backend.md").exists())

@@ -61,6 +61,12 @@ one signature interaction or experience where appropriate.
 
 Canonical tokens use DTCG-compatible JSON under `packages/design-tokens/tokens/`.
 
+The three candidate packs live in `.agentic/design-directions.json`. They use
+DTCG `$type`/`$value` objects but remain non-canonical exploration until
+`.agentic/design.json` records human approval. `./agentic tokens build` then
+compiles only the approved direction into `generated/direction.css`. Resetting a
+direction removes the override; it never guesses a replacement.
+
 - Primitive tokens hold raw values.
 - Semantic tokens express intent.
 - Component tokens exist only for stable component contracts.

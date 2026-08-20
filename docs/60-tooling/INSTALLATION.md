@@ -39,6 +39,18 @@ generator copies no Git history or secrets, enables no MCP server, and installs
 nothing. Continue the remaining installation steps inside the generated
 directory. See [Downstream project generator](PROJECT_GENERATOR.md).
 
+For a web preset, the generated README deliberately puts the UI-first path
+first:
+
+```bash
+pnpm install
+./agentic design intake
+pnpm dev
+```
+
+Compare the three live directions before approving one and compiling its token
+overrides. See [Portfolio golden path](PORTFOLIO_GOLDEN_PATH.md).
+
 ## 2. Secrets
 
 ```bash

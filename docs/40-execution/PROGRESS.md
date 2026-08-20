@@ -990,3 +990,38 @@ enable identity forwarding, MCP, plugins, self-hosted or cross-session work;
 change models, providers, credentials, network, sandbox, or managed settings;
 deploy; modify production; approve; or merge. Compatibility remains a
 prerequisite, not authorization.
+
+### 2026-08-19 — T-039
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED AND VERIFIED; INDEPENDENT REVIEW PENDING
+
+**Change**
+
+Replaced the placeholder web and UI surfaces with a runnable portfolio golden
+path. Added a short adaptive intake, three live and materially different design
+directions, explicit approval/reset state, DTCG-compatible direction token
+compilation, semantic UI primitives, purposeful core motion, reduced-motion and
+responsive contracts, generated root scripts, and streamlined onboarding.
+
+**Evidence**
+
+- Thirty-seven focused design-engine, token, generator, and command tests pass.
+- Web UI contract tests verify all three direction IDs, explicit approval,
+  semantic-token consumption, focus, responsive, and reduced-motion contracts.
+- TypeScript and the Next.js production build pass.
+- The running app was inspected at desktop and a 390 × 844 mobile viewport.
+  All three directions changed composition and typography, not only color; the
+  mobile page had no horizontal overflow.
+- Generated `web`, `mobile`, and `core` profile tests pass with correct surface
+  selection and reset design state.
+- Full repository verification passes all ten stages.
+
+**Authority boundary**
+
+The connected issue integration returned 403, so the task and pull request carry
+the review context. This task does not install or execute external skills,
+enable MCP servers, use credentials, deploy, modify production, make advanced
+2D/3D dependencies mandatory, approve its own direction, approve its own pull
+request, or merge. A separate design critic and human reviewer remain required.

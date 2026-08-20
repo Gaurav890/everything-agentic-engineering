@@ -72,6 +72,8 @@ MANDATORY_GENERATOR_FILES = {
 GENERATED_WRITE_PATHS = {
     PROJECT_PATH,
     GENERATED_PATH,
+    Path(".agentic/design.json"),
+    Path(".agentic/design-intake.json"),
     Path("package.json"),
     Path("plugin.json"),
     Path(".codex-plugin/plugin.json"),
@@ -455,12 +457,26 @@ def generated_metadata(plan: GenerationPlan) -> dict[str, Any]:
 
 def generated_package(plan: GenerationPlan) -> dict[str, Any]:
     source = load_object(plan.source_root / "package.json", "source package metadata")
+    active = set(plan.resolved_profiles)
+    scripts: dict[str, str] = {}
+    if "web-next" in active:
+        scripts.update(
+            {
+                "dev": "pnpm --filter @everything-agentic/web dev",
+                "build": "pnpm --filter @everything-agentic/web build",
+                "lint": "pnpm --filter @everything-agentic/web lint",
+                "typecheck": "pnpm --filter @everything-agentic/web typecheck",
+                "test": "pnpm --filter @everything-agentic/web test",
+            }
+        )
+    if "design-critical" in active:
+        scripts["tokens:build"] = "./agentic tokens build"
     return {
         "name": plan.slug,
         "version": "0.1.0",
         "private": True,
         "packageManager": source.get("packageManager", "pnpm@9.15.9"),
-        "scripts": {},
+        "scripts": scripts,
     }
 
 
@@ -507,7 +523,14 @@ def generated_env_example(plan: GenerationPlan) -> str:
             ]
         )
     if "web-next" in active:
-        lines.append("NEXT_PUBLIC_APP_URL=http://localhost:3000")
+        lines.extend(
+            [
+                "NEXT_PUBLIC_APP_URL=http://localhost:3000",
+                'NEXT_PUBLIC_PORTFOLIO_NAME="Mara Voss"',
+                'NEXT_PUBLIC_PORTFOLIO_ROLE="Product designer & creative technologist"',
+                'NEXT_PUBLIC_PORTFOLIO_LOCATION="London ↔ anywhere"',
+            ]
+        )
     if "backend-supabase" in active:
         lines.extend(["SUPABASE_URL=", "SUPABASE_ANON_KEY=", "SUPABASE_SERVICE_ROLE_KEY="])
     if "backend-convex" in active:
@@ -524,6 +547,20 @@ def generated_readme(plan: GenerationPlan) -> str:
         if plan.external_setup
         else "- None selected."
     )
+    active = set(plan.resolved_profiles)
+    if "web-next" in active:
+        start = """1. Run `pnpm install`.
+2. Run `./agentic design intake` and answer the short product-specific questions.
+3. Run `pnpm dev` and compare all three live directions with realistic content.
+4. Ask the human design owner to choose or synthesize a direction.
+5. Record the decision with `./agentic design approve <direction-id> --yes`.
+6. Run `./agentic tokens build`, replace the sample content, and iterate in the running product.
+7. Run `./agentic verify full`; capture Playwright evidence before review."""
+    else:
+        start = """1. Read `CLAUDE.md` and `AGENTS.md`.
+2. Complete `docs/00-vision/NORTH_STAR.md`.
+3. Build the initial PRD in `docs/10-product/PRD.md`.
+4. Run `./agentic setup bootstrap` and `./agentic verify full`."""
     return f"""# {plan.project_name}
 
 This project was materialized from Everything Agentic Engineering using a
@@ -535,12 +572,13 @@ profile-specific, non-destructive generation plan.
 
 ## Start here
 
-1. Read `CLAUDE.md` and `AGENTS.md`.
-2. Complete `docs/00-vision/NORTH_STAR.md`.
-3. Build the initial PRD in `docs/10-product/PRD.md`.
-4. Run `./agentic profile resolve` and review the selected capabilities.
-5. Run `./agentic setup bootstrap`.
-6. Run `./agentic verify full`.
+{start}
+
+For web projects, the default is intentionally design-critical. The live
+direction lab is the starting point; a generic blank page is not. Core motion
+and reduced-motion behavior are built in. Add advanced 2D, 3D, timeline, or
+gesture runtimes only when the approved direction and performance budget justify
+them.
 
 ## External setup requiring separate review
 
@@ -585,6 +623,41 @@ def reset_durable_state(plan: GenerationPlan) -> None:
     (execution / "RISKS.md").write_text("# Risks\n\nNo project-specific risks recorded yet.\n")
 
 
+def reset_design_state(plan: GenerationPlan) -> None:
+    if "design-critical" not in set(plan.resolved_profiles):
+        return
+    write_json(
+        plan.destination / ".agentic/design.json",
+        {
+            "schema_version": 1,
+            "status": "needs_approval",
+            "approved_direction": None,
+            "approved_by": None,
+            "approved_at": None,
+        },
+    )
+    write_json(
+        plan.destination / ".agentic/design-intake.json",
+        {
+            "schema_version": 1,
+            "status": "not_started",
+            "answers": {
+                "product_type": None,
+                "audience": None,
+                "personality": None,
+                "color_intent": None,
+                "color_expression": None,
+                "typography": None,
+                "density": None,
+                "motion": None,
+                "advanced_canvas": None,
+                "required_modes": None,
+                "constraints": None,
+            },
+        },
+    )
+
+
 def write_generated_files(plan: GenerationPlan) -> None:
     write_json(plan.destination / PROJECT_PATH, generated_project_manifest(plan))
     write_json(plan.destination / GENERATED_PATH, generated_metadata(plan))
@@ -598,6 +671,7 @@ def write_generated_files(plan: GenerationPlan) -> None:
         "# Changelog\n\n## Unreleased\n\nNo released project changes yet.\n"
     )
     reset_durable_state(plan)
+    reset_design_state(plan)
 
 
 def validate_symlinks(root: Path) -> None:
@@ -640,6 +714,23 @@ def validate_generated_project(root: Path) -> dict[str, Any]:
         raise GenerationError("Generated project identity does not match provenance")
     if package.get("name") != metadata.get("project", {}).get("slug"):
         raise GenerationError("Generated package slug does not match provenance")
+    if "web-next" in resolved:
+        required_scripts = {"dev", "build", "lint", "typecheck", "test"}
+        if not required_scripts.issubset(set(package.get("scripts", {}))):
+            raise GenerationError("Generated web project is missing runnable root scripts")
+        web_package = load_object(root / "apps/web/package.json", "web package metadata")
+        if web_package.get("name") != "@everything-agentic/web":
+            raise GenerationError("Generated web package identity is invalid")
+    if "design-critical" in resolved:
+        design_state = load_object(root / ".agentic/design.json", "design state")
+        intake_state = load_object(root / ".agentic/design-intake.json", "design intake")
+        if (
+            design_state.get("status") != "needs_approval"
+            or design_state.get("approved_direction") is not None
+        ):
+            raise GenerationError("Generated design direction must begin unapproved")
+        if intake_state.get("status") != "not_started":
+            raise GenerationError("Generated design intake must begin not started")
     if mcp != {"mcpServers": {}}:
         raise GenerationError("Generated projects must not enable MCP servers")
     for path in (".git", ".env", "node_modules", "apps/showcase", "docs/80-showcase"):
@@ -771,7 +862,10 @@ def run(args: argparse.Namespace) -> int:
     else:
         print(f"\nCreated {plan.project_name} at {plan.destination}")
         print("Generated-project verification: PASS")
-        print(f"Next: cd {plan.destination} && ./agentic setup bootstrap")
+        if "web-next" in set(plan.resolved_profiles):
+            print(f"Next: cd {plan.destination} && pnpm install && ./agentic design intake")
+        else:
+            print(f"Next: cd {plan.destination} && ./agentic setup bootstrap")
     return 0
 
 

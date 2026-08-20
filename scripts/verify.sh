@@ -17,12 +17,14 @@ if [ -f .agentic/generated-project.json ]; then
   python3 -m compileall -q scripts
   ./agentic --help >/dev/null
   ./agentic profile resolve >/dev/null
-  if [ -f package.json ] && command -v pnpm >/dev/null 2>&1; then
+  if [ -f package.json ] && [ -d node_modules ] && command -v pnpm >/dev/null 2>&1; then
     for script in lint typecheck test; do
       if node -e "const p=require('./package.json'); process.exit(p.scripts&&p.scripts['$script']?0:1)"; then
         pnpm "$script"
       fi
     done
+  elif [ -f package.json ] && command -v pnpm >/dev/null 2>&1; then
+    echo "Dependencies are not installed; package checks are available after pnpm install."
   fi
   echo "Generated project verification complete."
   exit 0
@@ -162,6 +164,8 @@ echo "[6/10] Build and test design tokens"
 ./scripts/build-design-tokens.sh
 ./scripts/build-design-tokens.sh --check
 python3 -m unittest discover -s tests -p 'test_design_tokens.py'
+python3 -m unittest discover -s tests -p 'test_design_engine.py'
+./agentic design check
 
 echo "[7/10] Test deterministic security hooks"
 python3 -m unittest discover -s tests -p 'test_security_hooks.py'
