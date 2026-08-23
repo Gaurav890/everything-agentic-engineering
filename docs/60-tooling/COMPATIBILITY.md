@@ -161,6 +161,11 @@ include a migration note.
   production deployments remain explicit human actions.
 - The research loop may propose updates but cannot adopt, commit, merge, or
   release them autonomously.
+- The offline harness-evolution kernel validates sanitized aggregates and
+  compares supplied candidate results. It does not ingest production telemetry,
+  invoke a model, write a candidate, modify protected evals, promote, deploy,
+  approve, or merge. Production signals and canaries require separate data and
+  deployment contracts.
 - Codex translates only reviewed read-heavy specialist roles. Claude
   write-capable agent definitions are intentionally not copied mechanically;
   parallel writes still require separate branches and worktrees.

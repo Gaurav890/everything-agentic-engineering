@@ -223,6 +223,14 @@ adoption remains evidence-gated. Never auto-install unreviewed third-party code,
 self-approve, self-merge, weaken safeguards, or create churn when nothing
 material changed.
 
+For outcome-driven harness improvement, invoke `harness-evolution` and use
+`./agentic evolve`. Only sanitized aggregate signals may enter the committed
+kernel. Candidates may touch only policy-declared low/medium-risk surfaces and
+must beat the same fingerprinted incumbent evals with no protected or safety
+regression. A passing comparison is review eligibility, not promotion. Never
+let a candidate change its policy, eval set, engine, security gates, authority,
+dependencies, production, approval, or merge behavior.
+
 ## 9. Frontend quality bar
 
 Frontend quality is a first-class product requirement. Route substantial

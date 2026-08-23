@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://everything-agentic-engineering.dev/schemas/evolution-outcome-signal.json",
+  "title": "Sanitized harness outcome signal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "signal_id", "observed_at", "source_type", "outcome", "metrics", "labels", "provenance", "privacy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "signal_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_type": {"enum": ["pull_request", "verification", "review", "generated_project", "human_feedback"]},
+    "outcome": {"enum": ["success", "partial", "failure", "reverted", "escalated"]},
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quality_score", "safety_pass", "cost_units", "latency_ms"],
+      "properties": {
+        "quality_score": {"type": "number", "minimum": 0, "maximum": 1},
+        "safety_pass": {"type": "boolean"},
+        "cost_units": {"type": "number", "minimum": 0},
+        "latency_ms": {"type": "number", "minimum": 0}
+      }
+    },
+    "labels": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"}},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ref", "authority"],
+      "properties": {
+        "source_ref": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:#/-]{1,127}$"},
+        "authority": {"enum": ["human", "deterministic_test", "repository_check", "calibrated_judge"]}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["redacted", "contains_personal_data", "contains_secrets", "retention_class"],
+      "properties": {
+        "redacted": {"const": true},
+        "contains_personal_data": {"const": false},
+        "contains_secrets": {"const": false},
+        "retention_class": {"const": "aggregate_only"}
+      }
+    }
+  }
+}

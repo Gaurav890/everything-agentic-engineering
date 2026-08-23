@@ -1065,3 +1065,38 @@ before the task can move to human approval.
 Issue #58 owns the review contract. This task does not silently update visual
 baselines, approve its own evidence or pull request, deploy, modify production,
 enable external capabilities, merge, or push `main`.
+
+### 2026-08-23 — T-041
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT REVIEW PENDING
+
+**Change**
+
+Added an offline, evidence-gated harness-evolution kernel. It validates
+sanitized aggregate outcomes, protects the policy and regression exam with
+fingerprints, compares bounded candidates with the incumbent across quality,
+safety, cost, and latency, and keeps all promotion authority false.
+
+**Evidence so far**
+
+- Thirteen focused tests cover the valid comparison and fail-closed privacy,
+  exam-integrity, path, coverage, evaluator, regression, safety, cost, and
+  latency boundaries.
+- Command and downstream-generator tests expose the same read-only
+  `./agentic evolve` interface in generated projects.
+- The committed policy, schemas, protected cases, and incumbent validate
+  deterministically without network access or mutation.
+- Full repository verification passes all ten stages, including the new
+  evolution tests, generated-project checks, security hooks, design-token
+  checks, documentation links, and project-defined lint/typecheck/tests.
+- Independent security review remains pending before task finalization.
+
+**Authority boundary**
+
+Issue #60 owns review. The kernel does not collect production telemetry, retain
+raw prompts or customer data, invoke remote models, train weights, execute
+generated code, write candidates, weaken or mutate protected evals, install or
+enable external capabilities, use credentials, change network or sandbox
+authority, deploy, canary, promote, approve, or merge.

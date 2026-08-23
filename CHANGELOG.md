@@ -8,6 +8,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- An offline, evidence-gated harness-evolution kernel with sanitized aggregate
+  signal schemas, fingerprinted incumbent and protected evals, bounded change
+  surfaces, deterministic quality/regression/safety/cost/latency comparison,
+  independent-evaluator enforcement, and explicit denial of candidate writes,
+  eval modification, promotion, deployment, approval, and merge.
 - A fail-closed Playwright web-quality gate covering all three portfolio
   directions at desktop and mobile sizes, keyboard and selection behavior, axe
   accessibility, horizontal overflow, reduced motion, reviewed Ubuntu visual

@@ -44,6 +44,11 @@ python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
 python3 -m json.tool .agentic/mcp-compatibility.json >/dev/null
 python3 -m json.tool .agentic/commands.json >/dev/null
 python3 -m json.tool .agentic/generator.json >/dev/null
+python3 -m json.tool .agentic/evolution/policy.json >/dev/null
+python3 -m json.tool .agentic/evolution/incumbent.json >/dev/null
+for f in .agentic/evolution/schemas/*.json; do
+  python3 -m json.tool "$f" >/dev/null
+done
 for f in .agentic/capabilities/*.json; do
   python3 -m json.tool "$f" >/dev/null
 done
@@ -98,6 +103,15 @@ print("TASKS.jsonl valid")
 PY
 ./scripts/task-sync.sh validate-ledger
 ./scripts/task-closeout.sh --validate-handoff
+python3 - <<'PY'
+import json
+from pathlib import Path
+path = Path(".agentic/evolution/eval-sets/harness-regression.jsonl")
+for i, line in enumerate(path.read_text().splitlines(), 1):
+    if line.strip():
+        json.loads(line)
+print("Evolution eval JSONL valid")
+PY
 
 echo "[3/10] Validate GitHub YAML"
 python3 - <<'PY'
@@ -132,6 +146,7 @@ python3 -m unittest discover -s tests -p 'test_pr_finalization.py'
 python3 -m unittest discover -s tests -p 'test_agentic_cli.py'
 python3 -m unittest discover -s tests -p 'test_capability_engine.py'
 python3 -m unittest discover -s tests -p 'test_project_generator.py'
+python3 -m unittest discover -s tests -p 'test_evolution_engine.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
 ./scripts/check-pr-title.sh 'feat(T-014): add password reset confirmation' >/dev/null
@@ -154,6 +169,7 @@ fi
 ./agentic commands --json | python3 -m json.tool >/dev/null
 ./agentic agents doctor >/dev/null
 ./agentic capabilities doctor >/dev/null
+./agentic evolve validate >/dev/null
 
 if ./scripts/profile-preview.sh backend-supabase,backend-convex >/dev/null 2>&1; then
   echo "Profile conflict check unexpectedly passed" >&2

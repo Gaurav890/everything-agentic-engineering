@@ -31,3 +31,5 @@
 # /.agents/                 @your-org/agent-platform
 # /plugin.json              @your-org/repo-maintainers @your-org/agent-platform
 # /.codex-plugin/           @your-org/repo-maintainers @your-org/agent-platform
+# /.agentic/evolution/      @your-org/security @your-org/agent-platform
+# /scripts/evolution*       @your-org/security @your-org/agent-platform
