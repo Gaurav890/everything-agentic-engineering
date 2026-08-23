@@ -16,6 +16,9 @@ Compare the directions in the running app. After human review:
 ./agentic design approve editorial-signal --yes
 ./agentic tokens build
 pnpm test
+pnpm build
+pnpm test:e2e
+pnpm test:visual
 ```
 
 The sample content is intentionally specific enough to expose weak hierarchy,
@@ -31,3 +34,22 @@ specialist runtime only when the approved direction requires it:
 - React Three Fiber for an approved, performance-budgeted 3D scene.
 
 Advanced motion is never installed or activated automatically.
+
+## Visual-quality gate
+
+Playwright exercises every direction at 1440×960 and 390×844, checks direction
+selection, keyboard focus, mobile overflow, reduced motion, and automated axe
+findings, then compares six approved Linux screenshots.
+
+Visual baselines are review artifacts, not snapshots to update until CI turns
+green. For an intentional redesign:
+
+1. approve the design-system or acceptance change;
+2. run the `Web quality` workflow manually with
+   `update_visual_baselines=true`;
+3. download and inspect `web-visual-baselines-linux`;
+4. commit only the approved images;
+5. rerun normal comparison.
+
+Local macOS screenshots are exploratory because browser rendering varies by
+operating system. CI owns the canonical Ubuntu comparison environment.

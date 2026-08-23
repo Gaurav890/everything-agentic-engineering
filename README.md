@@ -60,11 +60,19 @@ direction—or requests a synthesis—before it becomes canonical:
 ./agentic design approve editorial-signal --yes
 ./agentic tokens build
 pnpm test
+pnpm build
+pnpm test:web:e2e
+pnpm test:web:visual
 ```
 
 This is the shortest supported web path. It does not begin with a blank page,
 generic hero, or card grid. It begins with a product-specific choice that is
 compiled into tokens and checked in the running experience.
+
+The web quality gate then exercises all three directions at desktop and mobile,
+checks keyboard, accessibility, overflow, and reduced-motion behavior, and
+compares reviewed Ubuntu visual baselines. Intentional redesigns produce
+downloadable candidates; CI never silently approves new screenshots.
 
 Core interaction motion and a reduced-motion path are already present. Motion,
 GSAP, Rive/canvas, and React Three Fiber are escalation tiers—not a dependency

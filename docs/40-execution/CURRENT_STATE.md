@@ -34,6 +34,12 @@ responsive composition, purposeful core motion, and a reduced-motion path.
 2D, 3D, timeline, or gesture runtimes remain opt-in escalation tiers after an
 approved direction and performance budget.
 
+The web starter also has a Playwright interaction and accessibility suite for
+all three directions at 1440 x 960 and 390 x 844. Its visual workflow compares
+reviewed Linux screenshots, uploads failure evidence, and fails closed when
+baselines are absent. Candidate generation is deliberately separate from human
+visual approval.
+
 When `design-critical` is active, Emil Kowalski's reviewed ten-skill external
 collection is available as a profile-aware design-engineering craft layer.
 `design-engineering-quality` routes `emil-design-eng` as the first external
@@ -217,6 +223,11 @@ configuration authority boundaries, hook wiring, separate native and portable
 plugin metadata, portable path containment, default and strict runtime-doctor
 behavior, and Codex `apply_patch` secret scanning.
 
+The web browser gate verifies direction selection, keyboard entry, automated
+axe findings, mobile horizontal overflow, reduced-motion behavior, and visual
+comparisons in a fixed Linux environment. Local browser inspection remains
+exploratory evidence rather than the canonical screenshot environment.
+
 Runtime compatibility verification validates the machine-readable policy,
 stable-versus-prerelease comparison, advisory and strict outcomes, JSON output,
 and Codex doctor reuse without requiring either runtime in portable CI.
@@ -241,5 +252,7 @@ and Codex doctor reuse without requiring either runtime in portable CI.
 - The developer machine inspected for T-025 reports Claude Code 2.1.220 and a
   Codex 0.146.0 prerelease build, both below the recommended baselines. The
   repository reports this drift but does not upgrade developer tooling.
+- T-040 Linux visual baseline candidates still require human inspection before
+  they can be committed as approved comparison evidence.
 
 Only factual present-tense truth belongs here.

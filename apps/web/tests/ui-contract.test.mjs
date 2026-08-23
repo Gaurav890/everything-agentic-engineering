@@ -15,7 +15,9 @@ test("renders three materially named directions", () => {
 test("keeps direction approval explicit", () => {
   assert.match(component, /\.\/agentic design approve/);
   assert.match(component, /aria-pressed/);
-  assert.match(component, /Approve this direction/);
+  assert.match(component, /Copy approval command/);
+  assert.match(component, /Command copied/);
+  assert.match(component, /Copy failed/);
   assert.match(component, /data-approved/);
   assert.match(css, /var\(--eae-color-background-canvas\)/);
 });

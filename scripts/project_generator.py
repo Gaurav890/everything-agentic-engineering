@@ -467,6 +467,9 @@ def generated_package(plan: GenerationPlan) -> dict[str, Any]:
                 "lint": "pnpm --filter @everything-agentic/web lint",
                 "typecheck": "pnpm --filter @everything-agentic/web typecheck",
                 "test": "pnpm --filter @everything-agentic/web test",
+                "test:e2e": "pnpm --dir apps/web build && pnpm --dir apps/web test:e2e",
+                "test:visual": "pnpm --dir apps/web build && pnpm --dir apps/web test:visual",
+                "test:visual:update": "pnpm --dir apps/web build && pnpm --dir apps/web test:visual:update",
             }
         )
     if "design-critical" in active:
@@ -555,7 +558,8 @@ def generated_readme(plan: GenerationPlan) -> str:
 4. Ask the human design owner to choose or synthesize a direction.
 5. Record the decision with `./agentic design approve <direction-id> --yes`.
 6. Run `./agentic tokens build`, replace the sample content, and iterate in the running product.
-7. Run `./agentic verify full`; capture Playwright evidence before review."""
+7. Run `pnpm test:e2e` and `pnpm test:visual`; inspect any visual diff artifacts.
+8. Run `./agentic verify full` before review."""
     else:
         start = """1. Read `CLAUDE.md` and `AGENTS.md`.
 2. Complete `docs/00-vision/NORTH_STAR.md`.
@@ -715,12 +719,25 @@ def validate_generated_project(root: Path) -> dict[str, Any]:
     if package.get("name") != metadata.get("project", {}).get("slug"):
         raise GenerationError("Generated package slug does not match provenance")
     if "web-next" in resolved:
-        required_scripts = {"dev", "build", "lint", "typecheck", "test"}
+        required_scripts = {
+            "dev",
+            "build",
+            "lint",
+            "typecheck",
+            "test",
+            "test:e2e",
+            "test:visual",
+            "test:visual:update",
+        }
         if not required_scripts.issubset(set(package.get("scripts", {}))):
             raise GenerationError("Generated web project is missing runnable root scripts")
         web_package = load_object(root / "apps/web/package.json", "web package metadata")
         if web_package.get("name") != "@everything-agentic/web":
             raise GenerationError("Generated web package identity is invalid")
+        if not (root / ".github/workflows/web-quality.yml").is_file():
+            raise GenerationError("Generated web project is missing its visual-quality workflow")
+    elif (root / ".github/workflows/web-quality.yml").exists():
+        raise GenerationError("Inactive web project contains its visual-quality workflow")
     if "design-critical" in resolved:
         design_state = load_object(root / ".agentic/design.json", "design state")
         intake_state = load_object(root / ".agentic/design-intake.json", "design intake")

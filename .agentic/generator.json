@@ -36,6 +36,7 @@
   ],
   "profile_paths": {
     "apps/web": ["web-next"],
+    ".github/workflows/web-quality.yml": ["web-next"],
     "apps/mobile": ["mobile-expo"],
     "packages/ui": ["web-next"],
     "packages/api": ["backend-supabase", "backend-convex"],

@@ -11,7 +11,11 @@
     "lint": "tsc --noEmit",
     "pretypecheck": "next typegen",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "playwright test portfolio.spec.ts",
+    "test:visual": "playwright test visual.spec.ts",
+    "test:visual:update": "playwright test visual.spec.ts --update-snapshots",
+    "install:browsers": "playwright install chromium"
   },
   "dependencies": {
     "@everything-agentic/ui": "workspace:*",
@@ -20,6 +24,8 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.51.0",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

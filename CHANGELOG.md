@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A fail-closed Playwright web-quality gate covering all three portfolio
+  directions at desktop and mobile sizes, keyboard and selection behavior, axe
+  accessibility, horizontal overflow, reduced motion, reviewed Ubuntu visual
+  baselines, candidate artifacts, and failure evidence.
 - A runnable UI-first portfolio golden path with a short adaptive intake, three
   materially different live directions, explicit human approval/reset,
   DTCG-compatible compiled direction overrides, semantic UI primitives,

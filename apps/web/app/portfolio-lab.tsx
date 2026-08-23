@@ -54,6 +54,7 @@ const projects = [
 ] as const;
 
 type Profile = {name: string; role: string; location: string};
+type CopyStatus = "idle" | "copied" | "error";
 
 export function PortfolioLab({
   profile,
@@ -66,14 +67,18 @@ export function PortfolioLab({
     ? (approvedDirection as DirectionId)
     : null;
   const [active, setActive] = useState<DirectionId>(approved ?? "editorial-signal");
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
   const direction = directions.find((item) => item.id === active) ?? directions[0];
   const approvalCommand = `./agentic design approve ${active} --yes`;
 
   async function copyApproval() {
-    await navigator.clipboard.writeText(approvalCommand);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+    try {
+      await navigator.clipboard.writeText(approvalCommand);
+      setCopyStatus("copied");
+      window.setTimeout(() => setCopyStatus("idle"), 1800);
+    } catch {
+      setCopyStatus("error");
+    }
   }
 
   return (
@@ -99,7 +104,7 @@ export function PortfolioLab({
               aria-pressed={active === item.id}
               onClick={() => {
                 setActive(item.id);
-                setCopied(false);
+                setCopyStatus("idle");
               }}
             >
               <span>{item.number}</span>
@@ -112,9 +117,22 @@ export function PortfolioLab({
         </div>
         <div className="approval">
           <code>{approvalCommand}</code>
-          <Button type="button" size="compact" onClick={copyApproval}>
-            {copied ? "Copied" : active === approved ? "Approved direction" : "Approve this direction"}
+          <Button type="button" size="compact" data-copy-status={copyStatus} onClick={copyApproval}>
+            {copyStatus === "copied"
+              ? "Command copied"
+              : copyStatus === "error"
+                ? "Copy failed — try again"
+                : active === approved
+                  ? "Approved direction"
+                  : "Copy approval command"}
           </Button>
+          <span className="copy-status" role="status" aria-live="polite">
+            {copyStatus === "copied"
+              ? "Approval command copied to the clipboard."
+              : copyStatus === "error"
+                ? "The approval command could not be copied. Try again."
+                : ""}
+          </span>
         </div>
       </aside>
 
