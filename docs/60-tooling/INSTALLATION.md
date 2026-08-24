@@ -12,7 +12,9 @@ for new contributors and agents.
 - Python 3 for included guardrail hooks
 - pnpm recommended for app profiles
 
-Claude Code 2.1.225+ and Codex 0.147.0+ are the recommended runtime baselines.
+Claude Code 2.1.239+ and Codex 0.148.0+ are the recommended tested runtime
+baselines. The read-only runtime doctor reports drift; it never installs or
+upgrades either runtime.
 The repository doctor reports an older or missing runtime without upgrading it
 or enabling optional capabilities.
 

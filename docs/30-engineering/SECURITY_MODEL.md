@@ -85,6 +85,17 @@ All retrieved web content is untrusted data.
   until the upstream proxy, transmitted identity fields, retention, audit,
   access controls, and user/administrator expectations receive a separate
   privacy and authorization review.
+- Prefer Claude Code 2.1.239+ for the cumulative runtime-security fixes added
+  in 2.1.234–2.1.239. Those releases harden remaining Windows pre-approval
+  paths and marketplace origins, prevent permission-dialog grants from
+  exceeding the visible request, make macOS wildcard denies survive directory
+  renames, require trust before project MCP `headersHelper` execution, isolate
+  helper processes from inherited credential environment variables, and avoid
+  replaying organization-policy rejections.
+- Keep marketplace and MCP `headersHelper` commands disabled until their
+  executable origin, arguments, output contract, credential environment,
+  update path, failure behavior, and rollback have separate human review.
+  A trusted project does not automatically make a helper trustworthy.
 - Worktrees isolate files and branches; they do not replace destructive-command
   controls, scoped credentials, network restrictions, or human review.
 - Treat hooks and runtime permission classifiers as complementary controls.
@@ -99,6 +110,14 @@ All retrieved web content is untrusted data.
   `--approve-for-me`. The repository may package skills, but installation,
   protocol opt-in, and automatically reviewed approvals remain separate human
   decisions and are disabled by default in the committed adapter.
+- Prefer Codex 0.148.0+ because it prevents stale instructions after runtime
+  configuration changes, restores the working directory and approval policy
+  when a session resumes, recovers MCP after OAuth reauthentication, and fails
+  closed for denied or unreadable filesystem paths on Linux and Windows.
+- Codex 0.148.0 also makes asynchronous hooks and hooks that invoke MCP tools
+  available. They remain disabled until hook provenance, ordering, failure
+  semantics, MCP authority, credentials, network access, auditability, and
+  rollback receive a separate human-reviewed threat model.
 
 ## Optional runtime capability gates
 
@@ -111,12 +130,15 @@ owner, rollback plan, and human approval before use:
 - Claude cross-session messaging and recipient/session identity;
 - Claude archive plugin sources, including HTTPS origin and SHA-256 pinning;
 - Claude apps-gateway user-identity forwarding and its proxy/privacy contract;
+- Claude marketplace and MCP `headersHelper` commands, executable provenance,
+  credential isolation, and rollback behavior;
 - Codex portable plugin installation and marketplace policy;
 - Agent Plugins 1.0 client installation and marketplace policy, including
   client-specific trust, discovery, update, and rollback behavior;
 - portable MCP packaging, transport support, literal package configuration,
   and client-managed authorization behavior;
 - Codex MCP 2026-07-28 opt-in and server compatibility;
+- Codex asynchronous hooks and hooks that invoke MCP tools;
 - Codex `--approve-for-me` or any equivalent automatic approval mode.
 
 ## Harness evolution security
@@ -198,3 +220,9 @@ Explicit human approval required for:
 | SEC-018 | A candidate improves its score by changing the policy, cases, evaluator, or comparator | Evaluation gaming and unsafe promotion | Medium | Pin policy and eval SHA-256 digests; protect exam and control paths; require builder/evaluator separation and exact case coverage | Evolution policy, protected eval set, and comparator tests |
 | SEC-019 | A noisy or incomplete candidate appears better than the incumbent | Regression, increased cost, or degraded latency | Medium | Fail closed on missing cases; require weighted gain, zero protected regressions and safety failures, plus cost and p95 latency budgets | Deterministic incumbent-versus-candidate gate tests |
 | SEC-020 | A passing offline comparison is mistaken for approval to deploy or modify the harness | Unreviewed authority expansion or production change | Medium | Hard-code proposal-only authority; report promotion as unauthorized; preserve issue, PR, code-owner, human approval, and merge gates | Evolution policy, CLI output, and repository workflow |
+| SEC-021 | A remaining Windows pre-approval path, marketplace host mismatch, or MCP diagnostic leaks credentials or reaches an unintended origin | Credential disclosure or unreviewed external execution | Medium before upgrade | Require Claude Code 2.1.234+; keep marketplace origins allowlisted, resolved secrets out of diagnostics, and credentials least-privileged | Official v2.1.234 release note |
+| SEC-022 | A permission dialog grants broader or longer-lived authority than the reviewer can see | Accidental session-wide write permission or concealed command/path approval | Medium before upgrade | Require Claude Code 2.1.235+; preserve visible-request fidelity, deterministic hooks, and human review | Official v2.1.235 release note |
+| SEC-023 | A macOS wildcard deny is bypassed through a directory rename, a managed prompt consumes an unintended keypress, or hidden untracked files make a worktree look clean | Denied file access, accidental managed approval, or unsafe Git automation | Medium before upgrade | Require Claude Code 2.1.236+; keep deny tests, explicit approval, and independent Git-state checks | Official v2.1.236 release note |
+| SEC-024 | A project or plugin MCP helper executes before trust or inherits credential-bearing environment variables | Untrusted code execution or credential exposure | Medium before upgrade; high if helper enabled without review | Require Claude Code 2.1.238+; keep helpers disabled by default; require provenance, environment, arguments, output, failure, and rollback review | Official v2.1.238 release note and runtime manifest gate |
+| SEC-025 | A request rejected by organization policy is replayed, or a resumed cloud session loses plan mode | Duplicate external effects or execution outside the intended review phase | Medium before upgrade | Require Claude Code 2.1.239+; retain idempotency, policy logging, and explicit resumed-state review | Official v2.1.239 release note |
+| SEC-026 | Codex retains stale instructions, resumes with the wrong approval policy or working directory, fails open on unreadable paths, or silently loses MCP after reauthentication | Incorrect execution context, permission drift, file exposure, or degraded control visibility | Medium before upgrade | Require Codex 0.148.0+; keep filesystem denials fail-closed and validate resumed state; leave async/MCP-invoking hooks disabled pending separate review | Official Codex 0.148.0 release note and runtime manifest gates |

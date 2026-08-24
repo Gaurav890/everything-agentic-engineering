@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-23
+Last updated: 2026-08-24
 
 ## Product
 
@@ -191,18 +191,21 @@ worktree.
 Claude Code and Codex compatibility is defined in
 `.agentic/runtime-baselines.json` and reported by `runtime-doctor.sh` in
 advisory, strict, or JSON form. The doctor is read-only and keeps version
-availability separate from optional capability approval. Claude Code 2.1.233
-is the recommended tested baseline, adding Windows NT device-prefix validation,
-literal skill-argument substitution, and MCP v2 subscription reliability while
-explicitly excluding the reverted Cygwin-symlink and Bash input-redirection
-permission changes from the tested guarantee. The full-context fork and
-background-spawn defaults remain bounded by the repository contract:
+availability separate from optional capability approval. Claude Code 2.1.239
+is the recommended tested baseline. It includes the documented permission,
+Windows and macOS filesystem, marketplace-origin, MCP helper trust, credential
+isolation, organization-policy, and resumed-plan hardening through that
+release. Codex 0.148.0 is the recommended tested baseline for consistent
+instruction and approval state, fail-closed filesystem denials, and MCP OAuth
+recovery. The full-context fork and background-spawn defaults remain bounded by
+the repository contract:
 in-session specialists are read-only, writers use isolated branches/worktrees,
 and delegated work requires observed evidence. Claude self-hosted and
 cross-session execution, Remote
-Control, archive and dynamic marketplace sources, Codex portable plugin
-installation, MCP 2026-07-28 opt-in, apps-gateway identity forwarding, and
-automatically reviewed approvals are not enabled by the committed policy.
+Control, archive and dynamic marketplace sources, marketplace or MCP
+`headersHelper` commands, Codex portable plugin installation, MCP 2026-07-28
+opt-in, asynchronous or MCP-invoking hooks, apps-gateway identity forwarding,
+and automatically reviewed approvals are not enabled by the committed policy.
 
 GitHub `main` protection requires the `verify` and `policy` checks, an up-to-date
 branch, linear history, and resolved review conversations. It applies to

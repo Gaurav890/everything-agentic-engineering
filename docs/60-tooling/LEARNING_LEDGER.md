@@ -495,3 +495,63 @@ this file.
   #60 owns human review. It does not collect production data, invoke remote
   models, train weights, write candidates, change protected evals, promote,
   deploy, approve, or merge.
+
+### L-2026-08-24-01 — Runtime releases close permission, filesystem, and instruction-state gaps
+
+- **State:** trial
+- **Event dates:** 2026-08-17–2026-08-22
+- **Discovered:** 2026-08-24
+- **Domains:** Claude Code, Codex, permissions, filesystem, credentials, MCP,
+  runtime compatibility
+- **Sources:**
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.234`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.235`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.236`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.238`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.239`
+    (first-party release, high authority)
+  - `https://github.com/openai/codex/releases/tag/rust-v0.148.0`
+    (first-party release, high authority)
+- **Change:** Claude Code 2.1.234–2.1.239 adds cumulative hardening for
+  remaining Windows pre-approval paths, marketplace-origin checks, secret-safe
+  MCP diagnostics, permission-dialog grant fidelity, macOS wildcard denies,
+  managed-settings approval prompts, hidden Git state, project MCP helper trust
+  and credential isolation, organization-policy rejection replay, and resumed
+  plan mode. Codex 0.148.0 prevents stale instructions after configuration
+  changes, restores the working directory and approval policy on resume,
+  recovers MCP after OAuth reauthentication, and fails closed for denied or
+  unreadable filesystem paths on Linux and Windows.
+- **Repository relevance:** The starter treats permission prompts, filesystem
+  policy, marketplace and MCP execution, credentials, resumed sessions, and
+  organization policy as trust boundaries. The fixes strengthen the existing
+  policy without granting new runtime authority.
+- **Existing coverage / duplicate status:** partial. The ledger and runtime
+  policy already cover Claude Code through 2.1.233 and Codex through 0.147.0.
+  MCP 2026-07-28 and DTCG 2025.10 findings were also reviewed and deduplicated;
+  this entry records only material runtime changes. Generic 2.1.240–2.1.241
+  reliability notes are not used to claim specific security guarantees.
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 5 / risk 1 /
+  maintenance 1 / novelty 5
+- **Recommendation:** raise the read-only advisory and strict tested floors to
+  Claude Code 2.1.239 and Codex 0.148.0. Keep Claude marketplace/MCP
+  `headersHelper` commands and Codex asynchronous or MCP-invoking hooks disabled
+  until separate human-reviewed authority decisions exist.
+- **Affected artifacts:** `.agentic/runtime-baselines.json`, compatibility and
+  installation guidance, security model, runtime tests, changelog, and durable
+  state
+- **Acceptance and verification:** strict simulation rejects Claude Code
+  2.1.238 and Codex 0.147.0, accepts 2.1.239 and 0.148.0, preserves read-only
+  advisory/JSON output, and leaves all optional capability gates false and
+  human-controlled; full repository verification must pass.
+- **Uncertainty:** The release notes do not publish CVEs, complete exploit
+  prerequisites, or full affected-version ranges. A documented fix supports a
+  conservative tested floor, not a claim that every earlier installation is
+  exploitable or that a compatible runtime is authorized for optional use.
+- **Decision/PR:** T-042 is a bounded compatibility-policy trial owned by issue
+  #62. It does not install or upgrade either runtime; enable helpers, hooks,
+  plugins, MCP servers, credentials, network, sandbox, provider, model,
+  production, approval, or merge authority; or change managed settings.

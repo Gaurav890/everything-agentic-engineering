@@ -3,8 +3,8 @@
   "runtimes": {
     "claude": {
       "command": "claude",
-      "recommended_minimum": "2.1.233",
-      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.233",
+      "recommended_minimum": "2.1.239",
+      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.239",
       "capabilities": [
         {
           "id": "worktree-and-background-hook-isolation",
@@ -89,13 +89,49 @@
           "minimum": "2.1.233",
           "default_enabled": false,
           "human_approval_required": true
+        },
+        {
+          "id": "windows-preapproval-path-and-marketplace-origin-hardening",
+          "minimum": "2.1.234",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "permission-preview-and-grant-hardening",
+          "minimum": "2.1.235",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "macos-wildcard-deny-and-managed-approval-hardening",
+          "minimum": "2.1.236",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "mcp-helper-trust-and-credential-isolation",
+          "minimum": "2.1.238",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "organization-policy-replay-and-plan-resume-hardening",
+          "minimum": "2.1.239",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "marketplace-and-mcp-headers-helper",
+          "minimum": "2.1.238",
+          "default_enabled": false,
+          "human_approval_required": true
         }
       ]
     },
     "codex": {
       "command": "codex",
-      "recommended_minimum": "0.147.0",
-      "source": "https://learn.chatgpt.com/docs/changelog#codex-cli-01470",
+      "recommended_minimum": "0.148.0",
+      "source": "https://github.com/openai/codex/releases/tag/rust-v0.148.0",
       "capabilities": [
         {
           "id": "portable-agent-plugins",
@@ -112,6 +148,30 @@
         {
           "id": "approve-for-me",
           "minimum": "0.147.0",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "resumed-policy-and-instruction-state-hardening",
+          "minimum": "0.148.0",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "cross-platform-fail-closed-filesystem-sandbox",
+          "minimum": "0.148.0",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "mcp-oauth-reauthentication-recovery",
+          "minimum": "0.148.0",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "asynchronous-and-mcp-invoking-hooks",
+          "minimum": "0.148.0",
           "default_enabled": false,
           "human_approval_required": true
         }

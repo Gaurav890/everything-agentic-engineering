@@ -1,62 +1,61 @@
 # Handoff
 
-Last updated: 2026-08-23
+Last updated: 2026-08-24
 
 ## Current goal
 
-Finish verification and human review of the offline harness-evolution kernel.
+Finish verification and human/security review of the tested runtime-security
+baseline update.
 
 ## Completed
 
-- Added a closed, versioned evolution policy with proposal-only authority.
-- Added sanitized aggregate signal and evaluation-result schemas.
-- Added five protected regression cases and a synthetic last-known-good
-  incumbent with exact policy/eval fingerprints.
-- Added deterministic quality, protected-regression, safety, cost, p95 latency,
-  coverage, path, integrity, and evaluator-separation gates.
-- Added `./agentic evolve` plus generated-project and repository tests.
-- Documented the distinction between ecosystem research, harness evolution,
-  model-weight training, and enterprise-only production extensions.
+- Raised the machine-readable Claude Code tested floor from 2.1.233 to 2.1.239.
+- Raised the machine-readable Codex tested floor from 0.147.0 to 0.148.0.
+- Recorded the cumulative permission, filesystem, credential, marketplace,
+  MCP trust, organization-policy, resumed-state, and instruction-state fixes
+  from official release notes.
+- Kept Claude marketplace/MCP `headersHelper` commands and Codex asynchronous or
+  MCP-invoking hooks disabled and explicitly human-gated.
+- Updated strict/advisory/JSON regression coverage and compatibility guidance.
 
 ## Blockers
 
 - No known implementation blocker.
-- Independent security review is still required before the task can move to
-  human approval.
+- Independent security review and full repository verification are required
+  before direct human task approval.
 
 ## Unresolved decisions
 
-- Whether to add an opt-in production signal adapter later. This requires a
-  separate privacy, retention, access, tenant-isolation, deletion, and consent
-  design.
-- Whether domain teams should add calibrated judges, hidden holdouts,
-  statistical confidence, canaries, and rollback automation. None belongs in
-  this offline starter kernel by default.
+- Whether any project should later enable a marketplace/MCP helper or an
+  asynchronous/MCP-invoking hook. Each requires a separate threat model,
+  authority decision, rollback plan, and review; compatibility alone is not
+  authorization.
 
 ## Verification status
 
-- Thirteen focused evolution-engine tests pass.
-- Agentic CLI and downstream project-generator tests pass.
-- The committed policy, schemas, protected eval set, and incumbent validate
-  offline with `mutation_performed: false`.
+- Eight focused runtime-policy tests pass.
+- Strict simulation rejects Claude Code 2.1.238 and Codex 0.147.0, and accepts
+  Claude Code 2.1.239 and Codex 0.148.0.
+- JSON output validates with `mutation_performed: false`.
 - Full repository verification passes all ten stages.
-- Independent security review is pending.
+- The installed Codex runtime reports `0.148.0-alpha.21`, so the advisory doctor
+  correctly warns that it is below the stable 0.148.0 floor; no upgrade occurs.
+- No runtime was installed, upgraded, or configured by this task.
+- No optional capability was enabled.
 
 ## Exact next action
 
-Open a draft pull request, obtain independent security review, and address any
-findings before requesting direct human task approval. A passing candidate or
-CI run never authorizes promotion or merge.
+Open a draft pull request for issue #62 and obtain independent security review.
+Do not finalize the task or mark the pull request ready from CI evidence alone.
 
 ## Relevant files
 
-- `.agentic/evolution/`
-- `.claude/skills/harness-evolution/SKILL.md`
-- `scripts/evolution_engine.py`
-- `docs/30-engineering/HARNESS_EVOLUTION.md`
-- `docs/50-evals/HARNESS_EVALS.md`
-- `docs/60-tooling/EVOLUTION_POLICY.md`
-- `tests/test_evolution_engine.py`
-- `tests/test_project_generator.py`
+- `.agentic/runtime-baselines.json`
+- `tests/test_runtime_compatibility.py`
+- `docs/60-tooling/COMPATIBILITY.md`
+- `docs/60-tooling/CODEX.md`
+- `docs/60-tooling/INSTALLATION.md`
+- `docs/30-engineering/SECURITY_MODEL.md`
+- `docs/60-tooling/LEARNING_LEDGER.md`
 
 Keep this concise enough to read in under two minutes.
