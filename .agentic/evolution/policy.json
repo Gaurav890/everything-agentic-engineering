@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "mode": "offline_proposal_only",
+  "protected_eval_set": ".agentic/evolution/eval-sets/harness-regression.jsonl",
+  "incumbent_results": ".agentic/evolution/incumbent.json",
+  "minimum_evidence": {
+    "evaluated_cases": 5,
+    "human_calibration_required_for_learned_judges": true
+  },
+  "thresholds": {
+    "minimum_weighted_quality_gain": 0.05,
+    "quality_regression_tolerance": 0.0,
+    "maximum_protected_regressions": 0,
+    "maximum_safety_failures": 0,
+    "maximum_cost_ratio": 1.1,
+    "maximum_p95_latency_ratio": 1.15
+  },
+  "allowed_change_surfaces": [
+    {
+      "id": "few-shot-examples",
+      "risk": "low",
+      "patterns": [".claude/skills/*/examples/**"],
+      "required_reviews": ["qa-evaluator"]
+    },
+    {
+      "id": "instructions",
+      "risk": "medium",
+      "patterns": ["CLAUDE.md", "AGENTS.md", ".claude/skills/*/SKILL.md", ".claude/rules/*.md"],
+      "required_reviews": ["qa-evaluator", "security"]
+    },
+    {
+      "id": "memory-curation",
+      "risk": "medium",
+      "patterns": [".claude/skills/context-handoff/**"],
+      "required_reviews": ["qa-evaluator", "security"]
+    },
+    {
+      "id": "routing",
+      "risk": "medium",
+      "patterns": [".agentic/external-agents.json", ".agentic/external-skills.json"],
+      "required_reviews": ["architect", "qa-evaluator", "security"]
+    }
+  ],
+  "protected_paths": [
+    ".agentic/evolution/**",
+    ".github/**",
+    ".claude/hooks/**",
+    ".codex/**",
+    ".mcp.json",
+    ".env*",
+    "SECURITY.md",
+    "docs/30-engineering/SECURITY_MODEL.md",
+    "package.json",
+    "pnpm-lock.yaml",
+    "scripts/evolution.sh",
+    "scripts/evolution_engine.py",
+    "scripts/verify.sh"
+  ],
+  "data_policy": {
+    "storage": "sanitized_aggregates_only",
+    "forbidden_record_fields": [
+      "raw_input",
+      "raw_output",
+      "prompt",
+      "completion",
+      "source_code",
+      "secret",
+      "credential",
+      "personal_data",
+      "email",
+      "user_id"
+    ],
+    "required_privacy_flags": {
+      "redacted": true,
+      "contains_personal_data": false,
+      "contains_secrets": false,
+      "retention_class": "aggregate_only"
+    }
+  },
+  "authority": {
+    "propose": true,
+    "compare": true,
+    "write_candidate": false,
+    "modify_eval_set": false,
+    "promote": false,
+    "deploy": false,
+    "approve": false,
+    "merge": false,
+    "human_review_required": true
+  }
+}

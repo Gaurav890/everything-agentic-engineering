@@ -127,6 +127,7 @@ The non-design local skills remain:
 - `security-gate`
 - `specialist-router`
 - `self-improvement-loop`
+- `harness-evolution`
 - `codex-adapter`
 
 Superpowers and Expo tooling remain optional external workflow/platform layers.

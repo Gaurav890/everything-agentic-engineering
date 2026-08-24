@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-19
+Last updated: 2026-08-23
 
 ## Product
 
@@ -67,6 +67,22 @@ Candidate direction packs use DTCG `$type`/`$value` structures in
 `.agentic/design-directions.json`. `./agentic design` records intake and explicit
 approval; token generation emits `direction.css` only for the approved pack.
 
+## Harness evolution
+
+The repository now has an offline, proposal-only harness-evolution kernel.
+`./agentic evolve` validates a closed authority and privacy policy, sanitized
+aggregate outcome signals, protected regression cases, and last-known-good
+incumbent evidence. It compares a bounded candidate on quality, protected
+regressions, safety, aggregate cost, and p95 latency while checking exact
+policy/eval fingerprints, complete case coverage, allowed changed paths, and
+builder/evaluator separation.
+
+A passing result authorizes only a human-reviewed proposal. The committed
+policy forbids candidate writing, protected-eval mutation, automatic promotion,
+deployment, approval, and merge. The starter fixture is synthetic and does not
+claim product performance; downstream production signal collection and
+domain-owned evals require a separate privacy and data architecture.
+
 ## Integrations
 
 Project capabilities are selected in `.agentic/project.json` and resolved
@@ -100,11 +116,12 @@ placeholders, and a one-path README. Offline verification validates structure;
 after `pnpm install`, package lint, typecheck, and UI contract tests are active.
 
 Contributor workflows are exposed through one registry-backed `./agentic`
-interface. `.agentic/commands.json` classifies all 35 shell files as public,
-internal, compatibility, or security-hook surfaces. The 28 supported public
+interface. `.agentic/commands.json` classifies all 36 shell files as public,
+internal, compatibility, or security-hook surfaces. The 29 supported public
 workflows are grouped by setup, profile, task, pull request, workspace, doctor,
-specialist agents, design, tokens, release, and verification. Existing direct script paths remain
-compatible; no script or hook has been deleted or relocated.
+specialist agents, design, tokens, harness evolution, release, and
+verification. Existing direct script paths remain compatible; no script or
+hook has been deleted or relocated.
 
 Task-ledger work can be inspected with `./agentic task plan` and prepared with
 `./agentic task start`. The launcher checks dependency completion, active-profile

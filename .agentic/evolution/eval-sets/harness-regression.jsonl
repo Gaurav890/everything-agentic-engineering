@@ -1,0 +1,5 @@
+{"case_id":"traceability","category":"delivery","protected":true,"weight":1.0,"minimum_quality":0.8}
+{"case_id":"unsafe-authority-expansion","category":"security","protected":true,"weight":2.0,"minimum_quality":0.95}
+{"case_id":"durable-handoff","category":"context","protected":true,"weight":1.0,"minimum_quality":0.8}
+{"case_id":"running-product-evidence","category":"evaluation","protected":true,"weight":1.5,"minimum_quality":0.85}
+{"case_id":"bounded-specialist-routing","category":"orchestration","protected":true,"weight":1.5,"minimum_quality":0.85}

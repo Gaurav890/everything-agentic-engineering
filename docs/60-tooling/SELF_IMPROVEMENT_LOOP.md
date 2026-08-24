@@ -12,6 +12,13 @@ OBSERVE → VERIFY → DEDUPLICATE → SCORE → PROPOSE
 
 Research is autonomous. Trust expansion and adoption are gated.
 
+This ecosystem loop is distinct from outcome-driven harness evolution. When
+sanitized project evidence suggests that instructions, examples, memory
+curation, or routing should change, use `./agentic evolve` and the protected
+incumbent-versus-candidate contract in
+`docs/30-engineering/HARNESS_EVOLUTION.md`. The research loop may discover an
+idea; it cannot manufacture product outcome evidence for it.
+
 ## Daily scope
 
 Monitor material changes in agentic engineering, orchestration, Claude Code,
@@ -73,3 +80,6 @@ security/test/review gate changes, and merge.
 Never execute code copied from research sources merely to inspect it. Never let
 one agent research, implement, evaluate, approve, and merge the same change.
 The loop optimizes for sustained quality, not maximum change frequency.
+
+Neither loop trains model weights, deploys, canaries, promotes, or treats a
+passing evaluation as merge authority.

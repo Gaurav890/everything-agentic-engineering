@@ -285,6 +285,32 @@ Important decisions leave the chat and enter version-controlled project artifact
 
 ---
 
+### 🔁 Evidence-gated harness evolution
+
+The starter can improve its instructions, examples, memory curation, and
+routing from measured outcomes without allowing the system to rewrite its own
+exam or promote itself.
+
+```bash
+./agentic evolve status
+./agentic evolve signal validate sanitized-signal.json
+./agentic evolve compare --candidate candidate-results.json
+```
+
+Candidate and incumbent run against the same fingerprinted protected cases.
+Quality must improve, protected behavior and safety cannot regress, and cost
+and p95 latency must remain inside explicit budgets. Raw prompts, outputs,
+source code, secrets, credentials, personal data, and customer traces are not
+accepted by the committed signal contract.
+
+A `PASS` means **eligible for independent human review**. The kernel remains
+offline and cannot write candidates, alter evals, promote, deploy, approve, or
+merge. See the [architecture](docs/30-engineering/HARNESS_EVOLUTION.md),
+[evaluation contract](docs/50-evals/HARNESS_EVALS.md), and
+[operating policy](docs/60-tooling/EVOLUTION_POLICY.md).
+
+---
+
 ### 🤖 Specialized agents
 
 The starter includes focused agents for:

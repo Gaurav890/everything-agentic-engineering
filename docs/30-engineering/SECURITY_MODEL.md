@@ -119,6 +119,28 @@ owner, rollback plan, and human approval before use:
 - Codex MCP 2026-07-28 opt-in and server compatibility;
 - Codex `--approve-for-me` or any equivalent automatic approval mode.
 
+## Harness evolution security
+
+Harness evolution is an offline evaluation and proposal surface, not an
+authority-expanding runtime. Its committed policy, schemas, protected cases,
+incumbent evidence, and comparator are part of the trust boundary.
+
+- Accept only sanitized aggregate outcome signals. Reject raw prompts,
+  outputs, source code, secrets, credentials, personal data, email addresses,
+  and user identifiers rather than attempting best-effort redaction.
+- Fingerprint the policy and protected eval set. Incumbent and candidate
+  evidence must reference the exact same immutable exam.
+- Keep candidate-owned paths separate from policy, eval, security, workflow,
+  dependency, credential, and comparator paths.
+- Require complete case coverage, a distinct builder and evaluator, zero
+  protected regressions, zero safety failures, and bounded cost and latency.
+- Treat a passing comparison as permission to open a human-reviewed proposal
+  only. It never authorizes writing a candidate, changing an eval, promotion,
+  deployment, approval, merge, or production access.
+- Synthetic starter evidence demonstrates the contract, not product quality.
+  Downstream teams must provide domain-owned, privacy-reviewed evals before
+  relying on the result.
+
 ## MCP security
 
 - Use official/primary implementations when possible.
@@ -172,3 +194,7 @@ Explicit human approval required for:
 | SEC-014 | A skill or command argument is re-expanded as a template marker after substitution | Instruction or data substitution outside the caller's intended literal argument | Medium before upgrade | Require Claude Code 2.1.233+; validate arguments at trust boundaries and treat external skill inputs as untrusted data | Official v2.1.233 release note |
 | SEC-015 | A maintainer assumes 2.1.233 still enforces the reverted Cygwin-symlink or Bash input-redirection permission changes | Commands receive less runtime permission scrutiny than policy assumes | Medium | Do not claim those checks at 2.1.233; retain deterministic hooks, explicit path review, least privilege, and human approval | Official v2.1.233 release note |
 | SEC-016 | Apps-gateway identity forwarding exposes signed-in user identity to an insufficiently governed proxy | Privacy leakage, unexpected attribution, or identity retention outside the intended boundary | Medium if enabled | Keep forwarding disabled; require proxy, field, retention, access, audit, disclosure, and rollback review before enablement | Official v2.1.233 release note and runtime manifest gate |
+| SEC-017 | Raw traces, prompts, outputs, source, secrets, or identifiers enter an evolution dataset | Privacy breach, credential exposure, or durable retention of sensitive material | High if collection is added carelessly | Accept only closed aggregate signals; reject forbidden fields; require a separate data architecture before production collection | Evolution signal schema and negative tests |
+| SEC-018 | A candidate improves its score by changing the policy, cases, evaluator, or comparator | Evaluation gaming and unsafe promotion | Medium | Pin policy and eval SHA-256 digests; protect exam and control paths; require builder/evaluator separation and exact case coverage | Evolution policy, protected eval set, and comparator tests |
+| SEC-019 | A noisy or incomplete candidate appears better than the incumbent | Regression, increased cost, or degraded latency | Medium | Fail closed on missing cases; require weighted gain, zero protected regressions and safety failures, plus cost and p95 latency budgets | Deterministic incumbent-versus-candidate gate tests |
+| SEC-020 | A passing offline comparison is mistaken for approval to deploy or modify the harness | Unreviewed authority expansion or production change | Medium | Hard-code proposal-only authority; report promotion as unauthorized; preserve issue, PR, code-owner, human approval, and merge gates | Evolution policy, CLI output, and repository workflow |

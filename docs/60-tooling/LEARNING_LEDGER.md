@@ -447,3 +447,51 @@ this file.
   owns human review. Installation, configuration, capability activation,
   credentials, network/sandbox authority, approval, deployment, production,
   and merge remain out of scope.
+
+### L-2026-08-23-01 — Self-evolving systems need an evidence-gated harness loop
+
+- **State:** trial
+- **Event date:** 2026-08-18
+- **Discovered:** 2026-08-23
+- **Domains:** harness engineering, evaluation, continual improvement, safety,
+  cost, latency, enterprise governance
+- **Sources:**
+  - `https://spandyie.github.io/blog/2026/08/18/how-to-build-self-evolving-enterprise-agents/`
+    (independent synthesis, medium authority)
+  - `https://arxiv.org/abs/2508.07407` (research survey, primary source)
+  - `https://arxiv.org/abs/2509.26354` (Misevolution research, primary source)
+  - `https://arxiv.org/abs/2601.18734` (OPSD research, primary source)
+- **Change:** The sources distinguish outcome-driven improvement of prompts,
+  examples, memory, and orchestration from model-weight training. The recurring
+  safe loop is act, collect bounded signals, evaluate a candidate against an
+  incumbent, gate regressions and operational budgets, and promote only under
+  explicit governance.
+- **Repository relevance:** The repository already researches external changes
+  and records durable state, but it did not have a deterministic way to compare
+  a bounded harness candidate with the last-known-good behavior.
+- **Existing coverage:** partial. The ecosystem research loop, task ledger,
+  evaluator separation, security gates, and human merge boundary existed;
+  sanitized outcome schemas, protected regression cases, integrity digests,
+  and incumbent-versus-candidate gates were missing.
+- **Scores:** relevance 5 / authority 4 / confidence 4 / impact 5 / risk 5 /
+  maintenance 3 / novelty 4
+- **Recommendation:** trial an offline, proposal-only kernel. Begin with
+  examples, instructions, memory curation, and routing. Do not add production
+  telemetry, raw trace retention, generated-code execution, model training,
+  automatic eval mutation, canaries, or autonomous promotion.
+- **Affected artifacts:** `.agentic/evolution/`, `scripts/evolution_engine.py`,
+  `docs/30-engineering/HARNESS_EVOLUTION.md`, evaluation guidance, security
+  model, routing skill, tests, and durable state
+- **Acceptance and verification:** closed policy and schemas; sanitized signal
+  rejection tests; immutable policy/eval fingerprints; exact protected-case
+  coverage; quality, regression, safety, cost, and latency gates; proposal-only
+  result; deterministic offline and generated-project verification.
+- **Uncertainty:** The independent article is a useful synthesis, not a
+  production safety standard. The linked research demonstrates approaches in
+  bounded settings and does not establish that autonomous online learning is
+  safe for this starter. Domain calibration, privacy, statistical confidence,
+  canaries, and rollback remain future, separately reviewed work.
+- **Decision/PR:** T-041 implements only the offline comparison contract. Issue
+  #60 owns human review. It does not collect production data, invoke remote
+  models, train weights, write candidates, change protected evals, promote,
+  deploy, approve, or merge.

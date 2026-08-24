@@ -198,6 +198,21 @@ tools, credentials, network, sandbox, deployment, production, approval, or
 merge authority. Read `docs/60-tooling/SPECIALIST_ROUTING.md` for the operating
 contract.
 
+## Evidence-gated harness evolution
+
+Use `harness-evolution` and `./agentic evolve` only when sanitized project
+outcomes justify testing a bounded change to examples, instructions, memory
+curation, or routing. The committed comparator is offline, read-only, and
+fingerprints its policy and protected eval set. Candidate and incumbent must
+cover identical cases; any protected regression, safety failure, stale
+fingerprint, unknown path, missing evidence, cost overrun, or p95 latency
+overrun fails closed.
+
+Candidates never own the evolution policy, evals, engine, security gates,
+workflows, dependencies, tools, permissions, credentials, production,
+approval, or merge. `PASS` authorizes only independent human review through the
+normal task and pull-request workflow.
+
 ## Agent result contract
 
 Every specialist returns:

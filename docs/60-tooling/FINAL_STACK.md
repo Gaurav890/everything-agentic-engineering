@@ -76,6 +76,7 @@ Default decision:
 - loop-engineering
 - security-gate
 - self-improvement-loop
+- harness-evolution
 - codex-adapter
 
 ## External skills

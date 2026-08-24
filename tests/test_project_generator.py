@@ -143,6 +143,17 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse((destination / ".agentic/design.json").exists())
             self.assertFalse((destination / ".agentic/design-intake.json").exists())
             self.assertFalse((destination / ".agentic/design-directions.json").exists())
+            self.assertTrue((destination / ".agentic/evolution/policy.json").is_file())
+            self.assertTrue((destination / ".agentic/evolution/incumbent.json").is_file())
+            evolution = subprocess.run(
+                [str(destination / "agentic"), "evolve", "validate", "--json"],
+                cwd=destination,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, evolution.returncode, evolution.stderr)
+            self.assertFalse(json.loads(evolution.stdout)["mutation_performed"])
             self.assertFalse((destination / ".claude/agents/frontend.md").exists())
             self.assertFalse((destination / ".claude/agents/mobile.md").exists())
             self.assertFalse((destination / ".claude/agents/backend.md").exists())
