@@ -86,6 +86,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Security
 
+- Claude Code 2.1.239 and Codex 0.148.0 are now the tested advisory baselines,
+  covering cumulative permission-dialog, filesystem-deny, marketplace-origin,
+  credential-isolation, MCP reauthentication, organization-policy,
+  resumed-approval, and instruction-state hardening. Marketplace/MCP
+  `headersHelper` commands and asynchronous or MCP-invoking hooks remain
+  disabled pending separate human-reviewed authority decisions.
 - Claude Code 2.1.233 is now the tested advisory baseline, adding Windows NT
   device-prefix validation against an NTLM credential-leak vector and literal
   skill-argument substitution, plus version-qualified MCP v2 reliability

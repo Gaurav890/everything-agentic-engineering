@@ -98,13 +98,12 @@ must be checked against the installed version.
   identifiers, not authorization. Cross-session messaging, self-hosted runners,
   Remote Control, external marketplace sources, and managed sandbox overrides
   remain separately reviewed and human-gated.
-- Claude Code 2.1.233 is the repository's recommended general baseline. It
-  rejects Windows NT device-prefix paths that could bypass UNC validation and
-  leak NTLM credentials, and prevents skill/command argument values from being
-  re-expanded as template markers. It also fixes repeated MCP v2 subscription
-  reconnection against servers that terminate long-held streams and expands
-  bare skill validation. These are runtime hardening and reliability records,
-  not permission to enable an MCP server or install a skill.
+- Claude Code 2.1.233 rejects Windows NT device-prefix paths that could bypass
+  UNC validation and leak NTLM credentials, prevents skill/command argument
+  values from being re-expanded as template markers, and fixes repeated MCP v2
+  subscription reconnection against servers that terminate long-held streams
+  and expands bare skill validation. These remain part of the cumulative
+  baseline; they do not authorize an MCP server or skill installation.
 - Version 2.1.233 also reverts the broader 2.1.232 permission changes for
   Cygwin-style symlinks and Bash input redirection while a narrower change is
   prepared. Do not treat those two checks as part of the 2.1.233 guarantee;
@@ -114,6 +113,30 @@ must be checked against the installed version.
   user's identity to an upstream proxy. It remains disabled in the repository
   policy and requires a separate privacy, proxy-trust, retention, audit, and
   human-approval decision.
+- Claude Code 2.1.234 extends Windows NT-namespace rejection to remaining
+  pre-approval reads, session restore, includes, workflows, and uploads. It
+  also redacts resolved MCP secrets, rejects marketplace allowlist host
+  mismatches, preserves permission restrictions across renderer restarts, and
+  clarifies repository-wide trust scope.
+- Claude Code 2.1.235 fixes a permission-dialog path where Shift+Tab could
+  approve an edit and grant session-wide edit permission. Permission displays
+  and persistence options now match the grant, and persistent approval is
+  withheld when the full contents cannot be displayed.
+- Claude Code 2.1.236 makes macOS wildcard read-deny rules override allowed
+  regions, cover directory contents, and survive renames. It also prevents the
+  first keypress from being captured as managed-settings approval and prevents
+  a Git setting from hiding untracked work from auto-mode status checks.
+- Claude Code 2.1.238 requires project trust before project or added-directory
+  MCP `headersHelper` execution and removes inherited credential environment
+  variables from project, plugin, and agent helpers. The helper capability
+  itself remains disabled until a separate command, origin, credential,
+  network, and rollback review.
+- Claude Code 2.1.239 prevents a request rejected by organization policy from
+  being resent before the rejection is shown, preserves plan mode after cloud
+  worker restarts, and corrects WebFetch cache expiry. It is the repository's
+  recommended tested floor because it is the newest release with specific,
+  reviewable trust-boundary evidence; the generic 2.1.240–2.1.241 release notes
+  are not used to claim additional guarantees.
 - This recommendation does not authorize adding credential paths, secrets,
   sandbox settings, network allowlists, runtime upgrades, or new execution
   surfaces to the repository. Inventory and approve those separately.
@@ -127,10 +150,20 @@ The repository contract remains authoritative regardless of runtime defaults.
 - Codex 0.146.1 or newer is the preferred stable baseline when using models
   identified by Codex as cyber-specialized. It applies safer review defaults
   and explains permission changes in the terminal.
-- Codex 0.147.0 or newer is the recommended baseline for the repository's
-  plugin workflow. `codex-doctor.sh --strict-runtime` enforces that floor on a
+- Codex 0.147.0 introduced the repository's optional plugin, MCP 2026-07-28,
+  and automatic-review capability records. Those remain disabled and
+  human-gated.
+- Codex 0.148.0 or newer is the recommended tested baseline. It prevents model
+  or settings changes from leaving stale instructions or changing an active
+  turn, restores persisted working directory and approval policy on resume,
+  recovers MCP servers after OAuth reauthentication, and makes the sandbox fail
+  closed for denied or unreadable paths across Linux and Windows.
+  `codex-doctor.sh --strict-runtime` enforces that floor on a
   developer machine; normal CI validates the adapter without installing or
   upgrading Codex.
+- Codex 0.148.0 can run hooks asynchronously and invoke MCP tools. That is an
+  authority-expanding optional surface, not a baseline permission; the
+  committed adapter does not enable it.
 - Do not infer authorization from an automatic reviewer or model default.
   Project permission profiles, human approval, security review, and external
   action boundaries still apply.

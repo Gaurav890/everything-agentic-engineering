@@ -22,7 +22,7 @@ on a developer machine can require the runtime floor:
 ./scripts/codex-doctor.sh --strict-runtime
 ```
 
-Codex 0.147.0 or newer is the recommended baseline for plugin workflows. An
+Codex 0.148.0 or newer is the recommended tested baseline. An
 older runtime does not authorize an automatic upgrade; review and approve
 runtime changes separately.
 
@@ -75,6 +75,10 @@ guardrail, not a security boundary.
 
 Review the exact project hook definitions with `/hooks` before trusting them.
 Changed hooks require renewed trust in Codex.
+
+Codex 0.148.0 adds optional asynchronous hooks and MCP-tool invocation from
+hooks. The repository does not enable either surface. Adding them requires a
+separate command, credential, network, MCP, failure, and rollback review.
 
 ## Parallel work
 

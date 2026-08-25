@@ -32,9 +32,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
                     self.assertTrue(capability["human_approval_required"])
 
     def test_stable_release_meets_equal_baseline_but_prerelease_does_not(self) -> None:
-        stable = parse_version("codex-cli 0.147.0")
-        prerelease = parse_version("codex-cli 0.147.0-alpha.4")
-        required = parse_version("0.147.0")
+        stable = parse_version("codex-cli 0.148.0")
+        prerelease = parse_version("codex-cli 0.148.0-alpha.4")
+        required = parse_version("0.148.0")
         assert stable and prerelease and required
         self.assertTrue(stable.meets(required))
         self.assertFalse(prerelease.meets(required))
@@ -54,7 +54,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.232",
+            "2.1.238",
             "--codex-version",
             "0.147.0",
         )
@@ -65,9 +65,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.233",
+            "2.1.239",
             "--codex-version",
-            "codex-cli 0.147.0",
+            "codex-cli 0.148.0",
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Runtime compatibility PASS", result.stdout)
@@ -76,9 +76,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--json",
             "--claude-version",
-            "2.1.233",
+            "2.1.239",
             "--codex-version",
-            "0.147.0",
+            "0.148.0",
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         report = json.loads(result.stdout)
@@ -86,11 +86,11 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         self.assertFalse(report["mutation_performed"])
         self.assertEqual([item["id"] for item in report["runtimes"]], ["claude", "codex"])
 
-    def test_claude_baseline_records_changed_subagent_defaults_without_expanding_authority(self) -> None:
+    def test_runtime_baselines_record_hardening_without_expanding_authority(self) -> None:
         manifest = load_manifest(MANIFEST)
         claude = manifest["runtimes"]["claude"]
-        self.assertEqual(claude["recommended_minimum"], "2.1.233")
-        self.assertTrue(claude["source"].endswith("/v2.1.233"))
+        self.assertEqual(claude["recommended_minimum"], "2.1.239")
+        self.assertTrue(claude["source"].endswith("/v2.1.239"))
 
         capabilities = {item["id"]: item for item in claude["capabilities"]}
         self.assertEqual(
@@ -125,9 +125,53 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         self.assertEqual(identity_forwarding["minimum"], "2.1.233")
         self.assertFalse(identity_forwarding["default_enabled"])
         self.assertTrue(identity_forwarding["human_approval_required"])
+        self.assertEqual(
+            capabilities["windows-preapproval-path-and-marketplace-origin-hardening"]["minimum"],
+            "2.1.234",
+        )
+        self.assertEqual(
+            capabilities["permission-preview-and-grant-hardening"]["minimum"],
+            "2.1.235",
+        )
+        self.assertEqual(
+            capabilities["macos-wildcard-deny-and-managed-approval-hardening"]["minimum"],
+            "2.1.236",
+        )
+        self.assertEqual(
+            capabilities["mcp-helper-trust-and-credential-isolation"]["minimum"],
+            "2.1.238",
+        )
+        self.assertEqual(
+            capabilities["organization-policy-replay-and-plan-resume-hardening"]["minimum"],
+            "2.1.239",
+        )
+        headers_helper = capabilities["marketplace-and-mcp-headers-helper"]
+        self.assertFalse(headers_helper["default_enabled"])
+        self.assertTrue(headers_helper["human_approval_required"])
+
+        codex = manifest["runtimes"]["codex"]
+        self.assertEqual(codex["recommended_minimum"], "0.148.0")
+        self.assertTrue(codex["source"].endswith("/rust-v0.148.0"))
+        codex_capabilities = {item["id"]: item for item in codex["capabilities"]}
+        self.assertEqual(
+            codex_capabilities["resumed-policy-and-instruction-state-hardening"]["minimum"],
+            "0.148.0",
+        )
+        self.assertTrue(
+            codex_capabilities["cross-platform-fail-closed-filesystem-sandbox"]["default_enabled"]
+        )
+        self.assertTrue(
+            codex_capabilities["mcp-oauth-reauthentication-recovery"]["default_enabled"]
+        )
+        mcp_hooks = codex_capabilities["asynchronous-and-mcp-invoking-hooks"]
+        self.assertFalse(mcp_hooks["default_enabled"])
+        self.assertTrue(mcp_hooks["human_approval_required"])
         compatibility = (ROOT / "docs/60-tooling/COMPATIBILITY.md").read_text()
         self.assertIn("reverts", compatibility)
         self.assertIn("Bash input redirection", compatibility)
+        self.assertIn("MCP `headersHelper`", compatibility)
+        self.assertIn("makes the sandbox fail", compatibility)
+        self.assertIn("closed for denied or unreadable paths", compatibility)
         self.assertFalse(capabilities["cross-session-messaging"]["default_enabled"])
         self.assertTrue(
             capabilities["cross-session-messaging"]["human_approval_required"]

@@ -1100,3 +1100,41 @@ raw prompts or customer data, invoke remote models, train weights, execute
 generated code, write candidates, weaken or mutate protected evals, install or
 enable external capabilities, use credentials, change network or sandbox
 authority, deploy, canary, promote, approve, or merge.
+
+### 2026-08-24 — T-042
+
+**Requirements:** FR-001
+**Acceptance:** AC-001
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT SECURITY REVIEW PASS
+
+**Change**
+
+Raised the read-only tested runtime floors to Claude Code 2.1.239 and Codex
+0.148.0 based on first-party release evidence. The policy records cumulative
+permission, filesystem, credential, marketplace, MCP trust, resumed-state, and
+instruction-state hardening while keeping newly available helper and hook
+surfaces disabled and human-gated.
+
+**Evidence**
+
+- Eight focused runtime compatibility tests pass.
+- Strict simulation rejects Claude Code 2.1.238 and Codex 0.147.0, and accepts
+  Claude Code 2.1.239 and Codex 0.148.0.
+- JSON output parses with `mutation_performed: false`.
+- Full repository verification passes all ten stages.
+- The local Codex prerelease remains below the stable floor and produces an
+  advisory warning; the repository does not upgrade it.
+
+**Independent review**
+
+- A separate read-only security reviewer inspected exact head `553c747` and
+  returned `PASS` with no blocking security defect or authority expansion.
+- The review is recorded under `docs/50-evals/evidence/T-042/`.
+- Human task finalization and squash merge remain separate decisions.
+
+**Authority boundary**
+
+Issue #62 owns review. This task does not install, upgrade, or configure a
+runtime; enable marketplace/MCP helpers, asynchronous or MCP-invoking hooks,
+plugins, MCP servers, credentials, network, sandbox, provider, model,
+production, approval, or merge authority; or change managed settings.
