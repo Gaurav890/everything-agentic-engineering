@@ -17,12 +17,14 @@ baseline update.
 - Kept Claude marketplace/MCP `headersHelper` commands and Codex asynchronous or
   MCP-invoking hooks disabled and explicitly human-gated.
 - Updated strict/advisory/JSON regression coverage and compatibility guidance.
+- Independent read-only security review passed the exact implementation head
+  with no blocking security finding or accidental authority expansion.
 
 ## Blockers
 
-- No known implementation blocker.
-- Independent security review and full repository verification are required
-  before direct human task approval.
+- No known implementation or security-review blocker.
+- The task ledger still needs the normal finish and bounded finalization flow;
+  policy must be rechecked on the resulting exact head.
 
 ## Unresolved decisions
 
@@ -38,6 +40,8 @@ baseline update.
   Claude Code 2.1.239 and Codex 0.148.0.
 - JSON output validates with `mutation_performed: false`.
 - Full repository verification passes all ten stages.
+- Independent security review reports `PASS` with evidence under
+  `docs/50-evals/evidence/T-042/`.
 - The installed Codex runtime reports `0.148.0-alpha.21`, so the advisory doctor
   correctly warns that it is below the stable 0.148.0 floor; no upgrade occurs.
 - No runtime was installed, upgraded, or configured by this task.
@@ -45,8 +49,9 @@ baseline update.
 
 ## Exact next action
 
-Open a draft pull request for issue #62 and obtain independent security review.
-Do not finalize the task or mark the pull request ready from CI evidence alone.
+Move the task to review with the normal finish command, run the bounded
+finalizer under the direct human completion instruction, and recheck required
+checks on the resulting exact head. The finalizer must not merge.
 
 ## Relevant files
 
@@ -57,5 +62,6 @@ Do not finalize the task or mark the pull request ready from CI evidence alone.
 - `docs/60-tooling/INSTALLATION.md`
 - `docs/30-engineering/SECURITY_MODEL.md`
 - `docs/60-tooling/LEARNING_LEDGER.md`
+- `docs/50-evals/evidence/T-042/`
 
 Keep this concise enough to read in under two minutes.

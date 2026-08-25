@@ -1105,7 +1105,7 @@ authority, deploy, canary, promote, approve, or merge.
 
 **Requirements:** FR-001
 **Acceptance:** AC-001
-**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT SECURITY REVIEW PENDING
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT SECURITY REVIEW PASS
 
 **Change**
 
@@ -1125,9 +1125,12 @@ surfaces disabled and human-gated.
 - The local Codex prerelease remains below the stable floor and produces an
   advisory warning; the repository does not upgrade it.
 
-**Remaining evidence**
+**Independent review**
 
-- Independent security review is required before direct human task approval.
+- A separate read-only security reviewer inspected exact head `553c747` and
+  returned `PASS` with no blocking security defect or authority expansion.
+- The review is recorded under `docs/50-evals/evidence/T-042/`.
+- Human task finalization and squash merge remain separate decisions.
 
 **Authority boundary**
 
