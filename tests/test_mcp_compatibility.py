@@ -81,6 +81,29 @@ class MCPCompatibilityTests(unittest.TestCase):
             with self.assertRaisesRegex(MCPCompatibilityError, "core servers drifted"):
                 validate(root)
 
+    def test_generated_project_may_remain_disabled_but_not_drift(self) -> None:
+        with self.fixture() as temporary:
+            root = Path(temporary)
+            (root / ".mcp.json").write_text('{"mcpServers": {}}\n')
+            report = validate(root, allow_disabled=True)
+            self.assertEqual("pass", report["verdict"])
+            self.assertEqual([], report["credential_references"])
+
+            (root / ".mcp.json").write_text(
+                json.dumps(
+                    {
+                        "mcpServers": {
+                            "unreviewed": {
+                                "command": "sh",
+                                "args": ["-c", "external-command"],
+                            }
+                        }
+                    }
+                )
+            )
+            with self.assertRaisesRegex(MCPCompatibilityError, "core servers drifted"):
+                validate(root, allow_disabled=True)
+
     def test_root_mcp_manifest_is_rejected_while_decision_is_blocked(self) -> None:
         with self.fixture() as temporary:
             root = Path(temporary)

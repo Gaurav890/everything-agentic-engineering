@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import init_project  # noqa: E402
+import agent_broker  # noqa: E402
+import mcp_compatibility  # noqa: E402
 import profile_engine  # noqa: E402
 
 CONFIG_PATH = Path(".agentic/generator.json")
@@ -824,6 +826,37 @@ def validate_symlinks(root: Path) -> None:
                 raise GenerationError(f"Generated symlink escapes the project: {path.relative_to(root)}")
 
 
+def resolve_generated_profiles(root: Path, selected: list[str]) -> dict[str, Any]:
+    original_root = profile_engine.ROOT
+    original_config = profile_engine.CONFIG_DIR
+    original_profiles = profile_engine.PROFILES_DIR
+    original_project = profile_engine.PROJECT_PATH
+    original_resources = profile_engine.RESOURCES_PATH
+    original_mcp = profile_engine.MCP_PATH
+    try:
+        profile_engine.ROOT = root
+        profile_engine.CONFIG_DIR = root / ".agentic"
+        profile_engine.PROFILES_DIR = root / ".agentic" / "profiles"
+        profile_engine.PROJECT_PATH = root / PROJECT_PATH
+        profile_engine.RESOURCES_PATH = root / ".agentic" / "resources.json"
+        profile_engine.MCP_PATH = root / ".mcp.json"
+        result = profile_engine.resolve(selected)
+    except profile_engine.ProfileError as error:
+        raise GenerationError(f"Current project profiles are invalid: {error}") from error
+    finally:
+        profile_engine.ROOT = original_root
+        profile_engine.CONFIG_DIR = original_config
+        profile_engine.PROFILES_DIR = original_profiles
+        profile_engine.PROJECT_PATH = original_project
+        profile_engine.RESOURCES_PATH = original_resources
+        profile_engine.MCP_PATH = original_mcp
+    if result["conflicts"]:
+        raise GenerationError(
+            "Current project profiles conflict: " + ", ".join(result["conflicts"])
+        )
+    return result
+
+
 def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[str, Any]:
     root = root.resolve()
     metadata = load_object(root / GENERATED_PATH, "generated-project metadata")
@@ -834,18 +867,52 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Unsupported generated-project metadata schema")
     selected = metadata.get("selected_profiles")
     resolved = metadata.get("resolved_profiles")
-    if not isinstance(selected, list) or not isinstance(resolved, list):
-        raise GenerationError("Generated profile metadata must be arrays")
-    if pristine and project.get("profiles") != selected:
-        raise GenerationError("Generated project profiles do not match provenance")
-    if not isinstance(project.get("profiles"), list) or not all(
-        isinstance(item, str) for item in project.get("profiles", [])
+    if (
+        not isinstance(selected, list)
+        or not selected
+        or not all(isinstance(item, str) and item for item in selected)
+        or not isinstance(resolved, list)
+        or not resolved
+        or not all(isinstance(item, str) and item for item in resolved)
     ):
-        raise GenerationError("Project profiles must remain a string array")
-    if pristine and project.get("specialists") != []:
+        raise GenerationError("Generated profile metadata must contain non-empty string arrays")
+    current_selected = project.get("profiles")
+    if (
+        not isinstance(current_selected, list)
+        or not current_selected
+        or not all(isinstance(item, str) and item for item in current_selected)
+    ):
+        raise GenerationError("Project profiles must remain a non-empty string array")
+    current_resolution = resolve_generated_profiles(root, current_selected)
+    current_resolved = current_resolution["resolved_profiles"]
+    if pristine and current_selected != selected:
+        raise GenerationError("Generated project profiles do not match provenance")
+    if pristine and current_resolved != resolved:
+        raise GenerationError("Generated resolved profiles do not match provenance")
+    specialists = project.get("specialists")
+    if not isinstance(specialists, list) or not all(
+        isinstance(item, str) and item for item in specialists
+    ):
+        raise GenerationError("Project specialists must remain a string array")
+    if len(specialists) != len(set(specialists)):
+        raise GenerationError("Project specialists must not contain duplicates")
+    if pristine and specialists:
         raise GenerationError("Generated projects must not activate external specialists")
-    if not isinstance(project.get("specialists"), list):
-        raise GenerationError("Project specialists must remain an array")
+    try:
+        specialist_catalog = agent_broker.specialist_index(agent_broker.load_manifest(root))
+    except agent_broker.BrokerError as error:
+        raise GenerationError(f"Specialist catalog validation failed: {error}") from error
+    unknown_specialists = sorted(set(specialists).difference(specialist_catalog))
+    if unknown_specialists:
+        raise GenerationError(
+            "Unknown activated specialist: " + ", ".join(unknown_specialists)
+        )
+    for specialist_id in specialists:
+        required_profiles = set(specialist_catalog[specialist_id]["profiles_any_of"])
+        if not required_profiles.intersection(current_resolved):
+            raise GenerationError(
+                f"Activated specialist {specialist_id} does not match the current profiles"
+            )
     expected_policy = {
         "allow_automatic_install": False,
         "allow_automatic_removal": False,
@@ -858,7 +925,7 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Generated project identity does not match provenance")
     if package.get("name") != metadata.get("project", {}).get("slug"):
         raise GenerationError("Generated package slug does not match provenance")
-    if "web-next" in resolved:
+    if "web-next" in current_resolved:
         required_scripts = {
             "dev",
             "build",
@@ -899,9 +966,9 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Inactive web project contains its visual-quality workflow")
     elif (root / EXPERIENCE_PATH).exists():
         raise GenerationError("Non-web generated project contains a web experience manifest")
-    if "mobile-expo" in resolved and not (root / "pnpm-lock.yaml").is_file():
+    if "mobile-expo" in current_resolved and not (root / "pnpm-lock.yaml").is_file():
         raise GenerationError("Generated mobile project is missing the reviewed dependency lockfile")
-    if "design-critical" in resolved:
+    if "design-critical" in current_resolved:
         design_state = load_object(root / ".agentic/design.json", "design state")
         intake_state = load_object(root / ".agentic/design-intake.json", "design intake")
         if design_state.get("schema_version") != 1:
@@ -924,7 +991,7 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
                 raise GenerationError("Approved design state must name a catalog direction")
             if design_status not in {"needs_approval", "approved"}:
                 raise GenerationError("Unsupported ongoing design status")
-        expected_intake = "captured" if "web-next" in resolved else "not_started"
+        expected_intake = "captured" if "web-next" in current_resolved else "not_started"
         if pristine and intake_state.get("status") != expected_intake:
             raise GenerationError(
                 f"Generated design intake must begin {expected_intake.replace('_', ' ')}"
@@ -939,6 +1006,10 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Generated projects must not enable MCP servers")
     if not isinstance(mcp.get("mcpServers"), dict):
         raise GenerationError("MCP configuration must contain a server object")
+    try:
+        mcp_compatibility.validate(root, allow_disabled=True)
+    except mcp_compatibility.MCPCompatibilityError as error:
+        raise GenerationError(f"MCP compatibility validation failed: {error}") from error
     prohibited = ["apps/showcase", "docs/80-showcase"]
     if pristine:
         prohibited.extend([".git", ".env", "node_modules"])
@@ -972,7 +1043,7 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
     return {
         "status": "PASS",
         "project": metadata["project"],
-        "profiles": resolved,
+        "profiles": current_resolved,
         "external_setup_pending": metadata.get("expected_external_setup", []),
         "mutation_performed": False,
     }

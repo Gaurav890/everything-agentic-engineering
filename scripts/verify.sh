@@ -17,6 +17,8 @@ if [ -f .agentic/generated-project.json ]; then
   python3 -m compileall -q scripts
   ./agentic --help >/dev/null
   ./agentic profile resolve >/dev/null
+  ./agentic agents doctor >/dev/null
+  python3 scripts/mcp_compatibility.py --allow-disabled >/dev/null
   if [ -f package.json ] && [ -d node_modules ] && command -v pnpm >/dev/null 2>&1; then
     for script in lint typecheck test; do
       if node -e "const p=require('./package.json'); process.exit(p.scripts&&p.scripts['$script']?0:1)"; then

@@ -55,13 +55,20 @@ def _package_arg_matches(package: str, argument: str) -> bool:
     return argument == package or argument.startswith(f"{package}@")
 
 
-def _validate_project_config(root: Path, policy: dict[str, Any]) -> list[str]:
+def _validate_project_config(
+    root: Path,
+    policy: dict[str, Any],
+    *,
+    allow_disabled: bool = False,
+) -> list[str]:
     project_path = root / PROJECT_MCP_PATH
     project = _load_object(project_path)
     if set(project) != {"mcpServers"} or not isinstance(project["mcpServers"], dict):
         raise MCPCompatibilityError(".mcp.json must contain only an mcpServers object")
 
     configured = project["mcpServers"]
+    if allow_disabled and not configured:
+        return []
     if set(configured) != CORE_SERVERS:
         raise MCPCompatibilityError(
             ".mcp.json core servers drifted: expected "
@@ -111,7 +118,7 @@ def _validate_project_config(root: Path, policy: dict[str, Any]) -> list[str]:
     return credential_names
 
 
-def validate(root: Path = ROOT) -> dict[str, Any]:
+def validate(root: Path = ROOT, *, allow_disabled: bool = False) -> dict[str, Any]:
     root = root.resolve()
     policy = _load_object(root / POLICY_PATH)
     _require_keys(
@@ -298,7 +305,11 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     reconsider = _require_string_list(
         policy["reconsider_when"], "reconsider_when", nonempty=True
     )
-    credential_names = _validate_project_config(root, policy)
+    credential_names = _validate_project_config(
+        root,
+        policy,
+        allow_disabled=allow_disabled,
+    )
     return {
         "schema_version": 1,
         "verdict": "pass",
@@ -327,9 +338,14 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument(
+        "--allow-disabled",
+        action="store_true",
+        help="Accept an empty MCP server map while still rejecting unreviewed entries",
+    )
     args = parser.parse_args(argv)
     try:
-        report = validate(args.root)
+        report = validate(args.root, allow_disabled=args.allow_disabled)
     except MCPCompatibilityError as error:
         if args.json:
             print(

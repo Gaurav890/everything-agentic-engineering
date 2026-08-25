@@ -146,9 +146,15 @@ Creation-time validation proves the new directory contains only its selected
 surfaces, no copied Git/secrets/dependencies, no enabled MCP or specialist, and
 an empty task/design state. Ongoing verification deliberately allows normal
 Git, dependency, environment, task, approved-direction, and reviewed capability
-state while preserving manifest shape, safe automatic-install policy, JSON,
-symlink containment, shell syntax, Python syntax, command discovery, and
-profile resolution. When
+state. It resolves the profiles currently selected in `.agentic/project.json`
+rather than treating creation provenance as current configuration. Newly active
+profiles must have their required surfaces, inactive surfaces are rejected, and
+profile conflicts fail closed. Activated specialists must match the reviewed
+local catalog and current profiles. MCP remains either fully disabled or an
+exact match for the reviewed compatibility policy; unknown servers, commands,
+packages, and credential shapes fail verification. These checks preserve
+manifest shape, safe automatic-install policy, JSON, symlink containment, shell
+syntax, Python syntax, command discovery, and profile resolution. When
 dependencies are not installed, verification reports package checks as pending.
 After `pnpm install`, the same command runs lint, typecheck, and UI contract
 tests for the runnable web surface.

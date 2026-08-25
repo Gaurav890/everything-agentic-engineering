@@ -356,6 +356,121 @@ class ProjectGeneratorTests(unittest.TestCase):
             ):
                 project_generator.validate_generated_project(destination, pristine=True)
 
+    def test_ongoing_verification_requires_reviewed_authority_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "authority-project"
+            result = self.run_generator(
+                "--name",
+                "Authority Project",
+                "--destination",
+                str(destination),
+                "--preset",
+                "core",
+                "--yes",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            manifest_path = destination / ".agentic/project.json"
+            manifest = json.loads(manifest_path.read_text())
+
+            manifest["specialists"] = ["codebase-onboarding"]
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+            report = project_generator.validate_generated_project(destination)
+            self.assertEqual("PASS", report["status"])
+
+            manifest["specialists"] = ["unreviewed-specialist"]
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "Unknown activated specialist: unreviewed-specialist",
+            ):
+                project_generator.validate_generated_project(destination)
+
+            manifest["specialists"] = []
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+            (destination / ".mcp.json").write_text(
+                json.dumps(
+                    {
+                        "mcpServers": {
+                            "unreviewed": {
+                                "command": "sh",
+                                "args": ["-c", "external-command"],
+                            }
+                        }
+                    },
+                    indent=2,
+                )
+                + "\n"
+            )
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "MCP compatibility validation failed",
+            ):
+                project_generator.validate_generated_project(destination)
+            completed = subprocess.run(
+                [str(destination / "agentic"), "verify", "full"],
+                cwd=destination,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertNotEqual(0, completed.returncode)
+            self.assertIn("MCP compatibility validation failed", completed.stderr)
+
+    def test_ongoing_verification_uses_current_profiles(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            core_destination = Path(temporary) / "current-core"
+            core_result = self.run_generator(
+                "--name",
+                "Current Core",
+                "--destination",
+                str(core_destination),
+                "--preset",
+                "core",
+                "--yes",
+            )
+            self.assertEqual(0, core_result.returncode, core_result.stderr)
+            core_manifest_path = core_destination / ".agentic/project.json"
+            core_manifest = json.loads(core_manifest_path.read_text())
+            core_manifest["profiles"] = ["web-next"]
+            core_manifest_path.write_text(json.dumps(core_manifest, indent=2) + "\n")
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "missing runnable root scripts",
+            ):
+                project_generator.validate_generated_project(core_destination)
+
+            web_destination = Path(temporary) / "current-web"
+            web_result = self.run_generator(
+                "--name",
+                "Current Web",
+                "--destination",
+                str(web_destination),
+                "--preset",
+                "web",
+                "--yes",
+            )
+            self.assertEqual(0, web_result.returncode, web_result.stderr)
+            web_manifest_path = web_destination / ".agentic/project.json"
+            web_manifest = json.loads(web_manifest_path.read_text())
+            web_manifest["profiles"] = ["web-next", "research-enabled"]
+            web_manifest_path.write_text(json.dumps(web_manifest, indent=2) + "\n")
+            report = project_generator.validate_generated_project(web_destination)
+            self.assertIn("research-enabled", report["profiles"])
+            self.assertNotEqual(
+                json.loads(
+                    (web_destination / ".agentic/generated-project.json").read_text()
+                )["resolved_profiles"],
+                report["profiles"],
+            )
+
+            web_manifest["profiles"] = ["core"]
+            web_manifest_path.write_text(json.dumps(web_manifest, indent=2) + "\n")
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "Inactive web project contains its visual-quality workflow",
+            ):
+                project_generator.validate_generated_project(web_destination)
+
     def test_existing_destination_is_preserved_and_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             destination = Path(temporary) / "existing"

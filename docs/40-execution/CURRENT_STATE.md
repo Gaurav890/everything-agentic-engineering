@@ -114,13 +114,19 @@ identity and provenance, resets execution history, and leaves external setup
 pending. It does not prune the starter, copy Git or secret state, install
 dependencies or capabilities, enable MCP servers, initialize Git, or expand
 runtime authority. Generated projects have a dedicated offline verification
-mode through the same `./agentic verify full` interface.
+mode through the same `./agentic verify full` interface. That mode resolves the
+current project profiles, validates the surfaces those profiles require, and
+fails closed on unknown or profile-incompatible specialist activation. MCP
+configuration must remain empty or exactly match the reviewed compatibility
+policy; arbitrary servers, commands, packages, and credential shapes cannot
+receive a passing verification result.
 
 Generated web projects receive runnable root scripts, their selected content
 architecture, product-specific experience/brief state, unapproved direction
 state, and a one-path README. Creation validation rejects copied transient or
 authority state; ongoing validation allows normal Git, dependencies, task
-history, approved design state, and reviewed capability configuration. After
+history, approved design state, and reviewed capability configuration while
+keeping current profile and authority checks deterministic. After
 `pnpm install`, package lint, typecheck, and UI contract tests are active.
 
 Contributor workflows are exposed through one registry-backed `./agentic`
