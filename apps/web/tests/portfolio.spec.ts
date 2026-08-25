@@ -67,6 +67,12 @@ test("direction controls support Enter and Space selection", async ({ page }) =>
   await expect(page.locator("main.experience")).toHaveAttribute("data-direction", "kinetic-index");
 
   const quiet = page.locator(".direction-option").filter({ hasText: "Quiet Material" });
+  if (!(await quiet.isVisible())) {
+    const trigger = page.locator(".direction-trigger");
+    await expect(trigger).toBeFocused();
+    await trigger.press("Enter");
+    await expect(page.locator(".direction-option").first()).toBeFocused();
+  }
   await quiet.focus();
   await expect(quiet).toBeFocused();
   await quiet.press("Space");
@@ -86,6 +92,9 @@ test("approval command exposes clipboard success and failure states", async ({ p
       },
     });
   });
+  if (!(await page.getByRole("button", { name: "Copy approval command" }).isVisible())) {
+    await page.locator(".direction-trigger").click();
+  }
   await page.getByRole("button", { name: "Copy approval command" }).click();
   await expect(page.getByRole("button", { name: "Command copied" })).toBeVisible();
   await expect(page.getByRole("status")).toHaveText("Approval command copied to the clipboard.");
@@ -100,6 +109,9 @@ test("approval command exposes clipboard success and failure states", async ({ p
       value: { writeText: async () => Promise.reject(new Error("Clipboard unavailable")) },
     });
   });
+  if (!(await page.getByRole("button", { name: "Copy approval command" }).isVisible())) {
+    await page.locator(".direction-trigger").click();
+  }
   await page.getByRole("button", { name: "Copy approval command" }).click();
   await expect(page.getByRole("button", { name: "Copy failed — try again" })).toBeVisible();
   await expect(page.getByRole("status")).toHaveText(
@@ -147,6 +159,11 @@ test("direction lab is non-obscuring on desktop and collapsed on mobile", async 
       return intersects(triggerRect, titleRect);
     });
     expect(overlaps).toBe(false);
+    await trigger.click();
+    await expect(page.locator(".direction-option").first()).toBeFocused();
+    await page.locator(".direction-option").nth(1).click();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toBeFocused();
     await trigger.click();
     await expect(page.locator(".direction-option").first()).toBeFocused();
     await page.keyboard.press("Escape");

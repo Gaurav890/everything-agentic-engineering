@@ -135,6 +135,10 @@ export function PortfolioLab({
                 onClick={() => {
                   setActive(item.id);
                   setCopyStatus("idle");
+                  if (window.matchMedia("(max-width: 720px)").matches) {
+                    setDockOpen(false);
+                    window.setTimeout(() => dockTrigger.current?.focus(), 0);
+                  }
                 }}
               >
                 <span>{item.number}</span>
