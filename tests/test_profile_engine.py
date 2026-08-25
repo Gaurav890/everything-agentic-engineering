@@ -21,14 +21,15 @@ class ProfileEngineTests(unittest.TestCase):
         result = profile_engine.resolve(["web-next", "design-critical", "research-enabled"])
         self.assertEqual(
             result["resource_owners"]["playwright-mcp"],
-            ["web-next", "design-critical", "research-enabled"],
+            ["design-critical", "web-next", "research-enabled"],
         )
 
-    def test_emil_suite_is_design_profile_only(self) -> None:
+    def test_web_inherits_the_design_critical_craft_layer(self) -> None:
         design = profile_engine.resolve(["web-next", "design-critical"])
         web_only = profile_engine.resolve(["web-next"])
         self.assertIn("emil-design-engineering", design["required_resources"])
-        self.assertNotIn("emil-design-engineering", web_only["required_resources"])
+        self.assertIn("design-critical", web_only["resolved_profiles"])
+        self.assertIn("emil-design-engineering", web_only["required_resources"])
 
     def test_conflicting_backends_are_reported(self) -> None:
         result = profile_engine.resolve(["backend-supabase", "backend-convex"])

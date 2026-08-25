@@ -34,6 +34,63 @@ test -f .env || {
   --dry-run >/dev/null
 ./agentic profile resolve >/dev/null
 ./agentic profile doctor >/dev/null
+
+WEB_PROJECT="$TEMP_ROOT/smoke-web"
+MOBILE_PROJECT="$TEMP_ROOT/smoke-mobile"
+CORE_PROJECT="$TEMP_ROOT/smoke-core"
+GUIDED_PROJECT="$TEMP_ROOT/smoke-guided"
+
+printf '%s\n' \
+  "Guided Signal" \
+  "$GUIDED_PROJECT" \
+  "2" \
+  "" \
+  "" \
+  "" \
+  "y" | ./agentic setup create >/dev/null
+test -f "$GUIDED_PROJECT/.agentic/experience.json"
+GUIDED_NEXT="$("$GUIDED_PROJECT/agentic" next)"
+[[ "$GUIDED_NEXT" == *"pnpm install"* ]] || {
+  echo "Guided web project did not expose the expected single next action." >&2
+  exit 1
+}
+
+./agentic setup create \
+  --name "Smoke Signal" \
+  --destination "$WEB_PROJECT" \
+  --preset web \
+  --archetype agentic-product \
+  --audience "operators supervising consequential automation" \
+  --promise "Make every automated decision visible and reversible." \
+  --visual-character bold \
+  --yes >/dev/null
+"$WEB_PROJECT/agentic" verify full >/dev/null
+WEB_NEXT="$("$WEB_PROJECT/agentic" next)"
+[[ "$WEB_NEXT" == *"pnpm install"* ]]
+test "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["archetype"])' "$WEB_PROJECT/.agentic/experience.json")" = "agentic-product"
+test ! -e "$WEB_PROJECT/apps/mobile"
+
+./agentic setup create \
+  --name "Smoke Mobile" \
+  --destination "$MOBILE_PROJECT" \
+  --preset mobile \
+  --yes >/dev/null
+"$MOBILE_PROJECT/agentic" verify full >/dev/null
+MOBILE_NEXT="$("$MOBILE_PROJECT/agentic" next)"
+[[ "$MOBILE_NEXT" == *"Open docs/00-vision/NORTH_STAR.md"* ]]
+test ! -e "$MOBILE_PROJECT/.agentic/experience.json"
+test ! -e "$MOBILE_PROJECT/apps/web"
+
+./agentic setup create \
+  --name "Smoke Core" \
+  --destination "$CORE_PROJECT" \
+  --preset core \
+  --yes >/dev/null
+"$CORE_PROJECT/agentic" verify full >/dev/null
+CORE_NEXT="$("$CORE_PROJECT/agentic" next)"
+[[ "$CORE_NEXT" == *"Open docs/00-vision/NORTH_STAR.md"* ]]
+test ! -e "$CORE_PROJECT/apps"
+
 ./agentic release check
 
 git diff --exit-code -- . ':!.env' >/dev/null || {

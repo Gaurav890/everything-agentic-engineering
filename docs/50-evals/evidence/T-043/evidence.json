@@ -1,0 +1,35 @@
+{
+  "task_id": "T-043",
+  "acceptance_ids": ["AC-001"],
+  "ui_change": true,
+  "builder": "frontend-orchestrator",
+  "evaluator": "design-critic-and-qa-evaluator",
+  "commands": [
+    "python3 -m unittest tests.test_next_action tests.test_project_generator tests.test_agentic_cli tests.test_design_engine",
+    "pnpm --filter @everything-agentic/web test",
+    "pnpm --filter @everything-agentic/web typecheck",
+    "pnpm --filter @everything-agentic/web build",
+    "pnpm --filter @everything-agentic/web test:e2e",
+    "pnpm --filter @everything-agentic/web test:visual:update",
+    "generated product: pnpm install --offline --frozen-lockfile",
+    "generated product: pnpm build",
+    "generated product: pnpm test:e2e",
+    "generated product: ./agentic verify full",
+    "./agentic verify full"
+  ],
+  "states": [
+    "normal",
+    "loading",
+    "empty",
+    "error",
+    "partial-evidence",
+    "ready-for-review",
+    "approved",
+    "rejected",
+    "cancelled",
+    "recovery"
+  ],
+  "viewports": ["mobile", "desktop"],
+  "artifacts": ["README.md", "independent-review.md"],
+  "verdict": "PASS"
+}

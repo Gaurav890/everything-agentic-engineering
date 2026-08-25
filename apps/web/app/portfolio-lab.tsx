@@ -1,7 +1,7 @@
 "use client";
 
 import {Button} from "@everything-agentic/ui";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 const directions = [
   {
@@ -68,8 +68,22 @@ export function PortfolioLab({
     : null;
   const [active, setActive] = useState<DirectionId>(approved ?? "editorial-signal");
   const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
+  const [dockOpen, setDockOpen] = useState(false);
+  const dockTrigger = useRef<HTMLButtonElement>(null);
+  const firstDirection = useRef<HTMLButtonElement>(null);
   const direction = directions.find((item) => item.id === active) ?? directions[0];
   const approvalCommand = `./agentic design approve ${active} --yes`;
+
+  useEffect(() => {
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape" && dockOpen) {
+        setDockOpen(false);
+        dockTrigger.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [dockOpen]);
 
   async function copyApproval() {
     try {
@@ -89,50 +103,67 @@ export function PortfolioLab({
     >
       <a className="skip-link" href="#selected-work">Skip to selected work</a>
 
-      <aside className="direction-dock" aria-label="Design direction comparison">
-        <div className="dock-intro">
-          <span className="dock-kicker">Direction lab</span>
-          <strong>Same content. Three systems.</strong>
-        </div>
-        <div className="direction-options" role="group" aria-label="Choose a direction to preview">
-          {directions.map((item) => (
-            <button
-              className="direction-option"
-              data-selected={active === item.id}
-              key={item.id}
-              type="button"
-              aria-pressed={active === item.id}
-              onClick={() => {
-                setActive(item.id);
-                setCopyStatus("idle");
-              }}
-            >
-              <span>{item.number}</span>
-              <strong>{item.name}</strong>
-              <span className="palette" aria-label={`${item.name} palette`}>
-                {item.palette.map((color) => <i key={color} style={{background: color}} />)}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="approval">
-          <code>{approvalCommand}</code>
-          <Button type="button" size="compact" data-copy-status={copyStatus} onClick={copyApproval}>
-            {copyStatus === "copied"
-              ? "Command copied"
-              : copyStatus === "error"
-                ? "Copy failed — try again"
-                : active === approved
-                  ? "Approved direction"
-                  : "Copy approval command"}
-          </Button>
-          <span className="copy-status" role="status" aria-live="polite">
-            {copyStatus === "copied"
-              ? "Approval command copied to the clipboard."
-              : copyStatus === "error"
-                ? "The approval command could not be copied. Try again."
-                : ""}
-          </span>
+      <aside className="direction-dock" aria-label="Design direction comparison" data-open={dockOpen}>
+        <button
+          className="direction-trigger"
+          type="button"
+          ref={dockTrigger}
+          aria-controls="direction-dock-panel"
+          aria-expanded={dockOpen}
+          onClick={() => {
+            const next = !dockOpen;
+            setDockOpen(next);
+            if (next) window.setTimeout(() => firstDirection.current?.focus(), 0);
+          }}
+        >
+          <span>Direction</span><strong>{direction.name}</strong><b aria-hidden="true">{dockOpen ? "×" : "+"}</b>
+        </button>
+        <div className="direction-dock-panel" id="direction-dock-panel">
+          <div className="dock-intro">
+            <span className="dock-kicker">Direction lab</span>
+            <strong>Same content. Three systems.</strong>
+          </div>
+          <div className="direction-options" role="group" aria-label="Choose a direction to preview">
+            {directions.map((item, index) => (
+              <button
+                className="direction-option"
+                data-selected={active === item.id}
+                key={item.id}
+                ref={index === 0 ? firstDirection : undefined}
+                type="button"
+                aria-pressed={active === item.id}
+                onClick={() => {
+                  setActive(item.id);
+                  setCopyStatus("idle");
+                }}
+              >
+                <span>{item.number}</span>
+                <strong>{item.name}</strong>
+                <span className="palette" aria-label={`${item.name} palette`}>
+                  {item.palette.map((color) => <i key={color} style={{background: color}} />)}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="approval">
+            <code>{approvalCommand}</code>
+            <Button type="button" size="compact" data-copy-status={copyStatus} onClick={copyApproval}>
+              {copyStatus === "copied"
+                ? "Command copied"
+                : copyStatus === "error"
+                  ? "Copy failed — try again"
+                  : active === approved
+                    ? "Approved direction"
+                    : "Copy approval command"}
+            </Button>
+            <span className="copy-status" role="status" aria-live="polite">
+              {copyStatus === "copied"
+                ? "Approval command copied to the clipboard."
+                : copyStatus === "error"
+                  ? "The approval command could not be copied. Try again."
+                  : ""}
+            </span>
+          </div>
         </div>
       </aside>
 
@@ -146,7 +177,7 @@ export function PortfolioLab({
           <nav aria-label="Primary navigation">
             <a href="#selected-work">Work</a>
             <a href="#about">About</a>
-            <a href="mailto:hello@example.com">Contact ↗</a>
+            <a href="#contact">Contact ↗</a>
           </nav>
         </header>
 
@@ -211,10 +242,10 @@ export function PortfolioLab({
           </div>
         </section>
 
-        <footer>
+        <footer id="contact">
           <p>Have an ambitious, complicated thing?</p>
-          <a href="mailto:hello@example.com">Let&apos;s make it legible ↗</a>
-          <small>{profile.name} · Portfolio golden path · Replace with approved content</small>
+          <strong className="portfolio-contact">Connect the real contact path before release.</strong>
+          <small>{profile.name} · Reference fixture · Product-owner review required</small>
         </footer>
       </div>
     </main>

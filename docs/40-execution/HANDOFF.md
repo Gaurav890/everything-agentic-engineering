@@ -4,64 +4,51 @@ Last updated: 2026-08-24
 
 ## Current goal
 
-Finish verification and human/security review of the tested runtime-security
-baseline update.
+Maintain a minimal guided product studio whose generated projects preserve the
+same design-critical guarantees as the reference starter.
 
 ## Completed
 
-- Raised the machine-readable Claude Code tested floor from 2.1.233 to 2.1.239.
-- Raised the machine-readable Codex tested floor from 0.147.0 to 0.148.0.
-- Recorded the cumulative permission, filesystem, credential, marketplace,
-  MCP trust, organization-policy, resumed-state, and instruction-state fixes
-  from official release notes.
-- Kept Claude marketplace/MCP `headersHelper` commands and Codex asynchronous or
-  MCP-invoking hooks disabled and explicitly human-gated.
-- Updated strict/advisory/JSON regression coverage and compatibility guidance.
-- Independent read-only security review passed the exact implementation head
-  with no blocking security finding or accidental authority expansion.
+- Replaced flag-first onboarding with a guided, one-confirmation project flow.
+- Added portfolio, product, and agentic-product experience manifests and
+  genuinely different content architectures.
+- Added a one-next-action router and profile-relevant downstream generation.
+- Made web and mobile application profiles require the design-critical base.
+- Added a real agent evidence/review gate and non-obscuring responsive direction
+  controls.
+- Split pristine creation validation from normal ongoing project verification.
+- Scoped generated tests to the selected archetype while retaining the full
+  reference-lab evidence matrix.
 
 ## Blockers
 
-- No known implementation or security-review blocker.
-- The task ledger still needs the normal finish and bounded finalization flow;
-  policy must be rechecked on the resulting exact head.
-
-## Unresolved decisions
-
-- Whether any project should later enable a marketplace/MCP helper or an
-  asynchronous/MCP-invoking hook. Each requires a separate threat model,
-  authority decision, rollback plan, and review; compatibility alone is not
-  authorization.
+- Linux visual candidates still require generation and human inspection before
+  they become canonical baselines.
 
 ## Verification status
 
-- Eight focused runtime-policy tests pass.
-- Strict simulation rejects Claude Code 2.1.238 and Codex 0.147.0, and accepts
-  Claude Code 2.1.239 and Codex 0.148.0.
-- JSON output validates with `mutation_performed: false`.
-- Full repository verification passes all ten stages.
-- Independent security review reports `PASS` with evidence under
-  `docs/50-evals/evidence/T-042/`.
-- The installed Codex runtime reports `0.148.0-alpha.21`, so the advisory doctor
-  correctly warns that it is below the stable 0.148.0 floor; no upgrade occurs.
-- No runtime was installed, upgraded, or configured by this task.
-- No optional capability was enabled.
+- 38 focused generator/router/design tests pass.
+- Web model tests, typecheck, and production build pass.
+- 21 Playwright interaction/accessibility checks pass; one intentional
+  desktop skip covers a mobile-only overflow assertion.
+- 18 macOS reference-lab visual candidates were generated successfully.
+- A generated product project installs from the reviewed lockfile, builds,
+  passes 15 selected-archetype browser checks with seven intentional irrelevant
+  skips, and passes its complete downstream verification.
+- Independent product-design and adversarial QA evaluations pass.
 
 ## Exact next action
 
-Move the task to review with the normal finish command, run the bounded
-finalizer under the direct human completion instruction, and recheck required
-checks on the resulting exact head. The finalizer must not merge.
+Use the repository collaboration workflow for the active work item and preserve
+human authority over visual-baseline acceptance and release decisions.
 
 ## Relevant files
 
-- `.agentic/runtime-baselines.json`
-- `tests/test_runtime_compatibility.py`
-- `docs/60-tooling/COMPATIBILITY.md`
-- `docs/60-tooling/CODEX.md`
-- `docs/60-tooling/INSTALLATION.md`
-- `docs/30-engineering/SECURITY_MODEL.md`
-- `docs/60-tooling/LEARNING_LEDGER.md`
-- `docs/50-evals/evidence/T-042/`
+- `.agentic/experience.json`
+- `scripts/project_generator.py`
+- `scripts/next_action.py`
+- `apps/web/app/product-lab.tsx`
+- `apps/web/tests/`
+- `docs/50-evals/evidence/T-043/`
 
 Keep this concise enough to read in under two minutes.

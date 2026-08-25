@@ -17,28 +17,34 @@ Signalroom under `apps/showcase` is the reference AI-native product. It
 demonstrates agent runs, protected approvals, interruption, recovery, durable
 artifacts, required UI states, and responsive supervision.
 
-The web profile now materializes a runnable portfolio golden path instead of a
-placeholder surface. A short local intake records product-specific palette,
-typography, density, motion, mode, and advanced-canvas constraints. The running
-app compares Editorial Signal, Kinetic Index, and Quiet Material using the same
-realistic content; none becomes canonical until human approval is recorded.
+The guided project studio materializes a portfolio, product, agentic-product,
+mobile, or core project after five product decisions and one confirmation. Web
+projects persist name, audience, promise, archetype, and visual character in
+`.agentic/experience.json`; `./agentic next` then exposes one action at a time.
+Web and mobile application profiles always resolve the design-critical
+foundation.
 
 ## Web
 
 Substantial frontend work uses the project design system as authority and
 requires running-product evidence plus independent evaluation.
 
-`apps/web` is a buildable Next.js experience with accessible direction controls,
+`apps/web` is a buildable Next.js reference lab with distinct portfolio,
+product, and agentic-product architectures, accessible direction controls,
 responsive composition, purposeful core motion, and a reduced-motion path.
+The agentic example includes a working evidence-completeness gate, consequence
+disclosure, approval lock, approve/reject/cancel paths, and recovery language.
+The direction lab is non-obscuring on desktop and collapses to a focus-managed,
+escape-dismissible mobile control.
 `packages/ui` contains behavior primitives rather than a visual theme. Advanced
 2D, 3D, timeline, or gesture runtimes remain opt-in escalation tiers after an
 approved direction and performance budget.
 
-The web starter also has a Playwright interaction and accessibility suite for
-all three directions at 1440 x 960 and 390 x 844. Its visual workflow compares
-reviewed Linux screenshots, uploads failure evidence, and fails closed when
-baselines are absent. Candidate generation is deliberately separate from human
-visual approval.
+The starter reference lab has Playwright interaction/accessibility coverage and
+a complete three-archetype × three-direction × desktop/mobile visual matrix.
+Generated projects exclude reference baselines and test only their selected
+archetype. Linux candidate generation remains separate from human visual
+approval.
 
 When `design-critical` is active, Emil Kowalski's reviewed ten-skill external
 collection is available as a profile-aware design-engineering craft layer.
@@ -110,10 +116,12 @@ dependencies or capabilities, enable MCP servers, initialize Git, or expand
 runtime authority. Generated projects have a dedicated offline verification
 mode through the same `./agentic verify full` interface.
 
-Generated web projects receive runnable root scripts, the live portfolio
-direction lab, reset intake/approval state, project identity environment
-placeholders, and a one-path README. Offline verification validates structure;
-after `pnpm install`, package lint, typecheck, and UI contract tests are active.
+Generated web projects receive runnable root scripts, their selected content
+architecture, product-specific experience/brief state, unapproved direction
+state, and a one-path README. Creation validation rejects copied transient or
+authority state; ongoing validation allows normal Git, dependencies, task
+history, approved design state, and reviewed capability configuration. After
+`pnpm install`, package lint, typecheck, and UI contract tests are active.
 
 Contributor workflows are exposed through one registry-backed `./agentic`
 interface. `.agentic/commands.json` classifies all 36 shell files as public,

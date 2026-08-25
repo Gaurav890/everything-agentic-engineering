@@ -11,6 +11,7 @@ draft.
   --name "My Portfolio" \
   --destination ../my-portfolio \
   --preset web \
+  --archetype portfolio \
   --dry-run
 
 # After reviewing the copy plan:
@@ -18,6 +19,7 @@ draft.
   --name "My Portfolio" \
   --destination ../my-portfolio \
   --preset web \
+  --archetype portfolio \
   --yes
 
 cd ../my-portfolio

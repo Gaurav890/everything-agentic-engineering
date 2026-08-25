@@ -8,6 +8,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A five-decision guided project studio with portfolio, product, and agentic-
+  product content architectures, one-next-action routing, profile-minimal
+  downstream generation, human-approved direction/token flow, a real agent
+  evidence gate, non-obscuring responsive direction controls, and desktop/mobile
+  interaction, accessibility, reduced-motion, overflow, and visual evidence.
+
 - An offline, evidence-gated harness-evolution kernel with sanitized aggregate
   signal schemas, fingerprinted incumbent and protected evals, bounded change
   surfaces, deterministic quality/regression/safety/cost/latency comparison,

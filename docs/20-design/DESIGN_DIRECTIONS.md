@@ -19,8 +19,9 @@ product states; do not present accent-color swaps as different directions.
 
 ### Thesis
 
-An authored editorial portfolio where typography, pacing, and decisive red
-accents make case-study storytelling feel considered rather than templated.
+An authored editorial system where typography, pacing, and decisive red accents
+make product claims or case-study storytelling feel considered rather than
+templated.
 
 ### System
 
@@ -30,17 +31,17 @@ reveals, typographic wipes, and directional hover cues.
 
 ### Evidence and tradeoffs
 
-Live in `apps/web` as `editorial-signal` with the same hero, selected work,
-process, contact, desktop, and mobile content used by every direction. The final
-display face must be licensed or deliberately system-based, and long titles need
-editorial wrapping evidence.
+Live in `apps/web` as `editorial-signal` with the same archetype-specific promise,
+proof, process, contact, desktop, and mobile content used by every direction.
+The final display face must be licensed or deliberately system-based, and long
+titles need editorial wrapping evidence.
 
 ## Direction B — Kinetic Index
 
 ### Thesis
 
-A high-contrast, motion-led portfolio that behaves like a live creative index
-rather than a polite template.
+A high-contrast, motion-led system that behaves like a live index rather than a
+polite template.
 
 ### System
 
@@ -57,7 +58,7 @@ hierarchy without continuous animation.
 
 ### Thesis
 
-A warm, tactile portfolio with calm hierarchy and small material details that
+A warm, tactile system with calm hierarchy and small material details that
 reward close attention.
 
 ### System
@@ -85,6 +86,12 @@ visual identity. Components are structural donors only.
 - Reduced-motion behavior
 - Contrast and token validation
 - Performance and implementation risk
+
+The starter reference lab maintains the complete three-archetype × three-
+direction × desktop/mobile visual matrix. A generated project receives no
+unrelated fixture baselines and verifies only its selected archetype. Direction
+controls remain non-obscuring in normal reading flow and collapse to an
+accessible, escape-dismissible mobile control.
 
 ## Decision
 

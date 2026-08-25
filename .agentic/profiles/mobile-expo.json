@@ -1,7 +1,7 @@
 {
   "id": "mobile-expo",
   "description": "Expo/React Native native-mobile product",
-  "requires": ["core"],
+  "requires": ["core", "design-critical"],
   "resources": ["mobile-surface", "mobile-agent", "react-native-guidance"],
   "conflicts": []
 }

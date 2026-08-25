@@ -248,6 +248,11 @@ as the default visual identity.
 - Components are structural donors, not aesthetic authority.
 - Tokens encode approved decisions; they do not invent the direction.
 - Ask only for design constraints relevant to active project profiles.
+- Read `.agentic/experience.json` before substantial web work. Its archetype,
+  audience, promise, and visual character are the content-architecture contract;
+  never substitute a portfolio, dashboard, or landing-page default for it.
+- Keep first use progressive: ask only decisions that change the result, show
+  one concise plan, ask for confirmation once, and expose one next action.
 - Compare rendered directions and obtain explicit human approval before
   canonical design-system or token changes.
 - The project design system wins when external guidance conflicts.
@@ -261,6 +266,9 @@ as the default visual identity.
 - Build loading, empty, error, sparse, dense, disabled, success, and relevant
   agentic states.
 - Inspect the running product with Playwright at meaningful breakpoints.
+- For agentic interfaces, labels such as “live,” “controlled,” “approved,” or
+  “verified” require working disclosure, consequence, rejection/cancellation,
+  and recovery behavior—not decorative controls.
 - Record evidence and use a final evaluator separate from the builder.
 
 Do not ship generic AI-generated patterns by default. Use product-specific

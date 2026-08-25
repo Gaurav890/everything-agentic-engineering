@@ -6,11 +6,11 @@ mobile, backend, research, and design tooling without activating all of it.
 The source of truth is `.agentic/project.json`.
 
 ```bash
-./scripts/init-project.sh
-./scripts/profile-resolve.sh
-./scripts/profile-doctor.sh
-./scripts/profile-preview.sh web-next,design-critical,research-enabled
-./scripts/profile-select.sh web-next,design-critical,research-enabled --yes
+./agentic setup init
+./agentic profile resolve
+./agentic profile doctor
+./agentic profile preview web-next,design-critical,research-enabled
+./agentic profile select web-next,design-critical,research-enabled --yes
 ```
 
 Selection changes only the manifest. It never installs packages, enables MCPs,
@@ -21,11 +21,7 @@ When starting a separate product, use the downstream generator instead of
 pruning this checkout:
 
 ```bash
-./agentic setup create \
-  --name "My Product" \
-  --destination ../my-product \
-  --preset web-supabase \
-  --dry-run
+./agentic setup create
 ```
 
 `setup create` applies the same resolver to a new destination, includes only
@@ -45,9 +41,10 @@ recommended, optional, missing, or blocked:
 The result is advice, not activation. Capability adapters are plan-only and
 remain separately human-reviewed. See [Capability decisions](CAPABILITIES.md).
 
-The guided initializer asks plain-language questions about web, mobile, backend,
-design importance, research, and agentic UX. It previews the exact manifest and
-requires confirmation before writing.
+The guided downstream creator asks only for project identity, first experience,
+audience, promise, and visual character when relevant. Backend, research,
+combined surfaces, and machine-readable plans remain explicit advanced flags.
+The in-place `setup init` command remains a separate profile-manifest editor.
 
 It also makes non-selection explicit. If a project does not use mobile,
 `mobile-expo`, the mobile agent, and React Native guidance remain inactive:

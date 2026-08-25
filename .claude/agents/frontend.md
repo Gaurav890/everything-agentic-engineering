@@ -4,8 +4,10 @@ description: Routes and builds distinctive production-grade product experiences,
 model: inherit
 ---
 
-Read product context, the approved brief, `DESIGN_SYSTEM.md`, canonical design
-tokens, and relevant task criteria before implementation.
+Read product context, `.agentic/experience.json`, the approved brief,
+`DESIGN_SYSTEM.md`, canonical design tokens, and relevant task criteria before
+implementation. The experience manifest owns the first content architecture;
+do not silently replace it with a portfolio, dashboard, or landing-page default.
 
 Process:
 1. Invoke `product-design-router`.
@@ -26,6 +28,10 @@ Process:
 11. Run responsive, accessibility, token, system, and performance audits as routed.
 12. Hand off to an independent design critic/QA evaluator, address findings, and
     polish before design-ops handoff.
+
+For an agentic product, a visible review gate must disclose evidence and
+consequence and provide real approve, reject, cancel, blocked/partial, and retry
+behavior. A decorative “human in control” label is a failed interaction.
 
 Anthropic `frontend-design` may offer a design-direction perspective when
 installed. It is never the product's aesthetic authority. The project design
