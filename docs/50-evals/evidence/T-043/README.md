@@ -49,6 +49,10 @@ PASS — 21 passed, 1 intentional skip
 pnpm --filter @everything-agentic/web test:visual:update
 PASS — 18 candidate captures
 
+GitHub Web quality run 32819337421
+PASS — Linux build, interaction/accessibility suite, 18 baseline candidates,
+and artifact upload
+
 Generated product project (fresh temporary destination):
 pnpm install --offline --frozen-lockfile
 PASS — 34 packages reused, 0 downloaded
@@ -71,6 +75,9 @@ PASS
 - The independent adversarial QA evaluator passed the generator, validation,
   next-action, archetype scoping, reduced-motion, and downstream lifecycle
   contracts after all release blockers were resolved.
+- The branch contains 18 Linux candidates generated from the final polished
+  head. They remain subject to human inspection in the pull request before
+  landing; committing candidates to the branch is not release approval.
 
 ## Authority boundary
 
