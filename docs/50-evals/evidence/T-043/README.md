@@ -65,6 +65,13 @@ PASS — 15 passed, 7 intentional irrelevant-archetype skips
 
 ./agentic verify full
 PASS
+
+python3 -m unittest tests.test_project_generator tests.test_mcp_compatibility \
+  tests.test_profile_engine tests.test_agent_broker
+PASS — 45 authority, profile, and generated-project tests
+
+./agentic release smoke
+PASS — clean-checkout guided creation and next-action routing
 ```
 
 ## Independent evaluation
@@ -75,6 +82,9 @@ PASS
 - The independent adversarial QA evaluator passed the generator, validation,
   next-action, archetype scoping, reduced-motion, and downstream lifecycle
   contracts after all release blockers were resolved.
+- The independent read-only security reviewer passed exact code head `b6e364f`
+  after verification was hardened against unknown specialists, unreviewed MCP
+  configuration, and stale creation-time profile assumptions.
 - The branch contains 18 Linux candidates generated from the final polished
   head. They remain subject to human inspection in the pull request before
   landing; committing candidates to the branch is not release approval.

@@ -12,8 +12,11 @@
   desktop/mobile visual matrix.
 - Hardened generated-project validation for real post-install, Git, approved-
   design, task, JSON-array, and single-document automation workflows.
-- Focused generator/design tests, web build/typecheck, and 21 Playwright checks
-  pass. Independent re-review and full verification remain.
+- Ongoing verification now resolves current profiles and fails closed on
+  unknown/profile-incompatible specialists or unreviewed MCP configuration.
+- Focused generator/design and 45 authority/profile tests, web build/typecheck,
+  21 Playwright checks, full verification, release smoke, and all three PR
+  checks pass. Independent design, adversarial QA, and security reviews pass.
 
 Append-only verified history.
 

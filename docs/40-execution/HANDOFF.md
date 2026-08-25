@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-08-24
+Last updated: 2026-08-25
 
 ## Current goal
 
@@ -17,17 +17,20 @@ same design-critical guarantees as the reference starter.
 - Added a real agent evidence/review gate and non-obscuring responsive direction
   controls.
 - Split pristine creation validation from normal ongoing project verification.
+- Made ongoing verification resolve current profiles and reject unknown
+  specialists or unreviewed MCP authority state.
 - Scoped generated tests to the selected archetype while retaining the full
   reference-lab evidence matrix.
 
 ## Blockers
 
-- Linux visual candidates still require generation and human inspection before
-  they become canonical baselines.
+- The draft pull request still requires human inspection and task approval;
+  evaluator verdicts do not approve or merge it.
 
 ## Verification status
 
-- 38 focused generator/router/design tests pass.
+- 47 focused generator/router/design/MCP tests pass.
+- The independent authority/profile suite passes 45 tests.
 - Web model tests, typecheck, and production build pass.
 - 21 Playwright interaction/accessibility checks pass; one intentional
   desktop skip covers a mobile-only overflow assertion.
@@ -36,6 +39,8 @@ same design-critical guarantees as the reference starter.
   passes 15 selected-archetype browser checks with seven intentional irrelevant
   skips, and passes its complete downstream verification.
 - Independent product-design and adversarial QA evaluations pass.
+- Independent security/authority review passes at exact code head `b6e364f`.
+- PR policy, repository verification, and web-quality checks pass.
 
 ## Exact next action
 
