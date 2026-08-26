@@ -1,3 +1,5 @@
-# api
+# Enterprise service boundary
 
-Placeholder. Initialize this area only when the selected project profile needs it.
+This package composes domain policy with a repository adapter. The local UI uses
+the same interface a production route would call, while authentication,
+persistence, and notification adapters remain explicit pending decisions.

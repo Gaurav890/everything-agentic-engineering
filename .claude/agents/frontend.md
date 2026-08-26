@@ -33,6 +33,12 @@ For an agentic product, a visible review gate must disclose evidence and
 consequence and provide real approve, reject, cancel, blocked/partial, and retry
 behavior. A decorative “human in control” label is a failed interaction.
 
+For an enterprise workflow, read `.agentic/enterprise.json` and keep the
+business object, tenant context, actor role, evidence state, decision rationale,
+workflow consequence, audit event, and production-adapter boundary visible.
+Do not replace the supplied journey with a generic dashboard or present a local
+actor selector as authentication.
+
 Anthropic `frontend-design` may offer a design-direction perspective when
 installed. It is never the product's aesthetic authority. The project design
 system wins.

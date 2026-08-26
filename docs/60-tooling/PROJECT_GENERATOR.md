@@ -20,8 +20,10 @@ Use `setup create` when starting a new product in a separate directory:
 
 This is the default human flow. It progressively asks for the project name,
 destination, first experience, audience, promise, and visual character only
-when those answers affect the selected surface. It shows the complete plan and
-asks once before writing.
+when those answers affect the selected surface. Enterprise workflows then ask
+only four additional decisions: the governed business object, tenant model,
+approval model, and data sensitivity. It shows the complete plan and asks once
+before writing.
 
 Use explicit flags for automation or repeatable scaffolding:
 
@@ -61,6 +63,7 @@ Every plan reports:
 - external setup that remains pending;
 - source version, commit, and dirty-state disclosure;
 - web archetype, audience, promise, and starting visual character when active;
+- enterprise workflow contract when that archetype is selected;
 - mutation and authority boundaries.
 
 Dry-run performs no writes.
@@ -87,6 +90,8 @@ The generated project receives:
 - a project-specific README;
 - a machine-readable `.agentic/experience.json` for web identity, audience,
   promise, archetype, and starting visual character;
+- a machine-readable `.agentic/enterprise.json` for workflow state, roles,
+  evidence, tenancy, approval policy, audit events, and adapter boundaries;
 - selected `.agentic/project.json` profiles;
 - `.agentic/generated-project.json` provenance and path decisions;
 - project-specific package and plugin identities;
@@ -185,8 +190,13 @@ production authority remain separate, explicit decisions.
 |---|---|
 | `product` | product promise, outcome surface, proof principles, operating rhythm |
 | `agentic-product` | objective, visible execution, tool/decision states, human approval |
+| `enterprise-workflow` | tenant-scoped request queue, evidence review, dual control, decision rationale, append-only audit trail |
 | `portfolio` | personal identity, selected work, evidence, working philosophy |
 
 These are content architectures, not themes. Each one can be compared through
 the same three coherent direction systems and compiled into the canonical
 semantic token layer after human approval.
+
+For the full enterprise contract, generated artifacts, production boundary,
+and acceptance evidence, read
+[`ENTERPRISE_GOLDEN_PATH.md`](ENTERPRISE_GOLDEN_PATH.md).

@@ -21,4 +21,9 @@ For every proposal, cover:
 
 Create an ADR for durable decisions.
 
+For `enterprise-workflow`, distinguish the runnable local vertical slice from
+production identity, authorization, persistence, notifications, immutable
+audit, observability, migration, and deployment adapters. Do not approve
+`production_ready` until each boundary has evidence, rollback, and ownership.
+
 Do not invent requirements. Link architecture choices to actual product requirements.

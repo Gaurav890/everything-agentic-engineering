@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-24
+Last updated: 2026-08-26
 
 ## Product
 
@@ -18,7 +18,9 @@ demonstrates agent runs, protected approvals, interruption, recovery, durable
 artifacts, required UI states, and responsive supervision.
 
 The guided project studio materializes a portfolio, product, agentic-product,
-mobile, or core project after five product decisions and one confirmation. Web
+enterprise-workflow, mobile, or core project after five core product decisions
+and one confirmation. Enterprise workflows ask four additional domain
+decisions only when selected. Web
 projects persist name, audience, promise, archetype, and visual character in
 `.agentic/experience.json`; `./agentic next` then exposes one action at a time.
 Web and mobile application profiles always resolve the design-critical
@@ -30,18 +32,25 @@ Substantial frontend work uses the project design system as authority and
 requires running-product evidence plus independent evaluation.
 
 `apps/web` is a buildable Next.js reference lab with distinct portfolio,
-product, and agentic-product architectures, accessible direction controls,
+product, agentic-product, and enterprise-workflow architectures, accessible direction controls,
 responsive composition, purposeful core motion, and a reduced-motion path.
 The agentic example includes a working evidence-completeness gate, consequence
 disclosure, approval lock, approve/reject/cancel paths, and recovery language.
 The direction lab is non-obscuring on desktop and collapses to a focus-managed,
 escape-dismissible mobile control.
+
+The enterprise archetype runs a tenant-scoped request/evidence/decision/audit
+journey over explicit API, pure domain-policy, repository, and shared-type
+boundaries. Cross-tenant visibility, invalid roles, self-approval, incomplete
+evidence, missing rationale, and invalid transitions fail closed. Its identity,
+persistence, notifications, and audit adapters are explicitly local and
+`production_ready` remains false.
 `packages/ui` contains behavior primitives rather than a visual theme. Advanced
 2D, 3D, timeline, or gesture runtimes remain opt-in escalation tiers after an
 approved direction and performance budget.
 
 The starter reference lab has Playwright interaction/accessibility coverage and
-a complete three-archetype × three-direction × desktop/mobile visual matrix.
+a complete four-archetype × three-direction × desktop/mobile visual matrix.
 Generated projects exclude reference baselines and test only their selected
 archetype. Linux candidate generation remains separate from human visual
 approval.

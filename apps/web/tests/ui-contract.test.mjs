@@ -4,6 +4,7 @@ import test from "node:test";
 
 const component = readFileSync(new URL("../app/portfolio-lab.tsx", import.meta.url), "utf8");
 const productComponent = readFileSync(new URL("../app/product-lab.tsx", import.meta.url), "utf8");
+const enterpriseComponent = readFileSync(new URL("../app/enterprise-lab.tsx", import.meta.url), "utf8");
 const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
@@ -24,6 +25,20 @@ test("routes product and agentic-product to archetype-appropriate compositions",
   assert.match(productComponent, /Cancel run/);
   assert.match(productComponent, /Nothing ships silently/);
   assert.match(productComponent, /data-archetype/);
+});
+
+test("routes enterprise work to a real evidence and authority workflow", () => {
+  assert.match(page, /EnterpriseLab/);
+  assert.match(enterpriseComponent, /createEnterpriseService/);
+  assert.match(enterpriseComponent, /Request queue/);
+  assert.match(enterpriseComponent, /Required evidence/);
+  assert.match(enterpriseComponent, /Approve request/);
+  assert.match(enterpriseComponent, /Request changes/);
+  assert.match(enterpriseComponent, /The decision leaves a trail/);
+  assert.match(enterpriseComponent, /Production-ready/);
+  assert.match(enterpriseComponent, /local synthetic data only/);
+  assert.match(enterpriseComponent, /Tenant visibility and permissions were re-evaluated/);
+  assert.match(enterpriseComponent, /service\.create/);
 });
 
 test("keeps direction approval explicit", () => {

@@ -5,7 +5,8 @@
 The Showcase uses Playwright screenshot assertions for the normal, loading,
 empty, and error states at its desktop and mobile project sizes.
 
-The web portfolio uses the same approved-Linux-baseline contract for Editorial
+The web reference lab uses the same approved-Linux-baseline contract for
+portfolio, product, agentic-product, and enterprise-workflow across Editorial
 Signal, Kinetic Index, and Quiet Material at desktop and mobile sizes. Its
 interaction suite separately verifies keyboard entry, direction selection,
 axe results, horizontal overflow, and reduced-motion behavior.

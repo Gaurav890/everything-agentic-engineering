@@ -88,6 +88,56 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertTrue((destination / ".agentic/design.json").is_file())
             self.assertTrue((destination / "packages/design-tokens").is_dir())
 
+    def test_enterprise_workflow_generates_a_complete_local_vertical_slice(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "enterprise-workflow"
+            result = self.run_generator(
+                "--name", "Aperture",
+                "--destination", str(destination),
+                "--preset", "web",
+                "--archetype", "enterprise-workflow",
+                "--audience", "operations teams reviewing sensitive access",
+                "--promise", "Move every request from evidence to accountable decision.",
+                "--visual-character", "precise",
+                "--business-object", "access request",
+                "--tenant-model", "multi-tenant",
+                "--approval-model", "dual-control",
+                "--data-sensitivity", "confidential",
+                "--yes",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            enterprise = json.loads((destination / ".agentic/enterprise.json").read_text())
+            self.assertTrue(enterprise["enabled"])
+            self.assertEqual("access request", enterprise["business_object"]["singular"])
+            self.assertEqual("multi-tenant", enterprise["tenant_model"])
+            self.assertEqual("dual-control", enterprise["approval_model"])
+            self.assertFalse(enterprise["adapters"]["production_ready"])
+            self.assertTrue((destination / "apps/web/app/enterprise-lab.tsx").is_file())
+            self.assertTrue((destination / "packages/domain/src/index.js").is_file())
+            for relative in (
+                "docs/10-product/PRD.md",
+                "docs/10-product/ACCEPTANCE_CRITERIA.md",
+                "docs/10-product/USER_JOURNEYS.md",
+                "docs/30-engineering/ROLE_MATRIX.md",
+                "docs/30-engineering/DATA_MODEL.md",
+                "docs/30-engineering/API_CONTRACTS.md",
+                "docs/30-engineering/SECURITY_MODEL.md",
+                "docs/30-engineering/AUDIT_EVENTS.md",
+                "docs/40-execution/INITIAL_TASK_GRAPH.md",
+            ):
+                self.assertIn(
+                    "Generated from `.agentic/enterprise.json`",
+                    (destination / relative).read_text(),
+                )
+            verification = subprocess.run(
+                [str(destination / "agentic"), "verify", "full"],
+                cwd=destination,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, verification.returncode, verification.stderr)
+
     def test_web_project_is_materialized_and_verifies_offline(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             destination = Path(temporary) / "example-web"
@@ -282,13 +332,48 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertIn("./agentic next", (destination / "README.md").read_text())
             self.assertEqual({"mcpServers": {}}, json.loads((destination / ".mcp.json").read_text()))
 
+    def test_guided_enterprise_path_asks_only_relevant_authority_questions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "guided-enterprise"
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT)],
+                cwd=ROOT,
+                input="\n".join(
+                    [
+                        "Decision Desk",
+                        str(destination),
+                        "3",
+                        "security operations reviewers",
+                        "Move sensitive requests to accountable decisions.",
+                        "1",
+                        "policy exception",
+                        "2",
+                        "2",
+                        "3",
+                        "y",
+                        "",
+                    ]
+                ),
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn("Four enterprise boundaries", result.stdout)
+            enterprise = json.loads((destination / ".agentic/enterprise.json").read_text())
+            self.assertTrue(enterprise["enabled"])
+            self.assertEqual("policy exception", enterprise["business_object"]["singular"])
+            self.assertEqual("multi-tenant", enterprise["tenant_model"])
+            self.assertEqual("dual-control", enterprise["approval_model"])
+            self.assertEqual("restricted", enterprise["data_sensitivity"])
+
     def test_guided_mobile_path_skips_web_design_questions(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             destination = Path(temporary) / "guided-mobile"
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "4", "y", ""]),
+                input="\n".join(["Pocket Field", str(destination), "5", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,

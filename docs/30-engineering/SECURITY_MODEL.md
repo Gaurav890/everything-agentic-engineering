@@ -8,9 +8,22 @@
 
 ## Authentication
 
+The enterprise reference UI uses an explicit local actor selector for
+demonstration only. It is not authentication. Production must derive actor,
+role, and tenant claims from a reviewed identity provider on the server.
+
 ## Authorization
 
+The pure domain policy denies unknown roles, cross-tenant access, self-approval,
+invalid state transitions, incomplete evidence, and missing decision rationale.
+Production must enforce the same policy server-side before mutation and again
+inside tenant-scoped persistence boundaries.
+
 ## Sensitive data
+
+The committed enterprise fixture is synthetic. Production request scope,
+justification, evidence, identity, and rationale require classification,
+least-privilege access, encryption, retention, audit, and safe logging policy.
 
 ## Secret management
 

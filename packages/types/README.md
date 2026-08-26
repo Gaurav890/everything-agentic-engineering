@@ -1,3 +1,4 @@
-# types
+# Shared workflow types
 
-Placeholder. Initialize this area only when the selected project profile needs it.
+Canonical enterprise actor, request, evidence, audit, and transition types live
+here. They are framework-neutral and shared by domain, adapter, and UI layers.

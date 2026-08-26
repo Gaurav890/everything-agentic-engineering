@@ -27,9 +27,13 @@ CONFIG_PATH = Path(".agentic/generator.json")
 GENERATED_PATH = Path(".agentic/generated-project.json")
 PROJECT_PATH = Path(".agentic/project.json")
 EXPERIENCE_PATH = Path(".agentic/experience.json")
+ENTERPRISE_PATH = Path(".agentic/enterprise.json")
 
-WEB_ARCHETYPES = ("product", "agentic-product", "portfolio")
+WEB_ARCHETYPES = ("product", "agentic-product", "portfolio", "enterprise-workflow")
 VISUAL_CHARACTERS = ("precise", "bold", "warm", "experimental")
+TENANT_MODELS = ("single-tenant", "multi-tenant")
+APPROVAL_MODELS = ("single-review", "dual-control", "policy-gated")
+DATA_SENSITIVITY_LEVELS = ("internal", "confidential", "restricted")
 
 TRANSIENT_NAMES = {
     ".DS_Store",
@@ -69,9 +73,24 @@ SENSITIVE_SUFFIXES = {".key", ".p12", ".pem", ".pfx"}
 TRANSIENT_SUFFIXES = {".har", ".log", ".pyc", ".pyo", ".tsbuildinfo"}
 
 MANDATORY_GENERATOR_FILES = {
+    Path(".agentic/enterprise.json"),
     Path(".agentic/generator.json"),
     Path("apps/web/app/experience-types.ts"),
+    Path("apps/web/app/enterprise-lab.tsx"),
     Path("apps/web/app/product-lab.tsx"),
+    Path("packages/api/package.json"),
+    Path("packages/api/src/index.d.ts"),
+    Path("packages/api/src/index.js"),
+    Path("packages/api/tests/enterprise-service.test.mjs"),
+    Path("packages/database/package.json"),
+    Path("packages/database/src/index.d.ts"),
+    Path("packages/database/src/index.js"),
+    Path("packages/domain/package.json"),
+    Path("packages/domain/src/index.d.ts"),
+    Path("packages/domain/src/index.js"),
+    Path("packages/domain/tests/workflow.test.mjs"),
+    Path("packages/types/package.json"),
+    Path("packages/types/src/index.d.ts"),
     Path("scripts/create-project.sh"),
     Path("scripts/next-action.sh"),
     Path("scripts/next_action.py"),
@@ -85,6 +104,7 @@ GENERATED_WRITE_PATHS = {
     Path(".agentic/design.json"),
     Path(".agentic/design-intake.json"),
     EXPERIENCE_PATH,
+    ENTERPRISE_PATH,
     Path("package.json"),
     Path("plugin.json"),
     Path(".codex-plugin/plugin.json"),
@@ -93,6 +113,15 @@ GENERATED_WRITE_PATHS = {
     Path("README.md"),
     Path("CHANGELOG.md"),
     Path("docs/20-design/DESIGN_BRIEF.md"),
+    Path("docs/10-product/PRD.md"),
+    Path("docs/10-product/ACCEPTANCE_CRITERIA.md"),
+    Path("docs/10-product/USER_JOURNEYS.md"),
+    Path("docs/30-engineering/ROLE_MATRIX.md"),
+    Path("docs/30-engineering/DATA_MODEL.md"),
+    Path("docs/30-engineering/API_CONTRACTS.md"),
+    Path("docs/30-engineering/SECURITY_MODEL.md"),
+    Path("docs/30-engineering/AUDIT_EVENTS.md"),
+    Path("docs/40-execution/INITIAL_TASK_GRAPH.md"),
     Path("docs/40-execution/TASKS.jsonl"),
     Path("docs/40-execution/CURRENT_STATE.md"),
     Path("docs/40-execution/PROGRESS.md"),
@@ -126,6 +155,10 @@ class GenerationPlan:
     audience: str | None
     promise: str | None
     visual_character: str | None
+    business_object: str | None
+    tenant_model: str | None
+    approval_model: str | None
+    data_sensitivity: str | None
 
     def public_report(self) -> dict[str, Any]:
         return {
@@ -137,6 +170,13 @@ class GenerationPlan:
                 "audience": self.audience,
                 "promise": self.promise,
                 "visual_character": self.visual_character,
+            },
+            "enterprise": {
+                "enabled": self.archetype == "enterprise-workflow",
+                "business_object": self.business_object,
+                "tenant_model": self.tenant_model,
+                "approval_model": self.approval_model,
+                "data_sensitivity": self.data_sensitivity,
             },
             "destination": str(self.destination),
             "selected_profiles": list(self.selected_profiles),
@@ -234,6 +274,11 @@ def experience_defaults(name: str, archetype: str) -> tuple[str, str]:
         return (
             "teams delegating consequential work to software agents",
             f"{name} makes autonomous work visible, interruptible, and trustworthy.",
+        )
+    if archetype == "enterprise-workflow":
+        return (
+            "operations and security teams making consequential decisions",
+            f"{name} moves every request from evidence to accountable decision.",
         )
     return (
         "teams replacing fragmented work with one clear system",
@@ -364,6 +409,10 @@ def build_plan(
     audience: str | None = None,
     promise: str | None = None,
     visual_character: str | None = None,
+    business_object: str | None = None,
+    tenant_model: str | None = None,
+    approval_model: str | None = None,
+    data_sensitivity: str | None = None,
     source_root: Path = ROOT,
     cwd: Path | None = None,
 ) -> GenerationPlan:
@@ -378,7 +427,7 @@ def build_plan(
     active = set(resolution["resolved_profiles"])
     has_web = "web-next" in active
     if archetype is not None and archetype not in WEB_ARCHETYPES:
-        raise GenerationError("archetype must be product, agentic-product, or portfolio")
+        raise GenerationError("archetype must be product, agentic-product, portfolio, or enterprise-workflow")
     if visual_character is not None and visual_character not in VISUAL_CHARACTERS:
         raise GenerationError(
             "visual character must be precise, bold, warm, or experimental"
@@ -395,6 +444,31 @@ def build_plan(
         resolved_audience = None
         resolved_promise = None
         resolved_character = None
+    enterprise_enabled = resolved_archetype == "enterprise-workflow"
+    if not enterprise_enabled and any((business_object, tenant_model, approval_model, data_sensitivity)):
+        raise GenerationError("Enterprise options require the enterprise-workflow archetype")
+    if enterprise_enabled:
+        resolved_business_object = clean_text(
+            business_object or "access request", "business object", maximum=80
+        )
+        resolved_tenant_model = tenant_model or "multi-tenant"
+        resolved_approval_model = approval_model or "dual-control"
+        resolved_data_sensitivity = data_sensitivity or "confidential"
+        if resolved_tenant_model not in TENANT_MODELS:
+            raise GenerationError("tenant model must be single-tenant or multi-tenant")
+        if resolved_approval_model not in APPROVAL_MODELS:
+            raise GenerationError(
+                "approval model must be single-review, dual-control, or policy-gated"
+            )
+        if resolved_data_sensitivity not in DATA_SENSITIVITY_LEVELS:
+            raise GenerationError(
+                "data sensitivity must be internal, confidential, or restricted"
+            )
+    else:
+        resolved_business_object = None
+        resolved_tenant_model = None
+        resolved_approval_model = None
+        resolved_data_sensitivity = None
     commit, dirty, tracked = git_source_state(source_root)
     candidates = candidate_files(source_root, config["source_roots"], tracked)
     files = tuple(path for path in candidates if path_allowed(path, config, active))
@@ -430,6 +504,10 @@ def build_plan(
         audience=resolved_audience,
         promise=resolved_promise,
         visual_character=resolved_character,
+        business_object=resolved_business_object,
+        tenant_model=resolved_tenant_model,
+        approval_model=resolved_approval_model,
+        data_sensitivity=resolved_data_sensitivity,
     )
 
 
@@ -523,6 +601,7 @@ def generated_metadata(plan: GenerationPlan) -> dict[str, Any]:
         "schema_version": 1,
         "project": report["project"],
         "experience": report["experience"],
+        "enterprise": report["enterprise"],
         "selected_profiles": report["selected_profiles"],
         "resolved_profiles": report["resolved_profiles"],
         "included_managed_paths": report["copy"]["included_managed_paths"],
@@ -548,6 +627,233 @@ def generated_experience(plan: GenerationPlan) -> dict[str, Any]:
     }
 
 
+def business_object_plural(value: str) -> str:
+    return value if value.endswith("s") else f"{value}s"
+
+
+def generated_enterprise(plan: GenerationPlan) -> dict[str, Any]:
+    enabled = plan.archetype == "enterprise-workflow"
+    singular = plan.business_object or "workflow request"
+    return {
+        "schema_version": 1,
+        "enabled": enabled,
+        "business_object": {
+            "singular": singular,
+            "plural": business_object_plural(singular),
+        },
+        "tenant_model": plan.tenant_model or "single-tenant",
+        "approval_model": plan.approval_model or "single-review",
+        "data_sensitivity": plan.data_sensitivity or "internal",
+        "roles": ["requester", "reviewer", "auditor", "admin"],
+        "workflow_states": [
+            "draft",
+            "in_review",
+            "changes_requested",
+            "approved",
+            "rejected",
+            "cancelled",
+        ],
+        "required_evidence": [
+            "business justification",
+            "manager attestation",
+            "scope and expiry",
+        ],
+        "audit_events": [
+            "request.created",
+            "request.submitted",
+            "request.changes_requested",
+            "request.approved",
+            "request.rejected",
+            "request.cancelled",
+        ],
+        "adapters": {
+            "authentication": "local-demo",
+            "persistence": "local-demo",
+            "notifications": "disabled",
+            "production_ready": False,
+        },
+    }
+
+
+def generated_enterprise_artifacts(plan: GenerationPlan) -> dict[Path, str]:
+    if plan.archetype != "enterprise-workflow" or not all(
+        (plan.business_object, plan.tenant_model, plan.approval_model, plan.data_sensitivity)
+    ):
+        return {}
+    object_name = plan.business_object
+    plural = business_object_plural(object_name)
+    marker = "Generated from `.agentic/enterprise.json`; review before production."
+    return {
+        Path("docs/10-product/PRD.md"): f"""# Product requirements document
+
+Status: Captured — product-owner review required
+
+{marker}
+
+## Problem
+
+{plan.audience} need to move each {object_name} from evidence to an accountable
+decision without losing ownership, tenant context, rationale, or recovery.
+
+## Desired outcome
+
+{plan.promise}
+
+## Primary journey
+
+Create {object_name} → validate evidence → submit → authorized review → approve,
+reject, request changes, or cancel → append audit event → communicate outcome.
+
+## Functional requirements
+
+- **FR-001** — A requester can create, edit, submit, and cancel their own {plural}.
+- **FR-002** — An authorized reviewer can review evidence and make a reasoned decision.
+- **FR-003** — Every transition is tenant-scoped, attributable, and append-only audited.
+- **FR-004** — Unauthorized, incomplete, invalid, partial, and failed states recover safely.
+
+## Non-functional requirements
+
+- **NFR-001** — Authorization fails closed at the domain/service boundary.
+- **NFR-002** — Keyboard, screen-reader, responsive, reduced-motion, and performance contracts pass.
+- **NFR-003** — Local adapters remain visibly non-production until replaced and reviewed.
+
+## Non-goals
+
+Production identity, persistence, notifications, credentials, deployment, and
+customer data are not configured by generation.
+""",
+        Path("docs/10-product/ACCEPTANCE_CRITERIA.md"): f"""# Acceptance criteria
+
+{marker}
+
+- **AC-001** — A synthetic {object_name} can traverse the reviewed workflow and record an audit event.
+- **AC-002** — A cross-tenant, read-only, self-approving, or otherwise unauthorized actor is denied.
+- **AC-003** — Approval remains disabled until all required evidence is verified.
+- **AC-004** — Reject and request-changes decisions require a rationale.
+- **AC-005** — Loading, empty, dense, invalid, partial, error, disabled, unauthorized, and success states are inspectable.
+- **AC-006** — The experience passes responsive, keyboard, accessibility, reduced-motion, interaction, and visual checks.
+- **AC-007** — Replacing local adapters does not change the canonical workflow or UI contract.
+""",
+        Path("docs/10-product/USER_JOURNEYS.md"): f"""# User journeys
+
+{marker}
+
+## Requester
+
+Create {object_name} → understand missing evidence → submit → respond to requested
+changes → see the final decision and its rationale.
+
+## Reviewer
+
+Open assigned queue → inspect scope and provenance → verify every requirement →
+approve, reject, or request changes → see the recorded consequence.
+
+## Auditor
+
+Inspect tenant-scoped history and evidence without receiving mutation authority.
+
+## Administrator
+
+Cancel an unsafe in-flight request and inspect policy configuration; approval
+authority remains governed by the selected `{plan.approval_model}` model.
+""",
+        Path("docs/30-engineering/ROLE_MATRIX.md"): f"""# Role matrix
+
+{marker}
+
+| Capability | Requester | Reviewer | Auditor | Admin |
+|---|---:|---:|---:|---:|
+| Create own {object_name} | Yes | No | No | No |
+| Submit or cancel own request | Yes | No | No | Cancel only |
+| Inspect tenant-scoped evidence | Own | Assigned | Read only | Read only |
+| Request changes / reject | No | Yes | No | No |
+| Approve complete evidence | No | Yes | No | No |
+| Inspect audit trail | Own | Assigned | Yes | Yes |
+
+Every capability also requires a matching tenant boundary. The `{plan.approval_model}`
+model prevents implicit self-approval.
+""",
+        Path("docs/30-engineering/DATA_MODEL.md"): f"""# Data model
+
+{marker}
+
+## `{object_name.replace(' ', '_')}`
+
+`id`, `tenant_id`, `owner_id`, `status`, `risk`, `requested_scope`,
+`justification`, `created_at`, `updated_at`.
+
+## `request_evidence`
+
+`id`, `request_id`, `tenant_id`, `label`, `state`, `source`, `verified_at`.
+
+## `audit_event`
+
+`id`, `request_id`, `tenant_id`, `actor_id`, `action`, `from_status`,
+`to_status`, `reason`, `occurred_at`.
+
+Tenant model: `{plan.tenant_model}`. Data sensitivity: `{plan.data_sensitivity}`.
+Audit events are append-only; updates and deletes are not part of the contract.
+""",
+        Path("docs/30-engineering/API_CONTRACTS.md"): f"""# API contracts
+
+{marker}
+
+- `GET /{plural.replace(' ', '-')}` — tenant-scoped list authorized for the current actor.
+- `POST /{plural.replace(' ', '-')}` — create a draft owned by the current requester.
+- `GET /{plural.replace(' ', '-')}/:id` — request, evidence, allowed transitions, and audit summary.
+- `POST /{plural.replace(' ', '-')}/:id/transitions` — action plus rationale; server re-authorizes and appends one audit event atomically.
+
+The generated application uses a local in-memory adapter behind this interface.
+Do not expose it as a production API. Production routes must derive identity and
+tenant from reviewed server-side authentication, never client input.
+""",
+        Path("docs/30-engineering/SECURITY_MODEL.md"): f"""# Security model
+
+{marker}
+
+## Trust boundaries
+
+- Identity and tenant claims must come from reviewed server-side authentication.
+- Domain transitions fail closed for role, tenant, ownership, evidence, reason, and state.
+- `{plan.approval_model}` approval never permits silent self-approval.
+- `{plan.data_sensitivity}` fields must not enter logs, analytics, prompts, or client-visible errors without review.
+- Audit writes must commit atomically with the state transition.
+
+## Generated adapter boundary
+
+Authentication and persistence are `local-demo`; notifications are disabled;
+production readiness is false. Generation creates no credentials, database,
+identity provider, external service, or deployment.
+""",
+        Path("docs/30-engineering/AUDIT_EVENTS.md"): f"""# Audit events
+
+{marker}
+
+Canonical events: `request.created`, `request.submitted`,
+`request.changes_requested`, `request.approved`, `request.rejected`, and
+`request.cancelled`.
+
+Every event requires event ID, request ID, tenant ID, actor ID, action, prior
+state, next state, rationale, and timestamp. Events are immutable, ordered, and
+must not contain secrets or full sensitive payloads.
+""",
+        Path("docs/40-execution/INITIAL_TASK_GRAPH.md"): f"""# Initial task graph
+
+{marker}
+
+1. **DISC-001** — Product owner reviews PRD, journeys, roles, and non-goals.
+2. **DES-001** — Compare the three running directions; approve one explicitly.
+3. **SEC-001** — Choose production identity, tenant, data-retention, and audit controls.
+4. **BE-001** — Replace local repository/API adapters behind existing interfaces.
+5. **FE-001** — Replace synthetic content while preserving workflow and state coverage.
+6. **QA-001** — Run domain, integration, accessibility, responsive, visual, and security gates.
+
+Do not copy these into `TASKS.jsonl` blindly. Decompose approved work into owned,
+dependency-aware tasks after product and architecture review.
+""",
+    }
+
+
 def generated_package(plan: GenerationPlan) -> dict[str, Any]:
     source = load_object(plan.source_root / "package.json", "source package metadata")
     active = set(plan.resolved_profiles)
@@ -559,7 +865,7 @@ def generated_package(plan: GenerationPlan) -> dict[str, Any]:
                 "build": "pnpm --filter @everything-agentic/web build",
                 "lint": "pnpm --filter @everything-agentic/web lint",
                 "typecheck": "pnpm --filter @everything-agentic/web typecheck",
-                "test": "pnpm --filter @everything-agentic/web test",
+                "test": "pnpm --filter @everything-agentic/domain test && pnpm --filter @everything-agentic/api test && pnpm --filter @everything-agentic/web test",
                 "test:e2e": "pnpm --dir apps/web build && pnpm --dir apps/web test:e2e",
                 "test:visual": "pnpm --dir apps/web build && pnpm --dir apps/web test:visual",
                 "test:visual:update": "pnpm --dir apps/web build && pnpm --dir apps/web test:visual:update",
@@ -642,12 +948,27 @@ def generated_readme(plan: GenerationPlan) -> str:
     )
     active = set(plan.resolved_profiles)
     if "web-next" in active:
+        enterprise = ""
+        if plan.archetype == "enterprise-workflow":
+            enterprise = f"""
+
+Your enterprise boundary is also captured:
+
+- Business object: `{plan.business_object}`
+- Tenant model: `{plan.tenant_model}`
+- Approval model: `{plan.approval_model}`
+- Data sensitivity: `{plan.data_sensitivity}`
+
+The running application uses local synthetic data and replaceable adapters.
+Review the generated product, role, data, API, security, audit, and task-graph
+documents before selecting production identity or persistence."""
         start = f"""Your first experience brief is already captured:
 
 - Archetype: `{plan.archetype}`
 - Audience: {plan.audience}
 - Promise: {plan.promise}
 - Visual character: `{plan.visual_character}`
+{enterprise}
 
 Run exactly this next:
 
@@ -710,20 +1031,35 @@ def reset_durable_state(plan: GenerationPlan) -> None:
     execution = plan.destination / "docs/40-execution"
     execution.mkdir(parents=True, exist_ok=True)
     (execution / "TASKS.jsonl").write_text("")
-    (execution / "CURRENT_STATE.md").write_text(
-        f"# Current state\n\nProject: {plan.project_name}\n\n"
-        "The project has been generated, but product discovery and implementation have not started.\n\n"
-        "Only factual present-tense truth belongs here.\n"
-    )
+    if plan.archetype == "enterprise-workflow":
+        current = (
+            f"# Current state\n\nProject: {plan.project_name}\n\n"
+            "A synthetic enterprise workflow, machine-readable boundary, and generated review artifacts are present. "
+            "Production identity, persistence, notifications, credentials, and deployment are not configured.\n\n"
+            "Only factual present-tense truth belongs here.\n"
+        )
+        handoff = (
+            "# Handoff\n\n## Current goal\n\nReview the enterprise product and design contracts in the running local experience.\n\n"
+            "## Blockers\n\nProduction adapters require explicit architecture and security decisions.\n\n"
+            "## Exact next action\n\nRun `./agentic next` and follow the single revealed step.\n"
+        )
+    else:
+        current = (
+            f"# Current state\n\nProject: {plan.project_name}\n\n"
+            "The project has been generated, but product discovery and implementation have not started.\n\n"
+            "Only factual present-tense truth belongs here.\n"
+        )
+        handoff = (
+            "# Handoff\n\n"
+            "## Current goal\n\nComplete the north star and initial product discovery.\n\n"
+            "## Blockers\n\nNone recorded.\n\n"
+            "## Exact next action\n\nFill in `docs/00-vision/NORTH_STAR.md`, then create the initial PRD.\n"
+        )
+    (execution / "CURRENT_STATE.md").write_text(current)
     (execution / "PROGRESS.md").write_text(
         "# Progress log\n\nNo verified project work has been recorded yet.\n"
     )
-    (execution / "HANDOFF.md").write_text(
-        "# Handoff\n\n"
-        "## Current goal\n\nComplete the north star and initial product discovery.\n\n"
-        "## Blockers\n\nNone recorded.\n\n"
-        "## Exact next action\n\nFill in `docs/00-vision/NORTH_STAR.md`, then create the initial PRD.\n"
-    )
+    (execution / "HANDOFF.md").write_text(handoff)
     (execution / "BLOCKERS.md").write_text("# Blockers\n\nNone recorded.\n")
     (execution / "RISKS.md").write_text("# Risks\n\nNo project-specific risks recorded yet.\n")
 
@@ -777,6 +1113,7 @@ Status: Captured — direction approval pending
 - Audience: {plan.audience}
 - Product promise: {plan.promise}
 - Desired character: `{plan.visual_character}`
+{f"- Enterprise workflow: `{plan.business_object}` · `{plan.tenant_model}` · `{plan.approval_model}` · `{plan.data_sensitivity}`" if plan.archetype == "enterprise-workflow" else ""}
 
 These are first-run inputs, not permission to invent facts. Replace starter copy
 with verified product content before release.
@@ -804,9 +1141,14 @@ def write_generated_files(plan: GenerationPlan) -> None:
     (plan.destination / "README.md").write_text(generated_readme(plan))
     if "web-next" in set(plan.resolved_profiles):
         write_json(plan.destination / EXPERIENCE_PATH, generated_experience(plan))
+        write_json(plan.destination / ENTERPRISE_PATH, generated_enterprise(plan))
         (plan.destination / "docs/20-design/DESIGN_BRIEF.md").write_text(
             generated_design_brief(plan)
         )
+        for relative, content in generated_enterprise_artifacts(plan).items():
+            destination = plan.destination / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(content)
     (plan.destination / "CHANGELOG.md").write_text(
         "# Changelog\n\n## Unreleased\n\nNo released project changes yet.\n"
     )
@@ -959,6 +1301,60 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         for field in ("audience", "promise"):
             if not isinstance(experience.get(field), str) or not experience[field].strip():
                 raise GenerationError(f"Generated web experience is missing {field}")
+        enterprise = load_object(root / ENTERPRISE_PATH, "enterprise manifest")
+        if enterprise.get("schema_version") != 1 or not isinstance(
+            enterprise.get("enabled"), bool
+        ):
+            raise GenerationError("Unsupported enterprise-manifest schema")
+        enterprise_expected = experience.get("archetype") == "enterprise-workflow"
+        if enterprise.get("enabled") is not enterprise_expected:
+            raise GenerationError(
+                "Enterprise manifest enablement must match the experience archetype"
+            )
+        if enterprise.get("tenant_model") not in TENANT_MODELS:
+            raise GenerationError("Generated enterprise manifest has an invalid tenant model")
+        if enterprise.get("approval_model") not in APPROVAL_MODELS:
+            raise GenerationError("Generated enterprise manifest has an invalid approval model")
+        if enterprise.get("data_sensitivity") not in DATA_SENSITIVITY_LEVELS:
+            raise GenerationError(
+                "Generated enterprise manifest has an invalid data-sensitivity level"
+            )
+        required_roles = {"requester", "reviewer", "auditor", "admin"}
+        if set(enterprise.get("roles", [])) != required_roles:
+            raise GenerationError("Generated enterprise manifest has an invalid role contract")
+        adapters = enterprise.get("adapters")
+        if adapters != {
+            "authentication": "local-demo",
+            "persistence": "local-demo",
+            "notifications": "disabled",
+            "production_ready": False,
+        }:
+            raise GenerationError("Generated enterprise adapters must remain explicitly local")
+        if enterprise_expected:
+            business_object = enterprise.get("business_object")
+            if not isinstance(business_object, dict) or not all(
+                isinstance(business_object.get(field), str)
+                and business_object[field].strip()
+                for field in ("singular", "plural")
+            ):
+                raise GenerationError("Generated enterprise business object is incomplete")
+            required_artifacts = (
+                "docs/10-product/PRD.md",
+                "docs/10-product/ACCEPTANCE_CRITERIA.md",
+                "docs/10-product/USER_JOURNEYS.md",
+                "docs/30-engineering/ROLE_MATRIX.md",
+                "docs/30-engineering/DATA_MODEL.md",
+                "docs/30-engineering/API_CONTRACTS.md",
+                "docs/30-engineering/SECURITY_MODEL.md",
+                "docs/30-engineering/AUDIT_EVENTS.md",
+                "docs/40-execution/INITIAL_TASK_GRAPH.md",
+            )
+            for relative in required_artifacts:
+                artifact = root / relative
+                if not artifact.is_file() or "Generated from `.agentic/enterprise.json`" not in artifact.read_text():
+                    raise GenerationError(
+                        f"Generated enterprise project is missing its contract: {relative}"
+                    )
         env_text = (root / ".env.example").read_text()
         if "Mara Voss" in env_text or "NEXT_PUBLIC_PORTFOLIO_" in env_text:
             raise GenerationError("Generated web environment contains starter portfolio identity")
@@ -966,6 +1362,8 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Inactive web project contains its visual-quality workflow")
     elif (root / EXPERIENCE_PATH).exists():
         raise GenerationError("Non-web generated project contains a web experience manifest")
+    elif (root / ENTERPRISE_PATH).exists():
+        raise GenerationError("Non-web generated project contains an enterprise manifest")
     if "mobile-expo" in current_resolved and not (root / "pnpm-lock.yaml").is_file():
         raise GenerationError("Generated mobile project is missing the reviewed dependency lockfile")
     if "design-critical" in current_resolved:
@@ -1088,6 +1486,12 @@ def print_plan(plan: GenerationPlan) -> None:
         print(f"  Audience:    {plan.audience}")
         print(f"  Promise:     {plan.promise}")
         print(f"  Character:   {plan.visual_character}")
+    if plan.archetype == "enterprise-workflow":
+        print("\nEnterprise boundary:")
+        print(f"  Object:      {plan.business_object}")
+        print(f"  Tenancy:     {plan.tenant_model}")
+        print(f"  Approval:    {plan.approval_model}")
+        print(f"  Sensitivity: {plan.data_sensitivity}")
     print("\nResolved profiles:")
     for profile in plan.resolved_profiles:
         print(f"  + {profile}")
@@ -1142,7 +1546,7 @@ def prompt_confirm(question: str) -> bool:
 
 def interactive_answers() -> argparse.Namespace:
     print("\nCreate something unmistakable.")
-    print("Five decisions shape the first running experience; everything else can wait.\n")
+    print("Five product decisions shape the first running experience; enterprise boundaries appear only when relevant.\n")
     name = prompt_text("1/5  What is the project called?", "My Product", maximum=80)
     slug = slugify(name)
     destination = prompt_text(
@@ -1152,7 +1556,7 @@ def interactive_answers() -> argparse.Namespace:
     )
     kind = prompt_choice(
         "3/5  What should people experience first?",
-        ("product", "agentic-product", "portfolio", "mobile", "core"),
+        ("product", "agentic-product", "enterprise-workflow", "portfolio", "mobile", "core"),
         "product",
     )
     web = kind in WEB_ARCHETYPES
@@ -1170,10 +1574,41 @@ def interactive_answers() -> argparse.Namespace:
             VISUAL_CHARACTERS,
             "precise",
         )
+        if kind == "enterprise-workflow":
+            print("\nFour enterprise boundaries keep the generated workflow credible.")
+            business_object = prompt_text(
+                "6/9  What is the core business object?",
+                "access request",
+                maximum=80,
+            )
+            tenant_model = prompt_choice(
+                "7/9  How is organizational data separated?",
+                TENANT_MODELS,
+                "multi-tenant",
+            )
+            approval_model = prompt_choice(
+                "8/9  What decision control is required?",
+                APPROVAL_MODELS,
+                "dual-control",
+            )
+            data_sensitivity = prompt_choice(
+                "9/9  What is the highest data sensitivity in this workflow?",
+                DATA_SENSITIVITY_LEVELS,
+                "confidential",
+            )
+        else:
+            business_object = None
+            tenant_model = None
+            approval_model = None
+            data_sensitivity = None
     else:
         audience = None
         promise = None
         character = None
+        business_object = None
+        tenant_model = None
+        approval_model = None
+        data_sensitivity = None
     return argparse.Namespace(
         name=name,
         destination=destination,
@@ -1188,6 +1623,10 @@ def interactive_answers() -> argparse.Namespace:
         audience=audience,
         promise=promise,
         visual_character=character,
+        business_object=business_object,
+        tenant_model=tenant_model,
+        approval_model=approval_model,
+        data_sensitivity=data_sensitivity,
         json=False,
         dry_run=False,
         yes=False,
@@ -1210,6 +1649,10 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--audience")
     value.add_argument("--promise")
     value.add_argument("--visual-character", choices=VISUAL_CHARACTERS)
+    value.add_argument("--business-object")
+    value.add_argument("--tenant-model", choices=TENANT_MODELS)
+    value.add_argument("--approval-model", choices=APPROVAL_MODELS)
+    value.add_argument("--data-sensitivity", choices=DATA_SENSITIVITY_LEVELS)
     value.add_argument("--json", action="store_true")
     confirmation = value.add_mutually_exclusive_group()
     confirmation.add_argument("--dry-run", action="store_true")
@@ -1229,6 +1672,10 @@ def run(args: argparse.Namespace) -> int:
         audience=args.audience,
         promise=args.promise,
         visual_character=args.visual_character,
+        business_object=args.business_object,
+        tenant_model=args.tenant_model,
+        approval_model=args.approval_model,
+        data_sensitivity=args.data_sensitivity,
     )
     if not args.json:
         print_plan(plan)

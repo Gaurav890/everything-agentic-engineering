@@ -10,8 +10,11 @@
   design-system or token changes.
 - Read `docs/20-design/DESIGN_SYSTEM.md` and canonical design tokens.
 - Read `.agentic/experience.json`. Match the selected portfolio, product, or
-  agentic-product content architecture; do not switch archetypes or retain
+  agentic-product, or enterprise-workflow content architecture; do not switch archetypes or retain
   incompatible fixture identity/copy.
+- For enterprise workflows, read `.agentic/enterprise.json` and make tenant,
+  role, evidence, rationale, consequence, audit, and adapter status legible.
+  Never flatten the journey into generic dashboard cards.
 - Treat references as ingredients and components as structural donors.
 - Let tokens encode approved decisions; never use tokens to invent the design.
 - The project design system overrides external skills and library aesthetics.

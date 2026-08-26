@@ -8,6 +8,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A guided enterprise golden path that asks four conditional domain decisions,
+  generates role/workflow/evidence/audit and engineering contracts, and ships a
+  tenant-scoped request-decision vertical slice with pure policy, local adapter
+  boundaries, three responsive design systems, and allowed/denied Playwright
+  evidence without claiming production readiness.
+
 - A five-decision guided project studio with portfolio, product, and agentic-
   product content architectures, one-next-action routing, profile-minimal
   downstream generation, human-approved direction/token flow, a real agent

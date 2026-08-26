@@ -14,7 +14,7 @@ const directions = [
 ] as const;
 
 const productArchetypes = experience.preview_all_archetypes
-  ? (["product", "agentic-product"] as const)
+  ? (["product", "agentic-product", "enterprise-workflow"] as const)
   : experience.archetype === "portfolio"
     ? ([] as const)
     : ([experience.archetype] as const);
@@ -97,7 +97,7 @@ test("approval command exposes clipboard success and failure states", async ({ p
   }
   await page.getByRole("button", { name: "Copy approval command" }).click();
   await expect(page.getByRole("button", { name: "Command copied" })).toBeVisible();
-  await expect(page.getByRole("status")).toHaveText("Approval command copied to the clipboard.");
+  await expect(page.locator(".copy-status")).toHaveText("Approval command copied to the clipboard.");
   await expect.poll(() => page.evaluate(() => sessionStorage.getItem("approval-command"))).toBe(
     "./agentic design approve kinetic-index --yes",
   );
@@ -114,7 +114,7 @@ test("approval command exposes clipboard success and failure states", async ({ p
   }
   await page.getByRole("button", { name: "Copy approval command" }).click();
   await expect(page.getByRole("button", { name: "Copy failed — try again" })).toBeVisible();
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.locator(".copy-status")).toHaveText(
     "The approval command could not be copied. Try again.",
   );
 });
@@ -211,6 +211,50 @@ test("product and agentic-product use their own experience architecture", async 
   await expect(page.getByLabel("Agent workflow demonstration")).toBeVisible();
   await expect(page.getByText("Candidate blocked until review", { exact: true })).toBeVisible();
   await expect(page.getByText("Nothing ships silently.")).toBeVisible();
+});
+
+test("enterprise workflow enforces evidence, role, tenant, consequence, and recovery", async ({ page }) => {
+  test.skip(
+    experience.archetype !== "enterprise-workflow" && !experience.preview_all_archetypes,
+    "Only the enterprise workflow needs enterprise transition coverage.",
+  );
+  await page.goto("/?archetype=enterprise-workflow");
+  await expect(page.locator("main.experience")).toHaveAttribute("data-archetype", "enterprise-workflow");
+  await expect(page.getByRole("heading", {name: /Move every request from evidence to accountable decision/})).toBeVisible();
+  await expect(page.getByText("Request queue", {exact: true})).toBeVisible();
+
+  await page.getByRole("button", {name: "Test failure"}).click();
+  await expect(page.locator(".enterprise-state[role=alert]")).toContainText("No local decision was lost");
+  await page.getByRole("button", {name: "Retry safely"}).click();
+  await expect(page.getByText("Production analytics access")).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-auditor");
+  await page.getByRole("button", {name: "Approve request"}).click();
+  await expect(page.getByRole("status").filter({hasText: "not authorized"})).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-other-tenant");
+  await expect(page.getByText("Production analytics access")).toHaveCount(0);
+  await expect(page.getByText("No requests are exposed across the tenant boundary.")).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer");
+  await page.getByRole("button", {name: "Approve request"}).click();
+  await expect(page.getByRole("status").filter({hasText: "Approved recorded"})).toBeVisible();
+  await expect(page.locator(".audit-section li strong").filter({hasText: /^approve$/})).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-requester");
+  await page.getByRole("button", {name: /New access request/}).click();
+  await page.getByRole("button", {name: "Create draft"}).click();
+  await expect(page.getByText("Give reviewers a precise title.")).toBeVisible();
+  await page.getByLabel("Request title").fill("Finance reporting access");
+  await page.getByLabel("Requested scope").fill("Read-only for fourteen days");
+  await page.getByLabel("Business justification").fill("Complete the approved close review.");
+  await page.getByRole("button", {name: "Create draft"}).click();
+  await expect(page.getByText("Draft created locally", {exact: false})).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Filter requests"}).selectOption("empty");
+  await expect(page.getByText("No requests match this view.")).toBeVisible();
+  await page.getByRole("button", {name: "Show all requests"}).click();
+  await expect(page.locator(".request-list strong").filter({hasText: "Finance reporting access"})).toBeVisible();
 });
 
 test("product archetypes remain accessible through every direction", async ({ page }) => {

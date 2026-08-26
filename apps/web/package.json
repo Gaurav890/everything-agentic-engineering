@@ -18,6 +18,10 @@
     "install:browsers": "playwright install chromium"
   },
   "dependencies": {
+    "@everything-agentic/api": "workspace:*",
+    "@everything-agentic/database": "workspace:*",
+    "@everything-agentic/domain": "workspace:*",
+    "@everything-agentic/types": "workspace:*",
     "@everything-agentic/ui": "workspace:*",
     "next": "^16.0.0",
     "react": "^19.0.0",

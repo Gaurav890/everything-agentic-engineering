@@ -1156,3 +1156,39 @@ Issue #62 owns review. This task does not install, upgrade, or configure a
 runtime; enable marketplace/MCP helpers, asynchronous or MCP-invoking hooks,
 plugins, MCP servers, credentials, network, sandbox, provider, model,
 production, approval, or merge authority; or change managed settings.
+
+### 2026-08-26 — T-044
+
+**Requirements:** FR-001, FR-002, FR-003, FR-004
+**Acceptance:** AC-001, AC-002, AC-003, AC-004
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT AND HUMAN REVIEW PENDING
+
+**Change**
+
+Added a conditional enterprise-workflow path to guided creation. It generates
+a machine-readable enterprise contract and durable product, journey, role,
+data, API, security, audit, design, and task artifacts. The running reference
+slice covers tenant-scoped request creation, evidence review, approve/reject/
+request-changes/cancel transitions, append-only audit consequences, and clear
+local-versus-production adapter status across three design directions.
+
+**Evidence so far**
+
+- 27 focused generator/next-action tests pass.
+- Domain, API, and web model suites pass, including tenant visibility and
+  role-scoped creation.
+- Source production build and full interaction/accessibility suite pass: 23
+  passed, one intentional desktop skip.
+- All 24 macOS reference visual comparisons pass for four archetypes, three
+  directions, desktop, and mobile.
+- A freshly generated enterprise project installs from the reviewed lockfile,
+  advances to the live direction lab through `./agentic next`, passes full
+  generated-project verification, builds, and passes 17 selected-archetype
+  browser tests with seven intentional irrelevant-archetype skips.
+
+**Review boundary**
+
+This evidence is builder verification, not independent certification. Separate
+product-quality, security/authority, and human visual review remain required
+before task finalization. No production service, credential, external
+notification, deployment, approval, or merge authority was enabled.

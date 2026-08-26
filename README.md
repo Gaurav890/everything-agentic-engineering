@@ -36,22 +36,28 @@ cd everything-agentic-engineering
 ./agentic setup create
 ```
 
-That is the complete human quick start. The guide asks five decisions that
+That is the complete human quick start. The guide asks five core decisions that
 materially change the result, shows one concise plan, and asks once before it
-creates anything. It does not install dependencies, connect services, copy
-secrets, or modify this starter.
+creates anything. Enterprise workflow projects receive four additional,
+high-impact questions—business object, tenancy, approval model, and data
+sensitivity. It does not install dependencies, connect services, copy secrets,
+or modify this starter.
 
 Choose the experience people should see first:
 
 - `product` — a high-end product narrative and live outcome surface;
 - `agentic-product` — visible plans, tool work, approval, and human control;
+- `enterprise-workflow` — a credible multi-tenant request, evidence, approval,
+  and audit workflow with bounded local adapters;
 - `portfolio` — authored case-study storytelling;
 - `mobile` — a mobile-only project with no irrelevant web surface;
 - `core` — the engineering harness without an application shell.
 
 The new project records its audience, promise, archetype, and starting visual
-character in a machine-readable experience brief. It then prints exactly one
-next action. At any point, run:
+character in a machine-readable experience brief. Enterprise projects also
+record roles, workflow states, evidence requirements, trust boundaries, and
+adapter status in `.agentic/enterprise.json`. It then prints exactly one next
+action. At any point, run:
 
 ```bash
 ./agentic next
@@ -144,6 +150,7 @@ and implementation, merging, deployment, and release remain separate human
 decisions.
 
 Read the [first-run guide](docs/60-tooling/PROJECT_GENERATOR.md), the
+[enterprise golden path](docs/60-tooling/ENTERPRISE_GOLDEN_PATH.md), the
 [portfolio golden path](docs/60-tooling/PORTFOLIO_GOLDEN_PATH.md), the
 [installation guide](docs/60-tooling/INSTALLATION.md), follow the
 [60-second demo](docs/80-showcase/DEMO_SCRIPT.md), or review the

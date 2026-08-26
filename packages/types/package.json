@@ -1,0 +1,8 @@
+{
+  "name": "@everything-agentic/types",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "types": "./src/index.d.ts",
+  "exports": {".": {"types": "./src/index.d.ts"}}
+}
