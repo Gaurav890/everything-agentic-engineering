@@ -50,6 +50,44 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse(report["safety"]["source_mutation"])
             self.assertFalse(report["safety"]["enables_mcp_servers"])
 
+    def test_mutating_json_mode_emits_one_machine_readable_document(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "json-project"
+            result = self.run_generator(
+                "--name",
+                "JSON Project",
+                "--destination",
+                str(destination),
+                "--preset",
+                "core",
+                "--yes",
+                "--json",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            report = json.loads(result.stdout)
+            self.assertEqual(destination.resolve(), Path(report["created"]).resolve())
+            self.assertEqual("PASS", report["verification"]["status"])
+            self.assertEqual("create_downstream_project", report["plan"]["operation"])
+
+    def test_explicit_web_flag_cannot_omit_design_foundation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "explicit-web"
+            result = self.run_generator(
+                "--name",
+                "Explicit Web",
+                "--destination",
+                str(destination),
+                "--web",
+                "--yes",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            metadata = json.loads(
+                (destination / ".agentic/generated-project.json").read_text()
+            )
+            self.assertIn("design-critical", metadata["resolved_profiles"])
+            self.assertTrue((destination / ".agentic/design.json").is_file())
+            self.assertTrue((destination / "packages/design-tokens").is_dir())
+
     def test_web_project_is_materialized_and_verifies_offline(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             destination = Path(temporary) / "example-web"
@@ -68,7 +106,9 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse((destination / "apps/showcase").exists())
             self.assertTrue((destination / "packages/design-tokens").is_dir())
             self.assertTrue((destination / "apps/web/package.json").is_file())
+            self.assertTrue((destination / "pnpm-lock.yaml").is_file())
             self.assertTrue((destination / "apps/web/app/portfolio-lab.tsx").is_file())
+            self.assertTrue((destination / "apps/web/app/product-lab.tsx").is_file())
             self.assertTrue((destination / ".github/workflows/web-quality.yml").is_file())
             self.assertFalse((destination / ".git").exists())
             self.assertFalse((destination / "docs/50-evals/evidence").exists())
@@ -92,7 +132,11 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("needs_approval", design["status"])
             self.assertIsNone(design["approved_direction"])
             intake = json.loads((destination / ".agentic/design-intake.json").read_text())
-            self.assertEqual("not_started", intake["status"])
+            self.assertEqual("captured", intake["status"])
+            experience = json.loads((destination / ".agentic/experience.json").read_text())
+            self.assertEqual("product", experience["archetype"])
+            self.assertEqual("Example Web", experience["name"])
+            self.assertNotIn("Mara Voss", (destination / ".env.example").read_text())
             self.assertEqual("", (destination / "docs/40-execution/TASKS.jsonl").read_text())
             verification = subprocess.run(
                 [str(destination / "agentic"), "verify", "full"],
@@ -103,6 +147,45 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertEqual(verification.returncode, 0, verification.stderr)
             self.assertIn("Generated project verification complete", verification.stdout)
+
+    def test_ongoing_project_validation_allows_normal_development_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "ongoing-web"
+            result = self.run_generator(
+                "--name",
+                "Ongoing Web",
+                "--destination",
+                str(destination),
+                "--preset",
+                "web",
+                "--yes",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            (destination / ".git").mkdir()
+            (destination / "node_modules").mkdir()
+            (destination / ".env").write_text("LOCAL_ONLY=value\n")
+            (destination / "fixtures.json").write_text('["valid", "array"]\n')
+            (destination / "docs/40-execution/TASKS.jsonl").write_text(
+                '{"id":"T-001","status":"ready"}\n'
+            )
+            design_path = destination / ".agentic/design.json"
+            design_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "status": "approved",
+                        "approved_direction": "editorial-signal",
+                        "approved_by": "Product owner",
+                        "approved_at": "2026-08-24T00:00:00+00:00",
+                    },
+                    indent=2,
+                )
+                + "\n"
+            )
+            report = project_generator.validate_generated_project(destination)
+            self.assertEqual("PASS", report["status"])
+            with self.assertRaises(project_generator.GenerationError):
+                project_generator.validate_generated_project(destination, pristine=True)
 
     def test_mobile_project_excludes_web_and_showcase(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -118,6 +201,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue((destination / "apps/mobile").is_dir())
+            self.assertTrue((destination / "pnpm-lock.yaml").is_file())
             self.assertFalse((destination / "apps/web").exists())
             self.assertFalse((destination / "apps/showcase").exists())
             self.assertFalse((destination / ".github/workflows/web-quality.yml").exists())
@@ -138,6 +222,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertFalse((destination / "apps").exists())
+            self.assertFalse((destination / "pnpm-lock.yaml").exists())
             self.assertFalse((destination / ".github/workflows/web-quality.yml").exists())
             self.assertFalse((destination / "packages/design-tokens").exists())
             self.assertFalse((destination / ".agentic/design.json").exists())
@@ -158,9 +243,60 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse((destination / ".claude/agents/mobile.md").exists())
             self.assertFalse((destination / ".claude/agents/backend.md").exists())
             self.assertFalse((destination / ".claude/agents/researcher.md").exists())
+            self.assertFalse((destination / ".agentic/experience.json").exists())
             env_text = (destination / ".env.example").read_text()
             self.assertNotIn("PERPLEXITY", env_text)
             self.assertNotIn("SUPABASE", env_text)
+
+    def test_guided_create_captures_an_agentic_product_without_extra_setup(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "guided-product"
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT)],
+                cwd=ROOT,
+                input="\n".join(
+                    [
+                        "Signal Room",
+                        str(destination),
+                        "2",
+                        "operations teams supervising high-stakes automation",
+                        "Make every automated decision legible and reversible.",
+                        "2",
+                        "y",
+                        "",
+                    ]
+                ),
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn("One confirmation creates the new directory", result.stdout)
+            experience = json.loads((destination / ".agentic/experience.json").read_text())
+            self.assertEqual("agentic-product", experience["archetype"])
+            self.assertEqual("bold", experience["visual_character"])
+            self.assertEqual(
+                "operations teams supervising high-stakes automation",
+                experience["audience"],
+            )
+            self.assertIn("./agentic next", (destination / "README.md").read_text())
+            self.assertEqual({"mcpServers": {}}, json.loads((destination / ".mcp.json").read_text()))
+
+    def test_guided_mobile_path_skips_web_design_questions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "guided-mobile"
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT)],
+                cwd=ROOT,
+                input="\n".join(["Pocket Field", str(destination), "4", "y", ""]),
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertNotIn("Who is this for?", result.stdout)
+            self.assertNotIn("starting character", result.stdout.lower())
+            self.assertFalse((destination / ".agentic/experience.json").exists())
 
     def test_research_project_lists_credentials_but_does_not_enable_servers(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -210,7 +346,7 @@ class ProjectGeneratorTests(unittest.TestCase):
                 project_generator.GenerationError,
                 "automatic capability installation and removal disabled",
             ):
-                project_generator.validate_generated_project(destination)
+                project_generator.validate_generated_project(destination, pristine=True)
 
             manifest["policy"]["allow_automatic_install"] = False
             manifest["specialists"] = ["unreviewed-specialist"]
@@ -218,7 +354,122 @@ class ProjectGeneratorTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 project_generator.GenerationError, "must not activate external specialists"
             ):
+                project_generator.validate_generated_project(destination, pristine=True)
+
+    def test_ongoing_verification_requires_reviewed_authority_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "authority-project"
+            result = self.run_generator(
+                "--name",
+                "Authority Project",
+                "--destination",
+                str(destination),
+                "--preset",
+                "core",
+                "--yes",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            manifest_path = destination / ".agentic/project.json"
+            manifest = json.loads(manifest_path.read_text())
+
+            manifest["specialists"] = ["codebase-onboarding"]
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+            report = project_generator.validate_generated_project(destination)
+            self.assertEqual("PASS", report["status"])
+
+            manifest["specialists"] = ["unreviewed-specialist"]
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "Unknown activated specialist: unreviewed-specialist",
+            ):
                 project_generator.validate_generated_project(destination)
+
+            manifest["specialists"] = []
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+            (destination / ".mcp.json").write_text(
+                json.dumps(
+                    {
+                        "mcpServers": {
+                            "unreviewed": {
+                                "command": "sh",
+                                "args": ["-c", "external-command"],
+                            }
+                        }
+                    },
+                    indent=2,
+                )
+                + "\n"
+            )
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "MCP compatibility validation failed",
+            ):
+                project_generator.validate_generated_project(destination)
+            completed = subprocess.run(
+                [str(destination / "agentic"), "verify", "full"],
+                cwd=destination,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertNotEqual(0, completed.returncode)
+            self.assertIn("MCP compatibility validation failed", completed.stderr)
+
+    def test_ongoing_verification_uses_current_profiles(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            core_destination = Path(temporary) / "current-core"
+            core_result = self.run_generator(
+                "--name",
+                "Current Core",
+                "--destination",
+                str(core_destination),
+                "--preset",
+                "core",
+                "--yes",
+            )
+            self.assertEqual(0, core_result.returncode, core_result.stderr)
+            core_manifest_path = core_destination / ".agentic/project.json"
+            core_manifest = json.loads(core_manifest_path.read_text())
+            core_manifest["profiles"] = ["web-next"]
+            core_manifest_path.write_text(json.dumps(core_manifest, indent=2) + "\n")
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "missing runnable root scripts",
+            ):
+                project_generator.validate_generated_project(core_destination)
+
+            web_destination = Path(temporary) / "current-web"
+            web_result = self.run_generator(
+                "--name",
+                "Current Web",
+                "--destination",
+                str(web_destination),
+                "--preset",
+                "web",
+                "--yes",
+            )
+            self.assertEqual(0, web_result.returncode, web_result.stderr)
+            web_manifest_path = web_destination / ".agentic/project.json"
+            web_manifest = json.loads(web_manifest_path.read_text())
+            web_manifest["profiles"] = ["web-next", "research-enabled"]
+            web_manifest_path.write_text(json.dumps(web_manifest, indent=2) + "\n")
+            report = project_generator.validate_generated_project(web_destination)
+            self.assertIn("research-enabled", report["profiles"])
+            self.assertNotEqual(
+                json.loads(
+                    (web_destination / ".agentic/generated-project.json").read_text()
+                )["resolved_profiles"],
+                report["profiles"],
+            )
+
+            web_manifest["profiles"] = ["core"]
+            web_manifest_path.write_text(json.dumps(web_manifest, indent=2) + "\n")
+            with self.assertRaisesRegex(
+                project_generator.GenerationError,
+                "Inactive web project contains its visual-quality workflow",
+            ):
+                project_generator.validate_generated_project(web_destination)
 
     def test_existing_destination_is_preserved_and_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

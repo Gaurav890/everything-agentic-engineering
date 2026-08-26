@@ -19,6 +19,7 @@
     "LICENSE",
     "SECURITY.md",
     "agentic",
+    "pnpm-lock.yaml",
     "pnpm-workspace.yaml"
   ],
   "always_excluded": [
@@ -28,6 +29,7 @@
     ".github/workflows/release.yml",
     ".github/workflows/showcase.yml",
     "apps/showcase",
+    "apps/web/tests/visual.spec.ts-snapshots",
     "docs/50-evals/evidence",
     "docs/80-showcase",
     "docs/assets",
@@ -45,9 +47,11 @@
     "packages/types": ["web-next", "mobile-expo", "backend-supabase", "backend-convex"],
     "packages/config": ["web-next", "mobile-expo", "backend-supabase", "backend-convex"],
     "packages/design-tokens": ["design-critical"],
+    "pnpm-lock.yaml": ["web-next", "mobile-expo"],
     ".agentic/design.json": ["design-critical"],
     ".agentic/design-intake.json": ["design-critical"],
     ".agentic/design-directions.json": ["design-critical"],
+    ".agentic/experience.json": ["web-next"],
     ".claude/agents/frontend.md": ["web-next"],
     ".claude/rules/frontend.md": ["web-next"],
     ".claude/agents/mobile.md": ["mobile-expo"],

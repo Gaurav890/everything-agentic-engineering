@@ -251,7 +251,11 @@ def run_check(_: argparse.Namespace) -> int:
     state = load_object(STATE_PATH)
     intake = load_object(INTAKE_PATH)
     validate_state(state, catalog)
-    if intake.get("schema_version") != 1 or intake.get("status") not in {"not_started", "complete"}:
+    if intake.get("schema_version") != 1 or intake.get("status") not in {
+        "not_started",
+        "captured",
+        "complete",
+    }:
         raise DesignError("Invalid design-intake state")
     render_direction_css(state)
     print(f"Design workflow valid: {len(catalog)} directions, status={state['status']}")

@@ -102,6 +102,7 @@ class AgenticCliTests(unittest.TestCase):
         self.assertIn("setup create", names)
         self.assertIn("design", names)
         self.assertIn("evolve", names)
+        self.assertIn("next", names)
         self.assertNotIn("prepare merge", names)
 
     def test_arguments_are_forwarded_as_a_list_without_shell_evaluation(self) -> None:

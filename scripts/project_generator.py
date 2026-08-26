@@ -19,11 +19,17 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import init_project  # noqa: E402
+import agent_broker  # noqa: E402
+import mcp_compatibility  # noqa: E402
 import profile_engine  # noqa: E402
 
 CONFIG_PATH = Path(".agentic/generator.json")
 GENERATED_PATH = Path(".agentic/generated-project.json")
 PROJECT_PATH = Path(".agentic/project.json")
+EXPERIENCE_PATH = Path(".agentic/experience.json")
+
+WEB_ARCHETYPES = ("product", "agentic-product", "portfolio")
+VISUAL_CHARACTERS = ("precise", "bold", "warm", "experimental")
 
 TRANSIENT_NAMES = {
     ".DS_Store",
@@ -64,7 +70,11 @@ TRANSIENT_SUFFIXES = {".har", ".log", ".pyc", ".pyo", ".tsbuildinfo"}
 
 MANDATORY_GENERATOR_FILES = {
     Path(".agentic/generator.json"),
+    Path("apps/web/app/experience-types.ts"),
+    Path("apps/web/app/product-lab.tsx"),
     Path("scripts/create-project.sh"),
+    Path("scripts/next-action.sh"),
+    Path("scripts/next_action.py"),
     Path("scripts/project_generator.py"),
     Path("scripts/verify_generated_project.py"),
 }
@@ -74,6 +84,7 @@ GENERATED_WRITE_PATHS = {
     GENERATED_PATH,
     Path(".agentic/design.json"),
     Path(".agentic/design-intake.json"),
+    EXPERIENCE_PATH,
     Path("package.json"),
     Path("plugin.json"),
     Path(".codex-plugin/plugin.json"),
@@ -81,6 +92,7 @@ GENERATED_WRITE_PATHS = {
     Path(".env.example"),
     Path("README.md"),
     Path("CHANGELOG.md"),
+    Path("docs/20-design/DESIGN_BRIEF.md"),
     Path("docs/40-execution/TASKS.jsonl"),
     Path("docs/40-execution/CURRENT_STATE.md"),
     Path("docs/40-execution/PROGRESS.md"),
@@ -110,12 +122,22 @@ class GenerationPlan:
     source_version: str
     source_commit: str
     source_dirty: bool
+    archetype: str | None
+    audience: str | None
+    promise: str | None
+    visual_character: str | None
 
     def public_report(self) -> dict[str, Any]:
         return {
             "schema_version": 1,
             "operation": "create_downstream_project",
             "project": {"name": self.project_name, "slug": self.slug},
+            "experience": {
+                "archetype": self.archetype,
+                "audience": self.audience,
+                "promise": self.promise,
+                "visual_character": self.visual_character,
+            },
             "destination": str(self.destination),
             "selected_profiles": list(self.selected_profiles),
             "resolved_profiles": list(self.resolved_profiles),
@@ -189,6 +211,34 @@ def slugify(value: str) -> str:
             "Project name must produce a 1-63 character lowercase kebab-case slug"
         )
     return slug
+
+
+def clean_text(value: str | None, label: str, *, maximum: int = 180) -> str | None:
+    if value is None:
+        return None
+    cleaned = " ".join(value.split())
+    if not cleaned:
+        raise GenerationError(f"{label} cannot be empty")
+    if len(cleaned) > maximum:
+        raise GenerationError(f"{label} must be {maximum} characters or fewer")
+    return cleaned
+
+
+def experience_defaults(name: str, archetype: str) -> tuple[str, str]:
+    if archetype == "portfolio":
+        return (
+            "ambitious teams looking for a distinctive creative partner",
+            f"{name} turns complex product challenges into experiences people remember.",
+        )
+    if archetype == "agentic-product":
+        return (
+            "teams delegating consequential work to software agents",
+            f"{name} makes autonomous work visible, interruptible, and trustworthy.",
+        )
+    return (
+        "teams replacing fragmented work with one clear system",
+        f"{name} turns a complicated workflow into calm, measurable momentum.",
+    )
 
 
 def is_within(candidate: Path, parent: Path) -> bool:
@@ -310,6 +360,10 @@ def build_plan(
     name: str,
     destination: str,
     selected_profiles: list[str],
+    archetype: str | None = None,
+    audience: str | None = None,
+    promise: str | None = None,
+    visual_character: str | None = None,
     source_root: Path = ROOT,
     cwd: Path | None = None,
 ) -> GenerationPlan:
@@ -322,6 +376,25 @@ def build_plan(
     if resolution["conflicts"]:
         raise GenerationError("Conflicting profiles: " + ", ".join(resolution["conflicts"]))
     active = set(resolution["resolved_profiles"])
+    has_web = "web-next" in active
+    if archetype is not None and archetype not in WEB_ARCHETYPES:
+        raise GenerationError("archetype must be product, agentic-product, or portfolio")
+    if visual_character is not None and visual_character not in VISUAL_CHARACTERS:
+        raise GenerationError(
+            "visual character must be precise, bold, warm, or experimental"
+        )
+    if not has_web and any((archetype, audience, promise, visual_character)):
+        raise GenerationError("Web experience options require an active web profile")
+    resolved_archetype = archetype or ("product" if has_web else None)
+    if resolved_archetype:
+        default_audience, default_promise = experience_defaults(name.strip(), resolved_archetype)
+        resolved_audience = clean_text(audience, "audience", maximum=120) or default_audience
+        resolved_promise = clean_text(promise, "product promise", maximum=120) or default_promise
+        resolved_character = visual_character or "precise"
+    else:
+        resolved_audience = None
+        resolved_promise = None
+        resolved_character = None
     commit, dirty, tracked = git_source_state(source_root)
     candidates = candidate_files(source_root, config["source_roots"], tracked)
     files = tuple(path for path in candidates if path_allowed(path, config, active))
@@ -353,6 +426,10 @@ def build_plan(
         source_version=source_version(source_root),
         source_commit=commit,
         source_dirty=dirty,
+        archetype=resolved_archetype,
+        audience=resolved_audience,
+        promise=resolved_promise,
+        visual_character=resolved_character,
     )
 
 
@@ -445,6 +522,7 @@ def generated_metadata(plan: GenerationPlan) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "project": report["project"],
+        "experience": report["experience"],
         "selected_profiles": report["selected_profiles"],
         "resolved_profiles": report["resolved_profiles"],
         "included_managed_paths": report["copy"]["included_managed_paths"],
@@ -452,6 +530,21 @@ def generated_metadata(plan: GenerationPlan) -> dict[str, Any]:
         "expected_external_setup": report["external_setup_to_review"],
         "source": report["source"],
         "safety": report["safety"],
+    }
+
+
+def generated_experience(plan: GenerationPlan) -> dict[str, Any]:
+    if plan.archetype is None or plan.audience is None or plan.promise is None:
+        raise GenerationError("Web experience metadata is incomplete")
+    return {
+        "schema_version": 1,
+        "name": plan.project_name,
+        "archetype": plan.archetype,
+        "audience": plan.audience,
+        "promise": plan.promise,
+        "visual_character": plan.visual_character,
+        "content_status": "starter_copy_requires_review",
+        "preview_all_archetypes": False,
     }
 
 
@@ -529,9 +622,6 @@ def generated_env_example(plan: GenerationPlan) -> str:
         lines.extend(
             [
                 "NEXT_PUBLIC_APP_URL=http://localhost:3000",
-                'NEXT_PUBLIC_PORTFOLIO_NAME="Mara Voss"',
-                'NEXT_PUBLIC_PORTFOLIO_ROLE="Product designer & creative technologist"',
-                'NEXT_PUBLIC_PORTFOLIO_LOCATION="London ↔ anywhere"',
             ]
         )
     if "backend-supabase" in active:
@@ -552,19 +642,30 @@ def generated_readme(plan: GenerationPlan) -> str:
     )
     active = set(plan.resolved_profiles)
     if "web-next" in active:
-        start = """1. Run `pnpm install`.
-2. Run `./agentic design intake` and answer the short product-specific questions.
-3. Run `pnpm dev` and compare all three live directions with realistic content.
-4. Ask the human design owner to choose or synthesize a direction.
-5. Record the decision with `./agentic design approve <direction-id> --yes`.
-6. Run `./agentic tokens build`, replace the sample content, and iterate in the running product.
-7. Run `pnpm test:e2e` and `pnpm test:visual`; inspect any visual diff artifacts.
-8. Run `./agentic verify full` before review."""
+        start = f"""Your first experience brief is already captured:
+
+- Archetype: `{plan.archetype}`
+- Audience: {plan.audience}
+- Promise: {plan.promise}
+- Visual character: `{plan.visual_character}`
+
+Run exactly this next:
+
+```bash
+pnpm install
+```
+
+Then run `./agentic next`. It will reveal one next action at a time as you
+compare directions, approve the strongest system, compile tokens, and verify
+the running result."""
     else:
-        start = """1. Read `CLAUDE.md` and `AGENTS.md`.
-2. Complete `docs/00-vision/NORTH_STAR.md`.
-3. Build the initial PRD in `docs/10-product/PRD.md`.
-4. Run `./agentic setup bootstrap` and `./agentic verify full`."""
+        start = """Run exactly this next:
+
+```bash
+./agentic next
+```
+
+The router exposes one project-appropriate action at a time."""
     return f"""# {plan.project_name}
 
 This project was materialized from Everything Agentic Engineering using a
@@ -578,11 +679,11 @@ profile-specific, non-destructive generation plan.
 
 {start}
 
-For web projects, the default is intentionally design-critical. The live
-direction lab is the starting point; a generic blank page is not. Core motion
-and reduced-motion behavior are built in. Add advanced 2D, 3D, timeline, or
-gesture runtimes only when the approved direction and performance budget justify
-them.
+For web projects, the default is intentionally design-critical and
+archetype-aware. The live direction lab is the starting point; a generic blank
+page is not. Core motion and reduced-motion behavior are built in. Add advanced
+2D, 3D, timeline, or gesture runtimes only when the approved direction and
+performance budget justify them.
 
 ## External setup requiring separate review
 
@@ -644,11 +745,11 @@ def reset_design_state(plan: GenerationPlan) -> None:
         plan.destination / ".agentic/design-intake.json",
         {
             "schema_version": 1,
-            "status": "not_started",
+            "status": "captured" if plan.archetype else "not_started",
             "answers": {
-                "product_type": None,
-                "audience": None,
-                "personality": None,
+                "product_type": plan.archetype,
+                "audience": plan.audience,
+                "personality": plan.visual_character,
                 "color_intent": None,
                 "color_expression": None,
                 "typography": None,
@@ -662,6 +763,36 @@ def reset_design_state(plan: GenerationPlan) -> None:
     )
 
 
+def generated_design_brief(plan: GenerationPlan) -> str:
+    if plan.archetype is None:
+        return (plan.source_root / "docs/20-design/DESIGN_BRIEF.md").read_text()
+    return f"""# Design brief
+
+Status: Captured — direction approval pending
+
+## Product intent
+
+- Product: {plan.project_name}
+- Archetype: `{plan.archetype}`
+- Audience: {plan.audience}
+- Product promise: {plan.promise}
+- Desired character: `{plan.visual_character}`
+
+These are first-run inputs, not permission to invent facts. Replace starter copy
+with verified product content before release.
+
+## Direction contract
+
+The running direction lab must compare materially different systems using this
+same product promise and audience. References are ingredients, components are
+structural donors, tokens encode approved decisions, and this project's design
+system wins every conflict.
+
+Canonical design-system and token changes still require explicit human approval
+through `./agentic design approve <direction-id> --yes`.
+"""
+
+
 def write_generated_files(plan: GenerationPlan) -> None:
     write_json(plan.destination / PROJECT_PATH, generated_project_manifest(plan))
     write_json(plan.destination / GENERATED_PATH, generated_metadata(plan))
@@ -671,6 +802,11 @@ def write_generated_files(plan: GenerationPlan) -> None:
     write_json(plan.destination / ".mcp.json", {"mcpServers": {}})
     (plan.destination / ".env.example").write_text(generated_env_example(plan))
     (plan.destination / "README.md").write_text(generated_readme(plan))
+    if "web-next" in set(plan.resolved_profiles):
+        write_json(plan.destination / EXPERIENCE_PATH, generated_experience(plan))
+        (plan.destination / "docs/20-design/DESIGN_BRIEF.md").write_text(
+            generated_design_brief(plan)
+        )
     (plan.destination / "CHANGELOG.md").write_text(
         "# Changelog\n\n## Unreleased\n\nNo released project changes yet.\n"
     )
@@ -690,7 +826,38 @@ def validate_symlinks(root: Path) -> None:
                 raise GenerationError(f"Generated symlink escapes the project: {path.relative_to(root)}")
 
 
-def validate_generated_project(root: Path) -> dict[str, Any]:
+def resolve_generated_profiles(root: Path, selected: list[str]) -> dict[str, Any]:
+    original_root = profile_engine.ROOT
+    original_config = profile_engine.CONFIG_DIR
+    original_profiles = profile_engine.PROFILES_DIR
+    original_project = profile_engine.PROJECT_PATH
+    original_resources = profile_engine.RESOURCES_PATH
+    original_mcp = profile_engine.MCP_PATH
+    try:
+        profile_engine.ROOT = root
+        profile_engine.CONFIG_DIR = root / ".agentic"
+        profile_engine.PROFILES_DIR = root / ".agentic" / "profiles"
+        profile_engine.PROJECT_PATH = root / PROJECT_PATH
+        profile_engine.RESOURCES_PATH = root / ".agentic" / "resources.json"
+        profile_engine.MCP_PATH = root / ".mcp.json"
+        result = profile_engine.resolve(selected)
+    except profile_engine.ProfileError as error:
+        raise GenerationError(f"Current project profiles are invalid: {error}") from error
+    finally:
+        profile_engine.ROOT = original_root
+        profile_engine.CONFIG_DIR = original_config
+        profile_engine.PROFILES_DIR = original_profiles
+        profile_engine.PROJECT_PATH = original_project
+        profile_engine.RESOURCES_PATH = original_resources
+        profile_engine.MCP_PATH = original_mcp
+    if result["conflicts"]:
+        raise GenerationError(
+            "Current project profiles conflict: " + ", ".join(result["conflicts"])
+        )
+    return result
+
+
+def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[str, Any]:
     root = root.resolve()
     metadata = load_object(root / GENERATED_PATH, "generated-project metadata")
     project = load_object(root / PROJECT_PATH, "project manifest")
@@ -700,12 +867,52 @@ def validate_generated_project(root: Path) -> dict[str, Any]:
         raise GenerationError("Unsupported generated-project metadata schema")
     selected = metadata.get("selected_profiles")
     resolved = metadata.get("resolved_profiles")
-    if not isinstance(selected, list) or not isinstance(resolved, list):
-        raise GenerationError("Generated profile metadata must be arrays")
-    if project.get("profiles") != selected:
+    if (
+        not isinstance(selected, list)
+        or not selected
+        or not all(isinstance(item, str) and item for item in selected)
+        or not isinstance(resolved, list)
+        or not resolved
+        or not all(isinstance(item, str) and item for item in resolved)
+    ):
+        raise GenerationError("Generated profile metadata must contain non-empty string arrays")
+    current_selected = project.get("profiles")
+    if (
+        not isinstance(current_selected, list)
+        or not current_selected
+        or not all(isinstance(item, str) and item for item in current_selected)
+    ):
+        raise GenerationError("Project profiles must remain a non-empty string array")
+    current_resolution = resolve_generated_profiles(root, current_selected)
+    current_resolved = current_resolution["resolved_profiles"]
+    if pristine and current_selected != selected:
         raise GenerationError("Generated project profiles do not match provenance")
-    if project.get("specialists") != []:
+    if pristine and current_resolved != resolved:
+        raise GenerationError("Generated resolved profiles do not match provenance")
+    specialists = project.get("specialists")
+    if not isinstance(specialists, list) or not all(
+        isinstance(item, str) and item for item in specialists
+    ):
+        raise GenerationError("Project specialists must remain a string array")
+    if len(specialists) != len(set(specialists)):
+        raise GenerationError("Project specialists must not contain duplicates")
+    if pristine and specialists:
         raise GenerationError("Generated projects must not activate external specialists")
+    try:
+        specialist_catalog = agent_broker.specialist_index(agent_broker.load_manifest(root))
+    except agent_broker.BrokerError as error:
+        raise GenerationError(f"Specialist catalog validation failed: {error}") from error
+    unknown_specialists = sorted(set(specialists).difference(specialist_catalog))
+    if unknown_specialists:
+        raise GenerationError(
+            "Unknown activated specialist: " + ", ".join(unknown_specialists)
+        )
+    for specialist_id in specialists:
+        required_profiles = set(specialist_catalog[specialist_id]["profiles_any_of"])
+        if not required_profiles.intersection(current_resolved):
+            raise GenerationError(
+                f"Activated specialist {specialist_id} does not match the current profiles"
+            )
     expected_policy = {
         "allow_automatic_install": False,
         "allow_automatic_removal": False,
@@ -718,7 +925,7 @@ def validate_generated_project(root: Path) -> dict[str, Any]:
         raise GenerationError("Generated project identity does not match provenance")
     if package.get("name") != metadata.get("project", {}).get("slug"):
         raise GenerationError("Generated package slug does not match provenance")
-    if "web-next" in resolved:
+    if "web-next" in current_resolved:
         required_scripts = {
             "dev",
             "build",
@@ -734,45 +941,109 @@ def validate_generated_project(root: Path) -> dict[str, Any]:
         web_package = load_object(root / "apps/web/package.json", "web package metadata")
         if web_package.get("name") != "@everything-agentic/web":
             raise GenerationError("Generated web package identity is invalid")
+        if not (root / "pnpm-lock.yaml").is_file():
+            raise GenerationError("Generated web project is missing the reviewed dependency lockfile")
         if not (root / ".github/workflows/web-quality.yml").is_file():
             raise GenerationError("Generated web project is missing its visual-quality workflow")
+        experience = load_object(root / EXPERIENCE_PATH, "experience manifest")
+        if experience.get("schema_version") != 1:
+            raise GenerationError("Unsupported experience-manifest schema")
+        if pristine and experience.get("name") != metadata["project"]["name"]:
+            raise GenerationError("Experience identity does not match generated project")
+        if not isinstance(experience.get("name"), str) or not experience["name"].strip():
+            raise GenerationError("Web experience is missing its product name")
+        if experience.get("archetype") not in WEB_ARCHETYPES:
+            raise GenerationError("Generated web experience has an invalid archetype")
+        if experience.get("visual_character") not in VISUAL_CHARACTERS:
+            raise GenerationError("Generated web experience has an invalid visual character")
+        for field in ("audience", "promise"):
+            if not isinstance(experience.get(field), str) or not experience[field].strip():
+                raise GenerationError(f"Generated web experience is missing {field}")
+        env_text = (root / ".env.example").read_text()
+        if "Mara Voss" in env_text or "NEXT_PUBLIC_PORTFOLIO_" in env_text:
+            raise GenerationError("Generated web environment contains starter portfolio identity")
     elif (root / ".github/workflows/web-quality.yml").exists():
         raise GenerationError("Inactive web project contains its visual-quality workflow")
-    if "design-critical" in resolved:
+    elif (root / EXPERIENCE_PATH).exists():
+        raise GenerationError("Non-web generated project contains a web experience manifest")
+    if "mobile-expo" in current_resolved and not (root / "pnpm-lock.yaml").is_file():
+        raise GenerationError("Generated mobile project is missing the reviewed dependency lockfile")
+    if "design-critical" in current_resolved:
         design_state = load_object(root / ".agentic/design.json", "design state")
         intake_state = load_object(root / ".agentic/design-intake.json", "design intake")
-        if (
-            design_state.get("status") != "needs_approval"
-            or design_state.get("approved_direction") is not None
-        ):
+        if design_state.get("schema_version") != 1:
+            raise GenerationError("Unsupported design-state schema")
+        direction_ids = {
+            item.get("id")
+            for item in load_object(
+                root / ".agentic/design-directions.json", "design-direction catalog"
+            ).get("directions", [])
+            if isinstance(item, dict)
+        }
+        design_status = design_state.get("status")
+        approved_direction = design_state.get("approved_direction")
+        if pristine and (design_status != "needs_approval" or approved_direction is not None):
             raise GenerationError("Generated design direction must begin unapproved")
-        if intake_state.get("status") != "not_started":
-            raise GenerationError("Generated design intake must begin not started")
-    if mcp != {"mcpServers": {}}:
+        if not pristine:
+            if design_status == "needs_approval" and approved_direction is not None:
+                raise GenerationError("Unapproved design state cannot name a direction")
+            if design_status == "approved" and approved_direction not in direction_ids:
+                raise GenerationError("Approved design state must name a catalog direction")
+            if design_status not in {"needs_approval", "approved"}:
+                raise GenerationError("Unsupported ongoing design status")
+        expected_intake = "captured" if "web-next" in current_resolved else "not_started"
+        if pristine and intake_state.get("status") != expected_intake:
+            raise GenerationError(
+                f"Generated design intake must begin {expected_intake.replace('_', ' ')}"
+            )
+        if not pristine and intake_state.get("status") not in {
+            "not_started",
+            "captured",
+            "complete",
+        }:
+            raise GenerationError("Unsupported ongoing design-intake status")
+    if pristine and mcp != {"mcpServers": {}}:
         raise GenerationError("Generated projects must not enable MCP servers")
-    for path in (".git", ".env", "node_modules", "apps/showcase", "docs/80-showcase"):
+    if not isinstance(mcp.get("mcpServers"), dict):
+        raise GenerationError("MCP configuration must contain a server object")
+    try:
+        mcp_compatibility.validate(root, allow_disabled=True)
+    except mcp_compatibility.MCPCompatibilityError as error:
+        raise GenerationError(f"MCP compatibility validation failed: {error}") from error
+    prohibited = ["apps/showcase", "docs/80-showcase"]
+    if pristine:
+        prohibited.extend([".git", ".env", "node_modules"])
+    for path in prohibited:
         if (root / path).exists():
             raise GenerationError(f"Generated project contains prohibited path: {path}")
-    for path in metadata.get("included_managed_paths", []):
-        if not (root / path).exists():
-            raise GenerationError(f"Expected selected path is missing: {path}")
-    for path in metadata.get("excluded_managed_paths", []):
-        if (root / path).exists():
-            raise GenerationError(f"Inactive profile path is present: {path}")
+    if pristine:
+        for path in metadata.get("included_managed_paths", []):
+            if not (root / path).exists():
+                raise GenerationError(f"Expected selected path is missing: {path}")
+        for path in metadata.get("excluded_managed_paths", []):
+            if (root / path).exists():
+                raise GenerationError(f"Inactive profile path is present: {path}")
     tasks = root / "docs/40-execution/TASKS.jsonl"
-    if not tasks.is_file() or tasks.read_text() != "":
+    if not tasks.is_file():
+        raise GenerationError("Generated project is missing its task ledger")
+    if pristine and tasks.read_text() != "":
         raise GenerationError("Generated task ledger must start empty")
     if not (root / "README.md").is_file() or metadata["project"]["name"] not in (
         root / "README.md"
     ).read_text():
         raise GenerationError("Generated README does not contain the project identity")
     for path in root.rglob("*.json"):
-        load_object(path, "JSON document")
+        if any(part in TRANSIENT_NAMES for part in path.relative_to(root).parts):
+            continue
+        try:
+            json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError) as error:
+            raise GenerationError(f"Invalid JSON document at {path}: {error}") from error
     validate_symlinks(root)
     return {
         "status": "PASS",
         "project": metadata["project"],
-        "profiles": resolved,
+        "profiles": current_resolved,
         "external_setup_pending": metadata.get("expected_external_setup", []),
         "mutation_performed": False,
     }
@@ -794,7 +1065,7 @@ def materialize(plan: GenerationPlan) -> dict[str, Any]:
         require_destination_identity(plan.destination, created_identity)
         write_generated_files(plan)
         require_destination_identity(plan.destination, created_identity)
-        return validate_generated_project(plan.destination)
+        return validate_generated_project(plan.destination, pristine=True)
     except Exception as error:
         try:
             rollback_created_destination(plan.destination, created_identity)
@@ -811,6 +1082,12 @@ def print_plan(plan: GenerationPlan) -> None:
     print(f"  Source:      {plan.source_version} @ {plan.source_commit[:12]}")
     if plan.source_dirty:
         print("  Warning:     source working tree has local changes")
+    if plan.archetype:
+        print("\nExperience brief:")
+        print(f"  Archetype:   {plan.archetype}")
+        print(f"  Audience:    {plan.audience}")
+        print(f"  Promise:     {plan.promise}")
+        print(f"  Character:   {plan.visual_character}")
     print("\nResolved profiles:")
     for profile in plan.resolved_profiles:
         print(f"  + {profile}")
@@ -834,6 +1111,90 @@ def print_plan(plan: GenerationPlan) -> None:
     print("  - No dependency, external skill, plugin, MCP server, runtime, or backend is installed or enabled.")
 
 
+def prompt_text(question: str, default: str, *, maximum: int = 180) -> str:
+    while True:
+        answer = input(f"{question}\n  [{default}]\n> ").strip() or default
+        try:
+            return clean_text(answer, question, maximum=maximum) or default
+        except GenerationError as error:
+            print(error)
+
+
+def prompt_choice(question: str, choices: tuple[str, ...], default: str) -> str:
+    print(question)
+    for index, choice in enumerate(choices, start=1):
+        marker = " (recommended)" if choice == default else ""
+        print(f"  {index}. {choice}{marker}")
+    while True:
+        answer = input("> ").strip().lower()
+        if not answer:
+            return default
+        if answer.isdigit() and 1 <= int(answer) <= len(choices):
+            return choices[int(answer) - 1]
+        if answer in choices:
+            return answer
+        print(f"Choose 1-{len(choices)} or type: {', '.join(choices)}")
+
+
+def prompt_confirm(question: str) -> bool:
+    return input(f"{question} [y/N] ").strip().lower() in {"y", "yes"}
+
+
+def interactive_answers() -> argparse.Namespace:
+    print("\nCreate something unmistakable.")
+    print("Five decisions shape the first running experience; everything else can wait.\n")
+    name = prompt_text("1/5  What is the project called?", "My Product", maximum=80)
+    slug = slugify(name)
+    destination = prompt_text(
+        "2/5  Where should the new project live?",
+        str(ROOT.parent / slug),
+        maximum=500,
+    )
+    kind = prompt_choice(
+        "3/5  What should people experience first?",
+        ("product", "agentic-product", "portfolio", "mobile", "core"),
+        "product",
+    )
+    web = kind in WEB_ARCHETYPES
+    mobile = kind == "mobile"
+    if web:
+        default_audience, default_promise = experience_defaults(name, kind)
+        audience = prompt_text("4/5  Who is this for?", default_audience, maximum=120)
+        promise = prompt_text(
+            "5/5  What should it help them achieve?",
+            default_promise,
+            maximum=120,
+        )
+        character = prompt_choice(
+            "Choose the starting character; the live lab will still compare three systems.",
+            VISUAL_CHARACTERS,
+            "precise",
+        )
+    else:
+        audience = None
+        promise = None
+        character = None
+    return argparse.Namespace(
+        name=name,
+        destination=destination,
+        preset=None,
+        web=web,
+        mobile=mobile,
+        design=web or mobile,
+        research=False,
+        agentic=kind == "agentic-product",
+        backend="none",
+        archetype=kind if web else None,
+        audience=audience,
+        promise=promise,
+        visual_character=character,
+        json=False,
+        dry_run=False,
+        yes=False,
+        interactive=True,
+    )
+
+
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(description=__doc__)
     value.add_argument("--name", required=True)
@@ -845,6 +1206,10 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--research", action=argparse.BooleanOptionalAction, default=False)
     value.add_argument("--agentic", action=argparse.BooleanOptionalAction, default=False)
     value.add_argument("--backend", default="none")
+    value.add_argument("--archetype", choices=WEB_ARCHETYPES)
+    value.add_argument("--audience")
+    value.add_argument("--promise")
+    value.add_argument("--visual-character", choices=VISUAL_CHARACTERS)
     value.add_argument("--json", action="store_true")
     confirmation = value.add_mutually_exclusive_group()
     confirmation.add_argument("--dry-run", action="store_true")
@@ -860,36 +1225,53 @@ def run(args: argparse.Namespace) -> int:
         name=args.name,
         destination=args.destination,
         selected_profiles=selected,
+        archetype=args.archetype,
+        audience=args.audience,
+        promise=args.promise,
+        visual_character=args.visual_character,
     )
-    if args.json:
-        print(json.dumps(plan.public_report(), indent=2))
-    else:
+    if not args.json:
         print_plan(plan)
     if args.dry_run:
-        if not args.json:
+        if args.json:
+            print(json.dumps(plan.public_report(), indent=2))
+        else:
             print("\nDry run complete; no files changed.")
         return 0
+    if getattr(args, "interactive", False):
+        print("\nOne confirmation creates the new directory. Nothing is installed or enabled.")
+        if not prompt_confirm("Create this project?"):
+            print("No project created.")
+            return 0
+        args.yes = True
     if not args.yes:
         if not args.json:
             print("\nNo project created. Re-run with --yes after reviewing this plan.")
         return 2
     report = materialize(plan)
     if args.json:
-        print(json.dumps({"created": str(plan.destination), "verification": report}, indent=2))
+        print(
+            json.dumps(
+                {
+                    "plan": plan.public_report(),
+                    "created": str(plan.destination),
+                    "verification": report,
+                },
+                indent=2,
+            )
+        )
     else:
         print(f"\nCreated {plan.project_name} at {plan.destination}")
         print("Generated-project verification: PASS")
-        if "web-next" in set(plan.resolved_profiles):
-            print(f"Next: cd {plan.destination} && pnpm install && ./agentic design intake")
-        else:
-            print(f"Next: cd {plan.destination} && ./agentic setup bootstrap")
+        print(f"\nNext: cd {plan.destination} && ./agentic next")
     return 0
 
 
 def main() -> int:
     try:
-        return run(parser().parse_args())
-    except (GenerationError, profile_engine.ProfileError, OSError) as error:
+        args = interactive_answers() if len(sys.argv) == 1 else parser().parse_args()
+        return run(args)
+    except (GenerationError, profile_engine.ProfileError, OSError, EOFError, KeyboardInterrupt) as error:
         print(f"Project generator error: {error}", file=sys.stderr)
         return 1
 

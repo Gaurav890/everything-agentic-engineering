@@ -7,10 +7,9 @@ for new contributors and agents.
 ## Requirements
 
 - Git
-- Node.js 18+
 - Claude Code and/or Codex
 - Python 3 for included guardrail hooks
-- pnpm recommended for app profiles
+- Node.js 18+ and pnpm only for active web or mobile app profiles
 
 Claude Code 2.1.239+ and Codex 0.148.0+ are the recommended tested runtime
 baselines. The read-only runtime doctor reports drift; it never installs or
@@ -26,32 +25,32 @@ cd <your-repo>
 ```
 
 To create a clean downstream project instead of adapting the starter in place,
-preview a profile-specific generation plan:
+run the guided first-use path:
 
 ```bash
-./agentic setup create \
-  --name "My Product" \
-  --destination ../my-product \
-  --preset web-supabase \
-  --dry-run
+./agentic setup create
 ```
 
-Repeat with `--yes` only after review. The destination must not exist. The
-generator copies no Git history or secrets, enables no MCP server, and installs
-nothing. Continue the remaining installation steps inside the generated
-directory. See [Downstream project generator](PROJECT_GENERATOR.md).
+The guide captures only the inputs that change the result, shows one plan, and
+asks once before writing. The destination must not exist. The generator copies
+no Git history or secrets, enables no MCP server, and installs nothing. Continue
+inside the generated directory and run `./agentic next`. See
+[Downstream project generator](PROJECT_GENERATOR.md).
 
-For a web preset, the generated README deliberately puts the UI-first path
-first:
+For a web project, the next-action router initially guides you through:
 
 ```bash
 pnpm install
-./agentic design intake
 pnpm dev
 ```
 
-Compare the three live directions before approving one and compiling its token
-overrides. See [Portfolio golden path](PORTFOLIO_GOLDEN_PATH.md).
+The first-run brief has already selected the right portfolio, product, or
+agentic-product content architecture. Compare the three live directions before
+approving one and compiling its token overrides.
+
+`web-next` and `mobile-expo` always resolve the design-critical foundation.
+There is no supported application-profile path that silently omits the token,
+direction, audit, and independent-evaluation contracts.
 
 ## 2. Secrets
 
@@ -59,7 +58,7 @@ overrides. See [Portfolio golden path](PORTFOLIO_GOLDEN_PATH.md).
 cp .env.example .env
 ```
 
-Add:
+Only when `research-enabled` is active, add:
 - `PERPLEXITY_API_KEY`
 - `FIRECRAWL_API_KEY`
 
@@ -79,7 +78,7 @@ set +a
 ./agentic setup bootstrap
 ```
 
-## 4. Install selected skills
+## 4. Install selected skills when routed
 
 ```bash
 ./agentic setup skills
@@ -113,7 +112,7 @@ remains externally maintained and is routed one capability at a time through
 is intentionally not part of the default install; the installer prints its
 separate opt-in command.
 
-## 5. Check MCPs
+## 5. Check MCPs only when routed
 
 ```bash
 ./agentic doctor mcp

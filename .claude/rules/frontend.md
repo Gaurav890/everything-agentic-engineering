@@ -9,6 +9,9 @@
 - Require explicit approval of a rendered direction before canonical
   design-system or token changes.
 - Read `docs/20-design/DESIGN_SYSTEM.md` and canonical design tokens.
+- Read `.agentic/experience.json`. Match the selected portfolio, product, or
+  agentic-product content architecture; do not switch archetypes or retain
+  incompatible fixture identity/copy.
 - Treat references as ingredients and components as structural donors.
 - Let tokens encode approved decisions; never use tokens to invent the design.
 - The project design system overrides external skills and library aesthetics.
@@ -24,6 +27,9 @@
 - Design loading, empty, error, sparse, dense, disabled, and success states.
 - For agentic products, design planning, running, streaming, approval,
   interruption, partial success, failure, retry, provenance, and handoff states.
+- Never present a non-functional control as evidence of human control. Approval
+  surfaces identify evidence, consequence, blocked/partial state, rejection,
+  cancellation, retry, and the exact action that can proceed.
 - Use semantic HTML and visible focus states.
 - Respect reduced-motion preferences.
 - Add motion only when it explains causality, continuity, feedback, hierarchy,
@@ -34,3 +40,5 @@
   experience performance before final critique.
 - Use Playwright to inspect actual rendered output.
 - Builder and evaluator must be separate roles for substantial UI work.
+- Generated projects test and baseline only their selected archetype. The
+  starter reference lab alone may compare every archetype.

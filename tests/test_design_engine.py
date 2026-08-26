@@ -72,6 +72,41 @@ class DesignEngineTests(unittest.TestCase):
         with self.assertRaisesRegex(design_engine.DesignError, "Missing non-interactive"):
             design_engine.run_intake(args)
 
+    def test_first_run_captured_intake_is_a_valid_pre_approval_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state_path = root / "design.json"
+            intake_path = root / "design-intake.json"
+            state_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "status": "needs_approval",
+                        "approved_direction": None,
+                        "approved_by": None,
+                        "approved_at": None,
+                    }
+                )
+            )
+            intake_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "status": "captured",
+                        "answers": {
+                            "product_type": "product",
+                            "audience": "operators",
+                            "personality": "precise",
+                        },
+                    }
+                )
+            )
+            with (
+                mock.patch.object(design_engine, "STATE_PATH", state_path),
+                mock.patch.object(design_engine, "INTAKE_PATH", intake_path),
+            ):
+                self.assertEqual(0, design_engine.run_check(argparse.Namespace()))
+
     def test_approval_requires_confirmation_and_records_state(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             state_path = Path(temporary) / "design.json"

@@ -26,6 +26,22 @@ References are ingredients, not templates. Components are structural donors,
 not visual identity. Tokens encode approved decisions; they do not create the
 direction. If external guidance conflicts with this contract, this contract wins.
 
+## Experience architecture contract
+
+`.agentic/experience.json` owns the product name, selected archetype, audience,
+promise, starting visual character, and whether the checkout is the multi-
+archetype reference lab. The three archetypes are different information and
+interaction systems—not themes:
+
+- `portfolio`: identity, selected work, evidence, and working philosophy;
+- `product`: promise, outcome surface, proof, and operating rhythm;
+- `agentic-product`: objective, execution evidence, human decision gate,
+  consequence, recovery, and control.
+
+Changing color or tokens never changes this architecture. Query-string
+archetype previews are allowed only in the starter's explicit reference lab.
+Generated products expose and test only their selected archetype.
+
 Do not replace `Status: Draft` until the direction decision includes an
 approver, date, evidence reviewed, and design-decision ID.
 
@@ -128,6 +144,11 @@ When applicable, define planning, thinking, streaming, tool-running, queued,
 approval, interrupted, partial, failed, retry, complete, provenance, memory,
 handoff, and background-work behavior. Users must understand status, control,
 consequences, and recovery.
+
+Do not label a mock as “live,” “verified,” or “human controlled.” Demonstrations
+must identify themselves. Review gates disclose evidence completeness, lock
+approval while required proof is missing, explain the consequence, and provide
+working approve, reject, cancel, and retry paths.
 
 ## Responsive strategy
 

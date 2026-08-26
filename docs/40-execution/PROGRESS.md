@@ -1,5 +1,23 @@
 # Progress log
 
+## 2026-08-24 — T-043 guided product studio
+
+- Added progressive, archetype-aware downstream project creation and exactly
+  one routed next action.
+- Replaced portfolio leakage in product/agentic previews with complete fixtures
+  and selected-archetype downstream scope.
+- Added real evidence review, consequence, approve/reject/cancel, partial, and
+  retry behavior to the agentic reference experience.
+- Added responsive non-obscuring direction controls and the full reference-lab
+  desktop/mobile visual matrix.
+- Hardened generated-project validation for real post-install, Git, approved-
+  design, task, JSON-array, and single-document automation workflows.
+- Ongoing verification now resolves current profiles and fails closed on
+  unknown/profile-incompatible specialists or unreviewed MCP configuration.
+- Focused generator/design and 45 authority/profile tests, web build/typecheck,
+  21 Playwright checks, full verification, release smoke, and all three PR
+  checks pass. Independent design, adversarial QA, and security reviews pass.
+
 Append-only verified history.
 
 ## Entry template

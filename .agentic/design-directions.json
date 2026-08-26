@@ -4,8 +4,8 @@
     {
       "id": "editorial-signal",
       "name": "Editorial Signal",
-      "thesis": "A precise editorial portfolio where typography, pacing, and decisive red accents make the work feel authored.",
-      "best_for": ["product designers", "creative technologists", "case-study storytelling"],
+      "thesis": "A precise editorial product system where typography, pacing, and decisive signal color make the experience feel authored.",
+      "best_for": ["decision-heavy products", "expert tools", "case-study storytelling"],
       "motion": "Restrained reveals, typographic wipes, and directional hover cues.",
       "tokens": {
         "color.background.canvas": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.96, 0.94, 0.89], "alpha": 1}},
@@ -21,8 +21,8 @@
     {
       "id": "kinetic-index",
       "name": "Kinetic Index",
-      "thesis": "A high-contrast, motion-led portfolio that feels like a live creative index rather than a polite template.",
-      "best_for": ["interaction designers", "motion portfolios", "experimental studios"],
+      "thesis": "A high-contrast, motion-led product system that feels live and consequential rather than politely templated.",
+      "best_for": ["agentic products", "real-time tools", "high-energy launches"],
       "motion": "Continuous ambient geometry, elastic emphasis, and high-energy project transitions.",
       "tokens": {
         "color.background.canvas": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.035, 0.04, 0.035], "alpha": 1}},
@@ -38,8 +38,8 @@
     {
       "id": "quiet-material",
       "name": "Quiet Material",
-      "thesis": "A warm, tactile portfolio with calm hierarchy and small material details that reward close attention.",
-      "best_for": ["service designers", "systems thinkers", "research-rich portfolios"],
+      "thesis": "A warm, tactile product system with calm hierarchy and small material details that reward close attention.",
+      "best_for": ["complex services", "systems tools", "research-rich products"],
       "motion": "Soft spatial continuity, material shifts, and low-amplitude feedback.",
       "tokens": {
         "color.background.canvas": {"$type": "color", "$value": {"colorSpace": "srgb", "components": [0.90, 0.93, 0.86], "alpha": 1}},

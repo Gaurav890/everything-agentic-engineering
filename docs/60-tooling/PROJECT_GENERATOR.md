@@ -15,10 +15,25 @@ changing its active profile manifest:
 Use `setup create` when starting a new product in a separate directory:
 
 ```bash
+./agentic setup create
+```
+
+This is the default human flow. It progressively asks for the project name,
+destination, first experience, audience, promise, and visual character only
+when those answers affect the selected surface. It shows the complete plan and
+asks once before writing.
+
+Use explicit flags for automation or repeatable scaffolding:
+
+```bash
 ./agentic setup create \
   --name "My Product" \
   --destination ../my-product \
   --preset web-supabase \
+  --archetype product \
+  --audience "operations teams replacing fragmented handoffs" \
+  --promise "Turn a complicated workflow into calm, measurable momentum." \
+  --visual-character precise \
   --dry-run
 ```
 
@@ -45,6 +60,7 @@ Every plan reports:
 - tracked file count;
 - external setup that remains pending;
 - source version, commit, and dirty-state disclosure;
+- web archetype, audience, promise, and starting visual character when active;
 - mutation and authority boundaries.
 
 Dry-run performs no writes.
@@ -56,8 +72,8 @@ profile-specific path rules:
 
 | Selection | Included surface |
 |---|---|
-| `web-next` | runnable portfolio direction lab, UI behavior primitives, web owner/rules, shared app packages |
-| `mobile-expo` | `apps/mobile`, mobile owner/rules, shared app packages |
+| `web-next` | runnable archetype-aware direction lab, design-critical foundation, UI behavior primitives, web owner/rules, shared app packages |
+| `mobile-expo` | `apps/mobile`, design-critical foundation, mobile owner/rules, shared app packages |
 | backend profile | API/database/shared packages and backend owner/rules |
 | `design-critical` | intake/approval state, three DTCG-compatible directions, design command, and token package |
 | `research-enabled` | Research owner/rules and credential placeholders |
@@ -69,11 +85,15 @@ project state. They are excluded.
 The generated project receives:
 
 - a project-specific README;
+- a machine-readable `.agentic/experience.json` for web identity, audience,
+  promise, archetype, and starting visual character;
 - selected `.agentic/project.json` profiles;
 - `.agentic/generated-project.json` provenance and path decisions;
 - project-specific package and plugin identities;
 - runnable root web scripts when `web-next` is active;
-- reset design intake and direction state when `design-critical` is active;
+- the reviewed workspace lockfile for web/mobile dependency restoration;
+- captured first-run design intent and an unapproved direction state when a web
+  experience is active;
 - an empty task ledger;
 - reset current-state, progress, handoff, risk, and blocker files;
 - an empty `.mcp.json` so no server is enabled implicitly;
@@ -122,22 +142,51 @@ cd ../my-product
 ./agentic verify full
 ```
 
-Generated-project mode validates identity, provenance, selected/excluded
-surfaces, empty MCP configuration, empty task state, JSON, symlink containment,
-disabled automatic installation/removal, empty specialist activation, shell
+Creation-time validation proves the new directory contains only its selected
+surfaces, no copied Git/secrets/dependencies, no enabled MCP or specialist, and
+an empty task/design state. Ongoing verification deliberately allows normal
+Git, dependency, environment, task, approved-direction, and reviewed capability
+state. It resolves the profiles currently selected in `.agentic/project.json`
+rather than treating creation provenance as current configuration. Newly active
+profiles must have their required surfaces, inactive surfaces are rejected, and
+profile conflicts fail closed. Activated specialists must match the reviewed
+local catalog and current profiles. MCP remains either fully disabled or an
+exact match for the reviewed compatibility policy; unknown servers, commands,
+packages, and credential shapes fail verification. These checks preserve
+manifest shape, safe automatic-install policy, JSON, symlink containment, shell
 syntax, Python syntax, command discovery, and profile resolution. When
 dependencies are not installed, verification reports package checks as pending.
 After `pnpm install`, the same command runs lint, typecheck, and UI contract
 tests for the runnable web surface.
 
+Generated web tests and visual baselines are archetype-scoped. Portfolio or
+agentic fixtures are never imposed on a product that selected a different
+architecture.
+
 ## After generation
 
-1. Read the generated `README.md`, then run `pnpm install` for a web project.
-2. Run `./agentic design intake` and compare the live directions with `pnpm dev`.
-3. Record human direction approval before canonical implementation.
-4. Complete `docs/00-vision/NORTH_STAR.md`, then create the first PRD and task graph.
-5. Run `./agentic profile doctor` and review missing external setup.
-6. Run `./agentic setup skills --dry-run` only if a selected profile requires
-   reviewed external skills.
-7. Review MCP and backend setup separately before enabling anything.
-8. Initialize a new Git repository only when ready to own that project.
+Run:
+
+```bash
+./agentic next
+```
+
+It exposes exactly one project-appropriate action at a time. For a generated
+web project the path is dependency installation → live direction comparison →
+human approval → token compilation → full verification. Mobile and core
+projects do not receive web-only instructions.
+
+External skills, MCPs, backend credentials, Git initialization, deployment, and
+production authority remain separate, explicit decisions.
+
+## Web archetypes
+
+| Archetype | First composition |
+|---|---|
+| `product` | product promise, outcome surface, proof principles, operating rhythm |
+| `agentic-product` | objective, visible execution, tool/decision states, human approval |
+| `portfolio` | personal identity, selected work, evidence, working philosophy |
+
+These are content architectures, not themes. Each one can be compared through
+the same three coherent direction systems and compiled into the canonical
+semantic token layer after human approval.

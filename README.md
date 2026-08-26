@@ -26,35 +26,48 @@ Turn an idea into:
 
 ---
 
-## Build a design-first web project
+## Create your first project
 
 ![Everything Agentic Engineering quick-start flow](docs/assets/quickstart-flow.svg)
 
 ```bash
 git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
-./agentic setup create \
-  --name "My Portfolio" \
-  --destination ../my-portfolio \
-  --preset web \
-  --dry-run
-# Review the exact copy plan, then repeat with --yes.
-
-cd ../my-portfolio
-pnpm install
-./agentic design intake
-pnpm dev
+./agentic setup create
 ```
 
-The browser opens a real portfolio with the same realistic content rendered as
-three materially different systems:
+That is the complete human quick start. The guide asks five decisions that
+materially change the result, shows one concise plan, and asks once before it
+creates anything. It does not install dependencies, connect services, copy
+secrets, or modify this starter.
+
+Choose the experience people should see first:
+
+- `product` — a high-end product narrative and live outcome surface;
+- `agentic-product` — visible plans, tool work, approval, and human control;
+- `portfolio` — authored case-study storytelling;
+- `mobile` — a mobile-only project with no irrelevant web surface;
+- `core` — the engineering harness without an application shell.
+
+The new project records its audience, promise, archetype, and starting visual
+character in a machine-readable experience brief. It then prints exactly one
+next action. At any point, run:
+
+```bash
+./agentic next
+```
+
+Web projects open with the same product promise rendered through three
+materially different systems:
 
 - `editorial-signal` — authored, typographic, and case-study led;
 - `kinetic-index` — high-contrast, motion-led, and unconventional;
 - `quiet-material` — warm, tactile, and deliberately calm.
 
-Compare them live on desktop and mobile. A human design owner then approves one
-direction—or requests a synthesis—before it becomes canonical:
+The visual character chosen during setup determines which direction appears
+first; it does not silently approve it. Compare all three live on desktop and
+mobile. A human design owner then approves one direction—or requests a
+synthesis—before it becomes canonical:
 
 ```bash
 ./agentic design approve editorial-signal --yes
@@ -65,9 +78,10 @@ pnpm test:web:e2e
 pnpm test:web:visual
 ```
 
-This is the shortest supported web path. It does not begin with a blank page,
-generic hero, or card grid. It begins with a product-specific choice that is
-compiled into tokens and checked in the running experience.
+This path does not begin with a blank page, generic hero, card grid, or a
+portfolio pretending to be a SaaS product. It begins with the right content
+architecture for the product and compiles the approved visual decision into
+tokens that can retheme the experience without repainting every component.
 
 The web quality gate then exercises all three directions at desktop and mobile,
 checks keyboard, accessibility, overflow, and reduced-motion behavior, and
@@ -129,7 +143,8 @@ The planner is read-only. Workspace creation requires explicit confirmation,
 and implementation, merging, deployment, and release remain separate human
 decisions.
 
-Read the [portfolio golden path](docs/60-tooling/PORTFOLIO_GOLDEN_PATH.md), the
+Read the [first-run guide](docs/60-tooling/PROJECT_GENERATOR.md), the
+[portfolio golden path](docs/60-tooling/PORTFOLIO_GOLDEN_PATH.md), the
 [installation guide](docs/60-tooling/INSTALLATION.md), follow the
 [60-second demo](docs/80-showcase/DEMO_SCRIPT.md), or review the
 [v0.1.0 limitations](docs/60-tooling/COMPATIBILITY.md#known-limitations-in-v010).
@@ -1216,25 +1231,23 @@ Add more infrastructure only when a real limitation appears.
 
 ---
 
-## Quick start
+## Advanced and automated setup
 
-The examples below use the supported `./agentic` interface. Run
-`./agentic --help` whenever you need to discover a workflow.
+The guided command above is the default for people. The explicit commands below
+are for CI, automation, repeatable presets, or contributors who need to inspect
+every profile decision. Run `./agentic --help` to discover the full surface.
 
-### 1. Clone
-
-```bash
-git clone https://github.com/Gaurav890/everything-agentic-engineering.git
-cd everything-agentic-engineering
-```
-
-### 2. Create a clean downstream project
+### Create a deterministic downstream project
 
 ```bash
 ./agentic setup create \
   --name "My Product" \
   --destination ../my-product \
   --preset web-supabase \
+  --archetype product \
+  --audience "operations teams replacing fragmented handoffs" \
+  --promise "Turn a complicated workflow into calm, measurable momentum." \
+  --visual-character precise \
   --dry-run
 ```
 
@@ -1246,13 +1259,17 @@ new project:
   --name "My Product" \
   --destination ../my-product \
   --preset web-supabase \
+  --archetype product \
+  --audience "operations teams replacing fragmented handoffs" \
+  --promise "Turn a complicated workflow into calm, measurable momentum." \
+  --visual-character precise \
   --yes
 cd ../my-product
 ```
 
 The generator never modifies the starter or overlays an existing directory.
 
-### 3. Confirm the project capabilities
+### Confirm the project capabilities
 
 ```bash
 ./agentic profile resolve
@@ -1268,7 +1285,7 @@ manifest-only initializer instead:
 
 Neither workflow installs or enables external capabilities.
 
-### 4. Configure environment
+### Configure environment
 
 ```bash
 cp .env.example .env
@@ -1277,7 +1294,7 @@ cp .env.example .env
 Add API keys only for MCP services you explicitly plan and are authorized to
 use. Profile selection and plugin installation do not enable those services.
 
-### 5. Bootstrap
+### Bootstrap
 
 ```bash
 ./agentic setup bootstrap
