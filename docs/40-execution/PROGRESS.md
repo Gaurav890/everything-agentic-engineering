@@ -1185,6 +1185,10 @@ local-versus-production adapter status across three design directions.
   advances to the live direction lab through `./agentic next`, passes full
   generated-project verification, builds, and passes 17 selected-archetype
   browser tests with seven intentional irrelevant-archetype skips.
+- Ubuntu Web quality run `33014674724` passes the build and browser behavior
+  gates and generated all 24 Linux candidates. The six enterprise candidates
+  were builder-inspected without clipping, occlusion, or cross-direction
+  contract drift; human visual approval remains intentionally separate.
 
 **Review boundary**
 

@@ -18,6 +18,6 @@
   ],
   "states": ["normal", "loading", "empty", "invalid", "partial-evidence", "error", "recovery", "unauthorized", "disabled", "approved", "rejected", "changes-requested", "cancelled"],
   "viewports": ["mobile", "desktop"],
-  "artifacts": ["README.md"],
+  "artifacts": ["README.md", "linux-visual-candidates.md"],
   "verdict": "IMPLEMENTED; INDEPENDENT AND HUMAN REVIEW PENDING"
 }

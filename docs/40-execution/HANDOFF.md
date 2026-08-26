@@ -27,14 +27,17 @@ with production readiness.
 ## Pending gates
 
 - Independent product-quality and security/authority review.
-- Linux visual candidate generation and human inspection on PR #67.
+- Human inspection and approval of the Linux visual candidates from successful
+  Web quality run `33014674724` on PR #67.
 - Full repository verification and release smoke at the committed branch head.
 - Human approval of T-044 before PR finalization; no self-approval or merge.
 
 ## Exact next action
 
-Commit the implementation, push PR #67, generate/review Linux visual candidates,
-then request independent reviewers against the exact pushed head.
+Review the six enterprise images in the `web-visual-baselines-linux` artifact
+from run `33014674724`. If they are accepted, explicitly approve the T-044
+Linux visuals so only those six files can be committed as canonical baselines;
+then request independent reviewers against the final pushed head.
 
 ## Relevant files
 

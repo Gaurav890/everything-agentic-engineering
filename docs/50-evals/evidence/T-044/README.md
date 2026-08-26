@@ -39,6 +39,14 @@ PASS — 23 passed, 1 intentional skip
 source visual comparison
 PASS — 24 cases
 
+Linux Web quality candidate run 33014674724
+PASS — build, 23 interaction/accessibility cases with one intentional skip,
+and 24 visual candidates generated
+
+enterprise Linux candidate inspection
+PASS — six enterprise candidates inspected by the builder; human approval is
+still required before they become committed baselines
+
 fresh generated enterprise project
 ./agentic verify full — PASS
 pnpm test:e2e — PASS, 17 passed and 7 intentionally irrelevant skips
@@ -48,7 +56,7 @@ pnpm test:e2e — PASS, 17 passed and 7 intentionally irrelevant skips
 
 - independent product-design and adversarial QA evaluation;
 - independent security and authority evaluation;
-- Linux visual candidate generation and human inspection;
+- human inspection and approval of the generated Linux visual candidates;
 - full repository verification and release smoke at the exact committed head;
 - human task approval and pull-request merge decision.
 

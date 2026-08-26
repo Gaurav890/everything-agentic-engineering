@@ -295,7 +295,7 @@ and Codex doctor reuse without requiring either runtime in portable CI.
 - The developer machine inspected for T-025 reports Claude Code 2.1.220 and a
   Codex 0.146.0 prerelease build, both below the recommended baselines. The
   repository reports this drift but does not upgrade developer tooling.
-- T-040 Linux visual baseline candidates still require human inspection before
-  they can be committed as approved comparison evidence.
+- New or intentionally changed web visual baselines require human inspection
+  before their Linux candidates can be committed as comparison evidence.
 
 Only factual present-tense truth belongs here.
