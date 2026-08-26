@@ -626,6 +626,10 @@ footer small { display: block; margin-top: 90px; color: var(--muted); font-size:
   .enterprise-main { padding: 46px 14px 20px; }
   .enterprise-heading { grid-template-columns: 1fr; gap: 28px; }
   .enterprise-heading h1 { font-size: clamp(48px, 14vw, 68px); }
+  [data-direction="kinetic-index"] .enterprise-heading h1 {
+    font-size: clamp(38px, 10.4vw, 44px);
+    overflow-wrap: anywhere;
+  }
   .enterprise-heading > button { width: 100%; }
   .enterprise-metrics { grid-template-columns: 1fr; margin-top: 42px; }
   .enterprise-metrics article { min-height: 94px; border-right: 0; border-bottom: 1px solid var(--line); }
