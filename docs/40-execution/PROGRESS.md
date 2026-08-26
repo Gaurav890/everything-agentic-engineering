@@ -1188,11 +1188,17 @@ local-versus-production adapter status across three design directions.
 - Ubuntu Web quality run `33014674724` passes the build and browser behavior
   gates and generated all 24 Linux candidates. The six enterprise candidates
   were builder-inspected without clipping, occlusion, or cross-direction
-  contract drift; human visual approval remains intentionally separate.
+  contract drift. The project owner then explicitly approved T-044; only those
+  six enterprise images became canonical Linux baselines.
+- The public README was reduced from a reference-manual-sized first encounter
+  to a concise onboarding path with real enterprise visual proof, archetype
+  guidance, one-next-action usage, design-quality rules, enterprise boundaries,
+  core commands, parallel-work guidance, safety defaults, and routed deep links.
 
 **Review boundary**
 
-This evidence is builder verification, not independent certification. Separate
-product-quality, security/authority, and human visual review remain required
-before task finalization. No production service, credential, external
+This evidence includes explicit human visual approval but not merge authority.
+The final updated head must pass its deterministic gates, independent product
+and security review, and README review before task finalization. No production
+service, credential, external
 notification, deployment, approval, or merge authority was enabled.

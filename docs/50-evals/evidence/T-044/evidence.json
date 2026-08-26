@@ -3,7 +3,7 @@
   "acceptance_ids": ["AC-001", "AC-002", "AC-003", "AC-004"],
   "ui_change": true,
   "builder": "orchestrator",
-  "evaluator": "independent-review-pending",
+  "evaluator": "human-visual-review-complete-final-review-pending",
   "commands": [
     "python3 -m unittest tests.test_project_generator tests.test_next_action",
     "pnpm --filter @everything-agentic/domain test",
@@ -19,5 +19,5 @@
   "states": ["normal", "loading", "empty", "invalid", "partial-evidence", "error", "recovery", "unauthorized", "disabled", "approved", "rejected", "changes-requested", "cancelled"],
   "viewports": ["mobile", "desktop"],
   "artifacts": ["README.md", "linux-visual-candidates.md"],
-  "verdict": "IMPLEMENTED; INDEPENDENT AND HUMAN REVIEW PENDING"
+  "verdict": "IMPLEMENTED; HUMAN VISUAL APPROVAL RECEIVED; FINAL UPDATED-HEAD REVIEW PENDING"
 }

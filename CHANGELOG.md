@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+- The public README now leads with one guided creation path, real enterprise
+  visual proof, concise archetype selection, the design-quality contract,
+  enterprise production boundaries, core commands, parallel-work guidance,
+  safety defaults, and routed deep documentation instead of presenting the
+  entire reference manual during first contact.
+
 ### Added
 
 - A guided enterprise golden path that asks four conditional domain decisions,

@@ -1,6 +1,6 @@
 # T-044 Linux visual candidates
 
-Status: Generated and builder-inspected; human visual approval pending.
+Status: Human-approved and committed as canonical comparison evidence.
 
 ## Provenance
 
@@ -31,10 +31,10 @@ in all three direction systems:
 - The three systems remain visibly distinct in composition, typography,
   palette, density, and emphasis.
 
-## Approval boundary
+## Human approval
 
-This inspection is implementation evidence, not human approval. Do not copy the
-candidate files into the approved snapshot directory until a human has reviewed
-the artifact and explicitly approved the T-044 Linux visuals. Baseline
-generation, builder inspection, task approval, and merge authority remain
-separate decisions.
+The project owner explicitly approved T-044 on 2026-08-26 after the six Linux
+candidates were presented for review. Only those enterprise images were copied
+into the approved snapshot directory. This approval does not grant production,
+deployment, pull-request approval, or merge authority; the final branch head
+must still pass the normal comparison gate.

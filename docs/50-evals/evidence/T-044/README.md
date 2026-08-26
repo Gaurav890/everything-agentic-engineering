@@ -1,6 +1,6 @@
 # T-044 enterprise golden-path evidence
 
-Status: Builder verification complete; independent and human review pending.
+Status: Human visual approval received; final updated-head review pending.
 
 ## Product contract
 
@@ -44,8 +44,8 @@ PASS — build, 23 interaction/accessibility cases with one intentional skip,
 and 24 visual candidates generated
 
 enterprise Linux candidate inspection
-PASS — six enterprise candidates inspected by the builder; human approval is
-still required before they become committed baselines
+PASS — six enterprise candidates inspected by the builder and explicitly
+approved by the project owner before becoming committed baselines
 
 fresh generated enterprise project
 ./agentic verify full — PASS
@@ -56,9 +56,10 @@ pnpm test:e2e — PASS, 17 passed and 7 intentionally irrelevant skips
 
 - independent product-design and adversarial QA evaluation;
 - independent security and authority evaluation;
-- human inspection and approval of the generated Linux visual candidates;
+- normal Linux comparison against the committed enterprise baselines;
 - full repository verification and release smoke at the exact committed head;
-- human task approval and pull-request merge decision.
+- final human review of the streamlined README added with the approval request;
+- pull-request readiness and merge decisions.
 
 Builder verification does not grant approval, production authority, or merge
 authority.

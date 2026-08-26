@@ -23,21 +23,25 @@ with production readiness.
   `production_ready: false` disclosure.
 - A clean generated enterprise project that installs, verifies, builds, and
   passes its selected-archetype browser suite.
+- Six human-approved Linux enterprise baselines across three directions and two
+  viewports.
+- A streamlined public README centered on real output, one-action onboarding,
+  credible enterprise boundaries, design quality, and the commands users need.
 
 ## Pending gates
 
-- Independent product-quality and security/authority review.
-- Human inspection and approval of the Linux visual candidates from successful
-  Web quality run `33014674724` on PR #67.
-- Full repository verification and release smoke at the committed branch head.
-- Human approval of T-044 before PR finalization; no self-approval or merge.
+- Independent product-quality and security/authority review against the final
+  pushed head, as required by T-044.
+- Normal Linux comparison against the committed approved baselines.
+- Full repository verification and release smoke at the updated branch head.
+- Final human review of the README change requested alongside T-044 approval.
+- Pull-request finalization; no self-approval or merge.
 
 ## Exact next action
 
-Review the six enterprise images in the `web-visual-baselines-linux` artifact
-from run `33014674724`. If they are accepted, explicitly approve the T-044
-Linux visuals so only those six files can be committed as canonical baselines;
-then request independent reviewers against the final pushed head.
+Run the full local and clean-checkout gates, push the approved baselines and
+README, confirm normal CI is green, then present the exact updated PR head for
+independent and final human review before task finalization.
 
 ## Relevant files
 
