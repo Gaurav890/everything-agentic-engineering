@@ -1,6 +1,6 @@
 # T-044 enterprise golden-path evidence
 
-Status: Human visual approval received; final updated-head review pending.
+Status: Human visual and updated README approval received; independent reviews pending.
 
 ## Product contract
 
@@ -56,10 +56,15 @@ pnpm test:e2e — PASS, 17 passed and 7 intentionally irrelevant skips
 
 - independent product-design and adversarial QA evaluation;
 - independent security and authority evaluation;
-- normal Linux comparison against the committed enterprise baselines;
-- full repository verification and release smoke at the exact committed head;
-- final human review of the streamlined README added with the approval request;
 - pull-request readiness and merge decisions.
+
+Completed updated-head gates:
+
+- the project owner approved the streamlined README on 2026-08-26;
+- normal Linux Web quality passed against all committed baselines in run
+  `33021469073`;
+- full repository verification, production build, interaction/accessibility,
+  all 24 visual cases, and clean-checkout release smoke passed.
 
 Builder verification does not grant approval, production authority, or merge
 authority.
