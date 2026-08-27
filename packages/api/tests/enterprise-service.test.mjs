@@ -6,38 +6,100 @@ import {createEnterpriseService} from "../src/index.js";
 
 function draftFor(actor) {
   const now = "2026-08-26T19:00:00Z";
-  const request = {
+  return {
     id: "REQ-3001", tenantId: actor.tenantId, title: "Finance reporting access",
     businessObject: "access request", ownerId: actor.id, ownerName: actor.name,
+    assignedReviewerId: "actor-reviewer", policyState: "pending",
     status: "draft", risk: "medium", requestedScope: "Read only for fourteen days",
     justification: "Complete the approved close review.", createdAt: now, updatedAt: now,
-    evidence: [],
+    evidence: [
+      {id: "REQ-3001-E1", label: "Business justification", state: "verified", source: "Request form"},
+      {id: "REQ-3001-E2", label: "Manager attestation", state: "missing", source: "People directory"},
+      {id: "REQ-3001-E3", label: "Scope and expiry", state: "partial", source: "Policy check"},
+    ],
   };
-  const event = {
-    id: "AUD-REQ-3001-created", requestId: request.id, tenantId: request.tenantId,
-    actorId: actor.id, actorName: actor.name, action: "request.created",
-    fromStatus: null, toStatus: "draft", reason: "Created from reviewed input.", occurredAt: now,
-  };
-  return {request, event};
 }
 
-test("request creation is role and tenant scoped and persists its audit event", () => {
+test("request creation is validated and constructs trusted audit attribution", () => {
   const repository = createLocalEnterpriseRepository(demoRequests);
   const service = createEnterpriseService(repository);
   const requester = demoActors.find((actor) => actor.role === "requester");
   const reviewer = demoActors.find((actor) => actor.role === "reviewer" && actor.tenantId === requester.tenantId);
-  const {request, event} = draftFor(requester);
+  const request = draftFor(requester);
 
-  assert.equal(service.create(reviewer, request, event).code, "unauthorized");
-  assert.equal(service.create(requester, request, event).ok, true);
+  assert.equal(service.create(reviewer, request).code, "unauthorized");
+  assert.equal(service.create(requester, {...request, title: ""}).code, "invalid_input");
+  const result = service.create(requester, {...request, ownerName: "Forged Admin", status: "approved"}, {now: "2026-08-26T19:05:00Z", actorName: "Forged Admin"});
+  assert.equal(result.ok, true);
+  assert.equal(result.request.status, "draft");
+  assert.equal(result.request.evidence.every((item) => item.state === "missing"), true);
+  assert.equal(result.request.ownerName, requester.name);
+  assert.equal(result.event.actorId, requester.id);
+  assert.equal(result.event.actorName, requester.name);
+  assert.equal(result.event.fromStatus, null);
+  assert.equal(result.event.toStatus, "draft");
   assert.equal(service.list(requester).some((item) => item.id === request.id), true);
   assert.equal(repository.listAudit(requester.tenantId, request.id)[0].action, "request.created");
 });
 
-test("tenant visibility fails closed before a transition is attempted", () => {
+test("tenant, role, owner, and reviewer visibility fail closed", () => {
   const repository = createLocalEnterpriseRepository(demoRequests);
   const service = createEnterpriseService(repository);
+  const requester = demoActors.find((actor) => actor.id === "actor-requester");
+  const reviewer = demoActors.find((actor) => actor.id === "actor-reviewer");
+  const backup = demoActors.find((actor) => actor.id === "actor-reviewer-backup");
+  const auditor = demoActors.find((actor) => actor.id === "actor-auditor");
+  const unknown = {id: "actor-unknown", name: "Unknown", role: "unknown", tenantId: requester.tenantId};
+  const otherRequester = {id: "actor-requester-2", name: "Other", role: "requester", tenantId: requester.tenantId};
   const outsider = demoActors.find((actor) => actor.id === "actor-other-tenant");
+
+  assert.equal(service.list(requester).length, 3);
+  assert.equal(service.list(reviewer).length, 3);
+  assert.deepEqual(service.list(backup), []);
+  assert.equal(service.list(auditor).length, 3);
+  assert.deepEqual(service.list(unknown), []);
+  assert.deepEqual(service.list(otherRequester), []);
   assert.deepEqual(service.list(outsider), []);
   assert.equal(service.transition(outsider, "REQ-2048", "approve").code, "unauthorized");
+});
+
+test("created drafts complete evidence, submit, return for changes, resubmit, and approve", () => {
+  const repository = createLocalEnterpriseRepository(demoRequests);
+  const service = createEnterpriseService(repository, {approvalModel: "dual-control"});
+  const requester = demoActors.find((actor) => actor.id === "actor-requester");
+  const reviewer = demoActors.find((actor) => actor.id === "actor-reviewer");
+  const request = draftFor(requester);
+
+  assert.equal(service.create(requester, request, {now: "2026-08-26T19:00:00Z"}).ok, true);
+  assert.equal(service.transition(requester, request.id, "submit").code, "evidence_incomplete");
+  assert.equal(service.verifyEvidence(reviewer, request.id).code, "unauthorized");
+  assert.equal(service.verifyEvidence(requester, request.id, {now: "2026-08-26T19:01:00Z"}).ok, true);
+  assert.equal(service.transition(requester, request.id, "submit").ok, true);
+  assert.equal(service.transition(reviewer, request.id, "request_changes").code, "reason_required");
+  assert.equal(service.transition(reviewer, request.id, "request_changes", "Narrow the requested scope.").ok, true);
+  assert.equal(service.transition(requester, request.id, "submit").ok, true);
+  assert.equal(service.transition(reviewer, request.id, "approve").ok, true);
+  assert.deepEqual(
+    repository.listAudit(requester.tenantId, request.id).map((event) => event.action),
+    ["request.created", "request.evidence_verified", "request.submitted", "request.changes_requested", "request.submitted", "request.approved"],
+  );
+});
+
+test("approval models enforce distinct executable policies", () => {
+  const reviewer = demoActors.find((actor) => actor.id === "actor-reviewer");
+  const backup = demoActors.find((actor) => actor.id === "actor-reviewer-backup");
+
+  const dualRepository = createLocalEnterpriseRepository(demoRequests);
+  const dual = createEnterpriseService(dualRepository, {approvalModel: "dual-control"});
+  assert.equal(dual.transition(backup, "REQ-2048", "approve").code, "unauthorized");
+  assert.equal(dual.transition(reviewer, "REQ-2048", "approve").ok, true);
+
+  const singleRepository = createLocalEnterpriseRepository(demoRequests);
+  const single = createEnterpriseService(singleRepository, {approvalModel: "single-review"});
+  assert.equal(single.transition(backup, "REQ-2048", "approve").ok, true);
+
+  const gatedSeed = demoRequests.map((request) => request.id === "REQ-2048" ? {...request, policyState: "pending"} : request);
+  const gatedRepository = createLocalEnterpriseRepository(gatedSeed);
+  const gated = createEnterpriseService(gatedRepository, {approvalModel: "policy-gated"});
+  assert.equal(gated.transition(reviewer, "REQ-2048", "approve").code, "policy_required");
 });

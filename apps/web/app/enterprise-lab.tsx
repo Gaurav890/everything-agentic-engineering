@@ -44,7 +44,7 @@ const statusLabel: Record<RequestStatus, string> = {
 const initialAudit: AuditEvent[] = [
   {
     id: "AUD-SEED-2", requestId: "REQ-2048", tenantId: "tenant-northstar",
-    actorId: "policy-engine", actorName: "Policy engine", action: "request.submitted",
+    actorId: "actor-requester", actorName: "Maya Chen", action: "request.submitted",
     fromStatus: "draft", toStatus: "in_review", reason: "Three evidence requirements verified.",
     occurredAt: "2026-08-26T16:20:00Z",
   },
@@ -138,7 +138,7 @@ function DirectionDock({active, approved, onChange}: {active: DirectionId; appro
   );
 }
 
-function CreateRequest({open, onClose, onCreate, objectName, actor}: {open: boolean; onClose: () => void; onCreate: (request: WorkflowRequest, event: AuditEvent) => void; objectName: string; actor: EnterpriseActor}) {
+function CreateRequest({open, onClose, onCreate, objectName, actor}: {open: boolean; onClose: () => void; onCreate: (request: WorkflowRequest) => void; objectName: string; actor: EnterpriseActor}) {
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [scope, setScope] = useState("");
@@ -177,6 +177,7 @@ function CreateRequest({open, onClose, onCreate, objectName, actor}: {open: bool
     const request: WorkflowRequest = {
       id, tenantId: "tenant-northstar", title: title.trim(), businessObject: objectName,
       ownerId: actor.id, ownerName: actor.name, status: "draft", risk: "medium",
+      assignedReviewerId: "actor-reviewer", policyState: "pending",
       requestedScope: scope.trim(), justification: justification.trim(), createdAt: now, updatedAt: now,
       evidence: [
         {id: `${id}-E1`, label: "Business justification", state: "verified", source: "Request form"},
@@ -184,11 +185,7 @@ function CreateRequest({open, onClose, onCreate, objectName, actor}: {open: bool
         {id: `${id}-E3`, label: "Scope and expiry", state: "partial", source: "Policy check"},
       ],
     };
-    onCreate(request, {
-      id: `AUD-${id}-created`, requestId: id, tenantId: request.tenantId,
-      actorId: request.ownerId, actorName: request.ownerName, action: "request.created",
-      fromStatus: null, toStatus: "draft", reason: "Created from the reviewed request form.", occurredAt: now,
-    });
+    onCreate(request);
     setTitle(""); setScope(""); setJustification(""); setSubmitted(false); onClose();
   }
 
@@ -215,7 +212,10 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
   const approved = directions.some((item) => item.id === approvedDirection) ? approvedDirection : null;
   const [active, setActive] = useState<DirectionId>((approved as DirectionId | null) ?? characterDirection[experience.visual_character]);
   const repository = useMemo(() => createLocalEnterpriseRepository(demoRequests), []);
-  const service = useMemo(() => createEnterpriseService(repository), [repository]);
+  const service = useMemo(
+    () => createEnterpriseService(repository, {approvalModel: enterprise.approval_model}),
+    [enterprise.approval_model, repository],
+  );
   const [actorId, setActorId] = useState("actor-reviewer");
   const actor = demoActors.find((item) => item.id === actorId) as EnterpriseActor;
   const canCreate = actor.role === "requester" || actor.role === "admin";
@@ -230,6 +230,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
   const allRequests = requests;
   const selected = allRequests.find((request) => request.id === selectedId) ?? allRequests[0];
   const visible = filter === "empty" ? [] : filter === "all" ? allRequests : allRequests.filter((request) => request.status === filter);
+  const visibleRequestIds = new Set(allRequests.map((request) => request.id));
 
   function refresh() {
     setLoadState("loading");
@@ -264,17 +265,29 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
     setNotice(`${statusLabel[result.request.status]} recorded. The audit trail now shows who changed what and why.`);
   }
 
-  function addRequest(request: WorkflowRequest, event: AuditEvent) {
-    const result = service.create(actor, request, event);
+  function runEvidenceChecks() {
+    if (!selected) return;
+    const result = service.verifyEvidence(actor, selected.id);
+    if (!result.ok) {
+      setNotice(result.message);
+      return;
+    }
+    setRequests((current) => current.map((item) => item.id === result.request.id ? result.request : item));
+    setAudit((current) => [result.event, ...current]);
+    setNotice("Local evidence checks passed. The request is ready to submit for human review.");
+  }
+
+  function addRequest(request: WorkflowRequest) {
+    const result = service.create(actor, request);
     if (!result.ok) {
       setNotice(result.message);
       return;
     }
     setRequests(service.list(actor));
-    setAudit((current) => [event, ...current]);
-    setSelectedId(request.id);
+    setAudit((current) => [result.event, ...current]);
+    setSelectedId(result.request.id);
     setFilter("all");
-    setNotice("Draft created locally. Evidence remains incomplete, so approval is unavailable.");
+    setNotice("Draft created locally. Run the bounded evidence checks before submitting it for review.");
   }
 
   return (
@@ -353,10 +366,12 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
                   <div className="evidence-panel"><div><span>Required evidence</span><strong>{selected.evidence.filter((item) => item.state === "verified").length} / {selected.evidence.length} verified</strong></div><ul>{selected.evidence.map((item) => <li key={item.id} data-state={item.state}><i aria-hidden="true" /><span><strong>{item.label}</strong><small>{item.source}</small></span><b>{item.state}</b></li>)}</ul></div>
                   <label className="decision-reason">Decision rationale<textarea value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Required for rejection or requested changes" /></label>
                   <div className="enterprise-actions">
-                    <button type="button" onClick={() => applyAction("request_changes")}>Request changes</button>
-                    <button type="button" onClick={() => applyAction("reject")}>Reject</button>
-                    <button type="button" onClick={() => applyAction("cancel")}>Cancel</button>
-                    <button type="button" className="enterprise-primary" onClick={() => applyAction("approve")} disabled={selected.status !== "in_review" || selected.evidence.some((item) => item.state !== "verified")}>Approve request</button>
+                    {new Set(["draft", "changes_requested"]).has(selected.status) ? <button type="button" onClick={runEvidenceChecks} disabled={actor.role !== "requester" && actor.role !== "admin"}>Run local evidence checks</button> : null}
+                    {new Set(["draft", "changes_requested"]).has(selected.status) ? <button type="button" className="enterprise-primary" onClick={() => applyAction("submit")} disabled={actor.role !== "requester" || selected.ownerId !== actor.id || selected.evidence.some((item) => item.state !== "verified")}>Submit for review</button> : null}
+                    {selected.status === "in_review" ? <button type="button" onClick={() => applyAction("request_changes")}>Request changes</button> : null}
+                    {selected.status === "in_review" ? <button type="button" onClick={() => applyAction("reject")}>Reject</button> : null}
+                    {new Set(["draft", "in_review", "changes_requested"]).has(selected.status) ? <button type="button" onClick={() => applyAction("cancel")}>Cancel</button> : null}
+                    {selected.status === "in_review" ? <button type="button" className="enterprise-primary" onClick={() => applyAction("approve")} disabled={selected.evidence.some((item) => item.state !== "verified") || (enterprise.approval_model === "policy-gated" && selected.policyState !== "passed")}>Approve request</button> : null}
                   </div>
                   <p className="enterprise-notice" role="status">{notice}</p>
                 </> : <div className="enterprise-state" role="status"><span>Tenant boundary enforced</span><strong>{notice}</strong><p>Select a permitted request to inspect its evidence and allowed transitions.</p></div>}
@@ -365,7 +380,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
 
             <section className="audit-section" id="audit-trail" aria-labelledby="audit-title">
               <div><p className="eyebrow">Append-only evidence</p><h2 id="audit-title">The decision leaves a trail.</h2><p>Local demo events mirror the contract a production adapter must persist. They do not represent a production audit store.</p></div>
-              <ol>{audit.filter((event) => !selected || event.requestId === selected.id).map((event) => <li key={event.id}><i aria-hidden="true" /><div><strong>{event.action.replace("request.", "").replace("_", " ")}</strong><span>{event.actorName} · {event.reason}</span></div><time dateTime={event.occurredAt}>{shortTime(event.occurredAt)}</time></li>)}</ol>
+              <ol>{audit.filter((event) => visibleRequestIds.has(event.requestId) && (!selected || event.requestId === selected.id)).map((event) => <li key={event.id}><i aria-hidden="true" /><div><strong>{event.action.replace("request.", "").replace("_", " ")}</strong><span>{event.actorName} · {event.reason}</span></div><time dateTime={event.occurredAt}>{shortTime(event.occurredAt)}</time></li>)}</ol>
             </section>
 
             <section className="enterprise-contract" id="enterprise-contract" aria-label="Enterprise adapter boundary">

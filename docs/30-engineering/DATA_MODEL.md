@@ -5,7 +5,8 @@
 ### EnterpriseRequest
 
 `id`, `tenant_id`, `owner_id`, `title`, `scope`, `justification`, `risk`,
-`status`, `evidence[]`, `reviewer_id`, timestamps, and concurrency version.
+`status`, `evidence[]`, `assigned_reviewer_id`, `policy_state`, timestamps, and
+concurrency version.
 
 ### EvidenceItem
 

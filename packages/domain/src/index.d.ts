@@ -5,5 +5,5 @@ export declare function transitionRequest(
   request: WorkflowRequest,
   actor: EnterpriseActor,
   action: WorkflowAction,
-  options?: {reason?: string; now?: string},
+  options?: {reason?: string; now?: string; approvalModel?: "single-review" | "dual-control" | "policy-gated"},
 ): TransitionResult;

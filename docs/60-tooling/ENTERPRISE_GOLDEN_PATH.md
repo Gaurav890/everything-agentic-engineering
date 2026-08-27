@@ -26,16 +26,24 @@ The generated web product includes one complete vertical slice:
 ```text
 Create request
 → validate required evidence
+→ submit for review
 → assign reviewer
 → approve / reject / request changes / cancel
 → append audit event
 → recover from empty, invalid, loading, and failure states
 ```
 
-The interface includes tenant context, role switching, cross-tenant denial,
-self-approval prevention, decision rationale, evidence provenance, and an
-append-only local audit trail. It can be compared through all three approved
-design directions on desktop and mobile.
+The interface includes tenant context, role switching, owner/assignment-scoped
+reads, cross-tenant denial, self-approval prevention, evidence verification,
+submission and resubmission, decision rationale, and an append-only local audit
+trail. Audit attribution is constructed inside the service boundary. It can be
+compared through all three approved design directions on desktop and mobile.
+
+The approval choice changes executable policy:
+
+- `single-review` permits an eligible same-tenant reviewer;
+- `dual-control` requires the assigned reviewer to differ from the owner;
+- `policy-gated` adds a recorded passed policy gate before approval.
 
 ## What is generated
 

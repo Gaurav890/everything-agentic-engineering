@@ -235,11 +235,13 @@ test("enterprise workflow enforces evidence, role, tenant, consequence, and reco
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-other-tenant");
   await expect(page.getByText("Production analytics access")).toHaveCount(0);
   await expect(page.getByText("No requests are exposed across the tenant boundary.")).toBeVisible();
+  await expect(page.locator(".audit-section li")).toHaveCount(0);
 
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer");
-  await page.getByRole("button", {name: "Approve request"}).click();
-  await expect(page.getByRole("status").filter({hasText: "Approved recorded"})).toBeVisible();
-  await expect(page.locator(".audit-section li strong").filter({hasText: /^approve$/})).toBeVisible();
+  await page.getByLabel("Decision rationale").fill("The requested scope exceeds the reviewed need.");
+  await page.getByRole("button", {name: "Reject"}).click();
+  await expect(page.getByRole("status").filter({hasText: "Rejected recorded"})).toBeVisible();
+  await expect(page.locator(".audit-section li strong").filter({hasText: /^rejected$/})).toBeVisible();
 
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-requester");
   await page.getByRole("button", {name: /New access request/}).click();
@@ -250,6 +252,36 @@ test("enterprise workflow enforces evidence, role, tenant, consequence, and reco
   await page.getByLabel("Business justification").fill("Complete the approved close review.");
   await page.getByRole("button", {name: "Create draft"}).click();
   await expect(page.getByText("Draft created locally", {exact: false})).toBeVisible();
+  await expect(page.getByRole("button", {name: "Submit for review"})).toBeDisabled();
+  await page.getByRole("button", {name: "Run local evidence checks"}).click();
+  await expect(page.getByText("Local evidence checks passed", {exact: false})).toBeVisible();
+  await page.getByRole("button", {name: "Submit for review"}).click();
+  await expect(page.getByRole("status").filter({hasText: "In review recorded"})).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer-backup");
+  await expect(page.getByText("Finance reporting access")).toHaveCount(0);
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer");
+  await page.getByRole("button", {name: /Finance reporting access/}).click();
+  await page.getByLabel("Decision rationale").fill("Confirm the expiry owner before approval.");
+  await page.getByRole("button", {name: "Request changes"}).click();
+  await expect(page.getByRole("status").filter({hasText: "Changes requested recorded"})).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-requester");
+  await page.getByRole("button", {name: /Finance reporting access/}).click();
+  await page.getByRole("button", {name: "Run local evidence checks"}).click();
+  await page.getByRole("button", {name: "Submit for review"}).click();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer");
+  await page.getByRole("button", {name: /Finance reporting access/}).click();
+  await page.getByRole("button", {name: "Approve request"}).click();
+  await expect(page.getByRole("status").filter({hasText: "Approved recorded"})).toBeVisible();
+  await expect(page.locator(".audit-section li strong").filter({hasText: /^approved$/})).toBeVisible();
+
+  await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-requester");
+  await page.getByRole("button", {name: /Vendor security exception/}).click();
+  await page.getByRole("button", {name: "Cancel"}).click();
+  await expect(page.getByRole("status").filter({hasText: "Cancelled recorded"})).toBeVisible();
 
   await page.getByRole("combobox", {name: "Filter requests"}).selectOption("empty");
   await expect(page.getByText("No requests match this view.")).toBeVisible();

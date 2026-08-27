@@ -231,7 +231,7 @@ The generated project then includes:
 - tenant and authorization boundaries;
 - data model and API contract;
 - security model and audit-event vocabulary;
-- a runnable request → evidence → review → decision → audit slice;
+- a runnable create → evidence checks → submit → review → decision → audit slice;
 - loading, empty, invalid, partial, failure, recovery, disabled, and terminal
   states;
 - domain, repository, API, browser, accessibility, and visual tests;
@@ -240,6 +240,11 @@ The generated project then includes:
 This is a credible vertical slice, not a fake enterprise claim. Production
 identity, persistence, notifications, compliance evidence, and deployment must
 still be connected and reviewed for the real organization.
+
+The selected approval model is executable, not decorative: `single-review`
+permits an eligible same-tenant reviewer, `dual-control` restricts decisions to
+the assigned reviewer distinct from the owner, and `policy-gated` additionally
+requires the recorded policy check to pass.
 
 Read the [enterprise golden-path guide](docs/60-tooling/ENTERPRISE_GOLDEN_PATH.md).
 

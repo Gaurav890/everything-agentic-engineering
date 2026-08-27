@@ -660,6 +660,7 @@ def generated_enterprise(plan: GenerationPlan) -> dict[str, Any]:
         ],
         "audit_events": [
             "request.created",
+            "request.evidence_verified",
             "request.submitted",
             "request.changes_requested",
             "request.approved",
@@ -765,13 +766,16 @@ authority remains governed by the selected `{plan.approval_model}` model.
 |---|---:|---:|---:|---:|
 | Create own {object_name} | Yes | No | No | No |
 | Submit or cancel own request | Yes | No | No | Cancel only |
-| Inspect tenant-scoped evidence | Own | Assigned | Read only | Read only |
+| Inspect tenant-scoped evidence | Own | {"Any same-tenant request" if plan.approval_model == "single-review" else "Assigned"} | Read only | Read only |
 | Request changes / reject | No | Yes | No | No |
 | Approve complete evidence | No | Yes | No | No |
 | Inspect audit trail | Own | Assigned | Yes | Yes |
 
-Every capability also requires a matching tenant boundary. The `{plan.approval_model}`
-model prevents implicit self-approval.
+Every capability also requires a matching tenant boundary. Under `single-review`,
+any eligible same-tenant reviewer can decide; `dual-control` requires the assigned
+reviewer to be distinct from the owner; `policy-gated` additionally requires the
+recorded policy gate to pass. The selected `{plan.approval_model}` behavior is
+enforced by the service and domain policy rather than displayed as metadata only.
 """,
         Path("docs/30-engineering/DATA_MODEL.md"): f"""# Data model
 
@@ -779,8 +783,8 @@ model prevents implicit self-approval.
 
 ## `{object_name.replace(' ', '_')}`
 
-`id`, `tenant_id`, `owner_id`, `status`, `risk`, `requested_scope`,
-`justification`, `created_at`, `updated_at`.
+`id`, `tenant_id`, `owner_id`, `assigned_reviewer_id`, `policy_state`, `status`,
+`risk`, `requested_scope`, `justification`, `created_at`, `updated_at`.
 
 ## `request_evidence`
 
@@ -800,6 +804,7 @@ Audit events are append-only; updates and deletes are not part of the contract.
 
 - `GET /{plural.replace(' ', '-')}` — tenant-scoped list authorized for the current actor.
 - `POST /{plural.replace(' ', '-')}` — create a draft owned by the current requester.
+- `POST /{plural.replace(' ', '-')}/:id/evidence-checks` — run the bounded local check and append a trusted service-authored evidence event.
 - `GET /{plural.replace(' ', '-')}/:id` — request, evidence, allowed transitions, and audit summary.
 - `POST /{plural.replace(' ', '-')}/:id/transitions` — action plus rationale; server re-authorizes and appends one audit event atomically.
 
@@ -815,7 +820,12 @@ tenant from reviewed server-side authentication, never client input.
 
 - Identity and tenant claims must come from reviewed server-side authentication.
 - Domain transitions fail closed for role, tenant, ownership, evidence, reason, and state.
-- `{plan.approval_model}` approval never permits silent self-approval.
+- Reads fail closed and are scoped to requester ownership, reviewer eligibility,
+  or auditor/administrator tenant visibility.
+- Creation and evidence audit attribution is constructed inside the trusted
+  service boundary; callers cannot author actor or transition metadata.
+- `{plan.approval_model}` approval never permits silent self-approval and is
+  executable: reviewer eligibility and policy-gate state change the outcome.
 - `{plan.data_sensitivity}` fields must not enter logs, analytics, prompts, or client-visible errors without review.
 - Audit writes must commit atomically with the state transition.
 
@@ -829,7 +839,7 @@ identity provider, external service, or deployment.
 
 {marker}
 
-Canonical events: `request.created`, `request.submitted`,
+Canonical events: `request.created`, `request.evidence_verified`, `request.submitted`,
 `request.changes_requested`, `request.approved`, `request.rejected`, and
 `request.cancelled`.
 

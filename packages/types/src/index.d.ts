@@ -12,6 +12,8 @@ export type WorkflowRequest = {
   businessObject: string;
   ownerId: string;
   ownerName: string;
+  assignedReviewerId: string;
+  policyState: "pending" | "passed" | "blocked";
   status: RequestStatus;
   risk: "low" | "medium" | "high";
   requestedScope: string;
@@ -34,7 +36,7 @@ export type AuditEvent = {
 };
 export type TransitionResult =
   | {ok: true; request: WorkflowRequest; event: AuditEvent}
-  | {ok: false; code: "unauthorized" | "invalid_state" | "evidence_incomplete" | "reason_required"; message: string};
+  | {ok: false; code: "unauthorized" | "invalid_input" | "invalid_state" | "evidence_incomplete" | "policy_required" | "reason_required"; message: string};
 export type EnterpriseManifest = {
   schema_version: 1;
   enabled: boolean;

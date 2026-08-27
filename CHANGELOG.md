@@ -8,6 +8,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- The enterprise reference workflow now scopes reads by tenant, role, requester
+  ownership, and reviewer eligibility; constructs creation/evidence audit
+  attribution inside the service boundary; executes the selected approval
+  model; and exposes a complete evidence-check, submit, change, resubmit,
+  decision, cancellation, and recovery journey.
 - The public README now leads with one guided creation path, real enterprise
   visual proof, concise archetype selection, the design-quality contract,
   enterprise production boundaries, core commands, parallel-work guidance,

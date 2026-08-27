@@ -8,7 +8,7 @@
   "roles": ["requester", "reviewer", "auditor", "admin"],
   "workflow_states": ["draft", "in_review", "changes_requested", "approved", "rejected", "cancelled"],
   "required_evidence": ["business justification", "manager attestation", "scope and expiry"],
-  "audit_events": ["request.created", "request.submitted", "request.changes_requested", "request.approved", "request.rejected", "request.cancelled"],
+  "audit_events": ["request.created", "request.evidence_verified", "request.submitted", "request.changes_requested", "request.approved", "request.rejected", "request.cancelled"],
   "adapters": {
     "authentication": "local-demo",
     "persistence": "local-demo",

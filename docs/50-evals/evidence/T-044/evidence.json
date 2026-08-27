@@ -3,7 +3,7 @@
   "acceptance_ids": ["AC-001", "AC-002", "AC-003", "AC-004"],
   "ui_change": true,
   "builder": "orchestrator",
-  "evaluator": "human-visual-and-readme-review-complete-independent-reviews-pending",
+  "evaluator": "human-review-complete-initial-independent-reviews-blocked-corrections-await-re-review",
   "commands": [
     "python3 -m unittest tests.test_project_generator tests.test_next_action",
     "pnpm --filter @everything-agentic/domain test",
@@ -14,10 +14,12 @@
     "pnpm --filter @everything-agentic/web test:e2e",
     "pnpm --filter @everything-agentic/web test:visual",
     "generated enterprise: ./agentic verify full",
+    "generated enterprise: pnpm test",
+    "generated enterprise: pnpm build",
     "generated enterprise: pnpm test:e2e"
   ],
   "states": ["normal", "loading", "empty", "invalid", "partial-evidence", "error", "recovery", "unauthorized", "disabled", "approved", "rejected", "changes-requested", "cancelled"],
   "viewports": ["mobile", "desktop"],
-  "artifacts": ["README.md", "linux-visual-candidates.md"],
-  "verdict": "IMPLEMENTED; HUMAN VISUAL AND UPDATED README APPROVAL RECEIVED; INDEPENDENT REVIEWS PENDING"
+  "artifacts": ["README.md", "linux-visual-candidates.md", "independent-review.md"],
+  "verdict": "CORRECTIONS IMPLEMENTED AFTER BLOCKED INDEPENDENT REVIEWS; EXACT-HEAD RE-REVIEWS PENDING"
 }

@@ -1,5 +1,22 @@
 # Progress log
 
+## 2026-08-26 — T-044 independent-review remediation
+
+- Independent product/QA and security reviewers blocked the first reviewed
+  head on incomplete request submission, decorative approval-model selection,
+  same-tenant over-broad reads, and caller-forgeable audit attribution.
+- The service now scopes requester, reviewer, auditor, and administrator reads;
+  rejects unknown roles; constructs trusted creation and evidence events; and
+  resets caller-supplied evidence/policy state before persistence.
+- The selected single-review, dual-control, or policy-gated model now changes
+  executable reviewer and policy requirements.
+- The running product now demonstrates evidence checks, submission, rejection,
+  requested changes, resubmission, approval, cancellation, tenant/audit hiding,
+  and safe recovery.
+- Focused domain, API, generator, model, build, browser, accessibility, and
+  existing visual-baseline checks pass. Exact-head clean-checkout verification
+  and independent re-review remain pending before task finalization.
+
 ## 2026-08-24 — T-043 guided product studio
 
 - Added progressive, archetype-aware downstream project creation and exactly

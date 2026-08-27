@@ -1,6 +1,6 @@
 # T-044 enterprise golden-path evidence
 
-Status: Human visual and updated README approval received; independent reviews pending.
+Status: Human visual and updated README approval received; independent re-reviews pending after corrective implementation.
 
 ## Product contract
 
@@ -12,12 +12,18 @@ Status: Human visual and updated README approval received; independent reviews p
 
 ## Running-product evidence
 
-- Requester/admin creation is role-scoped and repository-backed.
-- Cross-tenant actors receive no request data before action handling.
+- Requester/admin creation is validated, role-scoped, and repository-backed.
+- Reads are scoped by tenant, role, requester ownership, and reviewer
+  eligibility; unknown and cross-tenant actors receive no request or audit data.
+- Creation and evidence events are constructed inside the trusted service
+  boundary rather than accepted from browser input.
+- Single-review, dual-control, and policy-gated choices change executable
+  reviewer or gate behavior.
 - Auditor, reviewer, requester, administrator, self-approval, evidence,
   rationale, and state policies fail closed at the domain boundary.
 - The UI covers queue loading, empty, invalid input, refresh failure, recovery,
-  incomplete evidence, disabled action, success, and append-only audit outcomes.
+  evidence checks, submission, rejection, requested changes, resubmission,
+  approval, cancellation, disabled action, and append-only audit outcomes.
 - Editorial Signal, Kinetic Index, and Quiet Material remain visibly distinct on
   desktop and mobile without changing the workflow contract.
 
@@ -27,16 +33,16 @@ Status: Human visual and updated README approval received; independent reviews p
 python3 -m unittest tests.test_project_generator tests.test_next_action
 PASS — 27 tests
 
-domain / API / web model tests
-PASS — 4 + 2 + 5 tests
+domain / API / web model tests after independent-review corrections
+PASS — 7 + 4 + 5 tests
 
 source production build
 PASS
 
-source Playwright interaction/accessibility suite
+source Playwright interaction/accessibility suite after corrections
 PASS — 23 passed, 1 intentional skip
 
-source visual comparison
+source visual comparison after corrections
 PASS — 24 cases
 
 Linux Web quality candidate run 33014674724
@@ -49,13 +55,18 @@ approved by the project owner before becoming committed baselines
 
 fresh generated enterprise project
 ./agentic verify full — PASS
+pnpm test — PASS, 7 domain + 4 API + 5 web model tests
+pnpm build — PASS
 pnpm test:e2e — PASS, 17 passed and 7 intentionally irrelevant skips
+
+corrected source repository
+./scripts/verify.sh full — PASS across all ten stages
 ```
 
 ## Review still required
 
-- independent product-design and adversarial QA evaluation;
-- independent security and authority evaluation;
+- independent product-design and adversarial QA re-review of the corrections;
+- independent security and authority re-review of the corrections;
 - pull-request readiness and merge decisions.
 
 Completed updated-head gates:

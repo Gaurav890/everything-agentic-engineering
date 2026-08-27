@@ -111,9 +111,14 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("access request", enterprise["business_object"]["singular"])
             self.assertEqual("multi-tenant", enterprise["tenant_model"])
             self.assertEqual("dual-control", enterprise["approval_model"])
+            self.assertIn("request.evidence_verified", enterprise["audit_events"])
             self.assertFalse(enterprise["adapters"]["production_ready"])
             self.assertTrue((destination / "apps/web/app/enterprise-lab.tsx").is_file())
             self.assertTrue((destination / "packages/domain/src/index.js").is_file())
+            self.assertIn(
+                "approvalModel: enterprise.approval_model",
+                (destination / "apps/web/app/enterprise-lab.tsx").read_text(),
+            )
             for relative in (
                 "docs/10-product/PRD.md",
                 "docs/10-product/ACCEPTANCE_CRITERIA.md",
@@ -129,6 +134,11 @@ class ProjectGeneratorTests(unittest.TestCase):
                     "Generated from `.agentic/enterprise.json`",
                     (destination / relative).read_text(),
                 )
+            role_matrix = (destination / "docs/30-engineering/ROLE_MATRIX.md").read_text()
+            self.assertIn("`dual-control` requires the assigned", role_matrix)
+            self.assertIn("reviewer to be distinct from the owner", role_matrix)
+            api_contract = (destination / "docs/30-engineering/API_CONTRACTS.md").read_text()
+            self.assertIn("evidence-checks", api_contract)
             verification = subprocess.run(
                 [str(destination / "agentic"), "verify", "full"],
                 cwd=destination,

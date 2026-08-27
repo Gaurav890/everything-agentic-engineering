@@ -14,8 +14,12 @@ role, and tenant claims from a reviewed identity provider on the server.
 
 ## Authorization
 
-The pure domain policy denies unknown roles, cross-tenant access, self-approval,
-invalid state transitions, incomplete evidence, and missing decision rationale.
+The service and pure domain policy deny unknown roles, cross-tenant access,
+requester access outside ownership, reviewer access outside eligibility,
+self-approval, invalid state transitions, incomplete evidence, failed policy
+gates, and missing decision rationale. Creation and evidence-check audit events
+are constructed inside the trusted service boundary from the verified actor or
+local policy engine; callers cannot supply attribution or transition metadata.
 Production must enforce the same policy server-side before mutation and again
 inside tenant-scoped persistence boundaries.
 

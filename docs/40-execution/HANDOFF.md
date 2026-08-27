@@ -13,10 +13,14 @@ with production readiness.
 - One-command progressive onboarding with four enterprise-only domain questions.
 - `.agentic/enterprise.json` and generated PRD, acceptance, journey, role,
   architecture, data, API, security, audit, and task contracts.
-- A runnable request → evidence → review → decision → audit vertical slice.
+- A runnable request → evidence checks → submit → review → decision → audit
+  vertical slice, including change/resubmission and cancellation.
 - Pure workflow policy plus API, repository, and shared-type boundaries.
-- Fail-closed tenant visibility, role, self-approval, evidence, rationale, and
-  state-transition behavior.
+- Fail-closed tenant, role, requester-ownership, reviewer-eligibility,
+  self-approval, evidence, policy-gate, rationale, and state-transition behavior.
+- Trusted service-authored creation/evidence audit attribution; browser input
+  cannot forge actor or transition metadata.
+- Executable single-review, dual-control, and policy-gated behavior.
 - Loading, empty, invalid, failure, recovery, disabled, and success states.
 - Three distinct direction systems with desktop/mobile Playwright evidence.
 - Explicit local auth/persistence, disabled notification, and
@@ -30,18 +34,17 @@ with production readiness.
 
 ## Pending gates
 
-- Independent product-quality and security/authority review against the final
-  pushed head, as required by T-044.
-- Normal Linux comparison against the committed approved baselines.
-- Full repository verification and release smoke at the updated branch head.
-- Final human review of the README change requested alongside T-044 approval.
+- Exact-head full verification, generated-project checks, release smoke, and
+  normal Linux comparison after the independent-review corrections.
+- Independent product-quality and security/authority re-review of the corrected
+  committed head, as required by T-044.
 - Pull-request finalization; no self-approval or merge.
 
 ## Exact next action
 
-Run the full local and clean-checkout gates, push the approved baselines and
-README, confirm normal CI is green, then present the exact updated PR head for
-independent and final human review before task finalization.
+Finish the full local and clean-checkout gates, commit and push the review
+corrections, then obtain independent product/QA and security PASS verdicts at
+that exact head before task finalization.
 
 ## Relevant files
 

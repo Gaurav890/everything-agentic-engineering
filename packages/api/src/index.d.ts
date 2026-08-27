@@ -1,8 +1,12 @@
 import type {EnterpriseRepository} from "@everything-agentic/database";
-import type {AuditEvent, EnterpriseActor, TransitionResult, WorkflowAction, WorkflowRequest} from "@everything-agentic/types";
+import type {EnterpriseActor, TransitionResult, WorkflowAction, WorkflowRequest} from "@everything-agentic/types";
 export type EnterpriseService = {
   list(actor: EnterpriseActor): WorkflowRequest[];
-  create(actor: EnterpriseActor, request: WorkflowRequest, event: AuditEvent): TransitionResult;
+  create(actor: EnterpriseActor, request: WorkflowRequest, options?: {now?: string}): TransitionResult;
+  verifyEvidence(actor: EnterpriseActor, requestId: string, options?: {now?: string}): TransitionResult;
   transition(actor: EnterpriseActor, requestId: string, action: WorkflowAction, reason?: string): TransitionResult;
 };
-export declare function createEnterpriseService(repository: EnterpriseRepository): EnterpriseService;
+export declare function createEnterpriseService(
+  repository: EnterpriseRepository,
+  options?: {approvalModel?: "single-review" | "dual-control" | "policy-gated"},
+): EnterpriseService;
