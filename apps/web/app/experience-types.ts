@@ -1,4 +1,4 @@
-export type ExperienceArchetype = "portfolio" | "product" | "agentic-product";
+export type ExperienceArchetype = "portfolio" | "product" | "agentic-product" | "enterprise-workflow";
 
 export type ExperienceManifest = {
   schema_version: number;
@@ -39,6 +39,16 @@ export const previewExperiences: Record<ExperienceArchetype, ExperienceManifest>
     audience: "operations teams delegating consequential work",
     promise: "Give agents room to work without giving up human control.",
     visual_character: "bold",
+    content_status: "reference_fixture",
+    preview_all_archetypes: true,
+  },
+  "enterprise-workflow": {
+    schema_version: 1,
+    name: "Aperture",
+    archetype: "enterprise-workflow",
+    audience: "operations and security teams making consequential access decisions",
+    promise: "Move every request from evidence to accountable decision.",
+    visual_character: "precise",
     content_status: "reference_fixture",
     preview_all_archetypes: true,
   },

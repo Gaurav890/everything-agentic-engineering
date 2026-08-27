@@ -37,10 +37,19 @@ interaction systems—not themes:
 - `product`: promise, outcome surface, proof, and operating rhythm;
 - `agentic-product`: objective, execution evidence, human decision gate,
   consequence, recovery, and control.
+- `enterprise-workflow`: governed business object, tenant and actor context,
+  evidence-backed queue, allowed and denied decisions, rationale, append-only
+  audit consequence, and explicit local-versus-production adapter status.
 
 Changing color or tokens never changes this architecture. Query-string
 archetype previews are allowed only in the starter's explicit reference lab.
 Generated products expose and test only their selected archetype.
+
+Enterprise UI must make the workflow understandable before decoration. Tenant,
+role, evidence readiness, decision authority, state, consequence, recovery, and
+audit provenance are first-class hierarchy. A generic analytics dashboard,
+performative approval control, or hidden production boundary fails this system
+even if its typography and color are polished.
 
 Do not replace `Status: Draft` until the direction decision includes an
 approver, date, evidence reviewed, and design-decision ID.

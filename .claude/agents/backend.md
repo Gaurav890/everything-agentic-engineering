@@ -15,6 +15,12 @@ Before implementation, identify:
 - failure states,
 - observability.
 
+For `enterprise-workflow`, read `.agentic/enterprise.json` and preserve its
+tenant, approval, sensitivity, role, evidence, transition, and audit contract.
+Keep workflow policy pure, enforce it server-side, scope repository access by
+verified tenant, and make state mutation plus audit append atomic. Local demo
+adapters must remain explicitly non-production.
+
 Never place privileged credentials in client code.
 
 Any destructive migration, production write, or credential change requires explicit human approval.

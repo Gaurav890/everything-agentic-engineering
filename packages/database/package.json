@@ -1,0 +1,10 @@
+{
+  "name": "@everything-agentic/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {".": {"types": "./src/index.d.ts", "import": "./src/index.js"}},
+  "dependencies": {"@everything-agentic/types": "workspace:*"}
+}

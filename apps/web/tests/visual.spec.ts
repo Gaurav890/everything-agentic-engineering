@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const experience = JSON.parse(
   readFileSync(resolve(process.cwd(), "../../.agentic/experience.json"), "utf8"),
-) as { archetype: "portfolio" | "product" | "agentic-product"; preview_all_archetypes?: boolean };
+) as { archetype: "portfolio" | "product" | "agentic-product" | "enterprise-workflow"; preview_all_archetypes?: boolean };
 
 const directions = [
   { id: "editorial-signal", name: "Editorial Signal" },
@@ -13,7 +13,7 @@ const directions = [
 ] as const;
 
 const archetypes = experience.preview_all_archetypes
-  ? (["portfolio", "product", "agentic-product"] as const)
+  ? (["portfolio", "product", "agentic-product", "enterprise-workflow"] as const)
   : ([experience.archetype] as const);
 
 async function prepareDirection(page: Page, archetype: string, name: string, id: string) {

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "enabled": true,
+  "business_object": {"singular": "access request", "plural": "access requests"},
+  "tenant_model": "multi-tenant",
+  "approval_model": "dual-control",
+  "data_sensitivity": "confidential",
+  "roles": ["requester", "reviewer", "auditor", "admin"],
+  "workflow_states": ["draft", "in_review", "changes_requested", "approved", "rejected", "cancelled"],
+  "required_evidence": ["business justification", "manager attestation", "scope and expiry"],
+  "audit_events": ["request.created", "request.evidence_verified", "request.submitted", "request.changes_requested", "request.approved", "request.rejected", "request.cancelled"],
+  "adapters": {
+    "authentication": "local-demo",
+    "persistence": "local-demo",
+    "notifications": "disabled",
+    "production_ready": false
+  }
+}

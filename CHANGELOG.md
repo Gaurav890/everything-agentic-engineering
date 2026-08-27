@@ -6,7 +6,29 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+- The enterprise reference workflow now scopes reads by tenant, role, requester
+  ownership, and reviewer eligibility; constructs creation/evidence audit
+  attribution inside the service boundary; executes the selected approval
+  model; and exposes a complete evidence-check, submit, change, resubmit,
+  decision, cancellation, and recovery journey.
+- Enterprise mutation clocks are service-owned, stale refresh work cannot
+  restore prior actor data, and generated browser tests follow custom product
+  wording and approval choices.
+- The public README now leads with one guided creation path, real enterprise
+  visual proof, concise archetype selection, the design-quality contract,
+  enterprise production boundaries, core commands, parallel-work guidance,
+  safety defaults, and routed deep documentation instead of presenting the
+  entire reference manual during first contact.
+
 ### Added
+
+- A guided enterprise golden path that asks four conditional domain decisions,
+  generates role/workflow/evidence/audit and engineering contracts, and ships a
+  tenant-scoped request-decision vertical slice with pure policy, local adapter
+  boundaries, three responsive design systems, and allowed/denied Playwright
+  evidence without claiming production readiness.
 
 - A five-decision guided project studio with portfolio, product, and agentic-
   product content architectures, one-next-action routing, profile-minimal

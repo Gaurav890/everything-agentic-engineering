@@ -39,6 +39,7 @@ WEB_PROJECT="$TEMP_ROOT/smoke-web"
 MOBILE_PROJECT="$TEMP_ROOT/smoke-mobile"
 CORE_PROJECT="$TEMP_ROOT/smoke-core"
 GUIDED_PROJECT="$TEMP_ROOT/smoke-guided"
+ENTERPRISE_PROJECT="$TEMP_ROOT/smoke-enterprise"
 
 printf '%s\n' \
   "Guided Signal" \
@@ -69,6 +70,26 @@ WEB_NEXT="$("$WEB_PROJECT/agentic" next)"
 [[ "$WEB_NEXT" == *"pnpm install"* ]]
 test "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["archetype"])' "$WEB_PROJECT/.agentic/experience.json")" = "agentic-product"
 test ! -e "$WEB_PROJECT/apps/mobile"
+
+./agentic setup create \
+  --name "Smoke Decision Desk" \
+  --destination "$ENTERPRISE_PROJECT" \
+  --preset web \
+  --archetype enterprise-workflow \
+  --audience "security teams reviewing sensitive access" \
+  --promise "Move every request from evidence to accountable decision." \
+  --visual-character precise \
+  --business-object "access request" \
+  --tenant-model multi-tenant \
+  --approval-model dual-control \
+  --data-sensitivity confidential \
+  --yes >/dev/null
+"$ENTERPRISE_PROJECT/agentic" verify full >/dev/null
+test "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["enabled"])' "$ENTERPRISE_PROJECT/.agentic/enterprise.json")" = "True"
+test -f "$ENTERPRISE_PROJECT/docs/30-engineering/ROLE_MATRIX.md"
+test -f "$ENTERPRISE_PROJECT/packages/domain/tests/workflow.test.mjs"
+ENTERPRISE_NEXT="$("$ENTERPRISE_PROJECT/agentic" next)"
+[[ "$ENTERPRISE_NEXT" == *"pnpm install"* ]]
 
 ./agentic setup create \
   --name "Smoke Mobile" \

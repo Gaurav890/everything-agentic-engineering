@@ -1,3 +1,5 @@
+import {EnterpriseLab} from "./enterprise-lab";
+import type {EnterpriseManifest} from "@everything-agentic/types";
 import {PortfolioLab} from "./portfolio-lab";
 import {ProductLab} from "./product-lab";
 import {
@@ -6,6 +8,7 @@ import {
   type ExperienceManifest,
 } from "./experience-types";
 import designState from "../../../.agentic/design.json";
+import enterpriseState from "../../../.agentic/enterprise.json";
 import experienceState from "../../../.agentic/experience.json";
 
 export default async function Page({
@@ -18,7 +21,7 @@ export default async function Page({
   const allowArchetypePreview = experienceState.preview_all_archetypes === true;
   const archetype: ExperienceArchetype =
     allowArchetypePreview &&
-    (requested === "product" || requested === "agentic-product" || requested === "portfolio")
+    (requested === "product" || requested === "agentic-product" || requested === "portfolio" || requested === "enterprise-workflow")
       ? requested
       : (experienceState.archetype as ExperienceArchetype);
   const requestedCharacter = query.character;
@@ -40,6 +43,16 @@ export default async function Page({
   } as ExperienceManifest;
   const approvedDirection =
     designState.status === "approved" ? (designState.approved_direction as string | null) : null;
+
+  if (archetype === "enterprise-workflow") {
+    return (
+      <EnterpriseLab
+        experience={experience}
+        enterprise={enterpriseState as EnterpriseManifest}
+        approvedDirection={approvedDirection}
+      />
+    );
+  }
 
   if (archetype !== "portfolio") {
     return <ProductLab experience={experience} approvedDirection={approvedDirection} />;

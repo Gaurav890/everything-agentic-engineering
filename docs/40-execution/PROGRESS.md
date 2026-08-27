@@ -1,5 +1,39 @@
 # Progress log
 
+## 2026-08-27 — T-044 independent reviews passed
+
+- Product-quality/adversarial QA and security/authority independently returned
+  PASS for `b0a9843ca0f9b9bf6517c1fefb25b4d5d20eda27` after review corrections.
+- Service-owned clocks reject caller-authored audit chronology. Stale refresh
+  callbacks cannot restore previous actor data or overwrite newer outcomes.
+- Generated browser assertions honor custom promises, business-object labels,
+  and the selected approval model instead of assuming starter defaults.
+- Full repository verification, 27 generator/next-action tests, 7 domain + 5
+  API + 5 web model tests, source build, 25 browser cases (one expected skip),
+  24 visual comparisons, and clean-checkout release smoke passed.
+- Independent fresh policy-gated and single-review projects each built and
+  passed 19 browser cases (seven expected skips) with custom copy and business
+  objects. Offline locked restores reused 34 packages and downloaded none.
+- Exact-head review evidence and production-adapter boundaries are recorded in
+  `docs/50-evals/evidence/T-044/`. Current PR/merge state remains GitHub-owned.
+
+## 2026-08-26 — T-044 independent-review remediation
+
+- Independent product/QA and security reviewers blocked the first reviewed
+  head on incomplete request submission, decorative approval-model selection,
+  same-tenant over-broad reads, and caller-forgeable audit attribution.
+- The service now scopes requester, reviewer, auditor, and administrator reads;
+  rejects unknown roles; constructs trusted creation and evidence events; and
+  resets caller-supplied evidence/policy state before persistence.
+- The selected single-review, dual-control, or policy-gated model now changes
+  executable reviewer and policy requirements.
+- The running product now demonstrates evidence checks, submission, rejection,
+  requested changes, resubmission, approval, cancellation, tenant/audit hiding,
+  and safe recovery.
+- Focused domain, API, generator, model, build, browser, accessibility, and
+  existing visual-baseline checks pass. Exact-head clean-checkout verification
+  and independent re-review remain pending before task finalization.
+
 ## 2026-08-24 — T-043 guided product studio
 
 - Added progressive, archetype-aware downstream project creation and exactly
@@ -1156,3 +1190,49 @@ Issue #62 owns review. This task does not install, upgrade, or configure a
 runtime; enable marketplace/MCP helpers, asynchronous or MCP-invoking hooks,
 plugins, MCP servers, credentials, network, sandbox, provider, model,
 production, approval, or merge authority; or change managed settings.
+
+### 2026-08-26 — T-044
+
+**Requirements:** FR-001, FR-002, FR-003, FR-004
+**Acceptance:** AC-001, AC-002, AC-003, AC-004
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT AND HUMAN REVIEW PENDING
+
+**Change**
+
+Added a conditional enterprise-workflow path to guided creation. It generates
+a machine-readable enterprise contract and durable product, journey, role,
+data, API, security, audit, design, and task artifacts. The running reference
+slice covers tenant-scoped request creation, evidence review, approve/reject/
+request-changes/cancel transitions, append-only audit consequences, and clear
+local-versus-production adapter status across three design directions.
+
+**Evidence so far**
+
+- 27 focused generator/next-action tests pass.
+- Domain, API, and web model suites pass, including tenant visibility and
+  role-scoped creation.
+- Source production build and full interaction/accessibility suite pass: 23
+  passed, one intentional desktop skip.
+- All 24 macOS reference visual comparisons pass for four archetypes, three
+  directions, desktop, and mobile.
+- A freshly generated enterprise project installs from the reviewed lockfile,
+  advances to the live direction lab through `./agentic next`, passes full
+  generated-project verification, builds, and passes 17 selected-archetype
+  browser tests with seven intentional irrelevant-archetype skips.
+- Ubuntu Web quality run `33014674724` passes the build and browser behavior
+  gates and generated all 24 Linux candidates. The six enterprise candidates
+  were builder-inspected without clipping, occlusion, or cross-direction
+  contract drift. The project owner then explicitly approved T-044; only those
+  six enterprise images became canonical Linux baselines.
+- The public README was reduced from a reference-manual-sized first encounter
+  to a concise onboarding path with real enterprise visual proof, archetype
+  guidance, one-next-action usage, design-quality rules, enterprise boundaries,
+  core commands, parallel-work guidance, safety defaults, and routed deep links.
+
+**Review boundary**
+
+This evidence includes explicit human visual approval but not merge authority.
+The final updated head must pass its deterministic gates, independent product
+and security review, and README review before task finalization. No production
+service, credential, external
+notification, deployment, approval, or merge authority was enabled.

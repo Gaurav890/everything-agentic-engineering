@@ -44,6 +44,18 @@ importers:
 
   apps/web:
     dependencies:
+      '@everything-agentic/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@everything-agentic/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@everything-agentic/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      '@everything-agentic/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@everything-agentic/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -76,7 +88,33 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  packages/api:
+    dependencies:
+      '@everything-agentic/database':
+        specifier: workspace:*
+        version: link:../database
+      '@everything-agentic/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@everything-agentic/types':
+        specifier: workspace:*
+        version: link:../types
+
+  packages/database:
+    dependencies:
+      '@everything-agentic/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/design-tokens: {}
+
+  packages/domain:
+    dependencies:
+      '@everything-agentic/types':
+        specifier: workspace:*
+        version: link:../types
+
+  packages/types: {}
 
   packages/ui:
     devDependencies:

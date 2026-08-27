@@ -8,9 +8,28 @@
 
 ## Authentication
 
+The enterprise reference UI uses an explicit local actor selector for
+demonstration only. It is not authentication. Production must derive actor,
+role, and tenant claims from a reviewed identity provider on the server.
+
 ## Authorization
 
+The service and pure domain policy deny unknown roles, cross-tenant access,
+requester access outside ownership, reviewer access outside eligibility,
+self-approval, invalid state transitions, incomplete evidence, failed policy
+gates, and missing decision rationale. Creation and evidence-check audit events
+are constructed inside the trusted service boundary from the verified actor or
+local policy engine; callers cannot supply attribution or transition metadata.
+All mutation timestamps come from the service-owned clock. Tests may inject a
+deterministic clock at service construction, never through mutation input.
+Production must enforce the same policy server-side before mutation and again
+inside tenant-scoped persistence boundaries.
+
 ## Sensitive data
+
+The committed enterprise fixture is synthetic. Production request scope,
+justification, evidence, identity, and rationale require classification,
+least-privilege access, encryption, retention, audit, and safe logging policy.
 
 ## Secret management
 

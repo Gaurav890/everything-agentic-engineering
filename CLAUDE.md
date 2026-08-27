@@ -169,6 +169,14 @@ overlay an existing directory, copy Git state or secrets, install external
 capabilities, enable MCP servers, initialize Git, or mutate the source. See
 `docs/60-tooling/PROJECT_GENERATOR.md`.
 
+When `.agentic/experience.json` selects `enterprise-workflow`, also read
+`.agentic/enterprise.json`. Preserve its business object, tenant model,
+approval policy, sensitivity, roles, evidence, audit, and adapter boundary.
+Start from the supplied request-decision vertical slice instead of replacing it
+with a generic dashboard. The local actor selector and in-memory repository are
+explicit demonstrations, never production authentication, authorization,
+persistence, notifications, or immutable audit.
+
 Before recommending an optional runtime, external collection, tool, or
 integration, use `./agentic capabilities plan --task T-###`. Treat
 `built_in`, `recommended`, `optional`, `missing`, and `blocked` as advisory
@@ -251,6 +259,9 @@ as the default visual identity.
 - Read `.agentic/experience.json` before substantial web work. Its archetype,
   audience, promise, and visual character are the content-architecture contract;
   never substitute a portfolio, dashboard, or landing-page default for it.
+- For `enterprise-workflow`, read `.agentic/enterprise.json`; keep tenant,
+  role, evidence, rationale, transition, audit, and production-adapter status
+  visible in the experience. A credible workflow is the design foundation.
 - Keep first use progressive: ask only decisions that change the result, show
   one concise plan, ask for confirmation once, and expose one next action.
 - Compare rendered directions and obtain explicit human approval before
