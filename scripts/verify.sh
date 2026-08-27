@@ -6,7 +6,18 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 export PYTHONPYCACHEPREFIX="$ROOT/.cache/python"
 
+if [ "$#" -gt 1 ]; then
+  echo "Usage: ./agentic verify [quick|full|web|visual]" >&2
+  exit 2
+fi
+case "$MODE" in
+  web|visual) exec python3 "$ROOT/scripts/web_verification.py" "$MODE" ;;
+  quick|full) ;;
+  *) echo "Unknown verification scope: $MODE. Use quick, full, web, or visual." >&2; exit 2 ;;
+esac
+
 echo "== Verification: $MODE =="
+echo "Scope: repository contracts and available lint, type, and unit checks; not a production build or browser/visual evidence."
 
 if [ -f .agentic/generated-project.json ]; then
   echo "Generated downstream project detected."
@@ -25,10 +36,11 @@ if [ -f .agentic/generated-project.json ]; then
         pnpm "$script"
       fi
     done
-  elif [ -f package.json ] && command -v pnpm >/dev/null 2>&1; then
-    echo "Dependencies are not installed; package checks are available after pnpm install."
+  elif [ -f package.json ]; then
+    echo "NOT RUN: package checks require pnpm and local dependencies; review package.json and pnpm install --frozen-lockfile."
   fi
   echo "Generated project verification complete."
+  echo "See docs/60-tooling/FIRST_PROJECT.md for applicable application evidence."
   exit 0
 fi
 
@@ -148,6 +160,8 @@ python3 -m unittest discover -s tests -p 'test_pr_finalization.py'
 python3 -m unittest discover -s tests -p 'test_agentic_cli.py'
 python3 -m unittest discover -s tests -p 'test_capability_engine.py'
 python3 -m unittest discover -s tests -p 'test_project_generator.py'
+python3 -m unittest discover -s tests -p 'test_next_action.py'
+python3 -m unittest discover -s tests -p 'test_web_verification.py'
 python3 -m unittest discover -s tests -p 'test_evolution_engine.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null
 ./scripts/check-branch-name.sh agent/T-014-password-reset >/dev/null
@@ -280,7 +294,7 @@ if [ -f package.json ]; then
 fi
 
 if [ "$MODE" = "full" ]; then
-  echo "Full mode complete. Product profiles may add application-specific E2E, visual, accessibility, and security commands."
+  echo "Repository checks complete. Running web evidence: ./agentic verify web. Reviewed screenshot comparison: ./agentic verify visual."
 fi
 
 echo "Verification complete."

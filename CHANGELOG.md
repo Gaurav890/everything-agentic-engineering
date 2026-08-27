@@ -24,6 +24,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Task-aware first-project guidance, personalized first-feature briefs, explicit
+  web and visual verification scopes, fail-closed screenshot comparison, and a
+  newcomer pilot protocol with no claimed participant results.
+
 - A guided enterprise golden path that asks four conditional domain decisions,
   generates role/workflow/evidence/audit and engineering contracts, and ships a
   tenant-scoped request-decision vertical slice with pure policy, local adapter

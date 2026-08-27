@@ -15,6 +15,13 @@ on:
       - "packages/ui/**"
       - "packages/design-tokens/**"
       - "scripts/build_design_tokens.py"
+      - "scripts/web_verification.py"
+      - "scripts/project_checks.py"
+      - "scripts/next_action.py"
+      - "scripts/project_generator.py"
+      - "scripts/verify.sh"
+      - "tests/test_web_verification.py"
+      - "tests/test_next_action.py"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
@@ -49,23 +56,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build web starter
-        run: pnpm --filter @everything-agentic/web build
-
       - name: Install browser
         working-directory: apps/web
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Run interaction and accessibility tests
-        working-directory: apps/web
-        run: pnpm test:e2e
+      - name: Verify repository, web build, interaction, and accessibility
+        run: ./agentic verify web
 
       - name: Detect approved Linux baselines
         id: baselines
         working-directory: apps/web
         shell: bash
         run: |
-          if find tests/visual.spec.ts-snapshots -type f -name '*-linux.png' -print -quit 2>/dev/null | grep -q .; then
+          if find tests -type f -path '*-snapshots/*-linux.png' -print -quit 2>/dev/null | grep -q .; then
             echo "present=true" >> "$GITHUB_OUTPUT"
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
@@ -75,8 +78,7 @@ jobs:
         if: >-
           steps.baselines.outputs.present == 'true' &&
           !(github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines)
-        working-directory: apps/web
-        run: pnpm test:visual
+        run: ./agentic verify visual
 
       - name: Generate visual baseline candidates
         if: >-
@@ -92,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: web-visual-baselines-linux
-          path: apps/web/tests/visual.spec.ts-snapshots/
+          path: apps/web/tests/**/*-snapshots/
           if-no-files-found: error
           retention-days: 7
 

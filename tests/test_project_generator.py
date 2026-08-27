@@ -115,6 +115,12 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("dual-control", enterprise["approval_model"])
             self.assertIn("request.evidence_verified", enterprise["audit_events"])
             self.assertFalse(enterprise["adapters"]["production_ready"])
+            brief = (destination / "docs/10-product/FIRST_FEATURE.md").read_text()
+            self.assertIn("Aperture", brief)
+            self.assertIn("operations teams reviewing sensitive access", brief)
+            self.assertIn("Make accountable decisions.", brief)
+            self.assertIn("right policy exception", brief)
+            self.assertIn("not approval", brief)
             self.assertTrue((destination / "apps/web/app/enterprise-lab.tsx").is_file())
             self.assertTrue((destination / "packages/domain/src/index.js").is_file())
             self.assertIn(
@@ -200,6 +206,29 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("Example Web", experience["name"])
             self.assertNotIn("Mara Voss", (destination / ".env.example").read_text())
             self.assertEqual("", (destination / "docs/40-execution/TASKS.jsonl").read_text())
+            brief = (destination / "docs/10-product/FIRST_FEATURE.md").read_text()
+            self.assertIn("Example Web", brief)
+            self.assertIn("one primary product action", brief)
+            self.assertIn("verify web", brief)
+            readme = (destination / "README.md").read_text()
+            self.assertIn("FIRST_FEATURE.md", readme)
+            self.assertIn("FIRST_PROJECT.md", readme)
+            self.assertIn("pnpm install --frozen-lockfile", readme)
+            self.assertTrue((destination / "scripts/web_verification.py").is_file())
+            self.assertTrue((destination / "scripts/project_checks.py").is_file())
+            app_package = json.loads((destination / "apps/web/package.json").read_text())
+            self.assertEqual("playwright test --grep-invert @visual", app_package["scripts"]["test:e2e"])
+            self.assertIn("updateSnapshots: \"none\"", (destination / "apps/web/playwright.config.ts").read_text())
+            self.assertIn("./agentic next", (destination / "docs/40-execution/HANDOFF.md").read_text())
+            environment = os.environ.copy()
+            environment.pop("PYTHONPYCACHEPREFIX", None)
+            environment.pop("PYTHONDONTWRITEBYTECODE", None)
+            next_result = subprocess.run(
+                [str(destination / "agentic"), "next"], cwd=destination,
+                env=environment, capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(0, next_result.returncode, next_result.stderr)
+            self.assertFalse((destination / "scripts/__pycache__").exists())
             verification = subprocess.run(
                 [str(destination / "agentic"), "verify", "full"],
                 cwd=destination,
@@ -209,6 +238,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertEqual(verification.returncode, 0, verification.stderr)
             self.assertIn("Generated project verification complete", verification.stdout)
+            self.assertIn("not a production build or browser/visual evidence", verification.stdout)
 
     def test_ongoing_project_validation_allows_normal_development_state(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -42,6 +42,12 @@ Then enter the generated project and run:
 `next` gives you exactly one useful action based on the project’s real state.
 Run it again whenever you are unsure what to do.
 
+Use Git and Python 3.11+ to create a project. The runnable web path also needs
+Node.js 20.9+ (22 LTS is tested) and the pnpm version declared in `package.json`.
+The local examples require no paid service or API key.
+See [your first useful feature](docs/60-tooling/FIRST_PROJECT.md) for the complete
+setup → feature → review path and help when a check stops.
+
 > **Important:** generate a project from this repository. Do not merely tell a
 > coding agent to “use this repo as inspiration.” The generated project is what
 > carries the selected profiles, product brief, design contract, verification,
@@ -49,7 +55,7 @@ Run it again whenever you are unsure what to do.
 
 ![Everything Agentic Engineering quick-start flow](docs/assets/quickstart-flow.svg)
 
-### The first ten minutes
+### Your first working session
 
 1. Run `./agentic setup create`.
 2. Choose what you are building and who it serves.
@@ -58,8 +64,12 @@ Run it again whenever you are unsure what to do.
 5. Run `./agentic next` and follow its single action.
 6. Open the live design-direction lab before committing to an aesthetic.
 7. Approve or synthesize a direction.
-8. Let the repository turn that decision into tokens, tasks, tests, and
-   evidence.
+8. Compile approved tokens, then use `next` to choose one useful feature from
+   your generated `FIRST_FEATURE.md` brief.
+9. Implement the accepted scope, inspect the running result, and review its
+   evidence. Return to `next` for the next improvement.
+
+Download times vary; this is a workflow, not a measured time-to-success claim.
 
 No command archaeology. No deleting irrelevant starter folders. No giant prompt
 that asks one model to invent the product, design it, build it, and approve
@@ -96,7 +106,7 @@ reference application on the same Ubuntu environment used by CI—not mockups.
   </tr>
 </table>
 
-Every direction also has a reviewed mobile composition:
+Every direction also has a reviewed mobile-web composition:
 [Editorial Signal](apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-editorial-signal-mobile-linux.png) ·
 [Kinetic Index](apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-kinetic-index-mobile-linux.png) ·
 [Quiet Material](apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-quiet-material-mobile-linux.png)
@@ -120,7 +130,7 @@ screenshots:
 Run it locally:
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev:showcase
 ```
 
@@ -134,7 +144,7 @@ pnpm dev:showcase
 | `agentic-product` | Human-agent interfaces with plans, progress, tools, approvals, and recovery | Hidden or performative “agent” behavior |
 | `enterprise-workflow` | Multi-tenant operations, requests, evidence, decisions, and auditability | Fake production auth, storage, or compliance claims |
 | `portfolio` | Authored work, case studies, and personal positioning | SaaS dashboard conventions |
-| `mobile` | Expo and React Native products | Web-only agents and surfaces |
+| `mobile` | Native-app planning, guidance, and token contracts; no runnable app yet | Web-only agents and surfaces |
 | `core` | The engineering harness without an application shell | Frontend and mobile inventory |
 
 Web projects inherit the design-critical profile automatically. Mobile, backend,
@@ -150,6 +160,11 @@ project needs them.
 If you are not building a mobile application, mobile guidance remains inactive.
 If you do not need crawling, research MCPs remain inactive. Supabase and Convex
 are mutually exclusive backend choices by design.
+
+**Readiness:** web examples run locally; enterprise identity and storage are
+synthetic; native mobile is a placeholder. Passing web checks does not establish
+production readiness or native support. The three design directions are
+references to adapt—not a guarantee of originality or a limit on custom design.
 
 ---
 
@@ -331,9 +346,11 @@ Read the [parallel work guide](docs/70-collaboration/PARALLEL_TERMINALS.md).
 | Approve a direction | `./agentic design approve <direction> --yes` |
 | Build design tokens | `./agentic tokens build` |
 | Plan a task safely | `./agentic task plan T-101` |
-| Start isolated work | `./agentic task start T-101 --yes` |
+| Preview isolated work | `./agentic task start T-101` |
 | Check optional capabilities | `./agentic capabilities plan --task T-101` |
-| Verify everything | `./agentic verify full` |
+| Check repository contracts | `./agentic verify full` |
+| Check the running web product | `./agentic verify web` |
+| Compare reviewed screenshots | `./agentic verify visual` |
 | Discover every command | `./agentic commands` |
 
 The command interface is intentionally small. Internal scripts remain available
@@ -343,21 +360,27 @@ for compatibility and CI, but users should begin with `./agentic`.
 
 ## Verification is evidence, not confidence
 
-The full gate validates:
+Use the check that matches the claim:
 
-- JSON, task ledgers, profiles, and generated-project contracts;
-- design tokens, themes, aliases, and contrast requirements;
-- shell/Python syntax and deterministic security hooks;
-- domain, API, application, and adapter tests;
-- lint, types, production builds, and local documentation links;
-- browser interaction, keyboard behavior, accessibility, mobile overflow, and
-  reduced motion;
-- reviewed Linux visual baselines for every shipped direction and viewport;
-- GitHub issue, task, branch, pull-request, and review policy.
+| Check | Evidence |
+|---|---|
+| `full` | Repository contracts, tokens, syntax, deterministic policy tests, and available lint/type/unit checks. Missing package checks are reported, not passed. |
+| `web` | Requires local dependencies and Chromium; runs repository checks, a production build, browser interaction, keyboard, automated accessibility, overflow, and reduced-motion tests. |
+| `visual` | Builds and compares existing screenshots on the current platform. Missing or changed baselines fail; they are never silently accepted. |
 
 ```bash
-./agentic verify full
+./agentic verify web
+./agentic verify visual
 ```
+
+`full` and `quick` do **not** run production builds, browser tests, or visual
+comparisons. Generated projects use a smaller repository suite than this
+starter's maintenance suite. New features need their own acceptance tests;
+reference tests alone cannot prove them. Human design review, manual
+accessibility, security review, and live PR policy are separate gates.
+
+For browser setup, visual candidate review, and exact scopes, read
+[the first-project guide](docs/60-tooling/FIRST_PROJECT.md#build-prove-review-repeat).
 
 ![Actual full repository verification](docs/assets/demo/05-verification.gif)
 

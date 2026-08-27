@@ -12,9 +12,9 @@
     "pretypecheck": "next typegen",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "test:e2e": "playwright test portfolio.spec.ts",
-    "test:visual": "playwright test visual.spec.ts",
-    "test:visual:update": "playwright test visual.spec.ts --update-snapshots",
+    "test:e2e": "playwright test --grep-invert @visual",
+    "test:visual": "playwright test --grep @visual",
+    "test:visual:update": "playwright test --grep @visual --update-snapshots",
     "install:browsers": "playwright install chromium"
   },
   "dependencies": {

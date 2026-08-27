@@ -31,7 +31,7 @@ async function prepareDirection(page: Page, archetype: string, name: string, id:
 
 for (const archetype of archetypes) {
   for (const direction of directions) {
-    test(`${archetype} / ${direction.name} matches the visual baseline`, async ({ page }) => {
+    test(`${archetype} / ${direction.name} matches the visual baseline`, { tag: "@visual" }, async ({ page }) => {
       await prepareDirection(page, archetype, direction.name, direction.id);
       await expect(page).toHaveScreenshot(`${archetype}-${direction.id}.png`, {
         fullPage: true,

@@ -8,8 +8,11 @@ for new contributors and agents.
 
 - Git
 - Claude Code and/or Codex
-- Python 3 for included guardrail hooks
-- Node.js 18+ and pnpm only for active web or mobile app profiles
+- Python 3.11+ for project tooling and included guardrail hooks
+- For the runnable web path: Node.js 20.9+ (22 LTS is tested) and the pnpm
+  version declared in `package.json`
+- Mobile currently supplies guidance and a placeholder; choose and verify a
+  native runtime separately when implementing it
 
 Claude Code 2.1.239+ and Codex 0.148.0+ are the recommended tested runtime
 baselines. The read-only runtime doctor reports drift; it never installs or
@@ -40,7 +43,7 @@ inside the generated directory and run `./agentic next`. See
 For a web project, the next-action router initially guides you through:
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
@@ -48,9 +51,18 @@ The first-run brief has already selected the right portfolio, product, or
 agentic-product content architecture. Compare the three live directions before
 approving one and compiling its token overrides.
 
+After token compilation, `./agentic next` guides the first feature, task
+implementation, blockers, and human review. Follow
+[Your first useful feature](FIRST_PROJECT.md); no paid service or API key is
+needed for the supplied local examples.
+
 `web-next` and `mobile-expo` always resolve the design-critical foundation.
 There is no supported application-profile path that silently omits the token,
 direction, audit, and independent-evaluation contracts.
+
+The remaining sections are reference paths, **not a mandatory onboarding
+checklist**. Skip secrets, external skills, MCPs, backends, and Obsidian unless
+your selected project actually needs them.
 
 ## 2. Secrets
 

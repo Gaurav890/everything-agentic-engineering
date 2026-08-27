@@ -23,7 +23,7 @@ draft.
   --yes
 
 cd ../my-portfolio
-pnpm install
+pnpm install --frozen-lockfile
 ./agentic design intake
 pnpm dev
 ```
@@ -69,15 +69,23 @@ content, rewrite product flows, or pretend tokens can repair interaction design.
 After dependencies and the Chromium test browser are installed:
 
 ```bash
-pnpm --filter @everything-agentic/web install:browsers
-pnpm test:web:e2e
-pnpm test:web:visual
+pnpm --dir apps/web install:browsers
+./agentic verify web
+./agentic verify visual
 ```
 
 The gate covers all three directions at desktop and mobile sizes. It also checks
 keyboard entry, explicit selection, automated accessibility findings, mobile
 overflow, and reduced-motion behavior. Screenshot assertions run with motion
-disabled in a fixed Ubuntu environment so comparisons remain reproducible.
+disabled; CI uses Ubuntu, while local comparison requires separately reviewed
+baselines for the local platform. `verify web` does not run visual comparison,
+and `verify full` does not run either browser suite.
+
+Generated projects have no approved screenshots yet. Follow the explicit
+[candidate review procedure](FIRST_PROJECT.md#visual-evidence) before expecting
+`verify visual` to pass. Neither command approves a design or certifies manual
+accessibility. After design setup, `./agentic next` helps turn
+`docs/10-product/FIRST_FEATURE.md` into your first accepted feature.
 
 Normal pull requests compare approved baselines and never rewrite them. If a
 new project or intentional redesign needs baselines, CI uploads
