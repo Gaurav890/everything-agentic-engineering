@@ -4,65 +4,41 @@ Last updated: 2026-08-27
 
 ## Current goal
 
-Take T-044's enterprise workflow golden path through independent product,
-security, visual, and human review without confusing its credible local slice
-with production readiness.
+Make the generated first-project journey understandable from setup through a
+useful feature and review, then validate it with real newcomers before broader
+launch claims.
 
 ## Implemented
 
-- One-command progressive onboarding with four enterprise-only domain questions.
-- `.agentic/enterprise.json` and generated PRD, acceptance, journey, role,
-  architecture, data, API, security, audit, and task contracts.
-- A runnable request → evidence checks → submit → review → decision → audit
-  vertical slice, including change/resubmission and cancellation.
-- Pure workflow policy plus API, repository, and shared-type boundaries.
-- Fail-closed tenant, role, requester-ownership, reviewer-eligibility,
-  self-approval, evidence, policy-gate, rationale, and state-transition behavior.
-- Trusted service-authored creation/evidence audit attribution; browser input
-  cannot forge actor or transition metadata.
-- Service-owned mutation timestamps and cancellation of stale refresh work.
-- Executable single-review, dual-control, and policy-gated behavior.
-- Loading, empty, invalid, failure, recovery, disabled, and success states.
-- Three distinct direction systems with desktop/mobile Playwright evidence.
-- Explicit local auth/persistence, disabled notification, and
-  `production_ready: false` disclosure.
-- A clean generated enterprise project that installs, verifies, builds, and
-  passes its selected-archetype browser suite.
-- Six human-approved Linux enterprise baselines across three directions and two
-  viewports.
-- A streamlined public README centered on real output, one-action onboarding,
-  credible enterprise boundaries, design quality, and the commands users need.
+- Product-specific first-feature brief and task-aware, read-only next steps.
+- Current-profile routing, explicit workstream selection, dependency/blocker
+  guidance, safe version-control instructions, and post-merge continuation.
+- Separate repository, running-web, and visual verification commands.
+- New acceptance-test discovery, explicit screenshot-only tags, and no implicit
+  baseline updates or external installations.
+- Honest local-web, native-placeholder, and enterprise-production boundaries.
+- A five-person pilot protocol with no invented participant results.
 
-## Verified review checkpoint
+## Evidence
 
-- Independent product-quality/adversarial QA and security/authority: PASS at
-  `b0a9843ca0f9b9bf6517c1fefb25b4d5d20eda27`.
-- Full repository verification, source build, 25 browser cases with one skip,
-  24 visual comparisons, and clean-checkout release smoke passed.
-- Fresh policy-gated and single-review projects with custom copy and business
-  objects each built and passed 19 browser cases with seven expected skips.
-- Evidence: `docs/50-evals/evidence/T-044/independent-review.md`.
+See `docs/50-evals/evidence/T-045/` for reproducible checks, independent review,
+resolved findings, and limitations. Source browser checks and unchanged visual
+comparisons passed. A fresh generated enterprise example includes a newly added
+acceptance file; missing visual baselines correctly block comparison.
+
+The enterprise request-decision slice remains a local reference with
+synthetic identity, in-memory persistence, and disabled production adapters.
+Its historical implementation/review evidence remains under
+`docs/50-evals/evidence/T-044/`.
 
 ## Exact next action
 
-Resolve live state through `./agentic task closeout T-044` before choosing the
-next operation. The bounded finalizer prepares approved tasks; the maintainer
-performs the separate squash merge only after current required checks pass.
-Closeout provides read-only cleanup guidance; do not execute cleanup
-automatically.
+Read the task ledger and current PR state, then follow the applicable
+review/finalization step. Human task approval and human merge are separate;
+never infer either from this document. After a confirmed merge, inspect
+`./agentic task closeout T-045`, preserve local work, return to the updated
+default branch, and choose the next outcome.
 
-This remains a local reference workflow. Production identity, tenant storage,
-evidence services, durable audit, and idempotency require separate implementation
-and review.
-
-## Relevant files
-
-- `.agentic/enterprise.json`
-- `apps/web/app/enterprise-lab.tsx`
-- `packages/domain/src/index.js`
-- `packages/api/src/index.js`
-- `scripts/project_generator.py`
-- `docs/60-tooling/ENTERPRISE_GOLDEN_PATH.md`
-- `docs/50-evals/evidence/T-044/`
-
-Keep this concise enough to read in under two minutes.
+Run the newcomer pilot before claiming measured onboarding success. Hosting,
+marketing publication, production integration, and native implementation need
+separate scope and authority.

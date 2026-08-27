@@ -1236,3 +1236,27 @@ The final updated head must pass its deterministic gates, independent product
 and security review, and README review before task finalization. No production
 service, credential, external
 notification, deployment, approval, or merge authority was enabled.
+
+### 2026-08-27 — T-045
+
+**Requirements:** FR-001, FR-004, FR-005
+**Acceptance:** AC-001, AC-004, AC-005
+
+Added a task-aware first-project continuation path, generated first-feature
+briefs, distinct repository/web/visual verification, and explicit readiness
+guidance. New acceptance files are included in the web suite; visual candidates
+remain separately generated and human-reviewed. The newcomer pilot is a
+protocol, not evidence of participant success.
+
+Verification recorded under `docs/50-evals/evidence/T-045/` includes 56 focused
+tests, all ten repository stages, 25 source browser passes with one intentional
+skip, 24 unchanged macOS visual comparisons, and clean-checkout release smoke.
+A fresh custom enterprise example passed 21 browser cases with seven expected
+skips, including an additional acceptance file. Its missing-baseline check
+failed safely without creating or approving screenshots.
+
+Independent product/QA and security reviews found and rechecked fixes for new
+test discovery, malformed-state handling, changed-profile task routing,
+feature-specific baseline paths, and post-merge guidance. No application UI or
+approved design changed. Human approval, merge, deployment, public hosting,
+production readiness, and real-user pilot results are not implied.

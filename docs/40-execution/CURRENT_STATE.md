@@ -26,6 +26,24 @@ projects persist name, audience, promise, archetype, and visual character in
 Web and mobile application profiles always resolve the design-critical
 foundation.
 
+## First-project continuation
+
+Generated web projects include an audience/promise-specific first-feature brief.
+`next` follows current profiles, prerequisites, approved design, dependencies,
+workstreams, blockers, and review instead of stopping at setup verification.
+It does not install tools, alter task state, or infer approval or merge.
+
+`verify full` checks repository contracts and available package checks;
+`verify web` additionally requires tools and runs build, interaction, and
+automated accessibility tests; `verify visual` compares existing screenshots
+without updating them. New acceptance files join the web suite, while
+`@visual` selects screenshot-only tests. Missing evidence remains explicit.
+
+The newcomer pilot protocol exists, but no real participant outcomes have been
+measured. Public-demo hosting, production adapters, and launch promotion remain
+separate work. Implementation and review evidence is under
+`docs/50-evals/evidence/T-045/`.
+
 ## Web
 
 Substantial frontend work uses the project design system as authority and
@@ -70,6 +88,8 @@ approved directions, tokens, accessibility, Playwright, or the final evaluator.
 ## Mobile
 
 The same phase routing applies while preserving native platform conventions.
+The current native application directory is a placeholder, not a runnable Expo
+app. Responsive browser evidence does not certify native behavior.
 
 ## Backend
 
