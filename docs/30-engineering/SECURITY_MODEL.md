@@ -20,6 +20,8 @@ self-approval, invalid state transitions, incomplete evidence, failed policy
 gates, and missing decision rationale. Creation and evidence-check audit events
 are constructed inside the trusted service boundary from the verified actor or
 local policy engine; callers cannot supply attribution or transition metadata.
+All mutation timestamps come from the service-owned clock. Tests may inject a
+deterministic clock at service construction, never through mutation input.
 Production must enforce the same policy server-side before mutation and again
 inside tenant-scoped persistence boundaries.
 

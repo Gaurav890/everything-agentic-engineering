@@ -22,14 +22,15 @@ function draftFor(actor) {
 
 test("request creation is validated and constructs trusted audit attribution", () => {
   const repository = createLocalEnterpriseRepository(demoRequests);
-  const service = createEnterpriseService(repository);
+  const trustedTime = "2026-08-26T19:05:00Z";
+  const service = createEnterpriseService(repository, {clock: () => trustedTime});
   const requester = demoActors.find((actor) => actor.role === "requester");
   const reviewer = demoActors.find((actor) => actor.role === "reviewer" && actor.tenantId === requester.tenantId);
   const request = draftFor(requester);
 
   assert.equal(service.create(reviewer, request).code, "unauthorized");
   assert.equal(service.create(requester, {...request, title: ""}).code, "invalid_input");
-  const result = service.create(requester, {...request, ownerName: "Forged Admin", status: "approved"}, {now: "2026-08-26T19:05:00Z", actorName: "Forged Admin"});
+  const result = service.create(requester, {...request, ownerName: "Forged Admin", status: "approved"}, {now: "1900-01-01T00:00:00Z", actorName: "Forged Admin"});
   assert.equal(result.ok, true);
   assert.equal(result.request.status, "draft");
   assert.equal(result.request.evidence.every((item) => item.state === "missing"), true);
@@ -38,6 +39,9 @@ test("request creation is validated and constructs trusted audit attribution", (
   assert.equal(result.event.actorName, requester.name);
   assert.equal(result.event.fromStatus, null);
   assert.equal(result.event.toStatus, "draft");
+  assert.equal(result.event.occurredAt, trustedTime);
+  assert.equal(result.request.createdAt, trustedTime);
+  assert.equal(result.request.updatedAt, trustedTime);
   assert.equal(service.list(requester).some((item) => item.id === request.id), true);
   assert.equal(repository.listAudit(requester.tenantId, request.id)[0].action, "request.created");
 });
@@ -70,10 +74,10 @@ test("created drafts complete evidence, submit, return for changes, resubmit, an
   const reviewer = demoActors.find((actor) => actor.id === "actor-reviewer");
   const request = draftFor(requester);
 
-  assert.equal(service.create(requester, request, {now: "2026-08-26T19:00:00Z"}).ok, true);
+  assert.equal(service.create(requester, request).ok, true);
   assert.equal(service.transition(requester, request.id, "submit").code, "evidence_incomplete");
   assert.equal(service.verifyEvidence(reviewer, request.id).code, "unauthorized");
-  assert.equal(service.verifyEvidence(requester, request.id, {now: "2026-08-26T19:01:00Z"}).ok, true);
+  assert.equal(service.verifyEvidence(requester, request.id).ok, true);
   assert.equal(service.transition(requester, request.id, "submit").ok, true);
   assert.equal(service.transition(reviewer, request.id, "request_changes").code, "reason_required");
   assert.equal(service.transition(reviewer, request.id, "request_changes", "Narrow the requested scope.").ok, true);
@@ -83,6 +87,29 @@ test("created drafts complete evidence, submit, return for changes, resubmit, an
     repository.listAudit(requester.tenantId, request.id).map((event) => event.action),
     ["request.created", "request.evidence_verified", "request.submitted", "request.changes_requested", "request.submitted", "request.approved"],
   );
+});
+
+test("all mutations use the service-owned clock and ignore caller timestamps", () => {
+  const repository = createLocalEnterpriseRepository([]);
+  const times = ["2026-08-26T19:00:00Z", "2026-08-26T19:01:00Z", "2026-08-26T19:02:00Z"];
+  let tick = 0;
+  const service = createEnterpriseService(repository, {clock: () => times[tick++]});
+  const requester = demoActors.find((actor) => actor.id === "actor-requester");
+  const forgedTime = "1900-01-01T00:00:00Z";
+  const request = {...draftFor(requester), createdAt: forgedTime, updatedAt: forgedTime};
+
+  const created = service.create(requester, request, {now: forgedTime});
+  const verified = service.verifyEvidence(requester, request.id, {now: forgedTime});
+  const submitted = service.transition(requester, request.id, "submit", "", {now: forgedTime});
+
+  for (const [index, result] of [created, verified, submitted].entries()) {
+    assert.equal(result.ok, true);
+    assert.equal(result.event.occurredAt, times[index]);
+    assert.equal(result.request.updatedAt, times[index]);
+    assert.equal(result.request.createdAt, times[0]);
+    assert.equal(result.event.id.endsWith(times[index]), true);
+  }
+  assert.deepEqual(repository.listAudit(requester.tenantId, request.id).map((event) => event.occurredAt), times);
 });
 
 test("approval models enforce distinct executable policies", () => {

@@ -19,8 +19,9 @@ no records.
 **Authorization:** requester or authorized administrator in the same tenant.
 
 **Request:** title, scope, justification, risk, tenant, assigned reviewer, and
-initial evidence requirements. Caller-authored audit identity or transition
-metadata is not accepted.
+initial evidence requirements. Caller-authored audit identity, transition
+metadata, or timestamps are not accepted. All mutation timestamps come from a
+trusted clock configured once when constructing the service, not per request.
 
 **Response:** validated draft whose evidence and policy state are reset to
 unverified, plus one service-authored `created` audit event.

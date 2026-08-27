@@ -1,6 +1,6 @@
 # T-044 independent review
 
-Initial review: 2026-08-26  
+Initial review: 2026-08-26
 Initial reviewed head: `23afb1506435a3b37a9be936adbcc09c595b9bf4`
 
 ## Initial product-quality and adversarial QA verdict
@@ -26,6 +26,10 @@ and transition metadata.
   unsafe reviewer assignment or duplicate identity.
 - Local evidence verification is a separate service action with a trusted
   policy-engine event; submission requires complete evidence.
+- All service mutations use a clock configured once at service construction;
+  per-call timestamp overrides and request-supplied chronology are ignored.
+- Pending refresh callbacks are cancelled on actor changes and successful
+  mutations, preventing stale identity views and overwritten outcome messages.
 - `single-review`, `dual-control`, and `policy-gated` now enforce distinct
   reviewer/assignment/gate rules while every model rejects self-approval.
 - The UI and browser suite now cover creation, evidence checks, submission,

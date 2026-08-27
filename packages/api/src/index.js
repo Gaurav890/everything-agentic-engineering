@@ -37,12 +37,13 @@ function validRequestInput(request) {
 
 export function createEnterpriseService(repository, options = {}) {
   const approvalModel = options.approvalModel ?? "dual-control";
+  const clock = options.clock ?? (() => new Date().toISOString());
   return {
     list(actor) {
       if (!readableRoles.has(actor?.role) || typeof actor?.tenantId !== "string") return [];
       return repository.listRequests(actor.tenantId).filter((request) => visibleTo(actor, request, approvalModel));
     },
-    create(actor, request, createOptions = {}) {
+    create(actor, request) {
       if (!creatorRoles.has(actor?.role) || actor.tenantId !== request?.tenantId) {
         return denial("unauthorized", "This actor cannot create a request in this tenant.");
       }
@@ -58,7 +59,7 @@ export function createEnterpriseService(repository, options = {}) {
       if (repository.getRequest(actor.tenantId, request.id)) {
         return denial("invalid_state", "A request with this identifier already exists.");
       }
-      const occurredAt = createOptions.now ?? new Date().toISOString();
+      const occurredAt = clock();
       const trustedRequest = {
         ...request,
         ownerName: actor.role === "requester" ? actor.name : request.ownerName,
@@ -83,7 +84,7 @@ export function createEnterpriseService(repository, options = {}) {
       repository.saveRequest(trustedRequest, event);
       return {ok: true, request: trustedRequest, event};
     },
-    verifyEvidence(actor, requestId, verifyOptions = {}) {
+    verifyEvidence(actor, requestId) {
       const request = repository.getRequest(actor?.tenantId, requestId);
       if (!request || !creatorRoles.has(actor?.role)) {
         return denial("unauthorized", "This actor cannot run evidence checks for this request.");
@@ -94,7 +95,7 @@ export function createEnterpriseService(repository, options = {}) {
       if (!new Set(["draft", "changes_requested"]).has(request.status)) {
         return denial("invalid_state", `Evidence checks are not available from ${request.status}.`);
       }
-      const occurredAt = verifyOptions.now ?? new Date().toISOString();
+      const occurredAt = clock();
       const updated = {
         ...request,
         evidence: request.evidence.map((item) => ({...item, state: "verified"})),
@@ -121,7 +122,7 @@ export function createEnterpriseService(repository, options = {}) {
       if (!request) {
         return {ok: false, code: "unauthorized", message: "The request is unavailable in this tenant."};
       }
-      const result = transitionRequest(request, actor, action, {reason, approvalModel});
+      const result = transitionRequest(request, actor, action, {reason, approvalModel, now: clock()});
       if (result.ok) repository.saveRequest(result.request, result.event);
       return result;
     },

@@ -224,6 +224,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
   const [audit, setAudit] = useState<AuditEvent[]>(initialAudit);
   const [filter, setFilter] = useState<Filter>("all");
   const [loadState, setLoadState] = useState<LoadState>("ready");
+  const refreshTimer = useRef<number | null>(null);
   const [notice, setNotice] = useState("Three evidence checks are ready for a human decision.");
   const [reason, setReason] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
@@ -232,9 +233,21 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
   const visible = filter === "empty" ? [] : filter === "all" ? allRequests : allRequests.filter((request) => request.status === filter);
   const visibleRequestIds = new Set(allRequests.map((request) => request.id));
 
+  useEffect(() => () => {
+    if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+  }, []);
+
+  function cancelRefresh() {
+    if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+    refreshTimer.current = null;
+    setLoadState("ready");
+  }
+
   function refresh() {
+    cancelRefresh();
     setLoadState("loading");
-    window.setTimeout(() => {
+    refreshTimer.current = window.setTimeout(() => {
+      refreshTimer.current = null;
       setRequests(service.list(actor));
       setLoadState("ready");
       setNotice(actor.tenantId === "tenant-northstar" ? "The tenant-scoped queue is current." : "No requests are exposed across the tenant boundary.");
@@ -242,6 +255,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
   }
 
   function changeActor(nextId: string) {
+    cancelRefresh();
     const next = demoActors.find((item) => item.id === nextId) as EnterpriseActor;
     const nextRequests = service.list(next);
     setActorId(nextId);
@@ -259,6 +273,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
       setNotice(result.message);
       return;
     }
+    cancelRefresh();
     setRequests((current) => current.map((item) => item.id === result.request.id ? result.request : item));
     setAudit((current) => [result.event, ...current]);
     setReason("");
@@ -272,6 +287,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
       setNotice(result.message);
       return;
     }
+    cancelRefresh();
     setRequests((current) => current.map((item) => item.id === result.request.id ? result.request : item));
     setAudit((current) => [result.event, ...current]);
     setNotice("Local evidence checks passed. The request is ready to submit for human review.");
@@ -283,6 +299,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
       setNotice(result.message);
       return;
     }
+    cancelRefresh();
     setRequests(service.list(actor));
     setAudit((current) => [result.event, ...current]);
     setSelectedId(result.request.id);
@@ -337,7 +354,7 @@ export function EnterpriseLab({experience, enterprise, approvedDirection}: {expe
                   <div><span>Request queue</span><strong>{visible.length} visible</strong></div>
                   <label><span className="sr-only">Filter requests</span><select value={filter} onChange={(event) => setFilter(event.target.value as Filter)}><option value="all">All states</option><option value="in_review">In review</option><option value="changes_requested">Needs changes</option><option value="approved">Approved</option><option value="empty">Empty state</option></select></label>
                   <button type="button" onClick={refresh} disabled={loadState === "loading"}>{loadState === "loading" ? "Refreshing…" : "Refresh"}</button>
-                  <button type="button" onClick={() => setLoadState("error")}>Test failure</button>
+                  <button type="button" onClick={() => { cancelRefresh(); setLoadState("error"); }}>Test failure</button>
                 </div>
                 {loadState === "error" ? (
                   <div className="enterprise-state" role="alert"><span>Connection interrupted</span><strong>The queue could not be refreshed.</strong><p>No local decision was lost and no action was retried automatically.</p><button type="button" onClick={refresh}>Retry safely</button></div>

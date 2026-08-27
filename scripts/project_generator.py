@@ -811,6 +811,8 @@ Audit events are append-only; updates and deletes are not part of the contract.
 The generated application uses a local in-memory adapter behind this interface.
 Do not expose it as a production API. Production routes must derive identity and
 tenant from reviewed server-side authentication, never client input.
+All mutation timestamps come from a trusted service-owned clock configured at
+construction; callers cannot override chronology in mutation input.
 """,
         Path("docs/30-engineering/SECURITY_MODEL.md"): f"""# Security model
 
@@ -824,6 +826,7 @@ tenant from reviewed server-side authentication, never client input.
   or auditor/administrator tenant visibility.
 - Creation and evidence audit attribution is constructed inside the trusted
   service boundary; callers cannot author actor or transition metadata.
+- All mutation timestamps come from the service-owned clock, never caller input.
 - `{plan.approval_model}` approval never permits silent self-approval and is
   executable: reviewer eligibility and policy-gate state change the outcome.
 - `{plan.data_sensitivity}` fields must not enter logs, analytics, prompts, or client-visible errors without review.
