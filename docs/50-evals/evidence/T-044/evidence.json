@@ -2,8 +2,9 @@
   "task_id": "T-044",
   "acceptance_ids": ["AC-001", "AC-002", "AC-003", "AC-004"],
   "ui_change": true,
-  "builder": "orchestrator",
-  "evaluator": "human-review-complete-initial-independent-reviews-blocked-corrections-await-re-review",
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-quality-and-security-review",
+  "reviewed_commit": "b0a9843ca0f9b9bf6517c1fefb25b4d5d20eda27",
   "commands": [
     "python3 -m unittest tests.test_project_generator tests.test_next_action",
     "pnpm --filter @everything-agentic/domain test",
@@ -16,10 +17,12 @@
     "generated enterprise: ./agentic verify full",
     "generated enterprise: pnpm test",
     "generated enterprise: pnpm build",
-    "generated enterprise: pnpm test:e2e"
+    "generated enterprise: pnpm test:e2e",
+    "./agentic verify full",
+    "./agentic release smoke"
   ],
   "states": ["normal", "loading", "empty", "invalid", "partial-evidence", "error", "recovery", "unauthorized", "disabled", "approved", "rejected", "changes-requested", "cancelled"],
   "viewports": ["mobile", "desktop"],
   "artifacts": ["README.md", "linux-visual-candidates.md", "independent-review.md"],
-  "verdict": "CORRECTIONS IMPLEMENTED AFTER BLOCKED INDEPENDENT REVIEWS; EXACT-HEAD RE-REVIEWS PENDING"
+  "verdict": "PASS — independent product-quality and security reviews; bounded local demonstration only"
 }

@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-26
+Last updated: 2026-08-27
 
 ## Product
 
@@ -42,7 +42,11 @@ escape-dismissible mobile control.
 The enterprise archetype runs a tenant-scoped request/evidence/decision/audit
 journey over explicit API, pure domain-policy, repository, and shared-type
 boundaries. Cross-tenant visibility, invalid roles, self-approval, incomplete
-evidence, missing rationale, and invalid transitions fail closed. Its identity,
+evidence, missing rationale, and invalid transitions fail closed. Creation and
+evidence audit attribution and all mutation timestamps are service-owned.
+Pending refresh work is cancelled when the acting identity or workflow state
+changes. Generated browser tests honor the selected promise, business object,
+and approval model. Its identity,
 persistence, notifications, and audit adapters are explicitly local and
 `production_ready` remains false.
 `packages/ui` contains behavior primitives rather than a visual theme. Advanced

@@ -1,5 +1,22 @@
 # Progress log
 
+## 2026-08-27 — T-044 independent reviews passed
+
+- Product-quality/adversarial QA and security/authority independently returned
+  PASS for `b0a9843ca0f9b9bf6517c1fefb25b4d5d20eda27` after review corrections.
+- Service-owned clocks reject caller-authored audit chronology. Stale refresh
+  callbacks cannot restore previous actor data or overwrite newer outcomes.
+- Generated browser assertions honor custom promises, business-object labels,
+  and the selected approval model instead of assuming starter defaults.
+- Full repository verification, 27 generator/next-action tests, 7 domain + 5
+  API + 5 web model tests, source build, 25 browser cases (one expected skip),
+  24 visual comparisons, and clean-checkout release smoke passed.
+- Independent fresh policy-gated and single-review projects each built and
+  passed 19 browser cases (seven expected skips) with custom copy and business
+  objects. Offline locked restores reused 34 packages and downloaded none.
+- Exact-head review evidence and production-adapter boundaries are recorded in
+  `docs/50-evals/evidence/T-044/`. Current PR/merge state remains GitHub-owned.
+
 ## 2026-08-26 — T-044 independent-review remediation
 
 - Independent product/QA and security reviewers blocked the first reviewed

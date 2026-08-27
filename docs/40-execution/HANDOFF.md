@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-08-26
+Last updated: 2026-08-27
 
 ## Current goal
 
@@ -20,6 +20,7 @@ with production readiness.
   self-approval, evidence, policy-gate, rationale, and state-transition behavior.
 - Trusted service-authored creation/evidence audit attribution; browser input
   cannot forge actor or transition metadata.
+- Service-owned mutation timestamps and cancellation of stale refresh work.
 - Executable single-review, dual-control, and policy-gated behavior.
 - Loading, empty, invalid, failure, recovery, disabled, and success states.
 - Three distinct direction systems with desktop/mobile Playwright evidence.
@@ -32,19 +33,27 @@ with production readiness.
 - A streamlined public README centered on real output, one-action onboarding,
   credible enterprise boundaries, design quality, and the commands users need.
 
-## Pending gates
+## Verified review checkpoint
 
-- Exact-head full verification, generated-project checks, release smoke, and
-  normal Linux comparison after the independent-review corrections.
-- Independent product-quality and security/authority re-review of the corrected
-  committed head, as required by T-044.
-- Pull-request finalization; no self-approval or merge.
+- Independent product-quality/adversarial QA and security/authority: PASS at
+  `b0a9843ca0f9b9bf6517c1fefb25b4d5d20eda27`.
+- Full repository verification, source build, 25 browser cases with one skip,
+  24 visual comparisons, and clean-checkout release smoke passed.
+- Fresh policy-gated and single-review projects with custom copy and business
+  objects each built and passed 19 browser cases with seven expected skips.
+- Evidence: `docs/50-evals/evidence/T-044/independent-review.md`.
 
 ## Exact next action
 
-Finish the full local and clean-checkout gates, commit and push the review
-corrections, then obtain independent product/QA and security PASS verdicts at
-that exact head before task finalization.
+Resolve live state through `./agentic task closeout T-044` before choosing the
+next operation. The bounded finalizer prepares approved tasks; the maintainer
+performs the separate squash merge only after current required checks pass.
+Closeout provides read-only cleanup guidance; do not execute cleanup
+automatically.
+
+This remains a local reference workflow. Production identity, tenant storage,
+evidence services, durable audit, and idempotency require separate implementation
+and review.
 
 ## Relevant files
 

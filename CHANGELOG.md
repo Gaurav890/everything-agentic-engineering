@@ -13,6 +13,9 @@ This project follows [Semantic Versioning](https://semver.org/).
   attribution inside the service boundary; executes the selected approval
   model; and exposes a complete evidence-check, submit, change, resubmit,
   decision, cancellation, and recovery journey.
+- Enterprise mutation clocks are service-owned, stale refresh work cannot
+  restore prior actor data, and generated browser tests follow custom product
+  wording and approval choices.
 - The public README now leads with one guided creation path, real enterprise
   visual proof, concise archetype selection, the design-quality contract,
   enterprise production boundaries, core commands, parallel-work guidance,

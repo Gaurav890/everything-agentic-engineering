@@ -42,7 +42,51 @@ and transition metadata.
   input, invalid creation, evidence enforcement, all configured approval models,
   decision rationale, terminal states, cancellation, and resubmission.
 
-## Re-review status
+## Additional review findings resolved
 
-Pending at the next committed exact head. These corrections are builder evidence
-only until the independent product/QA and security reviewers return PASS.
+- Security re-review of `52352e8` identified caller-controlled audit time. The
+  service-owned clock and forged-timestamp regression close that gap.
+- Linux run `33034011132` showed a refresh callback replacing the successful
+  draft notice. The same stale callback could restore a previous actor's view.
+  Cancellation and deterministic desktop/mobile timing tests close both paths.
+- Product re-review of `493daba` generated a valid custom product promise and
+  exposed a test that assumed default copy. The final assertions use the
+  configured promise, business-object label, and approval model.
+
+## Final independent verdicts
+
+Review date: 2026-08-27
+
+Exact reviewed implementation: `b0a9843ca0f9b9bf6517c1fefb25b4d5d20eda27`
+
+**Product-quality / adversarial QA: PASS.** A separate read-only evaluator
+verified the complete lifecycle and the refresh isolation correction, then
+generated two fresh projects with different custom promises and a
+`policy exception` business object. Both `policy-gated` and `single-review`
+projects built successfully and passed 19 desktop/mobile browser cases, with
+seven intentionally irrelevant-archetype skips each. Each restored locked
+dependencies offline with scripts disabled, 34 reused packages and zero
+downloads. The assertions honor all selected product choices.
+
+**Security / authority: PASS.** A separate read-only evaluator verified the
+factory-owned clock, forged-input regressions, tenant/role/ownership/assignment
+restrictions, audit attribution, evidence reset, and approval policies.
+Independent API tests (5), domain tests (7), and generator/next-action tests
+(27) passed. The evaluator confirmed the final test-only delta preserves the
+security verdict; refresh callbacks cannot restore a previous actor's records.
+
+Neither evaluator edited the implementation, approved the GitHub PR, or merged.
+Later review-record and task-finalization commits do not change the reviewed
+implementation; any further behavior change requires appropriate re-review.
+
+## Residual boundaries
+
+- This is a bounded local demonstration, not production readiness.
+- Verified identity, transactional tenant storage, durable audit integrity,
+  production evidence checks, idempotency, and clock operation require separate
+  adapter implementation and review.
+- New downstream projects require their own human visual-baseline approval.
+- Dynamic lifecycle states have interaction/accessibility coverage; not every
+  state has a separate visual snapshot.
+- Live required checks and merge status are resolved from PR #67, not inferred
+  from these historical review verdicts.
