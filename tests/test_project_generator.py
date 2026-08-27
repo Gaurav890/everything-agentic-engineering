@@ -97,18 +97,20 @@ class ProjectGeneratorTests(unittest.TestCase):
                 "--preset", "web",
                 "--archetype", "enterprise-workflow",
                 "--audience", "operations teams reviewing sensitive access",
-                "--promise", "Move every request from evidence to accountable decision.",
+                "--promise", "Make accountable decisions.",
                 "--visual-character", "precise",
-                "--business-object", "access request",
+                "--business-object", "policy exception",
                 "--tenant-model", "multi-tenant",
                 "--approval-model", "dual-control",
                 "--data-sensitivity", "confidential",
                 "--yes",
             )
             self.assertEqual(0, result.returncode, result.stderr)
+            experience = json.loads((destination / ".agentic/experience.json").read_text())
+            self.assertEqual("Make accountable decisions.", experience["promise"])
             enterprise = json.loads((destination / ".agentic/enterprise.json").read_text())
             self.assertTrue(enterprise["enabled"])
-            self.assertEqual("access request", enterprise["business_object"]["singular"])
+            self.assertEqual("policy exception", enterprise["business_object"]["singular"])
             self.assertEqual("multi-tenant", enterprise["tenant_model"])
             self.assertEqual("dual-control", enterprise["approval_model"])
             self.assertIn("request.evidence_verified", enterprise["audit_events"])

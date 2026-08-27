@@ -2,10 +2,15 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { previewExperiences } from "../app/experience-types";
 
 const experience = JSON.parse(
   readFileSync(resolve(process.cwd(), "../../.agentic/experience.json"), "utf8"),
 ) as { archetype: string; promise: string; preview_all_archetypes?: boolean };
+
+const enterprise = JSON.parse(
+  readFileSync(resolve(process.cwd(), "../../.agentic/enterprise.json"), "utf8"),
+) as { business_object: {singular: string}; approval_model: string };
 
 const directions = [
   { id: "editorial-signal", name: "Editorial Signal" },
@@ -220,7 +225,7 @@ test("enterprise workflow enforces evidence, role, tenant, consequence, and reco
   );
   await page.goto("/?archetype=enterprise-workflow");
   await expect(page.locator("main.experience")).toHaveAttribute("data-archetype", "enterprise-workflow");
-  await expect(page.getByRole("heading", {name: /Move every request from evidence to accountable decision/})).toBeVisible();
+  await expect(page.getByRole("heading", {name: experience.archetype === "enterprise-workflow" ? experience.promise : previewExperiences["enterprise-workflow"].promise, exact: true})).toBeVisible();
   await expect(page.getByText("Request queue", {exact: true})).toBeVisible();
 
   await page.getByRole("button", {name: "Test failure"}).click();
@@ -244,7 +249,7 @@ test("enterprise workflow enforces evidence, role, tenant, consequence, and reco
   await expect(page.locator(".audit-section li strong").filter({hasText: /^rejected$/})).toBeVisible();
 
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-requester");
-  await page.getByRole("button", {name: /New access request/}).click();
+  await page.getByRole("button", {name: `New ${enterprise.business_object.singular}`, exact: true}).click();
   await page.getByRole("button", {name: "Create draft"}).click();
   await expect(page.getByText("Give reviewers a precise title.")).toBeVisible();
   await page.getByLabel("Request title").fill("Finance reporting access");
@@ -259,7 +264,11 @@ test("enterprise workflow enforces evidence, role, tenant, consequence, and reco
   await expect(page.getByRole("status").filter({hasText: "In review recorded"})).toBeVisible();
 
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer-backup");
-  await expect(page.getByText("Finance reporting access")).toHaveCount(0);
+  if (enterprise.approval_model === "single-review") {
+    await expect(page.getByRole("button", {name: /Finance reporting access/})).toBeVisible();
+  } else {
+    await expect(page.getByText("Finance reporting access")).toHaveCount(0);
+  }
 
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-reviewer");
   await page.getByRole("button", {name: /Finance reporting access/}).click();
@@ -309,7 +318,7 @@ test("enterprise refresh cannot restore a previous actor or overwrite a new deci
 
   await page.getByRole("combobox", {name: "Acting as"}).selectOption("actor-requester");
   await page.getByRole("button", {name: "Refresh", exact: true}).click();
-  await page.getByRole("button", {name: /New access request/}).click();
+  await page.getByRole("button", {name: `New ${enterprise.business_object.singular}`, exact: true}).click();
   await page.clock.runFor(1);
   await page.getByLabel("Request title").fill("Refresh isolation request");
   await page.getByLabel("Requested scope").fill("Read only for one day");

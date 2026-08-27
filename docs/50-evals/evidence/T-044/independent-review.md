@@ -30,6 +30,9 @@ and transition metadata.
   per-call timestamp overrides and request-supplied chronology are ignored.
 - Pending refresh callbacks are cancelled on actor changes and successful
   mutations, preventing stale identity views and overwritten outcome messages.
+- Generated browser assertions read the configured promise, business-object
+  label, and approval model instead of assuming the starter's default copy or
+  reviewer policy.
 - `single-review`, `dual-control`, and `policy-gated` now enforce distinct
   reviewer/assignment/gate rules while every model rejects self-approval.
 - The UI and browser suite now cover creation, evidence checks, submission,
