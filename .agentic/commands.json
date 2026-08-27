@@ -39,8 +39,8 @@
     {"path": ["doctor", "codex"], "target": "scripts/codex-doctor.sh", "summary": "Validate the Codex adapter and safety contract", "usage": "./agentic doctor codex [--strict-runtime]", "impact": "read_only"},
     {"path": ["design"], "target": "scripts/design.sh", "summary": "Run the bounded design intake, direction comparison, approval, reset, and validation workflow", "usage": "./agentic design <intake|preview|approve|reset|status|check> [arguments]", "impact": "read_only_or_confirmed_local_write"},
     {"path": ["evolve"], "target": "scripts/evolution.sh", "summary": "Validate sanitized outcomes and compare bounded harness candidates offline", "usage": "./agentic evolve <status|validate|signal|compare> [arguments]", "impact": "read_only"},
-    {"path": ["next"], "target": "scripts/next-action.sh", "summary": "Show exactly one project-appropriate next action", "usage": "./agentic next", "impact": "read_only"},
-    {"path": ["verify"], "target": "scripts/verify.sh", "summary": "Run repository verification", "usage": "./agentic verify [quick|full]", "impact": "local_build"},
+    {"path": ["next"], "target": "scripts/next-action.sh", "summary": "Guide setup, feature work, and review without changing state", "usage": "./agentic next [--task <TASK-ID>]", "impact": "read_only"},
+    {"path": ["verify"], "target": "scripts/verify.sh", "summary": "Run explicit repository, running-web, or visual checks", "usage": "./agentic verify [quick|full|web|visual]", "impact": "local_build"},
     {"path": ["tokens", "build"], "target": "scripts/build-design-tokens.sh", "summary": "Generate or check design-token outputs", "usage": "./agentic tokens build [--check]", "impact": "local_build"},
     {"path": ["release", "check"], "target": "scripts/release-check.sh", "summary": "Validate the release contract for a semantic tag", "usage": "./agentic release check [tag]", "impact": "read_only"},
     {"path": ["release", "smoke"], "target": "scripts/release-smoke-test.sh", "summary": "Exercise onboarding in a disposable clean checkout", "usage": "./agentic release smoke", "impact": "temporary_write"}

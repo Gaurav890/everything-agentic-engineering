@@ -98,7 +98,7 @@ ENTERPRISE_NEXT="$("$ENTERPRISE_PROJECT/agentic" next)"
   --yes >/dev/null
 "$MOBILE_PROJECT/agentic" verify full >/dev/null
 MOBILE_NEXT="$("$MOBILE_PROJECT/agentic" next)"
-[[ "$MOBILE_NEXT" == *"Open docs/00-vision/NORTH_STAR.md"* ]]
+[[ "$MOBILE_NEXT" == *"not a runnable native starter"* ]]
 test ! -e "$MOBILE_PROJECT/.agentic/experience.json"
 test ! -e "$MOBILE_PROJECT/apps/web"
 

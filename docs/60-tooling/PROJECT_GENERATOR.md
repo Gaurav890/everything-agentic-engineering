@@ -76,7 +76,7 @@ profile-specific path rules:
 | Selection | Included surface |
 |---|---|
 | `web-next` | runnable archetype-aware direction lab, design-critical foundation, UI behavior primitives, web owner/rules, shared app packages |
-| `mobile-expo` | `apps/mobile`, design-critical foundation, mobile owner/rules, shared app packages |
+| `mobile-expo` | `apps/mobile` placeholder (not a runnable native app), design-critical foundation, mobile owner/rules, shared app packages |
 | backend profile | API/database/shared packages and backend owner/rules |
 | `design-critical` | intake/approval state, three DTCG-compatible directions, design command, and token package |
 | `research-enabled` | Research owner/rules and credential placeholders |
@@ -88,6 +88,8 @@ project state. They are excluded.
 The generated project receives:
 
 - a project-specific README;
+- a web first-feature brief with the chosen audience, promise, and an editable
+  outcome example; it does not invent approved requirements;
 - a machine-readable `.agentic/experience.json` for web identity, audience,
   promise, archetype, and starting visual character;
 - a machine-readable `.agentic/enterprise.json` for workflow state, roles,
@@ -161,8 +163,13 @@ packages, and credential shapes fail verification. These checks preserve
 manifest shape, safe automatic-install policy, JSON, symlink containment, shell
 syntax, Python syntax, command discovery, and profile resolution. When
 dependencies are not installed, verification reports package checks as pending.
-After `pnpm install`, the same command runs lint, typecheck, and UI contract
-tests for the runnable web surface.
+After `pnpm install --frozen-lockfile`, the same command runs lint, typecheck,
+and unit/contract tests for the runnable web surface. It does not build the
+application or run browser/visual checks. Use `./agentic verify web` for the
+build and interaction/automated accessibility path, then `./agentic verify
+visual` for comparison against separately reviewed screenshots. Missing
+browser tools or baselines stop with instructions; nothing is auto-installed
+or accepted. See [the verification scopes](FIRST_PROJECT.md#build-prove-review-repeat).
 
 Generated web tests and visual baselines are archetype-scoped. Portfolio or
 agentic fixtures are never imposed on a product that selected a different
@@ -178,8 +185,11 @@ Run:
 
 It exposes exactly one project-appropriate action at a time. For a generated
 web project the path is dependency installation → live direction comparison →
-human approval → token compilation → full verification. Mobile and core
-projects do not receive web-only instructions.
+human approval → token compilation → first-feature planning → implementation →
+evidence → human review. It reads current profiles and task state; it does not
+keep repeating a verification command after setup. Multiple workstreams can be
+selected with `./agentic next --task <TASK-ID>`. Mobile and core projects do not
+receive web-only instructions. Follow [the first-project guide](FIRST_PROJECT.md).
 
 External skills, MCPs, backend credentials, Git initialization, deployment, and
 production authority remain separate, explicit decisions.

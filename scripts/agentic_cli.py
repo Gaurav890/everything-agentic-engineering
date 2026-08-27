@@ -72,7 +72,7 @@ def print_top_help(registry: dict[str, Any], out: TextIO) -> None:
     out.write("One command surface for setup, delivery, verification, and releases.\n\n")
     out.write("Usage:\n")
     out.write("  ./agentic <group> <command> [arguments]\n")
-    out.write("  ./agentic verify [quick|full]\n")
+    out.write("  ./agentic verify [quick|full|web|visual]\n")
     out.write("  ./agentic commands [--json]\n")
     out.write("  ./agentic help [group|command]\n\n")
     out.write("Groups:\n")

@@ -952,6 +952,52 @@ def generated_env_example(plan: GenerationPlan) -> str:
     return "\n".join(lines) + "\n"
 
 
+def generated_first_feature(plan: GenerationPlan) -> str:
+    examples = {
+        "portfolio": "Help a visitor find a relevant case study and understand its outcome using your real work.",
+        "product": "Make one primary product action useful, with a clear result and a recoverable empty or error state.",
+        "agentic-product": "Let a person inspect an action's evidence and consequence before approving it, then recover from a failed attempt.",
+        "enterprise-workflow": f"Help a reviewer find the right {plan.business_object} in the queue without weakening tenant, role, evidence, or audit boundaries.",
+    }
+    return f"""# First feature brief — {plan.project_name}
+
+## Starting intent
+
+- Audience: {plan.audience}
+- Promise: {plan.promise}
+- Experience: `{plan.archetype}`
+
+This is a planning aid, not approval to implement an invented requirement.
+Revisit these inputs if your product intent has changed since generation.
+
+## One possible first outcome
+
+{examples[plan.archetype]}
+
+Choose this example or replace it with a more useful outcome. Replace synthetic
+copy with content you own or have permission to use. Preserve the approved
+design system; request an explicit redesign if it no longer serves the intent.
+
+## Agree before building
+
+Ask your coding assistant to help define one requirement, acceptance criteria,
+happy path, failure/recovery states, file ownership, and a bounded task. Review
+that scope before implementation. Keep production identity, persistence,
+credentials, external services, and deployment as separate reviewed decisions.
+
+## Prove the result
+
+Run `./agentic verify web` for repository, build, interaction, and automated
+accessibility checks. Add tests for the new behavior: the supplied reference
+tests cannot prove a feature you have just invented. Use separately reviewed
+screenshots with `./agentic verify visual`, and obtain an independent critique.
+Neither a passing command nor this brief grants human approval or merge authority.
+
+See [the first-project guide](../60-tooling/FIRST_PROJECT.md) for version control,
+review, visual candidates, and continuation. Run `./agentic next` to resume.
+"""
+
+
 def generated_readme(plan: GenerationPlan) -> str:
     profiles = "\n".join(f"- `{profile}`" for profile in plan.resolved_profiles)
     external = (
@@ -986,12 +1032,17 @@ documents before selecting production identity or persistence."""
 Run exactly this next:
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 ```
 
 Then run `./agentic next`. It will reveal one next action at a time as you
-compare directions, approve the strongest system, compile tokens, and verify
-the running result."""
+compare directions, approve the strongest system, compile tokens, plan your
+first useful feature, and continue through implementation and review.
+
+Read [your first-feature brief](docs/10-product/FIRST_FEATURE.md) once the design
+is approved. The [first-project guide](docs/60-tooling/FIRST_PROJECT.md) explains
+version control, verification scopes, visual evidence, and the review handoff.
+The supplied direction lab is a starting reference, not a finished product."""
     else:
         start = """Run exactly this next:
 
@@ -1012,6 +1063,11 @@ profile-specific, non-destructive generation plan.
 ## Start here
 
 {start}
+
+Web setup requires Python 3.11+, Node.js 20.9+ (22 LTS is the tested baseline),
+and the pnpm version in `package.json`. Local examples need no paid service or
+API key. The mobile profile is guidance and a placeholder, not a runnable native
+application; see the [readiness guide](docs/60-tooling/FIRST_PROJECT.md).
 
 For web projects, the default is intentionally design-critical and
 archetype-aware. The live direction lab is the starting point; a generic blank
@@ -1055,6 +1111,16 @@ def reset_durable_state(plan: GenerationPlan) -> None:
             "# Handoff\n\n## Current goal\n\nReview the enterprise product and design contracts in the running local experience.\n\n"
             "## Blockers\n\nProduction adapters require explicit architecture and security decisions.\n\n"
             "## Exact next action\n\nRun `./agentic next` and follow the single revealed step.\n"
+        )
+    elif "web-next" in set(plan.resolved_profiles):
+        current = (
+            f"# Current state\n\nProject: {plan.project_name}\n\n"
+            "The local direction lab and starting brief are present. No project-specific feature, "
+            "design approval, production integration, or deployment has been completed.\n"
+        )
+        handoff = (
+            "# Handoff\n\n## Current goal\n\nCompare the running directions, then choose the first useful feature.\n\n"
+            "## Exact next action\n\nRun `./agentic next` and follow its single revealed step.\n"
         )
     else:
         current = (
@@ -1155,6 +1221,9 @@ def write_generated_files(plan: GenerationPlan) -> None:
     if "web-next" in set(plan.resolved_profiles):
         write_json(plan.destination / EXPERIENCE_PATH, generated_experience(plan))
         write_json(plan.destination / ENTERPRISE_PATH, generated_enterprise(plan))
+        (plan.destination / "docs/10-product/FIRST_FEATURE.md").write_text(
+            generated_first_feature(plan)
+        )
         (plan.destination / "docs/20-design/DESIGN_BRIEF.md").write_text(
             generated_design_brief(plan)
         )

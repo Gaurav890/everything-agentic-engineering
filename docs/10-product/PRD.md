@@ -78,6 +78,14 @@ Tasks must trace to requirements and acceptance criteria, use isolated branches
 or worktrees when writing in parallel, pass relevant verification, receive
 separate evaluation, and update durable state before merge.
 
+### FR-005 — First-project continuation and honest verification
+
+The read-only guide must use current profiles and task lifecycle state to move
+from approved design into a bounded first feature, implementation, independent
+review, and post-merge continuation. Verification must declare its scope;
+missing tools, visual baselines, native implementations, or production
+adapters must not be presented as completed evidence.
+
 ## 8. Non-functional requirements
 
 ### NFR-001 — Safety

@@ -49,3 +49,20 @@ intentional baseline changes require human review.
 
 **Evidence required:** web quality checks, reviewed screenshots, evaluator
 report, and PR policy.
+
+## AC-005 — A newcomer can continue without inventing the workflow
+
+**Linked requirements:** FR-001, FR-004, FR-005
+
+**Given** a generated project, **when** current profiles, prerequisites, design
+state, or tasks change, **then** `next` reports one appropriate action without
+mutation, inferring approval, or looping forever at verification. Task
+dependencies and concurrent workstreams remain explicit. Unknown state fails
+closed. Web checks require their local tools, propagate failures, and never
+generate or approve visual baselines. Documentation separates local web,
+native scaffold, automated checks, human review, and production readiness.
+
+**Evidence required:** routing and verification regressions, fresh generated
+projects, browser checks, independent review, and an unclaimed newcomer pilot
+protocol. Real pilot results are a later launch gate, not an implementation
+test that can be simulated by the maintainer.
