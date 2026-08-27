@@ -9,6 +9,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
+
 import github_task_sync
 from project_checks import ProjectCheckError, active_profiles, load_object, web_prerequisite
 

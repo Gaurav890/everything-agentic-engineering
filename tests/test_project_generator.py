@@ -220,6 +220,15 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("playwright test --grep-invert @visual", app_package["scripts"]["test:e2e"])
             self.assertIn("updateSnapshots: \"none\"", (destination / "apps/web/playwright.config.ts").read_text())
             self.assertIn("./agentic next", (destination / "docs/40-execution/HANDOFF.md").read_text())
+            environment = os.environ.copy()
+            environment.pop("PYTHONPYCACHEPREFIX", None)
+            environment.pop("PYTHONDONTWRITEBYTECODE", None)
+            next_result = subprocess.run(
+                [str(destination / "agentic"), "next"], cwd=destination,
+                env=environment, capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(0, next_result.returncode, next_result.stderr)
+            self.assertFalse((destination / "scripts/__pycache__").exists())
             verification = subprocess.run(
                 [str(destination / "agentic"), "verify", "full"],
                 cwd=destination,
