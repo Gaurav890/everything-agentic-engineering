@@ -41,6 +41,11 @@ stated evidence limits; it did not rerun the suites. A separate privacy follow-u
 checked the inventory and disclosures against the implementation with no local
 contract blocker. Its requested inventory/deletion precision is included below.
 
+The final approval-source guard also received a separate recheck. It rejects
+the generated approval stylesheet, including filesystem case and hardlink
+aliases, while retaining ordinary preview/canonical-token inputs and all
+source/evidence hashes. The alias finding was fixed and independently closed.
+
 ## Supporting contract evidence
 
 The following inventory records implementation-owner evidence for the required

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -179,8 +180,15 @@ class DesignEngineTests(unittest.TestCase):
             output = root / "packages/design-tokens/generated/direction.css"
             output.parent.mkdir(parents=True)
             output.write_text("/* No direction approved. */")
-            for relative in ("packages/design-tokens/generated/direction.css",
-                             "packages/design-tokens/generated/./direction.css"):
+            alias = output.with_name("approval-copy.css")
+            os.link(output, alias)
+            sources = ["packages/design-tokens/generated/direction.css",
+                       "packages/design-tokens/generated/./direction.css",
+                       str(alias.relative_to(root))]
+            case_alias = output.with_name("Direction.css")
+            if case_alias.is_file():
+                sources.append(str(case_alias.relative_to(root)))
+            for relative in sources:
                 with self.subTest(relative=relative), self.assertRaisesRegex(design_engine.DesignError, "approval output"):
                     design_engine.candidate_source(root, relative)
 

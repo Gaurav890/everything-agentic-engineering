@@ -165,6 +165,9 @@ def candidate_source(root: Path, relative: str) -> Path:
     target = root / path
     if not target.is_file() or target.suffix not in {".tsx", ".ts", ".jsx", ".js", ".css", ".json", ".svg", ".png", ".jpg", ".webp", ".woff2"}:
         raise DesignError("Candidate source must reference existing preview code")
+    approval_output = root / "packages/design-tokens/generated/direction.css"
+    if approval_output.is_file() and target.samefile(approval_output):
+        raise DesignError("Candidate source aliases approval output; list preview code and canonical token inputs instead")
     return target
 
 
