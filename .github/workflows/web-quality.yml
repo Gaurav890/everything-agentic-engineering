@@ -81,6 +81,7 @@ jobs:
           cp tests/fixtures/onboarding/purchase-path.spec.ts "$ONBOARDING_ROOT/project/apps/web/tests/purchase-path.spec.ts"
           cd "$ONBOARDING_ROOT/project"
           ./agentic start --json
+          ./agentic tokens build
           ./agentic design propose --file purchase-path.json --yes
           pnpm install --offline --frozen-lockfile --ignore-scripts
           pnpm --dir apps/web build

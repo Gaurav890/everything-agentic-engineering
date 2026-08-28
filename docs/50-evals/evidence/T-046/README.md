@@ -40,11 +40,17 @@ context and preserves answers. Desktop and mobile recovery tests pass.
 
 The fresh-project step in `.github/workflows/web-quality.yml` creates a new
 temporary project, copies `tests/fixtures/onboarding/` into that disposable
-project only, registers the preview, installs from the existing offline locked
+project only, builds the reference token outputs required by the preview source
+list, registers the preview, installs from the existing offline locked
 cache without lifecycle scripts, builds and runs the sixteen browser cases.
 The fixture test deliberately damages/restores only its temporary copy, with
 single-worker execution and `finally` restoration. No fixture is an approved
 visual baseline or financial model.
+
+The first hosted run caught the missing token-output prerequisite before preview
+registration. The setup order was corrected; source-file validation was retained.
+A new local reproduction of that entire corrected step passed all sixteen
+browser cases using only cached dependencies.
 
 ## Limits
 
