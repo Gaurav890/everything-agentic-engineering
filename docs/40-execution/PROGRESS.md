@@ -11,7 +11,7 @@ approval. The setup workspace shows saved intent and a clear continuation
 without pretending to be the finished product. Custom generation no longer
 assigns a default design personality as a user answer.
 
-Local evidence includes 60 focused Python tests, nine web contract tests,
+Local evidence includes 61 focused Python tests, nine web contract tests,
 16 disposable-project browser cases, 25 reference browser passes and 24
 unchanged visual comparisons. Independent product/security reviews found
 blockers that were fixed and rechecked. Recovery reloads repaired context;

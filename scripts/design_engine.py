@@ -158,6 +158,8 @@ def candidate_source(root: Path, relative: str) -> Path:
     path = Path(relative)
     if path.is_absolute() or ".." in path.parts or not relative.startswith(("apps/", "packages/")):
         raise DesignError("Candidate source must stay inside apps/ or packages/")
+    if path == Path("packages/design-tokens/generated/direction.css"):
+        raise DesignError("direction.css is approval output, not source; list preview code and canonical token inputs instead")
     if any((root / Path(*path.parts[:index])).is_symlink() for index in range(1, len(path.parts) + 1)):
         raise DesignError("Candidate source cannot follow symlinks")
     target = root / path

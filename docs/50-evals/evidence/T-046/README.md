@@ -15,7 +15,7 @@ routing, not correctness or visual approval of a financial product.
 
 ## Completed checks
 
-- 60 focused Python tests: generation, handoff consent, malformed data,
+- 61 focused Python tests: generation, handoff consent, malformed data,
   source/output symlinks, arbitrary candidates, approval fingerprints and drift.
 - Nine web contract tests, including real public-data loader validation.
 - Generated production build.
@@ -51,6 +51,10 @@ The first hosted run caught the missing token-output prerequisite before preview
 registration. The setup order was corrected; source-file validation was retained.
 A new local reproduction of that entire corrected step passed all sixteen
 browser cases using only cached dependencies.
+
+A final source-contract regression also rejects using the generated approval
+stylesheet as its own fingerprint input, preventing self-invalidating builds.
+Ordinary source drift checks and derived-output verification remain intact.
 
 ## Limits
 

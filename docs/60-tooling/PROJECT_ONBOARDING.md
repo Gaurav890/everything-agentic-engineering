@@ -74,6 +74,11 @@ that preview. Save a project-local JSON proposal with these fields:
   dependency/asset affecting its appearance**, under `apps/` or `packages/`;
 - `tokens`: flat semantic paths mapped to DTCG `$type` / `$value` objects.
 
+Do not list `packages/design-tokens/generated/direction.css` as a source: it is
+the output of approval and includes that approval's fingerprint. Listing it
+would make a build invalidate itself. List preview code and canonical token
+inputs instead; `./agentic tokens build --check` separately checks derived output.
+
 Required semantic paths are `color.background.canvas`,
 `color.background.surface`, `color.text.primary`, `color.text.secondary`,
 `color.action.primary.default`, `font.family.display`, `radius.lg`, and

@@ -173,6 +173,17 @@ class DesignEngineTests(unittest.TestCase):
                 with self.assertRaises(design_engine.DesignError):
                     design_engine.load_catalog(path)
 
+    def test_approval_output_cannot_be_its_own_source(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "packages/design-tokens/generated/direction.css"
+            output.parent.mkdir(parents=True)
+            output.write_text("/* No direction approved. */")
+            for relative in ("packages/design-tokens/generated/direction.css",
+                             "packages/design-tokens/generated/./direction.css"):
+                with self.subTest(relative=relative), self.assertRaisesRegex(design_engine.DesignError, "approval output"):
+                    design_engine.candidate_source(root, relative)
+
     def test_unsafe_token_values_and_output_symlinks_are_rejected(self):
         for token in ({"$type": "fontFamily", "$value": ["x; url(remote)"]},
                       {"$type": "duration", "$value": {"value": float("nan"), "unit": "ms"}},
