@@ -4,41 +4,36 @@ Last updated: 2026-08-27
 
 ## Current goal
 
-Make the generated first-project journey understandable from setup through a
-useful feature and review, then validate it with real newcomers before broader
-launch claims.
+Capture the owner's idea, preserve it in their project, continue in their chosen
+coding client, compare custom working previews, then verify one agreed feature.
 
 ## Implemented
 
-- Product-specific first-feature brief and task-aware, read-only next steps.
-- Current-profile routing, explicit workstream selection, dependency/blocker
-  guidance, safe version-control instructions, and post-merge continuation.
-- Separate repository, running-web, and visual verification commands.
-- New acceptance-test discovery, explicit screenshot-only tags, and no implicit
-  baseline updates or external installations.
-- Honest local-web, native-placeholder, and enterprise-production boundaries.
-- A five-person pilot protocol with no invented participant results.
+- Project-owned brief, README, product/design/engineering drafts and first feature.
+- Consent-based native handoff and manual app/editor instructions; no key collection.
+- Open custom/existing-brand catalogs and explicit optional reference mode.
+- Evidence-bound approval and stale-context/source/evidence detection.
+- Responsive workspace with saved intent, continuation, candidate links, copy
+  feedback, visible keyboard focus and context-error recovery.
 
-## Evidence
+## Evidence and limits
 
-See `docs/50-evals/evidence/T-045/` for reproducible checks, independent review,
-resolved findings, and limitations. Source browser checks and unchanged visual
-comparisons passed. A fresh generated enterprise example includes a newly added
-acceptance file; missing visual baselines correctly block comparison.
+See `docs/50-evals/evidence/T-046/` for checks, screenshots, independent review
+scope and limits. A disposable Afford-style project exercises personalized
+documents and a custom preview; the existing project was untouched. This is a
+synthetic test, not a financial product or approved visual direction. Native
+sign-in and live assistant sessions were not run.
 
-The enterprise request-decision slice remains a local reference with
-synthetic identity, in-memory persistence, and disabled production adapters.
-Its historical implementation/review evidence remains under
-`docs/50-evals/evidence/T-044/`.
+No newcomer study, production readiness, native implementation, launch,
+deployment, human task approval or merge is implied.
 
 ## Exact next action
 
-Read the task ledger and current PR state, then follow the applicable
-review/finalization step. Human task approval and human merge are separate;
-never infer either from this document. After a confirmed merge, inspect
-`./agentic task closeout T-045`, preserve local work, return to the updated
-default branch, and choose the next outcome.
+Read the ledger and current PR state. Follow the applicable verification and
+human-review step; use the normal finalizer only after direct approval.
+Approval and merge are separate, never inferred from this document.
+After confirmed merge, inspect task closeout and preserve local work before
+updating a checkout.
 
-Run the newcomer pilot before claiming measured onboarding success. Hosting,
-marketing publication, production integration, and native implementation need
-separate scope and authority.
+Run a real newcomer pilot before claiming measured self-service success.
+Existing-project migration remains a separate reviewed change.

@@ -1,6 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import {getProjectBrief} from "../app/project-brief.server";
+
+const brief = getProjectBrief();
+test.skip(Boolean(brief && brief.design_mode !== "reference"), "Reference baselines do not certify a custom product; capture and review its own baselines");
 
 const experience = JSON.parse(
   readFileSync(resolve(process.cwd(), "../../.agentic/experience.json"), "utf8"),

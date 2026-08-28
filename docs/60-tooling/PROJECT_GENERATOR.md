@@ -19,11 +19,14 @@ Use `setup create` when starting a new product in a separate directory:
 ```
 
 This is the default human flow. It progressively asks for the project name,
-destination, first experience, audience, promise, and visual character only
-when those answers affect the selected surface. Enterprise workflows then ask
+destination, product surface, audience, promise, an optional first outcome,
+custom/existing-brand/reference design approach, optional preferences, and a
+coding client. Blank optional answers are deferred to the guided conversation.
+Enterprise workflows then ask
 only four additional decisions: the governed business object, tenant model,
 approval model, and data sensitivity. It shows the complete plan and asks once
-before writing.
+before writing. Enter the result and run `./agentic start`; creation itself
+does not launch a client. See [personalized onboarding](PROJECT_ONBOARDING.md).
 
 Use explicit flags for automation or repeatable scaffolding:
 
@@ -35,11 +38,15 @@ Use explicit flags for automation or repeatable scaffolding:
   --archetype product \
   --audience "operations teams replacing fragmented handoffs" \
   --promise "Turn a complicated workflow into calm, measurable momentum." \
-  --visual-character precise \
+  --assistant manual \
+  --design-mode custom \
+  --design-preferences "Warm, clear typography; no decorative 3D" \
   --dry-run
 ```
 
-Review the plan, then repeat it with explicit confirmation:
+Review the plan, then repeat **the same arguments**, replacing `--dry-run` with
+`--yes`. Omitting an answer uses its default; it does not reuse an earlier plan.
+For example, a minimal default creation is:
 
 ```bash
 ./agentic setup create \
@@ -75,10 +82,10 @@ profile-specific path rules:
 
 | Selection | Included surface |
 |---|---|
-| `web-next` | runnable archetype-aware direction lab, design-critical foundation, UI behavior primitives, web owner/rules, shared app packages |
+| `web-next` | runnable personalized workspace (or explicitly chosen reference lab), design-critical foundation, UI behavior primitives, web owner/rules, shared app packages |
 | `mobile-expo` | `apps/mobile` placeholder (not a runnable native app), design-critical foundation, mobile owner/rules, shared app packages |
 | backend profile | API/database/shared packages and backend owner/rules |
-| `design-critical` | intake/approval state, three DTCG-compatible directions, design command, and token package |
+| `design-critical` | intake/approval state, open-ended candidate catalog, design command, and token package; three bundled examples only in reference mode |
 | `research-enabled` | Research owner/rules and credential placeholders |
 
 Signalroom, historical evidence, launch assets, release artifacts, source
@@ -87,7 +94,8 @@ project state. They are excluded.
 
 The generated project receives:
 
-- a project-specific README;
+- a project-specific README and `.agentic/project-brief.json` shared by the handoff and onboarding page;
+- fresh vision, PRD, acceptance, copy, and engineering drafts derived from the user's intent;
 - a web first-feature brief with the chosen audience, promise, and an editable
   outcome example; it does not invent approved requirements;
 - a machine-readable `.agentic/experience.json` for web identity, audience,

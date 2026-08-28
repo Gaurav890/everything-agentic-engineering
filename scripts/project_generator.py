@@ -22,6 +22,7 @@ import init_project  # noqa: E402
 import agent_broker  # noqa: E402
 import mcp_compatibility  # noqa: E402
 import profile_engine  # noqa: E402
+import project_brief  # noqa: E402
 
 CONFIG_PATH = Path(".agentic/generator.json")
 GENERATED_PATH = Path(".agentic/generated-project.json")
@@ -73,6 +74,9 @@ SENSITIVE_SUFFIXES = {".key", ".p12", ".pem", ".pfx"}
 TRANSIENT_SUFFIXES = {".har", ".log", ".pyc", ".pyo", ".tsbuildinfo"}
 
 MANDATORY_GENERATOR_FILES = {
+    Path("scripts/project_brief.py"),
+    Path("scripts/project_handoff.py"),
+    Path(".claude/skills/project-onboarding/SKILL.md"),
     Path(".agentic/enterprise.json"),
     Path(".agentic/generator.json"),
     Path("apps/web/app/experience-types.ts"),
@@ -129,6 +133,13 @@ GENERATED_WRITE_PATHS = {
     Path("docs/40-execution/BLOCKERS.md"),
     Path("docs/40-execution/RISKS.md"),
 }
+GENERATED_WRITE_PATHS.update({project_brief.BRIEF_PATH, Path(".agentic/design-directions.json"), Path("docs/10-product/FIRST_FEATURE.md"), Path("docs/60-tooling/ASSISTANT_HANDOFF.md")})
+GENERATED_WRITE_PATHS.update(Path(f"docs/{section}/{name}.md") for section, names in {
+    "00-vision": ("NORTH_STAR", "PRODUCT_CONTEXT", "PERSONAS", "GLOSSARY"),
+    "10-product": ("ROADMAP", "NON_GOALS", "OPEN_QUESTIONS"),
+    "20-design": ("COPY", "DESIGN_DECISIONS", "DESIGN_DIRECTIONS"),
+    "30-engineering": ("ARCHITECTURE",),
+}.items() for name in names)
 
 
 class GenerationError(ValueError):
@@ -159,6 +170,10 @@ class GenerationPlan:
     tenant_model: str | None
     approval_model: str | None
     data_sensitivity: str | None
+    assistant: str = "choose"
+    design_mode: str = "custom"
+    design_preferences: str | None = None
+    first_outcome: str | None = None
 
     def public_report(self) -> dict[str, Any]:
         return {
@@ -179,6 +194,8 @@ class GenerationPlan:
                 "data_sensitivity": self.data_sensitivity,
             },
             "destination": str(self.destination),
+            "onboarding": {"assistant": self.assistant, "design_mode": self.design_mode,
+                           "design_preferences": self.design_preferences, "first_outcome": self.first_outcome},
             "selected_profiles": list(self.selected_profiles),
             "resolved_profiles": list(self.resolved_profiles),
             "copy": {
@@ -413,12 +430,20 @@ def build_plan(
     tenant_model: str | None = None,
     approval_model: str | None = None,
     data_sensitivity: str | None = None,
+    assistant: str = "choose",
+    design_mode: str = "custom",
+    design_preferences: str | None = None,
+    first_outcome: str | None = None,
     source_root: Path = ROOT,
     cwd: Path | None = None,
 ) -> GenerationPlan:
     if not name.strip():
         raise GenerationError("Project name is required")
     slug = slugify(name)
+    if assistant not in project_brief.CLIENTS or design_mode not in project_brief.DESIGN_MODES:
+        raise GenerationError("Unknown coding client or design mode")
+    design_preferences = clean_text(design_preferences, "design preferences", maximum=1000)
+    first_outcome = clean_text(first_outcome, "first outcome", maximum=500)
     target = resolve_destination(destination, source_root, cwd)
     config = load_config(source_root)
     resolution = profile_engine.resolve(selected_profiles)
@@ -432,7 +457,7 @@ def build_plan(
         raise GenerationError(
             "visual character must be precise, bold, warm, or experimental"
         )
-    if not has_web and any((archetype, audience, promise, visual_character)):
+    if not has_web and any((archetype, visual_character)):
         raise GenerationError("Web experience options require an active web profile")
     resolved_archetype = archetype or ("product" if has_web else None)
     if resolved_archetype:
@@ -441,8 +466,8 @@ def build_plan(
         resolved_promise = clean_text(promise, "product promise", maximum=120) or default_promise
         resolved_character = visual_character or "precise"
     else:
-        resolved_audience = None
-        resolved_promise = None
+        resolved_audience = clean_text(audience, "audience", maximum=120)
+        resolved_promise = clean_text(promise, "product promise", maximum=120)
         resolved_character = None
     enterprise_enabled = resolved_archetype == "enterprise-workflow"
     if not enterprise_enabled and any((business_object, tenant_model, approval_model, data_sensitivity)):
@@ -508,6 +533,8 @@ def build_plan(
         tenant_model=resolved_tenant_model,
         approval_model=resolved_approval_model,
         data_sensitivity=resolved_data_sensitivity,
+        assistant=assistant, design_mode=design_mode,
+        design_preferences=design_preferences, first_outcome=first_outcome,
     )
 
 
@@ -533,6 +560,8 @@ def validate_source_entry(plan: GenerationPlan, relative: Path) -> None:
         raise GenerationError(f"Planned source entry is not a file: {relative}")
     if not source.is_symlink():
         return
+    if relative in GENERATED_WRITE_PATHS:
+        raise GenerationError(f"Planned source symlink is a generated write target: {relative}")
 
     raw_target = Path(os.readlink(source))
     if raw_target.is_absolute():
@@ -599,6 +628,7 @@ def generated_metadata(plan: GenerationPlan) -> dict[str, Any]:
     report = plan.public_report()
     return {
         "schema_version": 1,
+        "onboarding_version": 1,
         "project": report["project"],
         "experience": report["experience"],
         "enterprise": report["enterprise"],
@@ -963,20 +993,21 @@ def generated_first_feature(plan: GenerationPlan) -> str:
 
 ## Starting intent
 
-- Audience: {plan.audience}
-- Promise: {plan.promise}
-- Experience: `{plan.archetype}`
+- Audience: {plan.audience or 'To be discussed with the product owner'}
+- Promise: {plan.promise or 'To be discussed with the product owner'}
+- Experience: `{plan.archetype or 'planning scaffold'}`
 
 This is a planning aid, not approval to implement an invented requirement.
 Revisit these inputs if your product intent has changed since generation.
 
-## One possible first outcome
+## {'Your proposed first outcome' if plan.first_outcome else 'One possible first outcome'}
 
-{examples[plan.archetype]}
+{plan.first_outcome or examples.get(plan.archetype, 'Agree one observable user outcome with the product owner.')}
 
-Choose this example or replace it with a more useful outcome. Replace synthetic
-copy with content you own or have permission to use. Preserve the approved
-design system; request an explicit redesign if it no longer serves the intent.
+{'Confirm this captured outcome or refine it together.' if plan.first_outcome else 'Choose this example or replace it with a more useful outcome.'}
+Use content you own or have permission to use. No product-specific design is
+approved yet: review real previews before establishing the design system.
+Once approved, preserve it or request an explicit redesign.
 
 ## Agree before building
 
@@ -987,10 +1018,9 @@ credentials, external services, and deployment as separate reviewed decisions.
 
 ## Prove the result
 
-Run `./agentic verify web` for repository, build, interaction, and automated
-accessibility checks. Add tests for the new behavior: the supplied reference
-tests cannot prove a feature you have just invented. Use separately reviewed
-screenshots with `./agentic verify visual`, and obtain an independent critique.
+{'Run `./agentic verify web` for repository, build, interaction, and automated accessibility checks. Use separately reviewed screenshots with `./agentic verify visual`.' if 'web-next' in plan.resolved_profiles else 'Run `./agentic verify full` for the scaffold. Add platform-specific behavior and device tests once an application exists.'}
+Add tests for the new behavior: supplied reference tests cannot prove your
+new feature. Obtain an independent critique.
 Neither a passing command nor this brief grants human approval or merge authority.
 
 See [the first-project guide](../60-tooling/FIRST_PROJECT.md) for version control,
@@ -999,100 +1029,72 @@ review, visual candidates, and continuation. Run `./agentic next` to resume.
 
 
 def generated_readme(plan: GenerationPlan) -> str:
-    profiles = "\n".join(f"- `{profile}`" for profile in plan.resolved_profiles)
-    external = (
-        "\n".join(f"- `{resource}`" for resource in plan.external_setup)
-        if plan.external_setup
-        else "- None selected."
-    )
-    active = set(plan.resolved_profiles)
-    if "web-next" in active:
-        enterprise = ""
-        if plan.archetype == "enterprise-workflow":
-            enterprise = f"""
-
-Your enterprise boundary is also captured:
-
-- Business object: `{plan.business_object}`
-- Tenant model: `{plan.tenant_model}`
-- Approval model: `{plan.approval_model}`
-- Data sensitivity: `{plan.data_sensitivity}`
-
-The running application uses local synthetic data and replaceable adapters.
-Review the generated product, role, data, API, security, audit, and task-graph
-documents before selecting production identity or persistence."""
-        start = f"""Your first experience brief is already captured:
-
-- Archetype: `{plan.archetype}`
-- Audience: {plan.audience}
-- Promise: {plan.promise}
-- Visual character: `{plan.visual_character}`
-{enterprise}
-
-Run exactly this next:
-
-```bash
-pnpm install --frozen-lockfile
-```
-
-Then run `./agentic next`. It will reveal one next action at a time as you
-compare directions, approve the strongest system, compile tokens, plan your
-first useful feature, and continue through implementation and review.
-
-Read [your first-feature brief](docs/10-product/FIRST_FEATURE.md) once the design
-is approved. The [first-project guide](docs/60-tooling/FIRST_PROJECT.md) explains
-version control, verification scopes, visual evidence, and the review handoff.
-The supplied direction lab is a starting reference, not a finished product."""
-    else:
-        start = """Run exactly this next:
-
-```bash
-./agentic next
-```
-
-The router exposes one project-appropriate action at a time."""
+    brief = project_brief.create(plan)
+    web = "web-next" in plan.resolved_profiles
     return f"""# {plan.project_name}
 
-This project was materialized from Everything Agentic Engineering using a
-profile-specific, non-destructive generation plan.
+{brief["promise"]}
 
-## Active profiles
-
-{profiles}
+For: {brief["audience"]}
 
 ## Start here
 
-{start}
+Open this project folder, then run:
 
-Web setup requires Python 3.11+, Node.js 20.9+ (22 LTS is the tested baseline),
-and the pnpm version in `package.json`. Local examples need no paid service or
-API key. The mobile profile is guidance and a placeholder, not a runnable native
-application; see the [readiness guide](docs/60-tooling/FIRST_PROJECT.md).
+```bash
+./agentic start
+```
 
-For web projects, the default is intentionally design-critical and
-archetype-aware. The live direction lab is the starting point; a generic blank
-page is not. Core motion and reduced-motion behavior are built in. Add advanced
-2D, 3D, timeline, or gesture runtimes only when the approved direction and
-performance budget justify them.
+Choose your existing coding assistant or use the prepared instruction in your
+desktop app/editor. The handoff carries your answers forward and asks for
+confirmation before starting a native interactive client. No API key is required
+by this starter; sign-in and billing stay with your chosen client.
 
-## External setup requiring separate review
+Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
-{external}
+Design path: **{plan.design_mode}**.
+Preferences: {plan.design_preferences or "Discuss or delegate recommendations; no preset is assumed."}
 
-The generator did not install dependencies, external skills, plugins, MCP
-servers, runtimes, or backends. It did not initialize Git or copy credentials.
-Use `./agentic profile doctor` and the tooling guides under `docs/60-tooling/`
-before enabling any external capability.
+## What exists today
 
-## Durable project memory
+{"A runnable local reference and a project brief—not an implemented product." if web else "A planning scaffold—not a runnable native application."}
+Product documents are drafts. No product-specific feature or design is approved.
+Production services, identity, persistence, and deployment are not configured.
 
-- Product intent: `docs/00-vision/`
-- Requirements: `docs/10-product/`
-- Architecture and security: `docs/30-engineering/`
-- Task state and handoffs: `docs/40-execution/`
-- Evaluation: `docs/50-evals/`
-- Tooling and profiles: `docs/60-tooling/`
-- Collaboration: `docs/70-collaboration/`
+The source brief is [project-brief.json](.agentic/project-brief.json). Your
+assistant should reconcile the product documents and show a first useful
+journey before claiming implementation. Existing user edits must be preserved.
+
+## Preview and verify
+
+{"After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it." if web else "Follow the active profile's readiness guide before choosing an implementation."}
+
+Run `./agentic next` to resume. Custom directions and existing brands are not
+limited to the reference presets. Review real previews before approving a
+candidate; token compilation is not design generation.
+
+Use `./agentic verify full` for the repository contract.
+{"Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines." if web else "Add platform-specific tests when an application is implemented."}
+Passing scaffold checks does not prove the product works.
+
+## Working agreements
+
+- Keep requirements, design decisions, tests, and current state specific to this product.
+- Show proposed changes before replacing approved requirements or design.
+- Use branches and draft PRs when version control is configured; human review and merge remain separate.
+- Builder credentials are not application credentials.
+- Missing tools, external skills, services, and deployment require explicit setup decisions.
+
+[First feature](docs/10-product/FIRST_FEATURE.md) ·
+[Assistant handoff](docs/60-tooling/ASSISTANT_HANDOFF.md) ·
+[Engineering guide](docs/60-tooling/FIRST_PROJECT.md)
+
+## Foundation
+
+Created from Everything Agentic Engineering. Reusable tooling remains under
+`docs/60-tooling/`; its examples are not this product's requirements.
+Active profiles: {", ".join(plan.resolved_profiles)}.
+Preserve the included license and required notices.
 """
 
 
@@ -1146,6 +1148,12 @@ def reset_durable_state(plan: GenerationPlan) -> None:
 def reset_design_state(plan: GenerationPlan) -> None:
     if "design-critical" not in set(plan.resolved_profiles):
         return
+    catalog = load_object(plan.source_root / ".agentic/design-directions.json", "direction catalog")
+    write_json(plan.destination / ".agentic/design-directions.json", {
+        "schema_version": 2,
+        "mode": plan.design_mode,
+        "directions": catalog["directions"] if plan.design_mode == "reference" else [],
+    })
     write_json(
         plan.destination / ".agentic/design.json",
         {
@@ -1164,7 +1172,7 @@ def reset_design_state(plan: GenerationPlan) -> None:
             "answers": {
                 "product_type": plan.archetype,
                 "audience": plan.audience,
-                "personality": plan.visual_character,
+                "personality": plan.visual_character if plan.design_mode == "reference" else None,
                 "color_intent": None,
                 "color_expression": None,
                 "typography": None,
@@ -1179,8 +1187,6 @@ def reset_design_state(plan: GenerationPlan) -> None:
 
 
 def generated_design_brief(plan: GenerationPlan) -> str:
-    if plan.archetype is None:
-        return (plan.source_root / "docs/20-design/DESIGN_BRIEF.md").read_text()
     return f"""# Design brief
 
 Status: Captured — direction approval pending
@@ -1188,10 +1194,12 @@ Status: Captured — direction approval pending
 ## Product intent
 
 - Product: {plan.project_name}
-- Archetype: `{plan.archetype}`
-- Audience: {plan.audience}
-- Product promise: {plan.promise}
-- Desired character: `{plan.visual_character}`
+- Archetype: `{plan.archetype or 'planning scaffold'}`
+- Audience: {plan.audience or 'To be discussed with the product owner'}
+- Product promise: {plan.promise or 'To be discussed with the product owner'}
+- Starting approach: `{plan.design_mode}`
+- Preferences: {plan.design_preferences or 'Discuss with the owner; no palette or aesthetic is assumed.'}
+{f'- Reference character: `{plan.visual_character}` (example only)' if plan.design_mode == 'reference' else ''}
 {f"- Enterprise workflow: `{plan.business_object}` · `{plan.tenant_model}` · `{plan.approval_model}` · `{plan.data_sensitivity}`" if plan.archetype == "enterprise-workflow" else ""}
 
 These are first-run inputs, not permission to invent facts. Replace starter copy
@@ -1199,17 +1207,26 @@ with verified product content before release.
 
 ## Direction contract
 
-The running direction lab must compare materially different systems using this
-same product promise and audience. References are ingredients, components are
+Compare working product-specific previews using this same promise and audience.
+Bundled examples are optional references, not the available design space.
+References are ingredients, components are
 structural donors, tokens encode approved decisions, and this project's design
 system wins every conflict.
 
 Canonical design-system and token changes still require explicit human approval
-through `./agentic design approve <direction-id> --yes`.
+with reviewed evidence. Follow `docs/60-tooling/PROJECT_ONBOARDING.md`.
 """
 
 
 def write_generated_files(plan: GenerationPlan) -> None:
+    brief = project_brief.create(plan)
+    write_json(plan.destination / project_brief.BRIEF_PATH, brief)
+    for relative, content in project_brief.documents(brief, web="web-next" in plan.resolved_profiles).items():
+        destination = plan.destination / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(content)
+    (plan.destination / "docs/10-product/FIRST_FEATURE.md").write_text(generated_first_feature(plan))
+    (plan.destination / "docs/20-design/DESIGN_BRIEF.md").write_text(generated_design_brief(plan))
     write_json(plan.destination / PROJECT_PATH, generated_project_manifest(plan))
     write_json(plan.destination / GENERATED_PATH, generated_metadata(plan))
     write_json(plan.destination / "package.json", generated_package(plan))
@@ -1221,12 +1238,6 @@ def write_generated_files(plan: GenerationPlan) -> None:
     if "web-next" in set(plan.resolved_profiles):
         write_json(plan.destination / EXPERIENCE_PATH, generated_experience(plan))
         write_json(plan.destination / ENTERPRISE_PATH, generated_enterprise(plan))
-        (plan.destination / "docs/10-product/FIRST_FEATURE.md").write_text(
-            generated_first_feature(plan)
-        )
-        (plan.destination / "docs/20-design/DESIGN_BRIEF.md").write_text(
-            generated_design_brief(plan)
-        )
         for relative, content in generated_enterprise_artifacts(plan).items():
             destination = plan.destination / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -1236,6 +1247,14 @@ def write_generated_files(plan: GenerationPlan) -> None:
     )
     reset_durable_state(plan)
     reset_design_state(plan)
+    (plan.destination / "docs/40-execution/CURRENT_STATE.md").write_text(
+        f"# Current state\n\nProject: {plan.project_name}\n\nThe project brief and selected scaffold are present. "
+        "Product and design decisions require review. No production services are configured.\n"
+    )
+    (plan.destination / "docs/40-execution/HANDOFF.md").write_text(
+        f"# Continue {plan.project_name}\n\nRun `./agentic start` to resume with the saved project brief. "
+        "Keep user edits; resolve open decisions before design approval or implementation.\n"
+    )
 
 
 def validate_symlinks(root: Path) -> None:
@@ -1286,6 +1305,11 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
     metadata = load_object(root / GENERATED_PATH, "generated-project metadata")
     project = load_object(root / PROJECT_PATH, "project manifest")
     package = load_object(root / "package.json", "package metadata")
+    if metadata.get("onboarding_version") == 1 or (root / project_brief.BRIEF_PATH).exists():
+        try:
+            project_brief.load(root)
+        except project_brief.BriefError as error:
+            raise GenerationError(str(error)) from error
     mcp = load_object(root / ".mcp.json", "MCP configuration")
     if metadata.get("schema_version") != 1:
         raise GenerationError("Unsupported generated-project metadata schema")
@@ -1471,6 +1495,11 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
                 raise GenerationError("Approved design state must name a catalog direction")
             if design_status not in {"needs_approval", "approved"}:
                 raise GenerationError("Unsupported ongoing design status")
+            import design_engine
+            try:
+                design_engine.validate_project(root)
+            except design_engine.DesignError as error:
+                raise GenerationError(str(error)) from error
         expected_intake = "captured" if "web-next" in current_resolved else "not_started"
         if pristine and intake_state.get("status") != expected_intake:
             raise GenerationError(
@@ -1567,7 +1596,8 @@ def print_plan(plan: GenerationPlan) -> None:
         print(f"  Archetype:   {plan.archetype}")
         print(f"  Audience:    {plan.audience}")
         print(f"  Promise:     {plan.promise}")
-        print(f"  Character:   {plan.visual_character}")
+        if plan.design_mode == "reference":
+            print(f"  Reference character: {plan.visual_character}")
     if plan.archetype == "enterprise-workflow":
         print("\nEnterprise boundary:")
         print(f"  Object:      {plan.business_object}")
@@ -1577,19 +1607,11 @@ def print_plan(plan: GenerationPlan) -> None:
     print("\nResolved profiles:")
     for profile in plan.resolved_profiles:
         print(f"  + {profile}")
-    print("\nProfile-managed paths included:")
-    for path in plan.included_managed_paths:
-        print(f"  + {path}")
-    print("\nProfile-managed paths excluded:")
-    for path in plan.excluded_managed_paths:
-        print(f"  - {path}")
-    print(f"\nTracked files to copy: {report['copy']['tracked_file_count']}")
-    print("External setup to review separately:")
+    print(f"\nDesign: {plan.design_mode} | Continue with: {plan.assistant}")
+    print(f"Copy: {report['copy']['tracked_file_count']} tracked files; inactive profile paths excluded.")
+    print("Use --dry-run --json for the complete file/profile/setup plan.")
     if plan.external_setup:
-        for resource in plan.external_setup:
-            print(f"  ! {resource}")
-    else:
-        print("  - none")
+        print("Optional capabilities remain unconfigured: " + ", ".join(plan.external_setup))
     print("\nSafety contract:")
     print("  - The source checkout is not modified or pruned.")
     print("  - The destination must not already exist and must be outside the source.")
@@ -1600,6 +1622,8 @@ def print_plan(plan: GenerationPlan) -> None:
 def prompt_text(question: str, default: str, *, maximum: int = 180) -> str:
     while True:
         answer = input(f"{question}\n  [{default}]\n> ").strip() or default
+        if not answer and not default:
+            return ""
         try:
             return clean_text(answer, question, maximum=maximum) or default
         except GenerationError as error:
@@ -1627,92 +1651,44 @@ def prompt_confirm(question: str) -> bool:
 
 
 def interactive_answers() -> argparse.Namespace:
-    print("\nCreate something unmistakable.")
-    print("Five product decisions shape the first running experience; enterprise boundaries appear only when relevant.\n")
-    name = prompt_text("1/5  What is the project called?", "My Product", maximum=80)
-    slug = slugify(name)
-    destination = prompt_text(
-        "2/5  Where should the new project live?",
-        str(ROOT.parent / slug),
-        maximum=500,
-    )
+    print("\nStart with your product, not a preset.")
+    print("Capture the essentials here; continue with your chosen assistant.\n")
+    name = prompt_text("What is the project called?", "My Product", maximum=80)
+    destination = prompt_text("Where should it live?", str(ROOT.parent / slugify(name)), maximum=500)
     kind = prompt_choice(
-        "3/5  What should people experience first?",
+        "What are you building?",
         ("product", "agentic-product", "enterprise-workflow", "portfolio", "mobile", "core"),
         "product",
     )
     web = kind in WEB_ARCHETYPES
-    mobile = kind == "mobile"
-    if web:
-        default_audience, default_promise = experience_defaults(name, kind)
-        audience = prompt_text("4/5  Who is this for?", default_audience, maximum=120)
-        promise = prompt_text(
-            "5/5  What should it help them achieve?",
-            default_promise,
-            maximum=120,
-        )
-        character = prompt_choice(
-            "Choose the starting character; the live lab will still compare three systems.",
-            VISUAL_CHARACTERS,
-            "precise",
-        )
-        if kind == "enterprise-workflow":
-            print("\nFour enterprise boundaries keep the generated workflow credible.")
-            business_object = prompt_text(
-                "6/9  What is the core business object?",
-                "access request",
-                maximum=80,
-            )
-            tenant_model = prompt_choice(
-                "7/9  How is organizational data separated?",
-                TENANT_MODELS,
-                "multi-tenant",
-            )
-            approval_model = prompt_choice(
-                "8/9  What decision control is required?",
-                APPROVAL_MODELS,
-                "dual-control",
-            )
-            data_sensitivity = prompt_choice(
-                "9/9  What is the highest data sensitivity in this workflow?",
-                DATA_SENSITIVITY_LEVELS,
-                "confidential",
-            )
-        else:
-            business_object = None
-            tenant_model = None
-            approval_model = None
-            data_sensitivity = None
-    else:
-        audience = None
-        promise = None
-        character = None
-        business_object = None
-        tenant_model = None
-        approval_model = None
-        data_sensitivity = None
+    audience = prompt_text("Who is it for?", "Discuss with me", maximum=120)
+    promise = prompt_text("What should it help them achieve?", "Discuss with me", maximum=120)
+    first_outcome = prompt_text("First useful action? Leave blank to decide together.", "", maximum=500) or None
+    mode = prompt_choice(
+        "How should the design begin? Custom is tailored; reference is a deliberate shortcut.",
+        project_brief.DESIGN_MODES, "custom",
+    ) if web or kind == "mobile" else "custom"
+    preferences = (prompt_text(
+        "Any brand colors, references, styles to avoid, or motion preferences? Leave blank to explore together.",
+        "", maximum=1000,
+    ) or None) if web or kind == "mobile" else None
+    assistant = prompt_choice(
+        "Where will you build? Use an existing account; this does not sign in or install anything.",
+        ("claude", "codex", "manual", "choose"), "choose",
+    )
+    enterprise = kind == "enterprise-workflow"
+    business_object = prompt_text("What is the business object?", "access request", maximum=80) if enterprise else None
+    tenant_model = prompt_choice("How is data separated?", TENANT_MODELS, "multi-tenant") if enterprise else None
+    approval_model = prompt_choice("What decision control is required?", APPROVAL_MODELS, "dual-control") if enterprise else None
+    data_sensitivity = prompt_choice("What is the highest data sensitivity?", DATA_SENSITIVITY_LEVELS, "confidential") if enterprise else None
     return argparse.Namespace(
-        name=name,
-        destination=destination,
-        preset=None,
-        web=web,
-        mobile=mobile,
-        design=web or mobile,
-        research=False,
-        agentic=kind == "agentic-product",
-        backend="none",
-        archetype=kind if web else None,
-        audience=audience,
-        promise=promise,
-        visual_character=character,
-        business_object=business_object,
-        tenant_model=tenant_model,
-        approval_model=approval_model,
-        data_sensitivity=data_sensitivity,
-        json=False,
-        dry_run=False,
-        yes=False,
-        interactive=True,
+        name=name, destination=destination, preset=None, web=web, mobile=kind == "mobile",
+        design=web or kind == "mobile", research=False, agentic=kind == "agentic-product",
+        backend="none", archetype=kind if web else None, audience=audience, promise=promise,
+        visual_character="precise" if web else None, business_object=business_object,
+        tenant_model=tenant_model, approval_model=approval_model, data_sensitivity=data_sensitivity,
+        assistant=assistant, design_mode=mode, design_preferences=preferences, first_outcome=first_outcome,
+        json=False, dry_run=False, yes=False, interactive=True,
     )
 
 
@@ -1731,6 +1707,10 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--audience")
     value.add_argument("--promise")
     value.add_argument("--visual-character", choices=VISUAL_CHARACTERS)
+    value.add_argument("--assistant", choices=project_brief.CLIENTS, default="choose")
+    value.add_argument("--design-mode", choices=project_brief.DESIGN_MODES, default="custom")
+    value.add_argument("--design-preferences")
+    value.add_argument("--first-outcome")
     value.add_argument("--business-object")
     value.add_argument("--tenant-model", choices=TENANT_MODELS)
     value.add_argument("--approval-model", choices=APPROVAL_MODELS)
@@ -1758,6 +1738,8 @@ def run(args: argparse.Namespace) -> int:
         tenant_model=args.tenant_model,
         approval_model=args.approval_model,
         data_sensitivity=args.data_sensitivity,
+        assistant=args.assistant, design_mode=args.design_mode,
+        design_preferences=args.design_preferences, first_outcome=args.first_outcome,
     )
     if not args.json:
         print_plan(plan)
@@ -1792,7 +1774,8 @@ def run(args: argparse.Namespace) -> int:
     else:
         print(f"\nCreated {plan.project_name} at {plan.destination}")
         print("Generated-project verification: PASS")
-        print(f"\nNext: cd {plan.destination} && ./agentic next")
+        print(f"\nOpen your new project folder: {plan.destination}")
+        print("Next, from that folder: ./agentic start")
     return 0
 
 

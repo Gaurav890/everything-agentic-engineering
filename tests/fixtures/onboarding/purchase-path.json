@@ -1,0 +1,21 @@
+{
+  "id": "purchase-path",
+  "name": "Purchase Path",
+  "thesis": "Put time and tradeoffs before a purchase recommendation.",
+  "composition": "A reading-led comparison with a single timing decision instead of dashboard cards.",
+  "interaction": "Switch timing scenarios and inspect the corresponding explanation.",
+  "rationale": "A product-specific test candidate, not an approved financial product.",
+  "motion": "Immediate feedback without decorative movement.",
+  "preview_path": "/concepts/purchase-path",
+  "source_files": ["apps/web/app/concepts/purchase-path/page.tsx", "apps/web/app/layout.tsx", "apps/web/app/globals.css", "packages/design-tokens/generated/tokens.css"],
+  "tokens": {
+    "color.background.canvas": {"$type":"color","$value":{"colorSpace":"srgb","components":[0.9647,0.9451,0.9059],"alpha":1}},
+    "color.background.surface": {"$type":"color","$value":{"colorSpace":"srgb","components":[1,1,1],"alpha":1}},
+    "color.text.primary": {"$type":"color","$value":{"colorSpace":"srgb","components":[0.1373,0.2353,0.2314],"alpha":1}},
+    "color.text.secondary": {"$type":"color","$value":{"colorSpace":"srgb","components":[0.25,0.31,0.30],"alpha":1}},
+    "color.action.primary.default": {"$type":"color","$value":{"colorSpace":"srgb","components":[0.14,0.30,0.28],"alpha":1}},
+    "font.family.display": {"$type":"fontFamily","$value":["Georgia","serif"]},
+    "radius.lg": {"$type":"dimension","$value":{"value":4,"unit":"px"}},
+    "duration.normal": {"$type":"duration","$value":{"value":0,"unit":"ms"}}
+  }
+}

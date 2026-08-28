@@ -66,3 +66,23 @@ native scaffold, automated checks, human review, and production readiness.
 projects, browser checks, independent review, and an unclaimed newcomer pilot
 protocol. Real pilot results are a later launch gate, not an implementation
 test that can be simulated by the maintainer.
+
+## AC-006 — A new project does not inherit a product or a forced aesthetic
+
+**Linked requirements:** FR-006, FR-003, NFR-001
+
+**Given** captured product intent, **when** creation completes, **then** its
+README, vision, PRD, and acceptance drafts describe that product, its next step
+is a prepared client handoff, and custom/existing-brand catalogs begin empty.
+Blank optional preferences remain unresolved. No keys are collected, client
+installed, or session launched without confirmation. Manual handoff works
+without a supported terminal client.
+
+**Given** a custom candidate, **when** it is registered and reviewed, **then**
+arbitrary candidate counts and IDs work, a local preview and source list are
+required, and incomplete intake or changed evidence cannot retain valid approval.
+
+**Evidence required:** all-profile generation matrix, consent/argv tests,
+symlink regression, candidate/freshness tests, actual generated-project browser
+checks and screenshots, and independent review. A maintainer test is not a
+newcomer usability study or proof of every downstream design's quality.

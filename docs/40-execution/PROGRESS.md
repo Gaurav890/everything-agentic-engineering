@@ -1,5 +1,27 @@
 # Progress log
 
+### 2026-08-27 — T-046
+
+**Requirements:** FR-001, FR-003, FR-005, FR-006
+**Acceptance:** AC-001, AC-004, AC-005, AC-006
+
+Implemented product-owned onboarding context, consent-based native/manual
+handoff, open-ended custom/existing-brand previews, and evidence-bound design
+approval. The setup workspace shows saved intent and a clear continuation
+without pretending to be the finished product. Custom generation no longer
+assigns a default design personality as a user answer.
+
+Local evidence includes 60 focused Python tests, nine web contract tests,
+16 disposable-project browser cases, 25 reference browser passes and 24
+unchanged visual comparisons. Independent product/security reviews found
+blockers that were fixed and rechecked. Recovery reloads repaired context;
+fixtures exercise empty, pending, failure and interactive preview states.
+See `docs/50-evals/evidence/T-046/` for scope and remaining checks.
+
+No existing downstream project was overwritten. Native account sign-in,
+unattended design generation, production readiness and newcomer outcomes
+remain unclaimed. Human task approval and merge remain separate.
+
 ## 2026-08-27 — T-044 independent reviews passed
 
 - Product-quality/adversarial QA and security/authority independently returned

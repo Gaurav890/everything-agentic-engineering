@@ -3,6 +3,10 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { previewExperiences } from "../app/experience-types";
+import {getProjectBrief} from "../app/project-brief.server";
+
+const brief = getProjectBrief();
+test.skip(Boolean(brief && brief.design_mode !== "reference"), "Reference-only suite; custom workspace is covered by onboarding.spec.ts");
 
 const experience = JSON.parse(
   readFileSync(resolve(process.cwd(), "../../.agentic/experience.json"), "utf8"),

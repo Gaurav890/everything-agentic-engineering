@@ -19,6 +19,10 @@ on:
       - "scripts/project_checks.py"
       - "scripts/next_action.py"
       - "scripts/project_generator.py"
+      - "scripts/project_brief.py"
+      - "scripts/project_handoff.py"
+      - "scripts/design_engine.py"
+      - "tests/fixtures/onboarding/**"
       - "scripts/verify.sh"
       - "tests/test_web_verification.py"
       - "tests/test_next_action.py"
@@ -62,6 +66,25 @@ jobs:
 
       - name: Verify repository, web build, interaction, and accessibility
         run: ./agentic verify web
+
+      - name: Verify a fresh personalized project and custom preview
+        run: |
+          ONBOARDING_ROOT="$(mktemp -d "$RUNNER_TEMP/eae-onboarding.XXXXXX")"
+          ./agentic setup create --name "First Project" \
+            --destination "$ONBOARDING_ROOT/project" --preset web \
+            --archetype agentic-product --audience "People comparing purchase dates" \
+            --promise "Understand the tradeoff before deciding." \
+            --first-outcome "Compare two purchase dates" --assistant manual --yes
+          mkdir -p "$ONBOARDING_ROOT/project/apps/web/app/concepts/purchase-path"
+          cp tests/fixtures/onboarding/purchase-path.tsx "$ONBOARDING_ROOT/project/apps/web/app/concepts/purchase-path/page.tsx"
+          cp tests/fixtures/onboarding/purchase-path.json "$ONBOARDING_ROOT/project/purchase-path.json"
+          cp tests/fixtures/onboarding/purchase-path.spec.ts "$ONBOARDING_ROOT/project/apps/web/tests/purchase-path.spec.ts"
+          cd "$ONBOARDING_ROOT/project"
+          ./agentic start --json
+          ./agentic design propose --file purchase-path.json --yes
+          pnpm install --offline --frozen-lockfile --ignore-scripts
+          pnpm --dir apps/web build
+          ONBOARDING_TEST_PROJECT=1 pnpm --dir apps/web exec playwright test onboarding.spec.ts purchase-path.spec.ts --workers=1
 
       - name: Detect approved Linux baselines
         id: baselines
@@ -114,5 +137,7 @@ jobs:
           path: |
             apps/web/test-results/
             apps/web/playwright-report/
+            ${{ runner.temp }}/eae-onboarding.*/project/apps/web/test-results/
+            ${{ runner.temp }}/eae-onboarding.*/project/apps/web/playwright-report/
           if-no-files-found: ignore
           retention-days: 7

@@ -24,6 +24,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Personalized project briefs and product documents, a consent-based native
+  client handoff, and a clear first-run workspace. Custom and existing-brand
+  projects start without forced example directions; local preview candidates
+  bind approval to reviewed context, sources, and evidence. No credentials
+  are collected, clients installed, or existing projects overwritten.
 - Task-aware first-project guidance, personalized first-feature briefs, explicit
   web and visual verification scopes, fail-closed screenshot comparison, and a
   newcomer pilot protocol with no claimed participant results.

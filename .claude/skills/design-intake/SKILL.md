@@ -14,7 +14,8 @@ then translate them into reviewable directions.
   restrictions, and the authority that may approve changes. Preserve exact brand
   inputs; do not approximate them from screenshots.
 - Greenfield design-critical product: collect preferences, research references,
-  and produce two or three materially different directions.
+  and produce comparable materially different directions. Two or three per
+  round is a starting point, not a catalog limit.
 - Redesign: inspect the running product and current tokens first. Separate what
   must remain compatible from what may change, and capture baseline evidence.
 - Design is not a competitive advantage: use one restrained accessible baseline;
@@ -56,7 +57,7 @@ approved decision.
 
 ## Generate comparable directions
 
-For design-critical work, create two or three coherent directions in
+For design-critical work, create a reviewable set of coherent directions in
 `docs/20-design/DESIGN_DIRECTIONS.md`. Each direction must include:
 
 - a name and product-specific thesis;
@@ -69,6 +70,13 @@ For design-critical work, create two or three coherent directions in
 
 Alternatives must differ in meaningful system decisions, not only accent color.
 References are inputs to synthesis; do not clone a product or library aesthetic.
+
+Generated projects use `project-onboarding` and an open-ended candidate catalog.
+Register actual local preview routes through `./agentic design propose`; do not
+force the bundled reference styles on custom or existing-brand projects. List
+preview code and its shared appearance-affecting dependencies/assets so approval
+fingerprints detect drift. Record complete intake and reviewed screenshot paths
+before approval; see `docs/60-tooling/PROJECT_ONBOARDING.md`.
 
 ## Approval gate
 

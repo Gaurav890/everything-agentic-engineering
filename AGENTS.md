@@ -155,6 +155,12 @@ from file-collision checks.
 
 ## Product-design routing
 
+Generated projects contain `.agentic/project-brief.json`. At first use, or when
+the owner is unsure how to continue, invoke `project-onboarding` to resume saved
+intent and unresolved decisions. `./agentic start` is a consent-based native
+client handoff, not an installation or credential collector. Custom and
+existing-brand projects must not be restricted to bundled reference directions.
+
 For substantial UI/UX work, the frontend owner invokes
 `product-design-router` and runs only the design phases whose durable outputs
 are missing or stale. Design direction must precede tokenization and

@@ -45,13 +45,16 @@ printf '%s\n' \
   "Guided Signal" \
   "$GUIDED_PROJECT" \
   "2" \
+  "people comparing choices" \
+  "Make a confident decision." \
+  "Compare the first two choices." \
   "" \
   "" \
-  "" \
+  "manual" \
   "y" | ./agentic setup create >/dev/null
 test -f "$GUIDED_PROJECT/.agentic/experience.json"
 GUIDED_NEXT="$("$GUIDED_PROJECT/agentic" next)"
-[[ "$GUIDED_NEXT" == *"pnpm install"* ]] || {
+[[ "$GUIDED_NEXT" == *"./agentic start"* ]] || {
   echo "Guided web project did not expose the expected single next action." >&2
   exit 1
 }
@@ -67,7 +70,8 @@ GUIDED_NEXT="$("$GUIDED_PROJECT/agentic" next)"
   --yes >/dev/null
 "$WEB_PROJECT/agentic" verify full >/dev/null
 WEB_NEXT="$("$WEB_PROJECT/agentic" next)"
-[[ "$WEB_NEXT" == *"pnpm install"* ]]
+[[ "$WEB_NEXT" == *"./agentic start"* ]]
+"$WEB_PROJECT/agentic" start --json >/dev/null
 test "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["archetype"])' "$WEB_PROJECT/.agentic/experience.json")" = "agentic-product"
 test ! -e "$WEB_PROJECT/apps/mobile"
 
@@ -89,7 +93,7 @@ test "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["enabled
 test -f "$ENTERPRISE_PROJECT/docs/30-engineering/ROLE_MATRIX.md"
 test -f "$ENTERPRISE_PROJECT/packages/domain/tests/workflow.test.mjs"
 ENTERPRISE_NEXT="$("$ENTERPRISE_PROJECT/agentic" next)"
-[[ "$ENTERPRISE_NEXT" == *"pnpm install"* ]]
+[[ "$ENTERPRISE_NEXT" == *"./agentic start"* ]]
 
 ./agentic setup create \
   --name "Smoke Mobile" \
@@ -98,7 +102,7 @@ ENTERPRISE_NEXT="$("$ENTERPRISE_PROJECT/agentic" next)"
   --yes >/dev/null
 "$MOBILE_PROJECT/agentic" verify full >/dev/null
 MOBILE_NEXT="$("$MOBILE_PROJECT/agentic" next)"
-[[ "$MOBILE_NEXT" == *"not a runnable native starter"* ]]
+[[ "$MOBILE_NEXT" == *"./agentic start"* ]]
 test ! -e "$MOBILE_PROJECT/.agentic/experience.json"
 test ! -e "$MOBILE_PROJECT/apps/web"
 
@@ -109,7 +113,7 @@ test ! -e "$MOBILE_PROJECT/apps/web"
   --yes >/dev/null
 "$CORE_PROJECT/agentic" verify full >/dev/null
 CORE_NEXT="$("$CORE_PROJECT/agentic" next)"
-[[ "$CORE_NEXT" == *"Open docs/00-vision/NORTH_STAR.md"* ]]
+[[ "$CORE_NEXT" == *"./agentic start"* ]]
 test ! -e "$CORE_PROJECT/apps"
 
 ./agentic release check

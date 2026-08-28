@@ -36,11 +36,22 @@ this starter.
 Then enter the generated project and run:
 
 ```bash
-./agentic next
+./agentic start
 ```
 
-`next` gives you exactly one useful action based on the project’s real state.
-Run it again whenever you are unsure what to do.
+`start` carries your saved brief into your chosen **Claude Code, Codex, or
+editor/app workflow**. It shows the folder and asks before launching an installed
+terminal client; manual copy/paste is available. Sign in through the client's
+own interface—this starter collects no API keys or subscription tokens.
+
+Your assistant then helps confirm one useful outcome, asks only unresolved
+questions, and creates working design previews for **your product**. Custom is
+the default; an existing brand or the bundled reference examples are optional.
+There is no preset-only shortlist. Your README and product documents start with
+your answers, not this starter's requirements.
+
+Use `./agentic next` whenever you return. It reads the current brief, design,
+and task state. [See exactly how the handoff works](docs/60-tooling/PROJECT_ONBOARDING.md).
 
 Use Git and Python 3.11+ to create a project. The runnable web path also needs
 Node.js 20.9+ (22 LTS is tested) and the pnpm version declared in `package.json`.
@@ -61,15 +72,16 @@ setup → feature → review path and help when a check stops.
 2. Choose what you are building and who it serves.
 3. Review the concise creation plan.
 4. Enter the generated directory.
-5. Run `./agentic next` and follow its single action.
-6. Open the live design-direction lab before committing to an aesthetic.
-7. Approve or synthesize a direction.
-8. Compile approved tokens, then use `next` to choose one useful feature from
-   your generated `FIRST_FEATURE.md` brief.
-9. Implement the accepted scope, inspect the running result, and review its
+5. Run `./agentic start`, or use its prepared instruction in your existing app.
+6. Confirm your first useful journey and discuss design preferences with your assistant.
+7. Compare real, product-specific previews; revise or reject them until the direction fits.
+8. Approve the design with reviewed evidence, then compile tokens.
+9. Implement the accepted feature, inspect the running result, and review its
    evidence. Return to `next` for the next improvement.
 
 Download times vary; this is a workflow, not a measured time-to-success claim.
+The initial custom workspace is a handoff and brief, not a finished product.
+Quality still depends on real content, good previews, critique, and iteration.
 
 No command archaeology. No deleting irrelevant starter folders. No giant prompt
 that asks one model to invent the product, design it, build it, and approve
@@ -77,7 +89,7 @@ itself.
 
 ---
 
-## See what it builds
+## Explore the reference examples
 
 The same enterprise request-and-decision product is rendered through three
 materially different design systems. These are screenshots from the running
@@ -340,6 +352,7 @@ Read the [parallel work guide](docs/70-collaboration/PARALLEL_TERMINALS.md).
 |---|---|
 | Create a clean project | `./agentic setup create` |
 | Get one next action | `./agentic next` |
+| Continue with your chosen assistant | `./agentic start` |
 | See active profiles | `./agentic profile resolve` |
 | Diagnose project setup | `./agentic profile doctor` |
 | Compare design directions | `./agentic design preview` |

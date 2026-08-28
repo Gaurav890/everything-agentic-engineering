@@ -12,6 +12,8 @@ from pathlib import Path
 sys.dont_write_bytecode = True
 
 import github_task_sync
+import project_brief
+import design_engine
 from project_checks import ProjectCheckError, active_profiles, load_object, web_prerequisite
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -114,6 +116,14 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         return "Create your first project", "./agentic setup create"
 
     profiles = active_profiles(root)
+    metadata = load_object(generated_path)
+    if metadata.get("onboarding_version") == 1 or (root / project_brief.BRIEF_PATH).exists():
+        try:
+            brief = project_brief.load(root)
+        except project_brief.BriefError as error:
+            raise NextActionError(str(error)) from error
+        if not task_id and brief["status"] != "ready":
+            return "Continue your product conversation; your answers are saved", "./agentic start"
     if task_id and "web-next" not in profiles:
         return task_action(root, task_id)
     if "web-next" in profiles:
@@ -125,6 +135,8 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         if not isinstance(design.get("status"), str) or design["status"] not in {"needs_approval", "approved"}:
             raise NextActionError("Invalid design status; run ./agentic design check")
         if design.get("status") != "approved":
+            if (root / project_brief.BRIEF_PATH).exists() and brief["design_mode"] != "reference":
+                return "Review product-specific previews with your coding assistant", "./agentic start"
             return (
                 "Compare the live directions, then explicitly approve your choice",
                 "pnpm dev",
@@ -133,11 +145,15 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         approved_direction = design.get("approved_direction")
         if not isinstance(approved_direction, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", approved_direction):
             raise NextActionError("Approved design needs a valid direction; run ./agentic design check")
+        try:
+            design_engine.validate_project(root)
+        except design_engine.DesignError as error:
+            return f"Re-review the direction: {error}", "./agentic start" if (root / project_brief.BRIEF_PATH).exists() else "./agentic design status"
         compiled = direction_path.read_text() if direction_path.is_file() else ""
         if (
             not isinstance(approved_direction, str)
             or not approved_direction
-            or f"({approved_direction})" not in compiled
+            or f"Fingerprint: {design['fingerprint']}." not in compiled
         ):
             return (
                 "Compile the approved direction into the canonical token outputs",

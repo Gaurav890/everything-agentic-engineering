@@ -42,13 +42,16 @@ class AgenticCliTests(unittest.TestCase):
         for command in self.registry["commands"]:
             target = command["target"]
             targets.append(target)
-            self.assertEqual("public", inventory[target]["classification"])
-            self.assertEqual(" ".join(command["path"]), inventory[target]["canonical_command"])
+            if target.endswith(".sh"):
+                self.assertEqual("public", inventory[target]["classification"])
+                self.assertEqual(" ".join(command["path"]), inventory[target]["canonical_command"])
+            else:
+                self.assertEqual(".py", Path(target).suffix)
             self.assertTrue((ROOT / target).is_file())
             self.assertTrue(os.access(ROOT / target, os.X_OK))
         self.assertEqual(len(targets), len(set(targets)))
         self.assertEqual(
-            command_names,
+            {" ".join(item["path"]) for item in self.registry["commands"] if item["target"].endswith(".sh")},
             {
                 item["canonical_command"]
                 for item in inventory.values()
@@ -103,6 +106,7 @@ class AgenticCliTests(unittest.TestCase):
         self.assertIn("design", names)
         self.assertIn("evolve", names)
         self.assertIn("next", names)
+        self.assertIn("start", names)
         self.assertNotIn("prepare merge", names)
 
     def test_arguments_are_forwarded_as_a_list_without_shell_evaluation(self) -> None:
