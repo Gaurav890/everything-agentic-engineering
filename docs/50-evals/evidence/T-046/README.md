@@ -1,6 +1,6 @@
 # T-046 — Personalized onboarding evidence
 
-Status: Local implementation checks pass; clean-checkout release smoke remains.
+Status: Local implementation and clean-checkout release smoke checks pass.
 No product or human approval implied.
 
 ## Actual test story
@@ -25,6 +25,9 @@ routing, not correctness or visual approval of a financial product.
 - Full repository verification, 25 reference browser checks (11 intentional
   non-applicable skips), and 24 unchanged macOS visual comparisons.
 - New onboarding skill validation.
+- `./agentic release smoke` from committed checkpoint `23495cc`: clean-checkout
+  guided creation and web, enterprise, mobile and core generation passed.
+  This does not install product dependencies or claim native application readiness.
 
 Pending copy is loading evidence; the empty catalog and clipboard fallback are
 empty/error evidence. Screenshots show the actual workspace, not an approved

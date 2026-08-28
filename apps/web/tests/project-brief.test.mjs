@@ -26,10 +26,11 @@ function fixture(run) {
 }
 
 test("public brief contains only product fields", () => fixture(write => {
-  write("project-brief.json", {...captured, private_notes: "excluded", client_path: "/not-public"});
+  write("project-brief.json", {...captured, private_notes: "excluded", client_path: "/not-public", confirmed_by: "Private reviewer"});
   assert.equal(getProjectBrief().name, "Sample");
   assert.equal("private_notes" in getProjectBrief(), false);
   assert.equal("client_path" in getProjectBrief(), false);
+  assert.equal("confirmed_by" in getProjectBrief(), false);
 }));
 
 test("ready requires human confirmation and a meaningful outcome", () => fixture(write => {

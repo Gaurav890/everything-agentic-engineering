@@ -16,6 +16,8 @@ Local evidence includes 60 focused Python tests, nine web contract tests,
 unchanged visual comparisons. Independent product/security reviews found
 blockers that were fixed and rechecked. Recovery reloads repaired context;
 fixtures exercise empty, pending, failure and interactive preview states.
+Clean-checkout release smoke passed from checkpoint `23495cc`, including guided
+creation and the web, enterprise, mobile and core profiles.
 See `docs/50-evals/evidence/T-046/` for scope and remaining checks.
 
 No existing downstream project was overwritten. Native account sign-in,

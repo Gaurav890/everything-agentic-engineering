@@ -114,6 +114,16 @@ rerun over an existing project. Starter operating agreements, license,
 provenance, workflow guides, and security policies remain reusable foundation.
 Research catalogs remain references, not claims about your product.
 
+Keep the brief suitable for display: its name, audience, promise, outcome and
+design preferences appear in the local workspace and generated documents. Do
+not put secrets, customer records, or confidential research into those fields.
+This workspace has no authentication; keep it local and do not publish it with
+private content. No telemetry or automatic retention/deletion service is added.
+Your files remain until you change them; copies in version control, backups or
+your chosen client's session have separate retention. Removing a current file
+does not erase those copies or duplicate text in the generated documents.
+Review content before sharing or committing it.
+
 Existing generated projects are **not migrated automatically**. In particular,
 their source, tokens, and approvals must not be overwritten. Review their
 current product work, then deliberately adopt the brief/handoff/candidate
