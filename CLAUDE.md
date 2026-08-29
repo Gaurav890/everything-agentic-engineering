@@ -241,6 +241,13 @@ dependencies, production, approval, or merge behavior.
 
 ## 9. Frontend quality bar
 
+For a generated project with `.agentic/project-brief.json`, use
+`project-onboarding` to resume its actual intent, unresolved design decisions,
+and first feature. `./agentic start` hands off to the user's chosen native client
+after consent; it collects no credentials. Custom and existing-brand modes are
+not restricted to bundled examples. Product docs and README must describe the
+owner's product, with unknowns explicit, not the starter's history.
+
 Frontend quality is a first-class product requirement. Route substantial
 experience work through `product-design-router` before implementation.
 

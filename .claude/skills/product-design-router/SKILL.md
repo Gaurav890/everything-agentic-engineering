@@ -7,6 +7,10 @@ description: Select the minimum valid product-design phases for substantial UI/U
 
 Inspect durable artifacts and the running product before routing.
 
+If `.agentic/project-brief.json` exists and product scope is still captured,
+start with `project-onboarding`. Resume saved answers; do not select a bundled
+direction or implement a renamed reference app on the owner's behalf.
+
 ## Phase order
 
 `discover → user-needs → benchmark → strategize → interaction-design → design-intake → design directions → human approval → design-system → design-tokens → component/Figma translation → implementation → live iteration → responsive/accessibility/system/token audits → performance-ux → design-critic → polish → design-ops → ship`

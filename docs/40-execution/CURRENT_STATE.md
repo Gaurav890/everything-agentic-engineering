@@ -18,17 +18,27 @@ demonstrates agent runs, protected approvals, interruption, recovery, durable
 artifacts, required UI states, and responsive supervision.
 
 The guided project studio materializes a portfolio, product, agentic-product,
-enterprise-workflow, mobile, or core project after five core product decisions
-and one confirmation. Enterprise workflows ask four additional domain
-decisions only when selected. Web
-projects persist name, audience, promise, archetype, and visual character in
-`.agentic/experience.json`; `./agentic next` then exposes one action at a time.
+enterprise-workflow, mobile, or core project after capturing its audience,
+outcome, design approach, optional preferences, and preferred coding client.
+Enterprise workflows ask four additional domain decisions only when selected.
+New projects persist `.agentic/project-brief.json` and their own product
+drafts; web reference metadata remains in `.agentic/experience.json`.
+`./agentic start` continues the saved brief; `next` exposes one action at a time.
 Web and mobile application profiles always resolve the design-critical
 foundation.
 
 ## First-project continuation
 
-Generated web projects include an audience/promise-specific first-feature brief.
+Generated projects include their own vision, PRD, acceptance draft, copy,
+architecture, README, and first-feature context. Native client launch requires
+terminal confirmation; a manual app/editor instruction needs no installation
+or credential collection. Existing projects are not migrated automatically.
+
+Custom/existing-brand web projects show an honest setup workspace, not a
+finished product. Their catalog starts empty and supports arbitrary local
+preview routes. Bundled examples require an explicit reference choice.
+Approval binds completed intake, confirmed scope, screenshot evidence, selected
+candidate, and listed sources. Fingerprints detect drift, not design quality.
 `next` follows current profiles, prerequisites, approved design, dependencies,
 workstreams, blockers, and review instead of stopping at setup verification.
 It does not install tools, alter task state, or infer approval or merge.
@@ -42,7 +52,7 @@ without updating them. New acceptance files join the web suite, while
 The newcomer pilot protocol exists, but no real participant outcomes have been
 measured. Public-demo hosting, production adapters, and launch promotion remain
 separate work. Implementation and review evidence is under
-`docs/50-evals/evidence/T-045/`.
+`docs/50-evals/evidence/T-046/`.
 
 ## Web
 
@@ -73,9 +83,10 @@ approved direction and performance budget.
 
 The starter reference lab has Playwright interaction/accessibility coverage and
 a complete four-archetype × three-direction × desktop/mobile visual matrix.
-Generated projects exclude reference baselines and test only their selected
-archetype. Linux candidate generation remains separate from human visual
-approval.
+Generated projects exclude reference baselines. Reference mode tests the chosen
+archetype; custom/existing-brand mode tests the workspace and local candidate
+links. Actual product behavior needs feature-specific tests. Linux candidate
+generation remains separate from human visual approval.
 
 When `design-critical` is active, Emil Kowalski's reviewed ten-skill external
 collection is available as a profile-aware design-engineering craft layer.

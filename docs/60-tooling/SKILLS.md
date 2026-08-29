@@ -46,6 +46,12 @@ Do not rerun phases whose outputs exist, remain valid, and match the current tas
 
 ## Product-design routing
 
+Fresh generated projects start with `project-onboarding`. It resumes the saved
+brief, personalizes the product documents, helps the owner choose one useful
+journey, and routes only missing design phases. It does not collect credentials,
+install clients, or turn bundled references into the project's approved design.
+See [the guided handoff and candidate contract](PROJECT_ONBOARDING.md).
+
 | Phase | Local contract | External capability when installed |
 |---|---|---|
 | Discovery | `discover` | Owl Listener discover; Impeccable Shape |

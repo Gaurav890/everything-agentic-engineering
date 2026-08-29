@@ -45,7 +45,7 @@ audit event.
 
 ### UJ-003 — Design approval
 
-Compare the same product content across three desktop/mobile directions,
+Compare product-specific desktop/mobile directions (without a fixed catalog limit),
 approve or synthesize one, compile tokens, and verify the running result.
 
 ## 6. Non-goals
@@ -58,8 +58,9 @@ connect production services, deploy, approve, or merge.
 ### FR-001 — Minimal credible project creation
 
 The guided generator must select only relevant profiles, preserve durable
-product context, create a runnable archetype-specific experience, and expose
-one safe next action.
+product context, create a runnable onboarding workspace or explicitly chosen
+reference experience, and expose one safe next action. A finished custom
+product requires the subsequent guided design and implementation session.
 
 ### FR-002 — Enterprise workflow contract
 
@@ -69,8 +70,10 @@ contracts; and supply a working local request-decision vertical slice.
 
 ### FR-003 — Product-specific visual system
 
-Web products must begin with three materially different, responsive direction
-systems and require explicit human approval before canonical token compilation.
+Web products must support materially different, responsive project-owned
+directions without a fixed shortlist. The three bundled examples are an
+explicit reference option. Require evidence-backed human approval before
+canonical token compilation.
 
 ### FR-004 — Evidence-gated engineering workflow
 
@@ -85,6 +88,15 @@ from approved design into a bounded first feature, implementation, independent
 review, and post-merge continuation. Verification must declare its scope;
 missing tools, visual baselines, native implementations, or production
 adapters must not be presented as completed evidence.
+
+### FR-006 — Personalized, resumable onboarding
+
+Creation captures project intent, open preferences, and a native client choice;
+generates product-owned draft documents; and provides a consent-based handoff
+without credentials or installation. Custom/existing-brand projects use an
+open-ended local candidate catalog. Approval is tied to the candidate, brief,
+intake, listed preview sources, and evidence. The user can reject all options,
+change direction, or resume without repeating settled questions.
 
 ## 8. Non-functional requirements
 

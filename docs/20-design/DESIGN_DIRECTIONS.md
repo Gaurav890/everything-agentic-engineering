@@ -105,6 +105,8 @@ accessible, escape-dismissible mobile control.
 Do not update canonical design tokens until this decision is approved.
 
 Machine state lives in `.agentic/design.json`. Use `./agentic design preview`
-to compare and `./agentic design approve <direction-id> --yes` only after the
-named human approver makes the decision. `./agentic design reset --yes` returns
+to compare. Register product-owned alternatives with `./agentic design propose`.
+Run `./agentic design approve <direction-id> --evidence <reviewed-screenshot> --yes`
+only after complete intake and direct human approval. The screenshot must exist
+under `docs/50-evals/`; the command does not produce evidence. `./agentic design reset --yes` returns
 the project to comparison without silently rewriting source tokens.

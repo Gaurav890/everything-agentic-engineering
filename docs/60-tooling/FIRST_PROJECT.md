@@ -6,7 +6,10 @@ and repeat. The initial design lab is a reference, not your finished product.
 ## Start and resume
 
 From the starter, run `./agentic setup create`. Enter the generated directory
-and run `./agentic next`. Run it again whenever you are unsure where to continue.
+and run `./agentic start`. It prepares a brief-aware conversation in your chosen
+installed terminal client, or an instruction for your editor/app. Native sign-in
+stays in that client; no keys are collected here. Use `./agentic next` later to
+resume. See [the complete handoff](PROJECT_ONBOARDING.md).
 
 Web prerequisites are Python 3.11+, Node.js 20.9+ (22 LTS is the tested baseline),
 and the pnpm version declared in `package.json`. No paid service or API key is
@@ -20,13 +23,15 @@ one. Substitute the actual task ID; the guide prints the available choices.
 
 ## Make it yours
 
-Compare the live directions with your audience and real content in mind. You
-can request a custom composition or synthesis; the three supplied directions
-are examples, not the limit of the product's identity. Record approval before
+Custom projects begin with no proposed directions. The assistant uses your
+saved product brief to confirm one outcome, discuss palette/type/motion intent,
+and build real previews. Existing-brand mode preserves your brand; reference
+mode explicitly opts into the three examples. Record evidence-backed approval before
 compiling canonical tokens. A new feature should preserve that approved system
 unless you explicitly request a redesign.
 
-Once tokens are compiled, `next` gives you a copyable planning request. Your
+Your scope and first journey are established before design approval. After
+tokens are compiled, `next` helps move into a bounded implementation task. Your
 project-specific starting brief is in `docs/10-product/FIRST_FEATURE.md`.
 Choose one outcome: for example, helping someone find a relevant case study or
 filtering a decision queue. Define the useful behavior and its failure/recovery

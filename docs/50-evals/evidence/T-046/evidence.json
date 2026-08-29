@@ -1,0 +1,21 @@
+{
+  "task_id": "T-046",
+  "acceptance_ids": ["AC-001", "AC-004", "AC-005", "AC-006"],
+  "ui_change": true,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-and-security-review",
+  "states": ["normal", "loading", "empty", "error"],
+  "viewports": ["desktop", "mobile"],
+  "commands": [
+    "python3 -m unittest tests.test_design_engine tests.test_project_handoff tests.test_project_generator tests.test_next_action",
+    "pnpm --dir apps/web test",
+    "generated project: pnpm --dir apps/web build",
+    "generated project: ONBOARDING_TEST_PROJECT=1 pnpm --dir apps/web exec playwright test onboarding.spec.ts purchase-path.spec.ts --workers=1",
+    "./agentic verify full",
+    "./agentic verify web",
+    "./agentic verify visual",
+    "./agentic release smoke"
+  ],
+  "artifacts": ["README.md", "independent-review.md", "onboarding-desktop.png", "onboarding-mobile.png", "onboarding-handoff.png", "onboarding-handoff-mobile.png", "custom-preview.png", "keyboard-focus.png", "copy-pending.png", "empty-catalog.png", "context-recovery.png", "context-recovery-mobile.png"],
+  "verdict": "PASS — local implementation, scoped reviews and clean-checkout smoke; remote checks remain; no human approval implied"
+}

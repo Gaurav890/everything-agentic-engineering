@@ -13,6 +13,8 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import project_generator  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from design_fixture import prepare
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/project_generator.py"
@@ -219,7 +221,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             app_package = json.loads((destination / "apps/web/package.json").read_text())
             self.assertEqual("playwright test --grep-invert @visual", app_package["scripts"]["test:e2e"])
             self.assertIn("updateSnapshots: \"none\"", (destination / "apps/web/playwright.config.ts").read_text())
-            self.assertIn("./agentic next", (destination / "docs/40-execution/HANDOFF.md").read_text())
+            self.assertIn("./agentic start", (destination / "docs/40-execution/HANDOFF.md").read_text())
             environment = os.environ.copy()
             environment.pop("PYTHONPYCACHEPREFIX", None)
             environment.pop("PYTHONDONTWRITEBYTECODE", None)
@@ -260,20 +262,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             (destination / "docs/40-execution/TASKS.jsonl").write_text(
                 '{"id":"T-001","status":"ready"}\n'
             )
-            design_path = destination / ".agentic/design.json"
-            design_path.write_text(
-                json.dumps(
-                    {
-                        "schema_version": 1,
-                        "status": "approved",
-                        "approved_direction": "editorial-signal",
-                        "approved_by": "Product owner",
-                        "approved_at": "2026-08-24T00:00:00+00:00",
-                    },
-                    indent=2,
-                )
-                + "\n"
-            )
+            prepare(destination)
             report = project_generator.validate_generated_project(destination)
             self.assertEqual("PASS", report["status"])
             with self.assertRaises(project_generator.GenerationError):
@@ -353,7 +342,10 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "2",
                         "operations teams supervising high-stakes automation",
                         "Make every automated decision legible and reversible.",
-                        "2",
+                        "Review one proposed automation action",
+                        "1",
+                        "Bold type, restrained motion; avoid neon",
+                        "3",
                         "y",
                         "",
                     ]
@@ -363,10 +355,14 @@ class ProjectGeneratorTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            self.assertIn("One confirmation creates the new directory", result.stdout)
+            self.assertIn("Start with your product", result.stdout)
             experience = json.loads((destination / ".agentic/experience.json").read_text())
             self.assertEqual("agentic-product", experience["archetype"])
-            self.assertEqual("bold", experience["visual_character"])
+            self.assertEqual("precise", experience["visual_character"])
+            brief = json.loads((destination / ".agentic/project-brief.json").read_text())
+            self.assertEqual("manual", brief["assistant"])
+            self.assertEqual("custom", brief["design_mode"])
+            self.assertIn("avoid neon", brief["design_preferences"])
             self.assertEqual(
                 "operations teams supervising high-stakes automation",
                 experience["audience"],
@@ -387,7 +383,10 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "3",
                         "security operations reviewers",
                         "Move sensitive requests to accountable decisions.",
+                        "Review one policy exception",
                         "1",
+                        "",
+                        "3",
                         "policy exception",
                         "2",
                         "2",
@@ -401,7 +400,7 @@ class ProjectGeneratorTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            self.assertIn("Four enterprise boundaries", result.stdout)
+            self.assertIn("What decision control is required?", result.stdout)
             enterprise = json.loads((destination / ".agentic/enterprise.json").read_text())
             self.assertTrue(enterprise["enabled"])
             self.assertEqual("policy exception", enterprise["business_object"]["singular"])
@@ -415,15 +414,63 @@ class ProjectGeneratorTests(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "5", "y", ""]),
+                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "1", "", "3", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            self.assertNotIn("Who is this for?", result.stdout)
+            self.assertIn("Who is it for?", result.stdout)
             self.assertNotIn("starting character", result.stdout.lower())
             self.assertFalse((destination / ".agentic/experience.json").exists())
+
+    def test_all_profiles_get_their_own_brief_and_product_documents(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            for preset, archetype in (("web", "product"), ("web", "agentic-product"), ("web", "portfolio"), ("mobile", None), ("core", None)):
+                destination = Path(temporary) / (archetype or preset)
+                flags = ["--archetype", archetype] if archetype else []
+                result = self.run_generator("--name", "Afford", "--destination", str(destination), "--preset", preset,
+                    "--audience", "Households", "--promise", "Understand purchase tradeoffs",
+                    "--first-outcome", "Compare two purchase dates", "--assistant", "manual",
+                    "--design-preferences", "Warm, no neon", *flags, "--yes")
+                self.assertEqual(0, result.returncode, result.stderr)
+                for relative in ("README.md", "docs/10-product/PRD.md", "docs/10-product/ACCEPTANCE_CRITERIA.md", "docs/00-vision/NORTH_STAR.md"):
+                    text = (destination / relative).read_text()
+                    self.assertIn("Afford", text)
+                    self.assertIn("Compare two purchase dates", text)
+                    self.assertNotIn("Build a reusable agentic starter", text)
+                before = (destination / "README.md").read_bytes()
+                result = subprocess.run([str(destination / "agentic"), "start", "--json"], cwd=destination, capture_output=True, text=True)
+                self.assertEqual(0, result.returncode, result.stderr)
+                self.assertEqual("manual", json.loads(result.stdout)["client"])
+                self.assertEqual(before, (destination / "README.md").read_bytes())
+                design_brief = (destination / "docs/20-design/DESIGN_BRIEF.md").read_text()
+                self.assertIn("Afford", design_brief)
+                self.assertIn("Warm, no neon", design_brief)
+                self.assertNotIn("Desired character: `precise`", design_brief)
+                if archetype:
+                    catalog = json.loads((destination / ".agentic/design-directions.json").read_text())
+                    self.assertEqual([], catalog["directions"])
+                    intake = json.loads((destination / ".agentic/design-intake.json").read_text())
+                    self.assertIsNone(intake["answers"]["personality"])
+                (destination / ".agentic/project-brief.json").unlink()
+                with self.assertRaises(project_generator.GenerationError):
+                    project_generator.validate_generated_project(destination)
+
+    def test_generated_doc_leaf_symlink_cannot_overwrite_operating_agreement(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, destination = root / "source", root / "generated"
+            (source / "docs/00-vision").mkdir(parents=True)
+            (source / "AGENTS.md").write_text("Keep safeguards")
+            relative = Path("docs/00-vision/NORTH_STAR.md")
+            (source / relative).symlink_to("../../AGENTS.md")
+            base = project_generator.build_plan(name="Safe", destination=str(destination), selected_profiles=["core"])
+            plan = replace(base, source_root=source.resolve(), files=(relative, Path("AGENTS.md")))
+            with self.assertRaisesRegex(project_generator.GenerationError, "generated write target"):
+                project_generator.materialize(plan)
+            self.assertFalse(destination.exists())
+            self.assertEqual("Keep safeguards", (source / "AGENTS.md").read_text())
 
     def test_research_project_lists_credentials_but_does_not_enable_servers(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -10,12 +10,20 @@ import {
 import designState from "../../../.agentic/design.json";
 import enterpriseState from "../../../.agentic/enterprise.json";
 import experienceState from "../../../.agentic/experience.json";
+import {getProjectBrief, getProjectCandidates} from "./project-brief.server";
+import {ProjectStudio} from "./project-studio";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{archetype?: string; character?: string}>;
 }) {
+  const brief = getProjectBrief();
+  if (brief && brief.design_mode !== "reference") {
+    return <ProjectStudio brief={brief} candidates={getProjectCandidates()} />;
+  }
   const query = await searchParams;
   const requested = query.archetype;
   const allowArchetypePreview = experienceState.preview_all_archetypes === true;

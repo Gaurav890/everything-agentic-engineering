@@ -86,11 +86,15 @@ one signature interaction or experience where appropriate.
 
 Canonical tokens use DTCG-compatible JSON under `packages/design-tokens/tokens/`.
 
-The three candidate packs live in `.agentic/design-directions.json`. They use
+Project candidates live in `.agentic/design-directions.json`; custom and
+existing-brand projects begin with an empty catalog. Three bundled packs are
+available only as explicit reference examples, not a fixed choice limit. Candidates use
 DTCG `$type`/`$value` objects but remain non-canonical exploration until
 `.agentic/design.json` records human approval. `./agentic tokens build` then
 compiles only the approved direction into `generated/direction.css`. Resetting a
-direction removes the override; it never guesses a replacement.
+direction removes the override; it never guesses a replacement. Approval binds
+the intake, candidate, listed preview sources, and reviewed evidence; changes
+require re-review. See the [candidate contract](../60-tooling/PROJECT_ONBOARDING.md).
 
 - Primitive tokens hold raw values.
 - Semantic tokens express intent.

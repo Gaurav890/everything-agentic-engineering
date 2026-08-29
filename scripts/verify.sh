@@ -161,6 +161,7 @@ python3 -m unittest discover -s tests -p 'test_agentic_cli.py'
 python3 -m unittest discover -s tests -p 'test_capability_engine.py'
 python3 -m unittest discover -s tests -p 'test_project_generator.py'
 python3 -m unittest discover -s tests -p 'test_next_action.py'
+python3 -m unittest discover -s tests -p 'test_project_handoff.py'
 python3 -m unittest discover -s tests -p 'test_web_verification.py'
 python3 -m unittest discover -s tests -p 'test_evolution_engine.py'
 ./scripts/check-branch-name.sh feat/T-014-password-reset >/dev/null

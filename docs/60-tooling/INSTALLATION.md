@@ -37,19 +37,26 @@ run the guided first-use path:
 The guide captures only the inputs that change the result, shows one plan, and
 asks once before writing. The destination must not exist. The generator copies
 no Git history or secrets, enables no MCP server, and installs nothing. Continue
-inside the generated directory and run `./agentic next`. See
+inside the generated directory and run `./agentic start`. See
 [Downstream project generator](PROJECT_GENERATOR.md).
 
-For a web project, the next-action router initially guides you through:
+The handoff opens a brief-aware conversation after consent, or gives you the
+instruction to paste in your existing editor/app. It installs no client and
+reads no credentials. See [project onboarding](PROJECT_ONBOARDING.md).
+
+When ready to inspect the generated web workspace or a design preview:
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-The first-run brief has already selected the right portfolio, product, or
-agentic-product content architecture. Compare the three live directions before
-approving one and compiling its token overrides.
+The brief captures your product intent. Custom and existing-brand modes start
+with no preselected designs; your assistant creates product-specific previews.
+The three bundled styles appear only in deliberately selected reference mode.
+Complete the brief and design intake, inspect actual screenshots, and approve
+the chosen direction before compiling overrides. Open the port printed by the
+development server; use Ctrl+C to stop it, not Ctrl+Z to suspend it.
 
 After token compilation, `./agentic next` guides the first feature, task
 implementation, blockers, and human review. Follow

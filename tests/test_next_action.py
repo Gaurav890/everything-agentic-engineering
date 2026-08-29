@@ -12,6 +12,8 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import next_action
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from design_fixture import prepare
 
 
 class NextActionTests(unittest.TestCase):
@@ -45,10 +47,10 @@ class NextActionTests(unittest.TestCase):
                 "tracking": {"mode": "not_required", "issues": [], "reason": "Reviewed local pilot."}}
 
     def approve(self):
-        self.write(".agentic/design.json", {"status": "approved", "approved_direction": "editorial-signal"})
+        state = prepare(self.root)
         path = self.root / "packages/design-tokens/generated/direction.css"
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text("/* Approved direction: Editorial Signal (editorial-signal). */\n")
+        path.write_text(f"/* Approved direction: editorial-signal. Fingerprint: {state['fingerprint']}. */\n")
 
     def test_source_checkout_routes_to_create(self):
         (self.root / ".agentic/generated-project.json").unlink()
@@ -59,7 +61,7 @@ class NextActionTests(unittest.TestCase):
         self.assertEqual("pnpm install --frozen-lockfile", next_action.next_action(self.root)[1])
         self.prerequisite.return_value = None
         self.assertEqual("pnpm dev", next_action.next_action(self.root)[1])
-        self.write(".agentic/design.json", {"status": "approved", "approved_direction": "editorial-signal"})
+        prepare(self.root)
         self.assertEqual("./agentic tokens build", next_action.next_action(self.root)[1])
         self.approve()
         title, action = next_action.next_action(self.root)
@@ -71,6 +73,24 @@ class NextActionTests(unittest.TestCase):
         self.write(".agentic/project.json", {"profiles": ["core"]})
         self.assertEqual("Open docs/00-vision/NORTH_STAR.md", next_action.next_action(self.root)[1])
         self.prerequisite.assert_not_called()
+
+    def test_new_brief_continues_in_chosen_assistant_before_installation(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "assistant": "manual", "status": "captured", "confirmed_by": None, "open_questions": [],
+        })
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+        self.prerequisite.assert_not_called()
+        (self.root / ".agentic/project-brief.json").unlink()
+        with self.assertRaises(next_action.NextActionError):
+            next_action.next_action(self.root)
+
+    def test_fake_css_comment_does_not_make_a_stale_design_current(self):
+        self.approve()
+        (self.root / "docs/50-evals/fixture.png").write_bytes(b"changed")
+        self.assertIn("Re-review", next_action.next_action(self.root)[0])
 
     def test_mobile_is_honest_and_never_routes_web(self):
         self.write(".agentic/project.json", {"profiles": ["mobile-expo"]})
