@@ -1,0 +1,17 @@
+{
+  "task_id": "T-047",
+  "acceptance_ids": ["AC-001", "AC-004", "AC-005", "AC-006"],
+  "ui_change": false,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-and-privacy-review-pending",
+  "states": [],
+  "viewports": [],
+  "commands": [
+    "python3 -m unittest tests.test_newcomer_pilot tests.test_agentic_cli tests.test_project_generator",
+    "./agentic pilot plan",
+    "./agentic verify full",
+    "./agentic release smoke"
+  ],
+  "artifacts": ["README.md"],
+  "verdict": "PASS_WITH_RISKS — focused tests, full repository verification, and clean-checkout smoke pass; independent product/privacy review and real participant sessions remain"
+}

@@ -1,11 +1,11 @@
 # Handoff
 
-Last updated: 2026-08-27
+Last updated: 2026-08-30
 
 ## Current goal
 
-Capture the owner's idea, preserve it in their project, continue in their chosen
-coding client, compare custom working previews, then verify one agreed feature.
+Measure whether five newcomers can create, personalize, implement, verify, and
+continue one useful web feature without maintainer intervention.
 
 ## Implemented
 
@@ -15,25 +15,24 @@ coding client, compare custom working previews, then verify one agreed feature.
 - Evidence-bound approval and stale-context/source/evidence detection.
 - Responsive workspace with saved intent, continuation, candidate links, copy
   feedback, visible keyboard focus and context-error recovery.
+- Consent-based local P1–P5 pilot packets, closed anonymous scorecards, strict
+  privacy validation, aggregate thresholds, repeated-blocker detection, and
+  read-only summary output unless a new report path is explicitly confirmed.
 
 ## Evidence and limits
 
-See `docs/50-evals/evidence/T-046/` for checks, screenshots, independent review
-scope and limits. A disposable Afford-style project exercises personalized
-documents and a custom preview; the existing project was untouched. This is a
-synthetic test, not a financial product or approved visual direction. Native
-sign-in and live assistant sessions were not run.
+See `docs/50-evals/evidence/T-047/` for implementation checks and limits. The
+deterministic evaluator has synthetic regression coverage; that coverage is not
+a participant result. Native sign-in and live assistant sessions have still not
+been measured through the pilot.
 
 No newcomer study, production readiness, native implementation, launch,
 deployment, human task approval or merge is implied.
 
 ## Exact next action
 
-Read the ledger and current PR state. Follow the applicable verification and
-human-review step; use the normal finalizer only after direct approval.
-Approval and merge are separate, never inferred from this document.
-After confirmed merge, inspect task closeout and preserve local work before
-updating a checkout.
-
-Run a real newcomer pilot before claiming measured self-service success.
-Existing-project migration remains a separate reviewed change.
+Run `./agentic pilot plan`, recruit five consenting people who did not build the
+repository, and give each only the public README. Keep session packets private.
+Use the aggregate result to choose the next small onboarding fix; do not claim
+measured self-service success from tests or an incomplete sample. Existing-
+project migration remains a separate reviewed change.

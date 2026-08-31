@@ -1284,3 +1284,21 @@ test discovery, malformed-state handling, changed-profile task routing,
 feature-specific baseline paths, and post-merge guidance. No application UI or
 approved design changed. Human approval, merge, deployment, public hosting,
 production readiness, and real-user pilot results are not implied.
+### 2026-08-30 — T-047
+
+**Requirements:** FR-001, FR-004, FR-005, FR-006
+
+**Acceptance:** AC-001, AC-004, AC-005, AC-006
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT AND HUMAN REVIEW PENDING
+
+Added a consent-based local newcomer-pilot command with anonymous P1–P5 session
+packets, a closed scorecard schema and policy, strict privacy and completeness
+validation, deterministic launch gates, repeated-blocker detection, and JSON/
+Markdown aggregate reports. Fewer than five valid sessions cannot pass.
+
+Targeted pilot, command-router, and generated-project tests pass. The ten-stage
+full repository verification and clean-checkout release smoke pass after
+restoring the reviewed locked dependencies. No participant data was collected and no newcomer success,
+testimonial, production readiness, native readiness, publication, approval, or
+merge is implied. Evidence and remaining review boundaries are recorded under
+`docs/50-evals/evidence/T-047/`.

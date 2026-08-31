@@ -63,9 +63,10 @@ generate or approve visual baselines. Documentation separates local web,
 native scaffold, automated checks, human review, and production readiness.
 
 **Evidence required:** routing and verification regressions, fresh generated
-projects, browser checks, independent review, and an unclaimed newcomer pilot
-protocol. Real pilot results are a later launch gate, not an implementation
-test that can be simulated by the maintainer.
+projects, browser checks, independent review, and a runnable consent-based
+newcomer pilot with closed anonymous scorecards and a fail-closed aggregate
+gate. Real participant results remain a launch gate, not an implementation test
+that can be simulated by the maintainer.
 
 ## AC-006 — A new project does not inherit a product or a forced aesthetic
 

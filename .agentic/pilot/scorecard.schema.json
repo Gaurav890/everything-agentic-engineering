@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://everything-agentic.example/schemas/newcomer-pilot-scorecard.schema.json",
+  "title": "Anonymous newcomer pilot scorecard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "session_id", "consent", "environment", "timings", "outcomes", "interventions", "blockers", "quality", "privacy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "session_id": {"enum": ["P1", "P2", "P3", "P4", "P5"]},
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participant_consented", "observer_explained_data_boundary"],
+      "properties": {
+        "participant_consented": {"const": true},
+        "observer_explained_data_boundary": {"const": true}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operating_system", "experience_level", "profile", "node_version", "pnpm_version", "python_version"],
+      "properties": {
+        "operating_system": {"enum": ["macos", "linux", "windows-wsl", "other"]},
+        "experience_level": {"enum": ["new_to_frontend", "working_frontend_knowledge", "experienced_frontend"]},
+        "profile": {"enum": ["web-next", "portfolio", "product", "agentic-product", "enterprise-workflow"]},
+        "node_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"},
+        "pnpm_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"},
+        "python_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"}
+      }
+    },
+    "timings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["download_and_tooling_minutes", "product_flow_minutes", "time_to_personalized_preview_minutes"],
+      "properties": {
+        "download_and_tooling_minutes": {"type": "number", "minimum": 0, "maximum": 480},
+        "product_flow_minutes": {"type": "number", "minimum": 0, "maximum": 480},
+        "time_to_personalized_preview_minutes": {"type": "number", "minimum": 0, "maximum": 480}
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["creation_completed", "personalization_completed", "feature_completed", "applicable_verification_completed", "evidence_boundaries_understood", "next_step_identified"],
+      "properties": {
+        "creation_completed": {"type": "boolean"},
+        "personalization_completed": {"type": "boolean"},
+        "feature_completed": {"type": "boolean"},
+        "applicable_verification_completed": {"type": "boolean"},
+        "evidence_boundaries_understood": {"type": "boolean"},
+        "next_step_identified": {"type": "boolean"}
+      }
+    },
+    "interventions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/friction"},
+      "maxItems": 100
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stage", "code", "safety_required", "resolved"],
+        "properties": {
+          "stage": {"enum": ["prerequisites", "creation", "personalization", "design", "handoff", "implementation", "verification", "review", "continuation", "safety"]},
+          "code": {"enum": ["missing_prerequisite", "unclear_instruction", "unexpected_output", "command_failure", "navigation_confusion", "concept_confusion", "unsafe_action", "other_redacted"]},
+          "safety_required": {"type": "boolean"},
+          "resolved": {"type": "boolean"}
+        }
+      },
+      "maxItems": 100
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["independent_evaluator", "hierarchy", "content_specificity", "interaction", "accessibility"],
+      "properties": {
+        "independent_evaluator": {"const": true},
+        "hierarchy": {"type": "integer", "minimum": 1, "maximum": 5},
+        "content_specificity": {"type": "integer", "minimum": 1, "maximum": 5},
+        "interaction": {"type": "integer", "minimum": 1, "maximum": 5},
+        "accessibility": {"type": "integer", "minimum": 1, "maximum": 5}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["redacted", "contains_personal_data", "contains_secrets", "contains_raw_prompts", "recording_collected", "retention_class"],
+      "properties": {
+        "redacted": {"const": true},
+        "contains_personal_data": {"const": false},
+        "contains_secrets": {"const": false},
+        "contains_raw_prompts": {"const": false},
+        "recording_collected": {"const": false},
+        "retention_class": {"const": "aggregate_only"}
+      }
+    }
+  },
+  "$defs": {
+    "friction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "code", "safety_required"],
+      "properties": {
+        "stage": {"enum": ["prerequisites", "creation", "personalization", "design", "handoff", "implementation", "verification", "review", "continuation", "safety"]},
+        "code": {"enum": ["missing_prerequisite", "unclear_instruction", "unexpected_output", "command_failure", "navigation_confusion", "concept_confusion", "unsafe_action", "other_redacted"]},
+        "safety_required": {"type": "boolean"}
+      }
+    }
+  }
+}
