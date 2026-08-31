@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "mode": "consent_local_only",
+  "required_sessions": 5,
+  "allowed_session_ids": ["P1", "P2", "P3", "P4", "P5"],
+  "thresholds": {
+    "minimum_unassisted_completions": 4,
+    "minimum_boundary_understanding": 5,
+    "minimum_independent_next_steps": 4,
+    "maximum_repeated_unresolved_blockers": 0
+  },
+  "privacy": {
+    "forbidden_field_names": [
+      "name",
+      "email",
+      "phone",
+      "username",
+      "company",
+      "employer",
+      "repository_url",
+      "raw_prompt",
+      "transcript",
+      "recording",
+      "credential",
+      "secret",
+      "token",
+      "api_key"
+    ],
+    "required_flags": {
+      "redacted": true,
+      "contains_personal_data": false,
+      "contains_secrets": false,
+      "contains_raw_prompts": false,
+      "recording_collected": false,
+      "retention_class": "aggregate_only"
+    }
+  },
+  "enums": {
+    "operating_system": ["macos", "linux", "windows-wsl", "other"],
+    "experience_level": ["new_to_frontend", "working_frontend_knowledge", "experienced_frontend"],
+    "profile": ["web-next", "portfolio", "product", "agentic-product", "enterprise-workflow"],
+    "stage": ["prerequisites", "creation", "personalization", "design", "handoff", "implementation", "verification", "review", "continuation", "safety"],
+    "friction_code": ["missing_prerequisite", "unclear_instruction", "unexpected_output", "command_failure", "navigation_confusion", "concept_confusion", "unsafe_action", "other_redacted"]
+  }
+}

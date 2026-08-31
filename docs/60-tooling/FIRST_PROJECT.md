@@ -130,5 +130,7 @@ and a redacted error in a repository issue. Do not share `.env`, access tokens,
 customer data, browser storage, or unredacted traces.
 
 Maintainers can validate this journey with the
-[first-project pilot](../50-evals/FIRST_PROJECT_PILOT.md). Its targets are not
-claims of measured newcomer success.
+[first-project pilot](../50-evals/FIRST_PROJECT_PILOT.md). Run `./agentic pilot
+plan` to create anonymous P1–P5 packets and evaluate the closed scorecards.
+Fewer than five valid sessions returns `INSUFFICIENT_EVIDENCE`; its targets are
+not claims of measured newcomer success.

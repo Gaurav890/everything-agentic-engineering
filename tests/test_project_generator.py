@@ -320,6 +320,15 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertEqual(0, evolution.returncode, evolution.stderr)
             self.assertFalse(json.loads(evolution.stdout)["mutation_performed"])
+            pilot = subprocess.run(
+                [str(destination / "agentic"), "pilot", "plan"],
+                cwd=destination,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, pilot.returncode, pilot.stderr)
+            self.assertIn("five-session evaluation", pilot.stdout)
             self.assertFalse((destination / ".claude/agents/frontend.md").exists())
             self.assertFalse((destination / ".claude/agents/mobile.md").exists())
             self.assertFalse((destination / ".claude/agents/backend.md").exists())

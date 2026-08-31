@@ -24,6 +24,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A consent-based local newcomer-pilot kit with anonymous P1–P5 session
+  packets, closed privacy-preserving scorecards, deterministic launch gates,
+  repeated-blocker detection, and aggregate reports that cannot pass with an
+  incomplete sample or publish themselves.
 - Personalized project briefs and product documents, a consent-based native
   client handoff, and a clear first-run workspace. Custom and existing-brand
   projects start without forced example directions; local preview candidates

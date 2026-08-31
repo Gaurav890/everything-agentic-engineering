@@ -130,6 +130,8 @@ idempotency, concurrency, observability, and threat-model review.
 - desktop/mobile evidence is human-reviewed across all three directions;
 - local-versus-production boundaries are visible in UI and documentation;
 - full repository verification and release smoke pass;
+- broad self-service claims remain blocked until five consented anonymous
+  newcomer sessions satisfy the published pilot gate;
 - final evaluator is separate from the builder and a human approves merge.
 
 ## 11. Acceptance criteria

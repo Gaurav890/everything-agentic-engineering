@@ -1,6 +1,6 @@
 # First-project pilot
 
-Status: protocol only. No participant results have been collected.
+Status: runnable protocol. No participant results have been collected.
 
 ## Question
 
@@ -16,6 +16,13 @@ recording, or publishing anything. Use synthetic content. Do not collect
 credentials, source belonging to an employer, raw prompts, or personal data.
 Keep any recordings private and agree on deletion before recording.
 
+This repository's scorecard does not accept recordings, transcripts, raw
+prompts, participant identity, employer or repository details, credentials,
+secrets, or personal data. If a separate research program records a session,
+keep that material outside this pilot bundle under its own consent, retention,
+access, and deletion policy. Only the closed anonymous scorecard may enter the
+aggregate evaluator.
+
 ## Session
 
 1. Give the participant only the README and a supported environment.
@@ -29,18 +36,56 @@ Do not rescue silently. Record interventions and their reasons. Stop if the
 participant reaches an unsafe action or wants to stop. Security intervention
 is never withheld to improve a metric.
 
+## Run the pilot
+
+First inspect the contract:
+
+```bash
+./agentic pilot plan
+```
+
+Create one private local packet per anonymous participant. Use only `P1`
+through `P5`; do not replace those identifiers with names or handles.
+
+```bash
+./agentic pilot create P1 --output /private/local/pilot --yes
+```
+
+Give the participant only the public README. The observer uses `SESSION.md` and
+records closed categories in `scorecard.json`. The template intentionally does
+not validate until consent, environment, results, and an independent quality
+review are complete.
+
+```bash
+./agentic pilot validate /private/local/pilot/P1/scorecard.json
+```
+
+After all five sessions, evaluate the directory. Without `--output` the command
+prints JSON and writes nothing.
+
+```bash
+./agentic pilot summarize /private/local/pilot
+./agentic pilot summarize /private/local/pilot \
+  --output /private/local/pilot/report.json --yes
+```
+
+The second form writes a JSON report and a Markdown companion. It refuses to
+overwrite either file. Keep session packets private; publish only a separately
+reviewed aggregate report, and never convert participant outcomes into
+testimonials without explicit permission.
+
 ## Minimal scorecard
 
 | Field | Record |
 |---|---|
-| Anonymous session | P1–P5; no identity required |
+| Anonymous session | P1–P5; identity is prohibited from the scorecard |
 | Environment | OS, Node/pnpm/Python versions, chosen profile |
-| Time to first personalized preview | Total minutes; separately note download and tooling time |
+| Time to first personalized preview | Product-flow minutes; download and tooling time is separate |
 | First-feature result | Completed / incomplete; observable acceptance result |
-| Interventions | Count and redacted friction category |
+| Interventions | Closed stage and redacted friction code; no free-text transcript |
 | Evidence understanding | Correctly distinguishes checks, visual approval, and production readiness |
 | Second-feature start | Could independently identify and begin the next step? |
-| Result quality | Independent critique of hierarchy, content specificity, interaction, and accessibility |
+| Result quality | Separate evaluator scores hierarchy, content specificity, interaction, and accessibility from 1–5 |
 
 ## Proposed launch gate
 
@@ -54,3 +99,9 @@ These are pilot targets, not a statistically representative adoption claim.
 Report the small sample, environment, assistance, and failures alongside any
 successes. Do not turn internal checks into testimonials. Use findings to choose
 the next small product fix before publishing broad usability claims.
+
+The evaluator returns `INSUFFICIENT_EVIDENCE` until all five valid P1–P5
+scorecards exist. A complete sample returns `FAIL` when any launch gate misses;
+there is no partial-pass label. Quality scores are reported but are not used to
+manufacture a usability pass. Distinctive-output benchmarking remains a
+separate evaluation.

@@ -74,8 +74,11 @@ SENSITIVE_SUFFIXES = {".key", ".p12", ".pem", ".pfx"}
 TRANSIENT_SUFFIXES = {".har", ".log", ".pyc", ".pyo", ".tsbuildinfo"}
 
 MANDATORY_GENERATOR_FILES = {
+    Path(".agentic/pilot/policy.json"),
+    Path(".agentic/pilot/scorecard.schema.json"),
     Path("scripts/project_brief.py"),
     Path("scripts/project_handoff.py"),
+    Path("scripts/newcomer-pilot.py"),
     Path(".claude/skills/project-onboarding/SKILL.md"),
     Path(".agentic/enterprise.json"),
     Path(".agentic/generator.json"),

@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-27
+Last updated: 2026-08-30
 
 ## Product
 
@@ -49,10 +49,15 @@ automated accessibility tests; `verify visual` compares existing screenshots
 without updating them. New acceptance files join the web suite, while
 `@visual` selects screenshot-only tests. Missing evidence remains explicit.
 
-The newcomer pilot protocol exists, but no real participant outcomes have been
-measured. Public-demo hosting, production adapters, and launch promotion remain
-separate work. Implementation and review evidence is under
-`docs/50-evals/evidence/T-046/`.
+The newcomer pilot is now runnable through `./agentic pilot`. It creates
+anonymous P1–P5 packets, validates closed aggregate-only scorecards, and reports
+`INSUFFICIENT_EVIDENCE`, `FAIL`, or `PASS` against published thresholds. It
+rejects identity, recordings, transcripts, raw prompts, secrets, unknown fields,
+incomplete consent/evaluator evidence, and repeated unresolved blockers. No real
+participant outcomes have been measured, so self-service success remains an
+unproven launch gate. Public-demo hosting, production adapters, native mobile,
+and launch promotion remain separate work. Implementation evidence is under
+`docs/50-evals/evidence/T-047/`.
 
 ## Web
 

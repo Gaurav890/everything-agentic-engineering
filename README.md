@@ -364,6 +364,7 @@ Read the [parallel work guide](docs/70-collaboration/PARALLEL_TERMINALS.md).
 | Check repository contracts | `./agentic verify full` |
 | Check the running web product | `./agentic verify web` |
 | Compare reviewed screenshots | `./agentic verify visual` |
+| Measure the newcomer journey | `./agentic pilot plan` |
 | Discover every command | `./agentic commands` |
 
 The command interface is intentionally small. Internal scripts remain available
@@ -399,6 +400,13 @@ For browser setup, visual candidate review, and exact scopes, read
 
 Visual redesigns generate candidates. CI never silently turns new screenshots
 into approved truth; a human reviews them before they become baselines.
+
+Maintainers can run the consent-based
+[five-session newcomer pilot](docs/50-evals/FIRST_PROJECT_PILOT.md). Its local
+scorecards exclude identity, recordings, transcripts, raw prompts, credentials,
+and secrets. The evaluator reports `INSUFFICIENT_EVIDENCE`, `FAIL`, or `PASS`
+against published thresholds; it never turns synthetic checks into a
+self-service claim.
 
 ---
 
