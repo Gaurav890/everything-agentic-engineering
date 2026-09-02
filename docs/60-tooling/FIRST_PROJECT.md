@@ -5,11 +5,12 @@ and repeat. The initial design lab is a reference, not your finished product.
 
 ## Start and resume
 
-From the starter, run `./agentic setup create`. Enter the generated directory
-and run `./agentic start`. It prepares a brief-aware conversation in your chosen
-installed terminal client, or an instruction for your editor/app. Native sign-in
-stays in that client; no keys are collected here. Use `./agentic next` later to
-resume. See [the complete handoff](PROJECT_ONBOARDING.md).
+From the starter, run `./agentic setup create`, then copy its final continuation
+command. That one command enters the generated directory and runs `./agentic
+start`. It prepares a brief-aware conversation in your chosen installed terminal
+client, or an instruction for your editor/app. Native sign-in stays in that
+client; no keys are collected here. Use `./agentic next` later to resume. See
+[the complete handoff](PROJECT_ONBOARDING.md).
 
 Web prerequisites are Python 3.11+, Node.js 20.9+ (22 LTS is the tested baseline),
 and the pnpm version declared in `package.json`. No paid service or API key is

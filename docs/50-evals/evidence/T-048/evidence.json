@@ -1,0 +1,18 @@
+{
+  "task_id": "T-048",
+  "acceptance_ids": ["AC-001", "AC-004", "AC-005", "AC-006"],
+  "ui_change": false,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-review-pending",
+  "states": [],
+  "viewports": [],
+  "commands": [
+    "python3 -m unittest tests.test_project_generator",
+    "./agentic verify full",
+    "generate a fresh web project into a destination containing spaces",
+    "run the printed continuation command",
+    "./agentic verify full in the generated project"
+  ],
+  "artifacts": ["README.md"],
+  "verdict": "PASS_WITH_REVIEW_PENDING — deterministic handoff, full repository verification, and fresh downstream verification pass; independent product review and real newcomer outcomes remain separate"
+}

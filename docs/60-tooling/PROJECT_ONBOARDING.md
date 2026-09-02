@@ -1,8 +1,9 @@
 # From your idea to your first useful feature
 
-Create a project, enter its folder, then run **`./agentic start`**. That is the
-normal next step. You do not need to know the skill names or write a giant
-prompt. `./agentic next` helps you resume later.
+Create a project, then copy the one continuation command printed after
+verification. It safely enters the generated folder and runs **`./agentic
+start`**. You do not need to reconstruct a path, know skill names, or write a
+giant prompt. `./agentic next` helps you resume later.
 
 ## What happens
 
@@ -10,12 +11,14 @@ prompt. `./agentic next` helps you resume later.
    optional preferences, and preferred coding client. Unknown answers can wait.
 2. Your new README, vision, PRD, acceptance draft, copy, and engineering context
    describe **your project**. Drafts are not fabricated research or built features.
-3. `start` prepares a specific instruction for the installed client you chose.
+3. The creation receipt previews the remaining journey and confirms that
+   nothing was installed or launched and no API key was collected.
+4. `start` prepares a specific instruction for the installed client you chose.
    It displays the folder and asks before launching. In an editor or desktop
    app, open that same folder and paste the supplied instruction instead.
-4. The assistant reads the saved brief and asks only unresolved questions. You
+5. The assistant reads the saved brief and asks only unresolved questions. You
    agree one useful journey, then compare real product-specific previews.
-5. Approve the scope and design separately. Approved design decisions become
+6. Approve the scope and design separately. Approved design decisions become
    tokens; implementation follows the ordinary test, review, and PR workflow.
 
 The initial custom-project page is a workspace showing your brief and handoff,
