@@ -1,5 +1,26 @@
 # Progress log
 
+### 2026-09-01 — T-048
+
+**Requirements:** FR-001, FR-004, FR-005, FR-006
+**Acceptance:** AC-001, AC-004, AC-005, AC-006
+**Outcome:** DONE — human review pending
+
+Replaced the post-generation dead end with one shell-safe continuation command,
+a concise preview of the real guided journey, and explicit non-installation,
+non-launch, and credential boundaries. Mutating JSON output exposes the same
+closed handoff contract for future first-party interfaces.
+
+All 26 generator tests and the ten-stage full repository verification pass. A
+fresh web project generated into a path containing spaces, ran the exact printed
+manual continuation, and passed its generated-project verification. Evidence is
+recorded under `docs/50-evals/evidence/T-048/`.
+
+No newcomer outcome, client execution, credential flow, product implementation,
+design approval, deployment, task approval, pull-request approval, or merge is
+claimed. The consented P1–P5 pilot remains required before advertising measured
+self-service success.
+
 ### 2026-08-27 — T-046
 
 **Requirements:** FR-001, FR-003, FR-005, FR-006

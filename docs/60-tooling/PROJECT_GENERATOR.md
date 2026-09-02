@@ -25,8 +25,15 @@ coding client. Blank optional answers are deferred to the guided conversation.
 Enterprise workflows then ask
 only four additional decisions: the governed business object, tenant model,
 approval model, and data sensitivity. It shows the complete plan and asks once
-before writing. Enter the result and run `./agentic start`; creation itself
-does not launch a client. See [personalized onboarding](PROJECT_ONBOARDING.md).
+before writing. On success it prints a shell-safe, copy-and-paste command that
+enters the new directory and runs `./agentic start`. It also previews the next
+product, design, implementation, and verification stages. Creation itself does
+not launch a client. See [personalized onboarding](PROJECT_ONBOARDING.md).
+
+Automation can consume the same handoff from mutating `--json` output under
+`continuation`: working directory, command, shell command, saved assistant,
+non-launch/non-key-collection flags, and ordered stages. This metadata is a
+handoff description, not permission to execute it.
 
 Use explicit flags for automation or repeatable scaffolding:
 

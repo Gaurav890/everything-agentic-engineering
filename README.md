@@ -31,9 +31,9 @@ cd everything-agentic-engineering
 The guide asks only the decisions that materially change the result, previews
 what it will create, and asks once before writing a new project. It installs
 nothing, enables no external service, copies no secrets, and does not modify
-this starter.
-
-Then enter the generated project and run:
+this starter. When creation succeeds, it prints one shell-safe command that
+enters the generated folder and continues the saved handoff. Copy and run that
+command. When returning later from inside the project, use:
 
 ```bash
 ./agentic start
@@ -43,6 +43,11 @@ Then enter the generated project and run:
 editor/app workflow**. It shows the folder and asks before launching an installed
 terminal client; manual copy/paste is available. Sign in through the client's
 own interface—this starter collects no API keys or subscription tokens.
+
+Before you run the continuation command, the terminal also previews the actual
+journey: resume the brief → confirm one useful journey → review product-specific
+design previews → implement approved scope → inspect and verify the running
+result. Nothing else is installed or launched by project creation.
 
 Your assistant then helps confirm one useful outcome, asks only unresolved
 questions, and creates working design previews for **your product**. Custom is
@@ -71,8 +76,10 @@ setup → feature → review path and help when a check stops.
 1. Run `./agentic setup create`.
 2. Choose what you are building and who it serves.
 3. Review the concise creation plan.
-4. Enter the generated directory.
-5. Run `./agentic start`, or use its prepared instruction in your existing app.
+4. Copy the printed continuation command; it enters the generated directory and
+   runs `./agentic start` for you.
+5. Use the prepared instruction in your existing app, or confirm launch of the
+   selected installed terminal client.
 6. Confirm your first useful journey and discuss design preferences with your assistant.
 7. Compare real, product-specific previews; revise or reject them until the direction fits.
 8. Approve the design with reviewed evidence, then compile tokens.

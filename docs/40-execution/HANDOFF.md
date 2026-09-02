@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-08-30
+Last updated: 2026-09-01
 
 ## Current goal
 
@@ -10,6 +10,9 @@ continue one useful web feature without maintainer intervention.
 ## Implemented
 
 - Project-owned brief, README, product/design/engineering drafts and first feature.
+- One shell-safe post-generation continuation command with a plain-language
+  preview of the saved brief → journey → design → implementation → verification
+  sequence and explicit non-launch/non-key-collection boundaries.
 - Consent-based native handoff and manual app/editor instructions; no key collection.
 - Open custom/existing-brand catalogs and explicit optional reference mode.
 - Evidence-bound approval and stale-context/source/evidence detection.

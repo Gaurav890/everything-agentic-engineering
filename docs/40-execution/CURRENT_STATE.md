@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-08-30
+Last updated: 2026-09-01
 
 ## Product
 
@@ -33,6 +33,12 @@ Generated projects include their own vision, PRD, acceptance draft, copy,
 architecture, README, and first-feature context. Native client launch requires
 terminal confirmation; a manual app/editor instruction needs no installation
 or credential collection. Existing projects are not migrated automatically.
+
+Successful creation now ends with one shell-safe continuation command, including
+for destination paths with spaces. The receipt explains the remaining product,
+design, implementation, and verification stages and explicitly records that no
+client was launched and no API key was collected. JSON callers receive the same
+structured handoff without gaining execution authority.
 
 Custom/existing-brand web projects show an honest setup workspace, not a
 finished product. Their catalog starts empty and supports arbitrary local

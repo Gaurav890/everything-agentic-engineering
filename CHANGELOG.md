@@ -8,6 +8,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Successful downstream creation now ends with one shell-safe continuation
+  command, a concise preview of the remaining product/design/build/review
+  journey, and explicit non-installation, non-launch, and credential boundaries;
+  JSON callers receive the same structured handoff metadata.
 - The enterprise reference workflow now scopes reads by tenant, role, requester
   ownership, and reviewer eligibility; constructs creation/evidence audit
   attribution inside the service boundary; executes the selected approval

@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import shutil
 import stat
 import subprocess
@@ -1042,7 +1043,8 @@ For: {brief["audience"]}
 
 ## Start here
 
-Open this project folder, then run:
+Project creation printed one shell-safe command that enters this folder and
+starts the guided handoff. If you are returning later, run:
 
 ```bash
 ./agentic start
@@ -1052,6 +1054,10 @@ Choose your existing coding assistant or use the prepared instruction in your
 desktop app/editor. The handoff carries your answers forward and asks for
 confirmation before starting a native interactive client. No API key is required
 by this starter; sign-in and billing stay with your chosen client.
+
+The handoff resumes this brief, confirms one useful journey, prepares
+product-specific design previews, and keeps scope/design approval separate from
+implementation and running-product verification.
 
 Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
@@ -1763,6 +1769,21 @@ def run(args: argparse.Namespace) -> int:
             print("\nNo project created. Re-run with --yes after reviewing this plan.")
         return 2
     report = materialize(plan)
+    continuation = {
+        "working_directory": str(plan.destination),
+        "command": "./agentic start",
+        "shell_command": f"cd {shlex.quote(str(plan.destination))} && ./agentic start",
+        "assistant": plan.assistant,
+        "automatic_launch": False,
+        "collects_api_keys": False,
+        "stages": [
+            "resume_saved_brief",
+            "confirm_first_useful_journey",
+            "review_product_specific_design",
+            "implement_approved_scope",
+            "verify_running_result",
+        ],
+    }
     if args.json:
         print(
             json.dumps(
@@ -1770,6 +1791,7 @@ def run(args: argparse.Namespace) -> int:
                     "plan": plan.public_report(),
                     "created": str(plan.destination),
                     "verification": report,
+                    "continuation": continuation,
                 },
                 indent=2,
             )
@@ -1777,8 +1799,14 @@ def run(args: argparse.Namespace) -> int:
     else:
         print(f"\nCreated {plan.project_name} at {plan.destination}")
         print("Generated-project verification: PASS")
-        print(f"\nOpen your new project folder: {plan.destination}")
-        print("Next, from that folder: ./agentic start")
+        print("\nContinue now — copy and paste:")
+        print(f"  {continuation['shell_command']}")
+        print("\nWhat happens next:")
+        print("  1. Resume the saved product brief in your selected client or manual handoff.")
+        print("  2. Confirm one useful journey and review product-specific design previews.")
+        print("  3. Implement only approved scope, then inspect and verify the running result.")
+        print("\nNothing else was installed or launched. This starter does not collect API keys;")
+        print("sign-in stays inside your chosen client, and native launch still asks first.")
     return 0
 
 

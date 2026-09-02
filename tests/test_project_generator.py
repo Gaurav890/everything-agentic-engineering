@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -70,6 +71,41 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual(destination.resolve(), Path(report["created"]).resolve())
             self.assertEqual("PASS", report["verification"]["status"])
             self.assertEqual("create_downstream_project", report["plan"]["operation"])
+            self.assertEqual("./agentic start", report["continuation"]["command"])
+            self.assertEqual("choose", report["continuation"]["assistant"])
+            self.assertFalse(report["continuation"]["automatic_launch"])
+            self.assertFalse(report["continuation"]["collects_api_keys"])
+            self.assertEqual(
+                f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
+                report["continuation"]["shell_command"],
+            )
+
+    def test_human_creation_output_has_one_shell_safe_continuation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "project with spaces"
+            result = self.run_generator(
+                "--name",
+                "Clear Handoff",
+                "--destination",
+                str(destination),
+                "--preset",
+                "web",
+                "--assistant",
+                "manual",
+                "--yes",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn("Continue now — copy and paste:", result.stdout)
+            self.assertIn(
+                f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
+                result.stdout,
+            )
+            self.assertIn("What happens next:", result.stdout)
+            self.assertIn("Resume the saved product brief", result.stdout)
+            self.assertIn("Confirm one useful journey", result.stdout)
+            self.assertIn("Implement only approved scope", result.stdout)
+            self.assertIn("Nothing else was installed or launched", result.stdout)
+            self.assertIn("does not collect API keys", result.stdout)
 
     def test_explicit_web_flag_cannot_omit_design_foundation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -215,6 +251,8 @@ class ProjectGeneratorTests(unittest.TestCase):
             readme = (destination / "README.md").read_text()
             self.assertIn("FIRST_FEATURE.md", readme)
             self.assertIn("FIRST_PROJECT.md", readme)
+            self.assertIn("printed one shell-safe command", readme)
+            self.assertIn("product-specific design previews", readme)
             self.assertIn("pnpm install --frozen-lockfile", readme)
             self.assertTrue((destination / "scripts/web_verification.py").is_file())
             self.assertTrue((destination / "scripts/project_checks.py").is_file())
