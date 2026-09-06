@@ -138,7 +138,11 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
                 "./agentic start",
             )
         if not task_id and brief["status"] != "ready":
-            if brief["design_mode"] != "reference" and "design-critical" in profiles:
+            if (
+                brief["design_mode"] != "reference"
+                and "design-critical" in profiles
+                and "web-next" in profiles
+            ):
                 return "Turn the saved brief into live product directions", "./agentic design sprint"
             return "Continue your product conversation; your answers are saved", "./agentic start"
     if task_id and "web-next" not in profiles:

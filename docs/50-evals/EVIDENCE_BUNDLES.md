@@ -26,7 +26,16 @@ An `evidence.json` manifest makes completion claims machine-checkable:
 
 Paths in `artifacts` are relative to the bundle. UI changes require normal,
 loading, empty, and error evidence; mobile and desktop evidence; and an
-evaluator distinct from the builder.
+evaluator distinct from the builder. Every bundle, including non-UI evidence,
+requires non-empty and distinct builder and evaluator identities. Artifact
+paths must resolve to regular, non-symlinked files inside the bundle; absolute
+paths and traversal are invalid.
+
+Verdicts use one exact status, optionally followed by ` — ` and a concise
+explanation: `PASS`, `PASS_WITH_RISKS`, `PASS_WITH_REVIEW_PENDING`,
+`PASS_WITH_PORTABLE_PACKAGING_BLOCKED`, `FAIL`, `BLOCKED`, `NEEDS_HUMAN`, or
+`INSUFFICIENT_EVIDENCE`. Only `PASS` evidence can advance the project journey;
+qualified or non-passing evidence remains visible without certifying completion.
 
 Validate one or more bundles with:
 

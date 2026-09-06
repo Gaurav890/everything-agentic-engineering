@@ -187,6 +187,61 @@ class ProjectJourneyTests(unittest.TestCase):
         research = next(stage for stage in result["stages"] if stage["id"] == "research")
         self.assertEqual("skipped", research["status"])
 
+    def test_ready_design_stage_matches_custom_reference_mobile_and_core_profiles(self) -> None:
+        self.brief.update(
+            status="ready", first_outcome="Compare two purchase dates",
+            confirmed_by="Owner", research_enabled=False,
+        )
+        cases = (
+            (["web-next", "design-critical"], "custom", "active", "compare live product-specific"),
+            (["web-next", "design-critical"], "reference", "active", "selected reference"),
+            (["mobile-expo", "design-critical"], "custom", "active", "native interaction states"),
+            (["core"], "custom", "skipped", "No application design surface"),
+        )
+        for profiles, mode, status, detail in cases:
+            with self.subTest(profiles=profiles, mode=mode):
+                self.brief["design_mode"] = mode
+                (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
+                with mock.patch.object(project_journey.next_action, "active_profiles", return_value=profiles):
+                    result = project_journey.build(self.root)
+                design = next(stage for stage in result["stages"] if stage["id"] == "design")
+                self.assertEqual(status, design["status"])
+                self.assertIn(detail, design["detail"])
+                if "mobile-expo" in profiles:
+                    self.assertNotIn("Build and compare live", design["detail"])
+
+    def test_forged_or_external_evidence_cannot_complete_verification(self) -> None:
+        task = {"id": "T-101", "status": "review", "depends_on": [],
+                "requirement_ids": ["FR-001"], "acceptance_ids": ["AC-001"],
+                "tracking": {"mode": "not_required", "issues": [], "reason": "Reviewed local test."}}
+        (self.root / "docs/40-execution/TASKS.jsonl").write_text(json.dumps(task) + "\n")
+        bundle = self.root / "docs/50-evals/evidence/T-101"
+        bundle.mkdir(parents=True)
+        (bundle / "README.md").write_text("# Evidence\n")
+        valid = {
+            "task_id": "T-101", "acceptance_ids": ["AC-001"], "ui_change": False,
+            "builder": "implementation-owner", "evaluator": "independent-reviewer",
+            "commands": ["./agentic verify full"], "artifacts": ["README.md"],
+            "verdict": "PASS",
+        }
+        attacks = (
+            {**valid, "verdict": "PASSPORT"},
+            {key: value for key, value in valid.items() if key not in {"builder", "evaluator"}},
+            {**valid, "commands": ["not executed"]},
+            {**valid, "artifacts": ["../../../40-execution/TASKS.jsonl"]},
+        )
+        for manifest in attacks:
+            with self.subTest(manifest=manifest):
+                (bundle / "evidence.json").write_text(json.dumps(manifest))
+                with self.assertRaisesRegex(project_journey.JourneyError, "Cannot trust evidence"):
+                    project_journey.build(self.root)
+        outside = self.root / "outside.md"
+        outside.write_text("external")
+        (bundle / "linked.md").symlink_to(outside)
+        (bundle / "evidence.json").write_text(json.dumps({**valid, "artifacts": ["linked.md"]}))
+        with self.assertRaisesRegex(project_journey.JourneyError, "cannot follow symlinks"):
+            project_journey.build(self.root)
+
     def test_unrelated_done_task_does_not_complete_the_product_slice(self) -> None:
         task = {"id": "T-101", "status": "done", "depends_on": [],
                 "requirement_ids": ["FR-099"],

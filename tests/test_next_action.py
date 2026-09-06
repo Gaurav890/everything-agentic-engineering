@@ -177,6 +177,20 @@ class NextActionTests(unittest.TestCase):
         self.assertIn("not a runnable", next_action.next_action(self.root)[0])
         self.prerequisite.assert_not_called()
 
+    def test_captured_mobile_brief_never_routes_to_the_web_design_sprint(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["mobile-expo", "design-critical"]})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Pocket", "audience": "field teams",
+            "promise": "Capture a decision", "first_outcome": None,
+            "design_preferences": None, "design_mode": "custom", "assistant": "manual",
+            "status": "captured", "confirmed_by": None, "open_questions": [],
+        })
+        title, action = next_action.next_action(self.root)
+        self.assertEqual("./agentic start", action)
+        self.assertNotIn("live product directions", title)
+        self.prerequisite.assert_not_called()
+
     def test_ready_mobile_and_core_projects_advance_to_the_only_task(self):
         self.write(".agentic/generated-project.json", {"onboarding_version": 1})
         brief = {

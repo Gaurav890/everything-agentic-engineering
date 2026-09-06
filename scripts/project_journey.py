@@ -105,8 +105,7 @@ def has_bound_task_evidence(root: Path, task: dict[str, Any], index: dict[str, d
     return bool(
         manifest.get("task_id") == task["id"]
         and "AC-001" in manifest.get("acceptance_ids", [])
-        and isinstance(manifest.get("verdict"), str)
-        and manifest["verdict"].strip().upper().startswith("PASS")
+        and validate_evidence.verdict_status(manifest.get("verdict")) == "PASS"
     )
 
 
@@ -143,8 +142,12 @@ def build(root: Path = ROOT, task_id: str | None = None) -> dict[str, Any]:
     product_complete = brief["status"] == "ready"
 
     design_state = "skipped"
-    design_detail = "This project does not include the design-critical profile."
-    if "design-critical" in profiles:
+    design_detail = "No application design surface is selected for this project."
+    web = "web-next" in profiles
+    mobile = "mobile-expo" in profiles
+    custom_web = web and brief["design_mode"] != "reference"
+    reference_web = web and brief["design_mode"] == "reference"
+    if custom_web or reference_web:
         design_path = root / ".agentic/design.json"
         if design_path.is_symlink() or design_path.parent.is_symlink():
             raise JourneyError("Design state cannot follow symlinks")
@@ -156,16 +159,34 @@ def build(root: Path = ROOT, task_id: str | None = None) -> dict[str, Any]:
             raise JourneyError("Design state is invalid")
         if design["status"] == "approved" and product_complete and research_complete:
             design_state = "complete"
-            design_detail = "A reviewed direction is approved; compile and preserve its canonical tokens."
+            design_detail = (
+                "A reviewed direction is approved; compile and preserve its canonical tokens."
+                if custom_web
+                else "The selected reference has been adapted to the product journey and approved with reviewed evidence."
+            )
         elif design["status"] == "approved":
             design_state = "waiting"
             design_detail = "Finish research and confirm the product journey, then re-check whether the approved direction remains valid."
         elif product_complete and research_complete:
             design_state = "active"
-            design_detail = "Build and compare live product-specific directions; palette-only variation is insufficient."
+            design_detail = (
+                "Build and compare live product-specific directions; palette-only variation is insufficient."
+                if custom_web
+                else "Adapt the deliberately selected reference to the real product journey and review the running result before approval."
+            )
         else:
             design_state = "waiting"
             design_detail = "Confirm the first useful journey before design approval."
+    elif mobile:
+        if product_complete and research_complete:
+            design_state = "active"
+            design_detail = (
+                "Define native interaction states, platform behavior, accessibility, recovery, and device-test evidence. "
+                "This planning scaffold does not claim a live comparison or runnable native result."
+            )
+        else:
+            design_state = "waiting"
+            design_detail = "Confirm the first useful journey before defining the native interaction contract."
 
     tasks = read_tasks(root)
     slice_tasks = [

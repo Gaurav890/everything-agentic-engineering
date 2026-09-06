@@ -334,6 +334,14 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse((destination / ".github/workflows/web-quality.yml").exists())
             self.assertTrue((destination / ".claude/agents/mobile.md").is_file())
             self.assertFalse((destination / ".claude/agents/frontend.md").exists())
+            for command in ("next", "journey"):
+                continuation = subprocess.run(
+                    [str(destination / "agentic"), command], cwd=destination,
+                    text=True, capture_output=True, check=False,
+                )
+                self.assertEqual(0, continuation.returncode, continuation.stderr)
+                self.assertIn("./agentic start", continuation.stdout)
+                self.assertNotIn("./agentic design sprint", continuation.stdout)
 
     def test_core_project_excludes_optional_surfaces_and_tokens(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
