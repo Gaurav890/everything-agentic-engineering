@@ -1,10 +1,12 @@
 # From your idea to your first useful feature
 
 Create a project, then copy the one continuation command printed after
-verification. For a custom design-critical web project it safely enters the
-generated folder and runs **`./agentic design sprint`**. You do not need to
-reconstruct a path, know skill names, or write a
-giant prompt. `./agentic next` helps you resume later.
+verification. When research is selected it safely enters the generated folder
+and runs **`./agentic start`** so evidence is handled first. A custom
+design-critical web project that skips research continues with
+**`./agentic design sprint`**. You do not need to reconstruct a path, know skill
+names, or write a giant prompt. `./agentic journey` explains the whole path;
+`./agentic next` returns only the next action.
 
 ## What happens
 
@@ -19,7 +21,8 @@ giant prompt. `./agentic next` helps you resume later.
    describe **your project**. Drafts are not fabricated research or built features.
 4. The creation receipt previews the remaining journey and confirms that
    nothing was installed or launched and no API key was collected.
-5. `design sprint` prepares a specific instruction for the installed client you chose.
+5. The printed `start` or `design sprint` command prepares a specific,
+   profile-aware instruction for the installed client you chose.
    It displays the folder and asks before launching. In an editor or desktop
    app, open that same folder and paste the supplied instruction instead.
 6. The assistant reads the saved brief and asks only unresolved consequential
@@ -42,9 +45,12 @@ MCP path and keep `PERPLEXITY_API_KEY` in environment or user scope.
 
 If Perplexity is unavailable, use official/first-party sources manually and
 record the fallback. Firecrawl is for authorized extraction from known sites;
-Playwright is for interaction and behavior. Change the research document's
-status to `Complete` only after the source ledger is synthesized and the brief
-records what changed. Research is evidence, not scope or design approval.
+Playwright is for interaction and behavior. The coding assistant records human-
+readable sources in `docs/10-product/RESEARCH.md` and may set the validated
+`.agentic/research.json` state to `complete` only after recording the route,
+source URLs, synthesis, product changes, and uncertainties. Do not edit status
+text in Markdown to advance the workflow. Research is evidence, not scope or
+design approval.
 
 The initial custom-project page is a workspace showing your brief and handoff,
 not a claim that your product is finished. The next session must build real

@@ -124,6 +124,7 @@ GENERATED_WRITE_PATHS = {
     Path("docs/20-design/DESIGN_BRIEF.md"),
     Path("docs/10-product/PRD.md"),
     Path("docs/10-product/RESEARCH.md"),
+    Path(".agentic/research.json"),
     Path("docs/10-product/ACCEPTANCE_CRITERIA.md"),
     Path("docs/10-product/USER_JOURNEYS.md"),
     Path("docs/30-engineering/ROLE_MATRIX.md"),
@@ -1344,9 +1345,10 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
     metadata = load_object(root / GENERATED_PATH, "generated-project metadata")
     project = load_object(root / PROJECT_PATH, "project manifest")
     package = load_object(root / "package.json", "package metadata")
+    brief = None
     if metadata.get("onboarding_version") == 1 or (root / project_brief.BRIEF_PATH).exists():
         try:
-            project_brief.load(root)
+            brief = project_brief.load(root)
         except project_brief.BriefError as error:
             raise GenerationError(str(error)) from error
     mcp = load_object(root / ".mcp.json", "MCP configuration")
@@ -1372,6 +1374,14 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Project profiles must remain a non-empty string array")
     current_resolution = resolve_generated_profiles(root, current_selected)
     current_resolved = current_resolution["resolved_profiles"]
+    if brief is not None:
+        selected_research = project_brief.research_selected(set(current_resolved))
+        try:
+            research_state = project_brief.load_research_state(root, selected=selected_research)
+        except project_brief.BriefError as error:
+            raise GenerationError(str(error)) from error
+        if pristine and selected_research and research_state.get("migration_required"):
+            raise GenerationError("Research-enabled generation is missing .agentic/research.json")
     if pristine and current_selected != selected:
         raise GenerationError("Generated project profiles do not match provenance")
     if pristine and current_resolved != resolved:
@@ -1708,14 +1718,6 @@ def interactive_answers() -> argparse.Namespace:
     audience = prompt_text("Who is it for?", "Discuss with me", maximum=120)
     promise = prompt_text("What should it help them achieve?", "Discuss with me", maximum=120)
     first_outcome = prompt_text("First useful action? Leave blank to decide together.", "", maximum=500) or None
-    mode = prompt_choice(
-        "How should the design begin? Custom is tailored; reference is a deliberate shortcut.",
-        project_brief.DESIGN_MODES, "custom",
-    ) if web or kind == "mobile" else "custom"
-    preferences = (prompt_text(
-        "Any brand colors, references, styles to avoid, or motion preferences? Leave blank to explore together.",
-        "", maximum=1000,
-    ) or None) if web or kind == "mobile" else None
     research = False
     if kind != "core":
         print("\nPerplexity can ground the first pass in current market, user, and competitor evidence.")
@@ -1724,6 +1726,14 @@ def interactive_answers() -> argparse.Namespace:
             "Use Perplexity-first current research before product and design decisions?",
             ("perplexity", "skip"), "perplexity",
         ) == "perplexity"
+    mode = prompt_choice(
+        "How should the design begin? Custom is tailored; reference is a deliberate shortcut.",
+        project_brief.DESIGN_MODES, "custom",
+    ) if web or kind == "mobile" else "custom"
+    preferences = (prompt_text(
+        "Any brand colors, references, styles to avoid, or motion preferences? Leave blank to explore together.",
+        "", maximum=1000,
+    ) or None) if web or kind == "mobile" else None
     assistant = prompt_choice(
         "Where will you build? Use an existing account; this does not sign in or install anything.",
         ("claude", "codex", "manual", "choose"), "choose",

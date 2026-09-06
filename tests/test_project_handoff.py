@@ -19,6 +19,10 @@ class ProjectHandoffTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
         (self.root / ".agentic").mkdir()
+        (self.root / ".agentic/profiles").mkdir()
+        (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": ["web-next", "design-critical"]}))
+        for profile in ("web-next", "design-critical", "research-enabled", "mobile-expo", "core"):
+            (self.root / f".agentic/profiles/{profile}.json").write_text(json.dumps({"id": profile}))
         self.brief = {"schema_version": 1, "name": "Afford", "audience": "households",
                       "promise": "Understand a purchase", "first_outcome": None,
                       "design_preferences": "No neon", "design_mode": "custom",
@@ -48,7 +52,8 @@ class ProjectHandoffTests(unittest.TestCase):
 
     @mock.patch.object(project_handoff.shutil, "which", return_value=None)
     def test_research_selection_enters_handoff_without_a_credential(self, which):
-        self.brief["research_enabled"] = True
+        (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": ["web-next", "design-critical", "research-enabled"]}))
+        self.brief["research_enabled"] = False
         self.path.write_text(json.dumps(self.brief))
         self.args.json = True
         code, output = self.run_handoff()
@@ -62,7 +67,8 @@ class ProjectHandoffTests(unittest.TestCase):
 
     @mock.patch.object(project_handoff.shutil, "which", return_value=None)
     def test_manual_research_handoff_points_to_start_before_design(self, which):
-        self.brief.update(research_enabled=True, assistant="manual")
+        (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": ["web-next", "design-critical", "research-enabled"]}))
+        self.brief.update(research_enabled=False, assistant="manual")
         self.path.write_text(json.dumps(self.brief))
         code, output = self.run_handoff()
         self.assertEqual(0, code)
@@ -82,8 +88,50 @@ class ProjectHandoffTests(unittest.TestCase):
         self.args.launch = self.args.yes = True
         with mock.patch.object(sys.stdin, "isatty", return_value=True), mock.patch.object(sys.stdout, "isatty", return_value=True), mock.patch("builtins.print"):
             self.assertEqual(7, project_handoff.run(self.args, self.root))
-        run.assert_called_once_with(["/usr/local/bin/claude", project_handoff.PROMPT], cwd=self.root, check=False)
-        self.assertNotIn("touch", project_handoff.PROMPT)
+        prompt = run.call_args.args[0][1]
+        self.assertIn("three live product-specific", prompt)
+        self.assertNotIn("touch", prompt)
+
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_handoff_is_profile_and_design_mode_aware(self, which):
+        cases = (
+            (["web-next", "design-critical"], "reference", "not a custom three-direction sprint"),
+            (["mobile-expo", "design-critical"], "custom", "no runnable native app yet"),
+            (["core"], "custom", "no application or design surface"),
+        )
+        self.args.json = True
+        for profiles, mode, expected in cases:
+            with self.subTest(profiles=profiles, mode=mode):
+                (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": profiles}))
+                self.brief["design_mode"] = mode
+                self.path.write_text(json.dumps(self.brief))
+                code, output = self.run_handoff()
+                self.assertEqual(0, code)
+                self.assertIn(expected, json.loads(output)["prompt"])
+
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_reference_handoff_does_not_claim_a_custom_sprint(self, which):
+        self.brief.update(design_mode="reference", assistant="manual")
+        self.path.write_text(json.dumps(self.brief))
+        code, output = self.run_handoff()
+        self.assertEqual(0, code)
+        self.assertIn("Shape the first product journey", output)
+        self.assertIn("For a terminal client: ./agentic start", output)
+
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_active_profile_is_the_only_research_routing_authority(self, which):
+        self.args.json = True
+        self.brief["research_enabled"] = True
+        self.path.write_text(json.dumps(self.brief))
+        _, output = self.run_handoff()
+        self.assertFalse(json.loads(output)["research_enabled"])
+        self.assertNotIn("Prefer Perplexity", json.loads(output)["prompt"])
+        (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": ["web-next", "design-critical", "research-enabled"]}))
+        self.brief["research_enabled"] = False
+        self.path.write_text(json.dumps(self.brief))
+        _, output = self.run_handoff()
+        self.assertTrue(json.loads(output)["research_enabled"])
+        self.assertIn("Prefer Perplexity", json.loads(output)["prompt"])
 
     @mock.patch.object(project_handoff.subprocess, "run")
     @mock.patch.object(project_handoff.shutil, "which", return_value=None)
@@ -120,6 +168,12 @@ class ProjectHandoffTests(unittest.TestCase):
         self.path.unlink()
         self.path.symlink_to(self.root / "elsewhere")
         with self.assertRaisesRegex(project_brief.BriefError, "symlink"):
+            project_brief.load(self.root)
+
+    def test_terminal_control_characters_are_rejected(self):
+        self.brief["design_preferences"] = "calm\x1b[2Jsurprise"
+        self.path.write_text(json.dumps(self.brief))
+        with self.assertRaisesRegex(project_brief.BriefError, "control characters"):
             project_brief.load(self.root)
 
 

@@ -15,6 +15,14 @@ This project follows [Semantic Versioning](https://semver.org/).
   decision, and routes research-enabled projects through a bounded research
   brief before product and design work. Selecting Perplexity does not collect
   credentials, install or activate an MCP server, or perform network work.
+- Research routing now follows the active profile and completion uses a
+  validated structured record with sources, synthesis, product changes, and
+  uncertainty; copied Markdown and malformed task rows cannot advance the
+  journey. Handoffs are profile-aware across custom web, reference, mobile, and
+  core projects.
+- README interaction demos now use readable static states with opt-in animation
+  links, and the bundled enterprise examples are accurately described as three
+  visual systems over a shared workflow rather than three custom compositions.
 - Fresh custom and existing-brand web projects now continue through one
   product-specific creative-direction sprint instead of an empty design handoff
   or a starter theme choice. Candidate registration rejects starter demo

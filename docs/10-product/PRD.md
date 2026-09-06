@@ -114,9 +114,11 @@ change direction, or resume without repeating settled questions.
 
 Guided creation must explicitly offer Perplexity-first current research and a
 no-research fast path. Selection persists in the project brief and profile
-manifest. When selected, the generated project creates a bounded source-ledger
-contract and routes research before product/design decisions while supporting a
-disclosed primary-source/manual fallback. One read-only journey command must
+manifest, with the active profile controlling routing and the brief retaining
+provenance. When selected, the generated project creates a bounded source-ledger
+contract plus validated machine state and routes research before product/design
+decisions while supporting a disclosed primary-source/manual fallback. Copied
+research text must not advance the workflow. One read-only journey command must
 show research, product, design, build, verification, review, their current
 states, and the exact next action. Creation never collects credentials, installs
 or starts an MCP server, or performs network research.

@@ -10,6 +10,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import project_journey
+import project_brief
 
 
 class ProjectJourneyTests(unittest.TestCase):
@@ -36,7 +37,8 @@ class ProjectJourneyTests(unittest.TestCase):
         (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
         (self.root / ".agentic/design.json").write_text(json.dumps({"status": "needs_approval"}))
         (self.root / "docs/10-product").mkdir(parents=True)
-        (self.root / "docs/10-product/RESEARCH.md").write_text("# Research\n\nStatus: Not started\n")
+        (self.root / ".agentic/research.json").write_text(json.dumps(project_brief.initial_research_state()))
+        (self.root / "docs/10-product/RESEARCH.md").write_text("# Research\n\nMachine state: `.agentic/research.json`\n")
         (self.root / "docs/40-execution").mkdir(parents=True)
         (self.root / "docs/40-execution/TASKS.jsonl").write_text("")
         self.profiles = mock.patch.object(
@@ -47,7 +49,7 @@ class ProjectJourneyTests(unittest.TestCase):
         self.action = mock.patch.object(
             project_journey.next_action,
             "next_action",
-            return_value=("Create live directions", "./agentic design sprint"),
+            return_value=("Ground the product", "./agentic start"),
         )
         self.profiles.start()
         self.action.start()
@@ -57,37 +59,53 @@ class ProjectJourneyTests(unittest.TestCase):
         tracked = [
             self.root / ".agentic/project-brief.json",
             self.root / ".agentic/design.json",
+            self.root / ".agentic/research.json",
             self.root / "docs/10-product/RESEARCH.md",
             self.root / "docs/40-execution/TASKS.jsonl",
         ]
         before = {path: path.read_bytes() for path in tracked}
         result = project_journey.build(self.root)
         stages = {stage["id"]: stage["status"] for stage in result["stages"]}
-        self.assertEqual("selected", stages["research"])
-        self.assertEqual("active", stages["product"])
+        self.assertEqual("active", stages["research"])
+        self.assertEqual("waiting", stages["product"])
         self.assertEqual("waiting", stages["design"])
         self.assertEqual("waiting", stages["build"])
         self.assertFalse(result["mutation_performed"])
-        self.assertEqual("./agentic design sprint", result["next"]["action"])
+        self.assertEqual("./agentic start", result["next"]["action"])
         self.assertEqual(before, {path: path.read_bytes() for path in tracked})
         rendered = project_journey.render(result)
         self.assertIn("PROJECT JOURNEY — Afford", rendered)
-        self.assertIn("[SELECTED] RESEARCH", rendered)
+        self.assertIn("[ACTIVE] RESEARCH", rendered)
         self.assertIn("NEXT", rendered)
 
+    def test_prior_design_approval_cannot_bypass_selected_research(self) -> None:
+        (self.root / ".agentic/design.json").write_text(json.dumps({"status": "approved"}))
+        result = project_journey.build(self.root)
+        stages = {stage["id"]: stage["status"] for stage in result["stages"]}
+        self.assertEqual("active", stages["research"])
+        self.assertEqual("waiting", stages["design"])
+
     def test_completed_research_and_review_task_are_reported_without_certifying_quality(self) -> None:
-        (self.root / "docs/10-product/RESEARCH.md").write_text("# Research\n\nStatus: Complete\n")
+        (self.root / ".agentic/research.json").write_text(json.dumps({
+            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
+            "route_used": "perplexity", "source_urls": ["https://example.com/report"],
+            "synthesis": "Current evidence changes the journey by adding a comparison checkpoint.",
+            "product_changes": ["Add a comparison checkpoint."], "uncertainties": [],
+        }))
         self.brief.update(status="ready", first_outcome="Compare two purchase dates", confirmed_by="Owner")
         (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
         (self.root / ".agentic/design.json").write_text(json.dumps({"status": "approved"}))
-        task = {"id": "T-101", "status": "review"}
+        task = {"id": "T-101", "status": "review", "depends_on": [],
+                "requirement_ids": ["FR-001"],
+                "acceptance_ids": ["AC-001"],
+                "tracking": {"mode": "not_required", "issues": [], "reason": "Reviewed local test."}}
         (self.root / "docs/40-execution/TASKS.jsonl").write_text(json.dumps(task) + "\n")
         result = project_journey.build(self.root)
         stages = {stage["id"]: stage["status"] for stage in result["stages"]}
         self.assertEqual("complete", stages["research"])
         self.assertEqual("complete", stages["product"])
         self.assertEqual("complete", stages["design"])
-        self.assertEqual("active", stages["verify"])
+        self.assertEqual("complete", stages["verify"])
         self.assertEqual("active", stages["review"])
         review = next(stage for stage in result["stages"] if stage["id"] == "review")
         self.assertIn("human approval", review["detail"])
@@ -103,6 +121,23 @@ class ProjectJourneyTests(unittest.TestCase):
             result = project_journey.build(self.root)
         research = next(stage for stage in result["stages"] if stage["id"] == "research")
         self.assertEqual("skipped", research["status"])
+
+    def test_unrelated_done_task_does_not_complete_the_product_slice(self) -> None:
+        task = {"id": "T-101", "status": "done", "depends_on": [],
+                "requirement_ids": ["FR-099"],
+                "acceptance_ids": ["AC-099"],
+                "tracking": {"mode": "not_required", "issues": [], "reason": "Reviewed local test."}}
+        (self.root / "docs/40-execution/TASKS.jsonl").write_text(json.dumps(task) + "\n")
+        result = project_journey.build(self.root)
+        stages = {stage["id"]: stage["status"] for stage in result["stages"]}
+        self.assertEqual("waiting", stages["build"])
+        self.assertEqual("waiting", stages["verify"])
+        self.assertEqual("waiting", stages["review"])
+
+    def test_malformed_task_cannot_claim_completion(self) -> None:
+        (self.root / "docs/40-execution/TASKS.jsonl").write_text(json.dumps({"status": "done"}) + "\n")
+        with self.assertRaisesRegex(project_journey.JourneyError, "Cannot trust"):
+            project_journey.build(self.root)
 
     def test_source_checkout_routes_to_creation(self) -> None:
         (self.root / ".agentic/generated-project.json").unlink()

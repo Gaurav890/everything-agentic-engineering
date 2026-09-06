@@ -219,9 +219,11 @@ Use the MCP stack intentionally:
 - Interactive browser flows, JS-heavy behavior, auth state, UI validation → Playwright
 - Framework/library docs → prefer official docs; use Context7 only when installed and useful
 
-When guided creation selects current research, the project brief and
-`docs/10-product/RESEARCH.md` make that phase explicit before product scope and
-design direction are settled. Perplexity is the preferred broad-discovery path,
+When guided creation selects current research, the active profile,
+`docs/10-product/RESEARCH.md`, and validated `.agentic/research.json` state make
+that phase explicit before product scope and design direction are settled. The
+profile controls routing; the brief records provenance; Markdown cannot declare
+completion. Perplexity is the preferred broad-discovery path,
 not a hidden prerequisite. If it is unavailable, use primary-source/manual
 research and disclose the fallback. Never claim a tool ran merely because its
 configuration or catalog entry exists.

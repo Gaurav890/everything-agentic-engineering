@@ -12,7 +12,8 @@ reach one useful verified product slice without maintainer intervention.
 - One outcome-first public promise and a visible research → product → design
   → build → verify → review journey.
 - An optional Perplexity-first research decision during guided creation, with a
-  safe skip path, persisted profile state, and a generated research ledger.
+  safe skip path, profile-authoritative routing, a generated research ledger,
+  and validated structured completion state.
 - A research-aware assistant handoff with official-source and manual fallbacks;
   no credential collection, MCP installation or activation, or generator-time
   network research.
@@ -24,10 +25,10 @@ reach one useful verified product slice without maintainer intervention.
   sequence and explicit non-launch/non-key-collection boundaries.
 - Consent-based native handoff and manual app/editor instructions; no key collection.
 - Open custom/existing-brand catalogs and explicit optional reference mode.
-- One `./agentic design sprint` continuation for fresh design-critical web
-  projects, with three live, product-specific, materially divergent candidates
-  by default and deterministic rejection of starter-demo or duplicate-axis
-  submissions.
+- One profile-aware continuation: research-enabled projects enter `start`, while
+  fresh design-critical web projects that skip research enter `design sprint`.
+  Custom sprints require three live, product-specific, materially divergent
+  candidates by default and reject starter-demo or duplicate-axis submissions.
 - Candidate comparison exposes product states, signature idea, asset and motion
   rationale, responsive behavior, and reduced-motion behavior before approval.
 - Evidence-bound approval and stale-context/source/evidence detection.
@@ -43,9 +44,8 @@ See `docs/50-evals/evidence/T-050/` for current implementation checks and
 limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
 deterministic evaluator has synthetic regression coverage; that coverage is not
 a participant result. The fresh-project page was inspected at desktop and 390px,
-but a live assistant-generated candidate set, independent product/design review,
-native sign-in, and newcomer sessions have still not been measured through the
-pilot.
+but a live assistant-generated candidate set, native sign-in, and newcomer
+sessions have still not been measured through the pilot.
 
 No newcomer study, production readiness, native implementation, launch,
 deployment, human task approval or merge is implied.

@@ -38,8 +38,9 @@ The guide captures only the inputs that change the result, shows one plan, and
 asks once before writing. The destination must not exist. The generator copies
 no Git history or secrets, enables no MCP server, and installs nothing. On
 success it prints one shell-safe continuation command that enters the generated
-directory and runs `./agentic design sprint` for a custom design-critical web
-project; copy and run it. See
+directory and runs `./agentic start` when research was selected, or
+`./agentic design sprint` for a custom design-critical web project that skipped
+research; copy and run it. See
 [Downstream project generator](PROJECT_GENERATOR.md).
 
 The handoff opens a brief-aware conversation after consent, or gives you the

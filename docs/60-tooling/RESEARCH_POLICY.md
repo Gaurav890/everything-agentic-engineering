@@ -5,9 +5,13 @@
 Get current, grounded answers without flooding the main context or granting retrieved content authority over the agent.
 
 For generated projects, current research is selected explicitly during
-`./agentic setup create`. The choice persists in `.agentic/project-brief.json`
-and the active profiles. `./agentic journey` shows whether research was skipped,
-selected, or declared complete. Selection never proves that a tool ran.
+`./agentic setup create`. The active `research-enabled` profile is the routing
+authority; `.agentic/project-brief.json` retains the original answer as
+provenance. `.agentic/research.json` is the validated machine state, while
+`docs/10-product/RESEARCH.md` is the human-readable source ledger.
+`./agentic journey` shows whether research was skipped, active, or complete.
+Selection never proves that a tool ran, and copied Markdown cannot advance the
+workflow.
 
 ## Search order
 
@@ -30,6 +34,11 @@ For important claims record:
 - authority,
 - claim supported,
 - conflict/uncertainty.
+
+The coding assistant may set structured research to `complete` only when it
+records the route actually used, at least one source URL, a meaningful
+synthesis, product changes (including an evidence-backed no-change conclusion),
+and explicit uncertainties. Product and design approval remain separate.
 
 ## Social and community content
 

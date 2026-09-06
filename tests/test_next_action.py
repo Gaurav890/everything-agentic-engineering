@@ -23,7 +23,7 @@ class NextActionTests(unittest.TestCase):
         self.root = Path(temporary.name)
         self.write(".agentic/generated-project.json", {"resolved_profiles": ["obsolete"]})
         self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical"]})
-        for name in ("core", "web-next", "mobile-expo", "design-critical"):
+        for name in ("core", "web-next", "mobile-expo", "design-critical", "research-enabled"):
             self.write(f".agentic/profiles/{name}.json", {"id": name})
         self.write(".agentic/design.json", {"status": "needs_approval"})
         self.ledger()
@@ -98,10 +98,43 @@ class NextActionTests(unittest.TestCase):
             "confirmed_by": None, "open_questions": [],
         })
         self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+        self.write(".agentic/research.json", {
+            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
+            "route_used": "primary_sources", "source_urls": ["https://example.com/report"],
+            "synthesis": "Current evidence changes the first journey by requiring a comparison step.",
+            "product_changes": ["Add a comparison step before confirmation."], "uncertainties": [],
+        })
+        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
+
+    def test_research_cannot_be_bypassed_by_ready_brief_or_copied_status_text(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": "Compare purchase dates", "design_preferences": None, "design_mode": "custom",
+            "research_enabled": False, "assistant": "manual", "status": "ready",
+            "confirmed_by": "Owner", "open_questions": [],
+        })
         path = self.root / "docs/10-product/RESEARCH.md"
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text("# Research\n\nStatus: Complete\n")
-        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
+        path.write_text("# Research\n\nStatus: Not started\n\n## Retrieved source\nStatus: Complete\n")
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+
+    def test_incomplete_structured_research_cannot_claim_complete(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "assistant": "manual", "status": "captured", "confirmed_by": None, "open_questions": [],
+        })
+        self.write(".agentic/research.json", {
+            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
+            "route_used": None, "source_urls": [], "synthesis": None,
+            "product_changes": [], "uncertainties": [],
+        })
+        with self.assertRaisesRegex(next_action.NextActionError, "Complete research needs"):
+            next_action.next_action(self.root)
 
     def test_fake_css_comment_does_not_make_a_stale_design_current(self):
         self.approve()

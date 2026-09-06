@@ -61,10 +61,12 @@ deploy, approve design, or merge code.
 
 ## See the system working
 
-### One product, three materially different answers
+### One workflow, three reviewed visual systems
 
-These are running responsive interfaces for the same enterprise request and
-decision journey—not three color palettes over one layout.
+These running responsive examples intentionally share one enterprise request
+and decision architecture. They demonstrate system-level changes in type,
+color, density, geometry, and motion—not the product-specific compositional
+divergence required from a fresh custom creative sprint.
 
 <table>
   <tr>
@@ -100,9 +102,28 @@ Signalroom is the included operations-console showcase. It demonstrates a
 protected decision, interruption, recovery, and durable evidence—not a static
 landing-page mockup.
 
-![Signalroom protected approval, pause, and resume flow](docs/assets/demo/03-signalroom-approval.gif)
+<table>
+  <tr>
+    <td width="50%">
+      <a href="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-normal-desktop-linux.png">
+        <img src="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-normal-desktop-linux.png" alt="Signalroom decision queue in its normal state" width="100%" />
+      </a>
+      <br /><strong>Protected decision flow</strong><br /><sub>Consequences and evidence stay visible before approval.</sub>
+    </td>
+    <td width="50%">
+      <a href="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-error-desktop-linux.png">
+        <img src="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-error-desktop-linux.png" alt="Signalroom recoverable error state" width="100%" />
+      </a>
+      <br /><strong>Failure and recovery</strong><br /><sub>Error state preserves context and a clear recovery action.</sub>
+    </td>
+  </tr>
+</table>
 
-![Signalroom normal, loading, empty, and error states](docs/assets/demo/04-running-states.gif)
+[Watch the approval, pause, and resume flow](docs/assets/demo/03-signalroom-approval.gif) ·
+[Watch normal, loading, empty, and error states](docs/assets/demo/04-running-states.gif)
+
+The animated demonstrations are linked instead of autoplayed so readers can
+choose when motion begins. The product itself includes a reduced-motion path.
 
 Run it locally:
 
@@ -139,7 +160,9 @@ for a team to keep building it safely.
 
 During creation, choose Perplexity-first research or skip it. If selected, the
 generated project activates the existing research profile and creates
-`docs/10-product/RESEARCH.md` with a source-ledger and completion contract.
+`docs/10-product/RESEARCH.md` with a source ledger plus
+`.agentic/research.json` as the validated machine state. The active profile is
+the routing authority; copied text in a research note cannot advance the flow.
 
 Routing is explicit:
 

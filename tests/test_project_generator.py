@@ -397,8 +397,8 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "Make every automated decision legible and reversible.",
                         "Review one proposed automation action",
                         "1",
-                        "Bold type, restrained motion; avoid neon",
                         "1",
+                        "Bold type, restrained motion; avoid neon",
                         "3",
                         "y",
                         "",
@@ -424,7 +424,8 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertIn("./agentic next", (destination / "README.md").read_text())
             self.assertIn("Perplexity-first research was selected", (destination / "README.md").read_text())
-            self.assertIn("Status: Not started", (destination / "docs/10-product/RESEARCH.md").read_text())
+            self.assertIn("Machine state: `.agentic/research.json`", (destination / "docs/10-product/RESEARCH.md").read_text())
+            self.assertEqual("not_started", json.loads((destination / ".agentic/research.json").read_text())["status"])
             self.assertIn("Run `./agentic start`", (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text())
             self.assertIn("research-enabled", json.loads((destination / ".agentic/project.json").read_text())["profiles"])
             self.assertEqual({"mcpServers": {}}, json.loads((destination / ".mcp.json").read_text()))
@@ -444,8 +445,8 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "Move sensitive requests to accountable decisions.",
                         "Review one policy exception",
                         "1",
-                        "",
                         "1",
+                        "",
                         "3",
                         "policy exception",
                         "2",
@@ -474,7 +475,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "1", "", "2", "3", "y", ""]),
+                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "2", "1", "", "3", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,
