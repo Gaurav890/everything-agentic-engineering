@@ -14,6 +14,7 @@ sys.dont_write_bytecode = True
 import next_action
 import project_brief
 import github_task_sync
+import validate_evidence
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -85,6 +86,30 @@ def research_status(root: Path, enabled: bool) -> tuple[str, str]:
     return "active", "Perplexity is preferred when configured; primary-source/manual research is the supported fallback."
 
 
+def has_bound_task_evidence(root: Path, task: dict[str, Any], index: dict[str, dict[str, Any]]) -> bool:
+    if any(index[dependency]["status"] != "done" for dependency in task.get("depends_on", [])):
+        return False
+    bundle = root / "docs/50-evals/evidence" / task["id"]
+    manifest_path = bundle / "evidence.json"
+    if not manifest_path.exists():
+        return False
+    if bundle.is_symlink() or manifest_path.is_symlink():
+        raise JourneyError(f"Evidence for {task['id']} cannot follow symlinks")
+    errors = validate_evidence.validate(bundle)
+    if errors:
+        raise JourneyError(f"Cannot trust evidence for {task['id']}: {'; '.join(errors)}")
+    try:
+        manifest = json.loads(manifest_path.read_text())
+    except (OSError, json.JSONDecodeError) as error:
+        raise JourneyError(f"Cannot read evidence for {task['id']}: {error}") from error
+    return bool(
+        manifest.get("task_id") == task["id"]
+        and "AC-001" in manifest.get("acceptance_ids", [])
+        and isinstance(manifest.get("verdict"), str)
+        and manifest["verdict"].strip().upper().startswith("PASS")
+    )
+
+
 def build(root: Path = ROOT, task_id: str | None = None) -> dict[str, Any]:
     generated = root / ".agentic/generated-project.json"
     brief_path = root / project_brief.BRIEF_PATH
@@ -148,20 +173,31 @@ def build(root: Path = ROOT, task_id: str | None = None) -> dict[str, Any]:
         if "FR-001" in task.get("requirement_ids", [])
         and "AC-001" in task.get("acceptance_ids", [])
     ]
+    task_index = {task["id"]: task for task in tasks}
     statuses = {task["status"] for task in slice_tasks}
+    evidenced_tasks = [
+        task for task in slice_tasks
+        if task["status"] in {"review", "done"}
+        and has_bound_task_evidence(root, task, task_index)
+    ]
     if statuses.intersection({"in_progress"}):
         build_state, build_detail = "active", "The AC-001 vertical-slice task is in progress."
-    elif statuses.intersection({"review", "done"}):
+    elif evidenced_tasks:
         build_state, build_detail = "complete", "The AC-001 vertical slice is implemented; its evidence and merge state remain separate."
+    elif statuses.intersection({"review", "done"}):
+        build_state, build_detail = "active", "The task claims implementation, but bound passing evidence is still required."
     else:
         build_state, build_detail = "waiting", "Create one AC-001-traced task only after product and design scope are accepted."
 
-    if "review" in statuses:
+    evidenced_statuses = {task["status"] for task in evidenced_tasks}
+    if "review" in evidenced_statuses:
         verify_state, review_state = "complete", "active"
-    elif "done" in statuses:
+    elif "done" in evidenced_statuses:
         verify_state = "complete"
         branch = next_action.git_branch(root)
         review_state = "complete" if branch in {"main", "master"} else "ready_for_human"
+    elif statuses.intersection({"review", "done"}):
+        verify_state, review_state = "active", "waiting"
     else:
         verify_state, review_state = "waiting", "waiting"
 

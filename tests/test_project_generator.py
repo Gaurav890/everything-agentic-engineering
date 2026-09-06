@@ -508,6 +508,9 @@ class ProjectGeneratorTests(unittest.TestCase):
                 self.assertEqual("manual", json.loads(result.stdout)["client"])
                 self.assertEqual(before, (destination / "README.md").read_bytes())
                 design_brief = (destination / "docs/20-design/DESIGN_BRIEF.md").read_text()
+                generated_readme = (destination / "README.md").read_text()
+                assistant_handoff = (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text()
+                direction_guidance = (destination / "docs/20-design/DESIGN_DIRECTIONS.md").read_text()
                 self.assertIn("Afford", design_brief)
                 self.assertIn("Warm, no neon", design_brief)
                 self.assertNotIn("Desired character: `precise`", design_brief)
@@ -516,9 +519,41 @@ class ProjectGeneratorTests(unittest.TestCase):
                     self.assertEqual([], catalog["directions"])
                     intake = json.loads((destination / ".agentic/design-intake.json").read_text())
                     self.assertIsNone(intake["answers"]["personality"])
+                    self.assertIn("three live product-specific directions", generated_readme)
+                    self.assertIn("creative-direction-sprint", assistant_handoff)
+                elif preset == "mobile":
+                    self.assertIn("does not contain a web comparison board", generated_readme)
+                    self.assertIn("native mobile design guidance", assistant_handoff)
+                    self.assertIn("Plan product-specific native alternatives", direction_guidance)
+                    self.assertNotIn("three live product-specific directions", generated_readme)
+                else:
+                    self.assertIn("No design surface is selected", generated_readme)
+                    self.assertIn("no application or design surface", assistant_handoff)
+                    self.assertIn("No design surface is selected", direction_guidance)
+                    self.assertNotIn("selected platform", direction_guidance)
+                    self.assertNotIn("three live product-specific directions", generated_readme)
                 (destination / ".agentic/project-brief.json").unlink()
                 with self.assertRaises(project_generator.GenerationError):
                     project_generator.validate_generated_project(destination)
+
+    def test_reference_web_guidance_never_claims_a_custom_sprint(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "reference-web"
+            result = self.run_generator(
+                "--name", "Reference Web", "--destination", str(destination),
+                "--preset", "web", "--archetype", "product", "--audience", "Operators",
+                "--promise", "Review one decision", "--first-outcome", "Open a request",
+                "--assistant", "manual", "--design-mode", "reference", "--yes",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            readme = (destination / "README.md").read_text()
+            handoff = (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text()
+            directions = (destination / "docs/20-design/DESIGN_DIRECTIONS.md").read_text()
+            self.assertIn("not a custom three-direction sprint", readme)
+            self.assertIn("deliberately selected reference", handoff)
+            self.assertIn("deliberately selected reference experience", directions)
+            self.assertNotIn("creative-direction-sprint", handoff)
+            self.assertNotIn("builds three live product-specific directions", readme)
 
     def test_generated_doc_leaf_symlink_cannot_overwrite_operating_agreement(self):
         with tempfile.TemporaryDirectory() as temporary:

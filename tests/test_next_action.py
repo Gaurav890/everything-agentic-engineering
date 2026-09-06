@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import io
 import json
 import subprocess
@@ -12,6 +13,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import next_action
+import project_brief
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_fixture import prepare
 
@@ -52,6 +54,24 @@ class NextActionTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(f"/* Approved direction: editorial-signal. Fingerprint: {state['fingerprint']}. */\n")
 
+    def complete_research(self, brief):
+        ledger = self.root / "docs/10-product/RESEARCH.md"
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.write_text("# Research\n\nSource: https://docs.python.org/3/\n\nEvidence supports the captured first journey.\n")
+        ledger_digest = hashlib.sha256(ledger.read_bytes()).hexdigest()
+        brief["research_evidence_digest"] = ledger_digest
+        self.write(".agentic/project-brief.json", brief)
+        baseline = project_brief.research_snapshot_digest(brief)
+        self.write(".agentic/research.json", {
+            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
+            "route_used": "primary_sources", "source_urls": ["https://docs.python.org/3/"],
+            "synthesis": "Current evidence supports the first journey without changing its product intent.",
+            "decision": "no_change",
+            "product_changes": ["No change; retain the captured journey and record the evidence."],
+            "uncertainties": [], "ledger_sha256": ledger_digest,
+            "baseline_brief_digest": baseline, "resulting_brief_digest": baseline,
+        })
+
     def test_source_checkout_routes_to_create(self):
         (self.root / ".agentic/generated-project.json").unlink()
         self.assertEqual("./agentic setup create", next_action.next_action(self.root)[1])
@@ -91,19 +111,15 @@ class NextActionTests(unittest.TestCase):
         self.write(".agentic/generated-project.json", {"onboarding_version": 1})
         self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
         self.write(".agentic/profiles/research-enabled.json", {"id": "research-enabled"})
-        self.write(".agentic/project-brief.json", {
+        brief = {
             "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
             "first_outcome": None, "design_preferences": None, "design_mode": "custom",
             "research_enabled": True, "assistant": "manual", "status": "captured",
             "confirmed_by": None, "open_questions": [],
-        })
+        }
+        self.write(".agentic/project-brief.json", brief)
         self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
-        self.write(".agentic/research.json", {
-            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
-            "route_used": "primary_sources", "source_urls": ["https://example.com/report"],
-            "synthesis": "Current evidence changes the first journey by requiring a comparison step.",
-            "product_changes": ["Add a comparison step before confirmation."], "uncertainties": [],
-        })
+        self.complete_research(brief)
         self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
 
     def test_research_cannot_be_bypassed_by_ready_brief_or_copied_status_text(self):
@@ -123,18 +139,33 @@ class NextActionTests(unittest.TestCase):
     def test_incomplete_structured_research_cannot_claim_complete(self):
         self.write(".agentic/generated-project.json", {"onboarding_version": 1})
         self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
-        self.write(".agentic/project-brief.json", {
+        brief = {
             "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
             "first_outcome": None, "design_preferences": None, "design_mode": "custom",
             "assistant": "manual", "status": "captured", "confirmed_by": None, "open_questions": [],
-        })
-        self.write(".agentic/research.json", {
-            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
-            "route_used": None, "source_urls": [], "synthesis": None,
-            "product_changes": [], "uncertainties": [],
-        })
+        }
+        self.write(".agentic/project-brief.json", brief)
+        state = project_brief.initial_research_state(brief)
+        state["status"] = "complete"
+        self.write(".agentic/research.json", state)
         with self.assertRaisesRegex(next_action.NextActionError, "Complete research needs"):
             next_action.next_action(self.root)
+
+    def test_selected_task_is_validated_and_cannot_bypass_research(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        brief = {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "research_enabled": True, "assistant": "manual", "status": "captured",
+            "confirmed_by": None, "open_questions": [],
+        }
+        self.write(".agentic/project-brief.json", brief)
+        self.write(".agentic/research.json", project_brief.initial_research_state(brief))
+        with self.assertRaisesRegex(next_action.NextActionError, "Task not found"):
+            next_action.next_action(self.root, "T-999")
+        self.ledger(self.task(identity="T-101"))
+        self.assertEqual("./agentic start", next_action.next_action(self.root, "T-101")[1])
 
     def test_fake_css_comment_does_not_make_a_stale_design_current(self):
         self.approve()

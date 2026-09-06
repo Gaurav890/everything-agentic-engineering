@@ -1051,7 +1051,58 @@ def generated_readme(plan: GenerationPlan) -> str:
     brief = project_brief.create(plan)
     web = "web-next" in plan.resolved_profiles
     research = "research-enabled" in plan.resolved_profiles
+    mobile = "mobile-expo" in plan.resolved_profiles
+    custom_web = web and plan.design_mode != "reference"
     continuation = first_continuation_command(plan)
+    if custom_web:
+        journey_guidance = (
+            "The creative sprint resumes this brief, confirms one useful journey, and builds three live "
+            "product-specific directions on different design axes by default."
+        )
+        design_guidance = (
+            "Custom directions and existing brands are not limited to reference presets. A custom candidate "
+            "must prove a different composition or interaction idea with realistic states, signature craft, "
+            "an asset strategy, and responsive/reduced-motion behavior. Review running previews before approval."
+        )
+        exists_guidance = "A runnable local onboarding workspace and empty custom candidate catalog—not an implemented product."
+        preview_guidance = "After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it."
+        verification_guidance = "Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines."
+    elif web:
+        journey_guidance = (
+            "The handoff confirms one useful journey, replaces the deliberately selected reference's sample "
+            "content with this product's real states, and requires running-product review before approval."
+        )
+        design_guidance = (
+            "Reference mode is an intentional shortcut, not a custom three-direction sprint. Adapt the "
+            "reference to this product and review the running result before design or token approval."
+        )
+        exists_guidance = "A runnable deliberately selected reference and a project brief—not an implemented product."
+        preview_guidance = "After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Replace sample content and behavior before requesting product-specific approval."
+        verification_guidance = "Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines."
+    elif mobile:
+        journey_guidance = (
+            "The handoff confirms one native journey and plans platform behavior, recovery, accessibility, "
+            "motion, and tokens without claiming that a runnable native application already exists."
+        )
+        design_guidance = (
+            "Use native platform guidance and device evidence once an application is implemented. This "
+            "planning scaffold does not contain a web comparison board or approved mobile design."
+        )
+        exists_guidance = "A native product and design planning scaffold—not a runnable mobile application."
+        preview_guidance = "Follow the mobile readiness path before choosing a native implementation, dependencies, or device matrix."
+        verification_guidance = "Add native platform and device tests when an application is implemented; web checks do not prove mobile behavior."
+    else:
+        journey_guidance = (
+            "The handoff confirms the audience, promise, first useful journey, failure and recovery, acceptance "
+            "criteria, and one bounded task without inventing an application or design surface."
+        )
+        design_guidance = (
+            "No design surface is selected. Add an application profile through a separate reviewed decision "
+            "before creating visual directions or claiming runnable UI."
+        )
+        exists_guidance = "A product and engineering planning scaffold with no application or design surface."
+        preview_guidance = "Confirm the product outcome and first bounded task before selecting an application profile."
+        verification_guidance = "Use the repository contract check; add platform-specific checks only after an application surface is approved."
     return f"""# {plan.project_name}
 
 {brief["promise"]}
@@ -1079,14 +1130,13 @@ The complete journey is visible at any time:
 ```
 
 It shows research → product → design → build → verify → review, their current
-status, and one exact next action. The creative sprint resumes this brief,
-confirms one useful journey, and builds three live product-specific directions
-on different design axes by default. It keeps scope, design approval, token
-compilation, implementation, and verification as separate decisions.
+status, and one exact next action. {journey_guidance} It keeps scope, design
+approval, token compilation, implementation, and verification as separate
+decisions.
 
 ## Current research
 
-{"Perplexity-first research was selected. Start with docs/10-product/RESEARCH.md. Use Perplexity only when it is already configured in your chosen client; primary-source/manual research is the supported fallback. Firecrawl is for authorized extraction from known sites, and Playwright is for interactive behavior. Project creation did not collect a key, configure a server, or run network research." if research else "Live research was not selected. That is a valid fast path. If current category, competitor, user, or technical evidence would materially change the product, review the research profile before design rather than inventing facts."}
+{"Perplexity-first research was selected. Start with docs/10-product/RESEARCH.md; the coding assistant binds its source ledger and changed/no-change brief decision in .agentic/research.json. Use Perplexity only when it is already configured in your chosen client; primary-source/manual research is the supported fallback. Firecrawl is for authorized extraction from known sites, and Playwright is for interactive behavior. Project creation did not collect a key, configure a server, or run network research." if research else "Live research was not selected. That is a valid fast path. If current category, competitor, user, or technical evidence would materially change the product, review the research profile before design rather than inventing facts."}
 
 Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
@@ -1095,7 +1145,7 @@ Preferences: {plan.design_preferences or "Discuss or delegate recommendations; n
 
 ## What exists today
 
-{"A runnable local reference and a project brief—not an implemented product." if web else "A planning scaffold—not a runnable native application."}
+{exists_guidance}
 Product documents are drafts. No product-specific feature or design is approved.
 Production services, identity, persistence, and deployment are not configured.
 
@@ -1105,16 +1155,13 @@ journey before claiming implementation. Existing user edits must be preserved.
 
 ## Preview and verify
 
-{"After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it." if web else "Follow the active profile's readiness guide before choosing an implementation."}
+{preview_guidance}
 
-Run `./agentic next` to resume. Custom directions and existing brands are not
-limited to the reference presets. A custom candidate must prove a different
-composition or interaction idea with realistic states, signature craft, an asset
-strategy, and responsive/reduced-motion behavior. Review the running previews
-before approval; token compilation is not design generation.
+Run `./agentic next` to resume. {design_guidance} Token compilation is not design
+generation.
 
 Use `./agentic verify full` for the repository contract.
-{"Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines." if web else "Add platform-specific tests when an application is implemented."}
+{verification_guidance}
 Passing scaffold checks does not prove the product works.
 
 ## Working agreements
@@ -1261,7 +1308,11 @@ with reviewed evidence. Follow `docs/60-tooling/PROJECT_ONBOARDING.md`.
 def write_generated_files(plan: GenerationPlan) -> None:
     brief = project_brief.create(plan)
     write_json(plan.destination / project_brief.BRIEF_PATH, brief)
-    for relative, content in project_brief.documents(brief, web="web-next" in plan.resolved_profiles).items():
+    for relative, content in project_brief.documents(
+        brief,
+        web="web-next" in plan.resolved_profiles,
+        mobile="mobile-expo" in plan.resolved_profiles,
+    ).items():
         destination = plan.destination / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(content)

@@ -26,8 +26,9 @@ names, or write a giant prompt. `./agentic journey` explains the whole path;
    It displays the folder and asks before launching. In an editor or desktop
    app, open that same folder and paste the supplied instruction instead.
 6. The assistant reads the saved brief and asks only unresolved consequential
-   questions. You agree one useful journey, then compare three materially
-   different live product directions by default.
+   questions. You agree one useful journey. A custom design-critical web
+   project then compares three materially different live directions by default;
+   reference, mobile, and core profiles follow their narrower contracts.
 7. Approve the scope and design separately. Approved design decisions become
    tokens; implementation follows the ordinary test, review, and PR workflow.
 
@@ -48,9 +49,10 @@ record the fallback. Firecrawl is for authorized extraction from known sites;
 Playwright is for interaction and behavior. The coding assistant records human-
 readable sources in `docs/10-product/RESEARCH.md` and may set the validated
 `.agentic/research.json` state to `complete` only after recording the route,
-source URLs, synthesis, product changes, and uncertainties. Do not edit status
-text in Markdown to advance the workflow. Research is evidence, not scope or
-design approval.
+source URLs, synthesis, changed/no-change decision, product changes,
+uncertainties, and SHA-256 bindings to the ledger and before/after brief. The
+brief records the ledger digest. Do not edit status text in Markdown to advance
+the workflow. Research is evidence, not scope or design approval.
 
 The initial custom-project page is a workspace showing your brief and handoff,
 not a claim that your product is finished. The next session must build real

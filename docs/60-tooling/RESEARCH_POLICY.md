@@ -37,8 +37,10 @@ For important claims record:
 
 The coding assistant may set structured research to `complete` only when it
 records the route actually used, at least one source URL, a meaningful
-synthesis, product changes (including an evidence-backed no-change conclusion),
-and explicit uncertainties. Product and design approval remain separate.
+synthesis, a changed/no-change decision, product changes, explicit
+uncertainties, and SHA-256 bindings to the source ledger and before/after brief.
+The brief also records the ledger digest, so an unbound state or changed ledger
+fails closed. Product and design approval remain separate.
 
 ## Social and community content
 

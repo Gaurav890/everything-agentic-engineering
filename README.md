@@ -162,7 +162,9 @@ During creation, choose Perplexity-first research or skip it. If selected, the
 generated project activates the existing research profile and creates
 `docs/10-product/RESEARCH.md` with a source ledger plus
 `.agentic/research.json` as the validated machine state. The active profile is
-the routing authority; copied text in a research note cannot advance the flow.
+the routing authority; completion is bound to the source ledger and the
+changed/no-change brief decision, and copied text in a research note cannot
+advance the flow.
 
 Routing is explicit:
 
