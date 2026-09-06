@@ -55,7 +55,7 @@ export function ProjectStudio({brief, candidates}: {brief: ProjectBrief; candida
         </div>
         {candidates.length ? <ul className={styles.candidates}>{candidates.map((candidate, index) => <li key={candidate.id}>
           <div className={styles.previewFrame}>
-            <iframe src={candidate.preview_path} title={`${candidate.name} live design preview`} loading="lazy" sandbox="allow-forms allow-scripts" tabIndex={-1} />
+            <iframe src={candidate.preview_path} title={`${candidate.name} live design preview`} loading="lazy" sandbox="allow-forms allow-scripts" />
           </div>
           <span className={styles.eyebrow}>{String(index + 1).padStart(2, "0")} / {candidate.axis}</span>
           <h3>{candidate.name}</h3><p>{candidate.thesis}</p>

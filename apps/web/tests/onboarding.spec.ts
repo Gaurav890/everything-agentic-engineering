@@ -23,7 +23,8 @@ test("copy succeeds or explains the manual fallback without launching anything",
   await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
   expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic design sprint");
   await expect(page.getByRole("status").first()).toContainText("Copied");
-  if (!(await page.locator("details").getAttribute("open")) && !(await page.locator("pre").isVisible())) {
+  const manualHandoff = page.locator("details").filter({hasText: "Already using an app or editor?"});
+  if (!(await manualHandoff.getAttribute("open")) && !(await page.locator("pre").isVisible())) {
     await page.getByText("Already using an app or editor?").click();
   }
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async () => { throw new Error("unavailable"); }}}));
@@ -55,7 +56,8 @@ test("workspace supports keyboard, narrow screens, and automated accessibility",
   await expect.poll(() => primary.evaluate(node => getComputedStyle(node).outlineColor !== getComputedStyle(node).color)).toBe(true);
   await page.screenshot({path: testInfo.outputPath("keyboard-focus.png")});
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  const results = await new AxeBuilder({page}).analyze();
+  // Candidate previews are separate interactive documents and receive their own audit.
+  const results = await new AxeBuilder({page}).exclude("iframe").analyze();
   expect(results.violations).toEqual([]);
 });
 
