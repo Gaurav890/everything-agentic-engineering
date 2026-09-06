@@ -1,8 +1,8 @@
 # T-050 — Research-to-build journey evidence
 
-Status: implementation and deterministic checks pass. Independent product,
-design, security, integration, human task review, and newcomer measurement
-remain separate.
+Status: implementation, deterministic checks, independent product/design,
+security, integration, and human task review pass. Newcomer measurement and
+merge remain separate.
 
 ## Observed gap
 
@@ -29,13 +29,21 @@ together.
   the fresh project's `.mcp.json` remained `{"mcpServers": {}}`.
 - `./agentic journey` reports all six stages, status, and the exact next action
   in text and JSON without mutating project state.
-- Sixty-five focused generator, handoff, next-action, journey, and command-router
+- Eighty-six focused generator, handoff, next-action, journey, and command-router
   tests pass.
 - A fresh research-enabled product generated successfully in a temporary
   directory and reported research as selected with `./agentic start` next.
 - The complete ten-stage repository verification passes, including task,
   security-hook, token, documentation-link, generated-project, package, and
   evidence-bundle checks.
+- Custom web, reference web, mobile, and core receive distinct continuation,
+  design, and task-routing behavior. A fresh mobile project cannot enter the
+  web creative sprint, while ready mobile/core projects advance to real tasks.
+- Research completion is bound to the current ledger and brief. Task evidence
+  must be rooted inside the project, use a documented verdict, name distinct
+  builder/evaluator roles, and pass adversarial traversal and symlink checks.
+- Independent product/design, security, and integration reviewers passed exact
+  implementation commit `f0b45f8a79e88868bb831df1cc46f18dddd9a8b8`.
 
 ## UI evidence
 
@@ -45,10 +53,11 @@ approved visual baseline; reusing older screenshots would not prove this flow.
 
 ## Review boundary
 
-Automated checks prove deterministic routing and safety constraints, not that
-the promise is persuasive, the design outcome is world-class, the source
-synthesis is insightful, or a newcomer succeeds unaided. Those claims require
-independent product/design review and the consented P1–P5 newcomer pilot.
+Automated checks and independent source review prove deterministic routing and
+safety constraints, not that the promise is persuasive to real newcomers, the
+generated design outcome is world-class, the source synthesis is insightful,
+or a newcomer succeeds unaided. Those claims require the consented P1–P5
+newcomer pilot and evidence from generated products.
 
 No external capability, credential, model, provider, plugin, MCP server,
 network session, deployment, production service, approval, or merge authority

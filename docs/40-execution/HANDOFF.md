@@ -43,12 +43,14 @@ reach one useful verified product slice without maintainer intervention.
 See `docs/50-evals/evidence/T-050/` for current implementation checks and
 limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
 deterministic evaluator has synthetic regression coverage; that coverage is not
-a participant result. The fresh-project page was inspected at desktop and 390px,
-but a live assistant-generated candidate set, native sign-in, and newcomer
-sessions have still not been measured through the pilot.
+a participant result. Product/design, security, and integration reviews pass on
+the same implementation commit, and human task approval is recorded. The
+fresh-project page was inspected at desktop and 390px, but a live
+assistant-generated candidate set, native sign-in, and newcomer sessions have
+still not been measured through the pilot.
 
 No newcomer study, production readiness, native implementation, launch,
-deployment, human task approval or merge is implied.
+deployment, or merge is implied.
 
 ## Exact next action
 
