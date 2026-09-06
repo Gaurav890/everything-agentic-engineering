@@ -62,15 +62,18 @@ class ProjectJourneyTests(unittest.TestCase):
         ledger_digest = hashlib.sha256(ledger.read_bytes()).hexdigest()
         self.brief["research_evidence_digest"] = ledger_digest
         (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
-        baseline = project_brief.research_snapshot_digest(self.brief)
+        current_state = json.loads((self.root / ".agentic/research.json").read_text())
+        baseline = current_state.get("baseline_brief_digest") or project_brief.research_snapshot_digest(self.brief)
+        resulting = project_brief.research_snapshot_digest(self.brief)
+        changed = baseline != resulting
         (self.root / ".agentic/research.json").write_text(json.dumps({
             "schema_version": 1, "status": "complete", "route_preference": "perplexity",
             "route_used": "primary_sources", "source_urls": ["https://docs.python.org/3/"],
             "synthesis": "Current evidence supports the first journey without changing its product intent.",
-            "decision": "no_change",
-            "product_changes": ["No change; retain the captured journey and record the evidence."],
+            "decision": "changed" if changed else "no_change",
+            "product_changes": ["Bind the researched evidence to the current confirmed journey." if changed else "No change; retain the captured journey and record the evidence."],
             "uncertainties": [], "ledger_sha256": ledger_digest,
-            "baseline_brief_digest": baseline, "resulting_brief_digest": baseline,
+            "baseline_brief_digest": baseline, "resulting_brief_digest": resulting,
         }))
 
     def add_evidence(self, task_id: str = "T-101") -> None:
@@ -127,10 +130,23 @@ class ProjectJourneyTests(unittest.TestCase):
         with self.assertRaisesRegex(project_journey.JourneyError, "changed after completion"):
             project_journey.build(self.root)
 
-    def test_completed_research_and_review_task_are_reported_without_certifying_quality(self) -> None:
+    def test_ready_brief_change_invalidates_research_until_rebound(self) -> None:
         self.complete_research()
+        self.brief.update(
+            status="ready", first_outcome="Compare two purchase dates", confirmed_by="Owner"
+        )
+        (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
+        with self.assertRaisesRegex(project_journey.JourneyError, "changed without updating"):
+            project_journey.build(self.root)
+        self.complete_research()
+        result = project_journey.build(self.root)
+        research = next(stage for stage in result["stages"] if stage["id"] == "research")
+        self.assertEqual("complete", research["status"])
+
+    def test_completed_research_and_review_task_are_reported_without_certifying_quality(self) -> None:
         self.brief.update(status="ready", first_outcome="Compare two purchase dates", confirmed_by="Owner")
         (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
+        self.complete_research()
         (self.root / ".agentic/design.json").write_text(json.dumps({"status": "approved"}))
         task = {"id": "T-101", "status": "review", "depends_on": [],
                 "requirement_ids": ["FR-001"],

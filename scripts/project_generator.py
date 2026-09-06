@@ -1874,6 +1874,16 @@ def run(args: argparse.Namespace) -> int:
         return 2
     report = materialize(plan)
     first_command = first_continuation_command(plan)
+    web = "web-next" in plan.resolved_profiles
+    mobile = "mobile-expo" in plan.resolved_profiles
+    if web and plan.design_mode != "reference":
+        design_stage = "review_product_specific_design"
+    elif web:
+        design_stage = "adapt_reference_experience"
+    elif mobile:
+        design_stage = "define_native_journey"
+    else:
+        design_stage = "define_product_scope"
     continuation = {
         "working_directory": str(plan.destination),
         "command": first_command,
@@ -1885,7 +1895,7 @@ def run(args: argparse.Namespace) -> int:
             "resume_saved_brief",
             "research_current_evidence" if "research-enabled" in plan.resolved_profiles else "research_not_selected",
             "confirm_first_useful_journey",
-            "review_product_specific_design",
+            design_stage,
             "implement_approved_scope",
             "verify_running_result",
         ],

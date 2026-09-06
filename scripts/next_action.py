@@ -179,10 +179,14 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         return selected_task_action or task_action(root)
 
     if "mobile-expo" in profiles:
+        if (root / "docs/40-execution/TASKS.jsonl").read_text().strip():
+            return task_action(root)
         return (
             "Mobile is a planning scaffold, not a runnable native starter",
             "Open docs/60-tooling/FIRST_PROJECT.md and follow the mobile readiness path.",
         )
+    if (root / "docs/40-execution/TASKS.jsonl").read_text().strip():
+        return task_action(root)
     return (
         "Define the product outcome before creating the first requirement",
         "Open docs/00-vision/NORTH_STAR.md",

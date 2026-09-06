@@ -177,6 +177,24 @@ class NextActionTests(unittest.TestCase):
         self.assertIn("not a runnable", next_action.next_action(self.root)[0])
         self.prerequisite.assert_not_called()
 
+    def test_ready_mobile_and_core_projects_advance_to_the_only_task(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        brief = {
+            "schema_version": 1, "name": "Afford", "audience": "households",
+            "promise": "Plan a purchase", "first_outcome": "Compare purchase dates",
+            "design_preferences": None, "design_mode": "custom", "assistant": "manual",
+            "status": "ready", "confirmed_by": "Owner", "open_questions": [],
+        }
+        self.write(".agentic/project-brief.json", brief)
+        self.ledger(self.task(identity="T-101"))
+        for profile in ("mobile-expo", "core"):
+            with self.subTest(profile=profile):
+                self.write(".agentic/project.json", {"profiles": [profile]})
+                title, action = next_action.next_action(self.root)
+                self.assertIn("T-101", title)
+                self.assertEqual("./agentic task start T-101", action)
+        self.prerequisite.assert_not_called()
+
     def test_malformed_unknown_and_conflicting_profiles_fail_closed(self):
         for profiles in (None, "web-next", [], [7], ["unknown"]):
             self.write(".agentic/project.json", {"profiles": profiles})

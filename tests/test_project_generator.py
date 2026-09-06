@@ -75,6 +75,8 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("choose", report["continuation"]["assistant"])
             self.assertFalse(report["continuation"]["automatic_launch"])
             self.assertFalse(report["continuation"]["collects_api_keys"])
+            self.assertIn("define_product_scope", report["continuation"]["stages"])
+            self.assertNotIn("review_product_specific_design", report["continuation"]["stages"])
             self.assertEqual(
                 f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
                 report["continuation"]["shell_command"],
@@ -526,12 +528,16 @@ class ProjectGeneratorTests(unittest.TestCase):
                     self.assertIn("native mobile design guidance", assistant_handoff)
                     self.assertIn("Plan product-specific native alternatives", direction_guidance)
                     self.assertNotIn("three live product-specific directions", generated_readme)
+                    self.assertNotIn("Register candidates", direction_guidance)
+                    self.assertIn("Do not use the web candidate workflow", direction_guidance)
                 else:
                     self.assertIn("No design surface is selected", generated_readme)
                     self.assertIn("no application or design surface", assistant_handoff)
                     self.assertIn("No design surface is selected", direction_guidance)
                     self.assertNotIn("selected platform", direction_guidance)
                     self.assertNotIn("three live product-specific directions", generated_readme)
+                    self.assertNotIn("Register candidates", direction_guidance)
+                    self.assertIn("Do not create or compare design candidates", direction_guidance)
                 (destination / ".agentic/project-brief.json").unlink()
                 with self.assertRaises(project_generator.GenerationError):
                     project_generator.validate_generated_project(destination)
@@ -554,6 +560,31 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertIn("deliberately selected reference experience", directions)
             self.assertNotIn("creative-direction-sprint", handoff)
             self.assertNotIn("builds three live product-specific directions", readme)
+            self.assertNotIn("Register candidates", directions)
+            self.assertIn("Only create custom candidates", directions)
+
+    def test_continuation_stages_match_each_generated_profile(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            cases = (
+                ("web", "custom", "review_product_specific_design"),
+                ("web", "reference", "adapt_reference_experience"),
+                ("mobile", "custom", "define_native_journey"),
+                ("core", "custom", "define_product_scope"),
+            )
+            for preset, design_mode, expected in cases:
+                with self.subTest(preset=preset, design_mode=design_mode):
+                    destination = Path(temporary) / f"{preset}-{design_mode}"
+                    result = self.run_generator(
+                        "--name", "Profile Journey", "--destination", str(destination),
+                        "--preset", preset, "--design-mode", design_mode, "--yes", "--json",
+                    )
+                    self.assertEqual(0, result.returncode, result.stderr)
+                    stages = json.loads(result.stdout)["continuation"]["stages"]
+                    self.assertIn(expected, stages)
+                    self.assertEqual(1, len(set(stages) & {
+                        "review_product_specific_design", "adapt_reference_experience",
+                        "define_native_journey", "define_product_scope",
+                    }))
 
     def test_generated_doc_leaf_symlink_cannot_overwrite_operating_agreement(self):
         with tempfile.TemporaryDirectory() as temporary:

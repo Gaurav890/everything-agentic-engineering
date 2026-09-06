@@ -223,10 +223,8 @@ def load_research_state(root: Path, *, selected: bool) -> dict[str, Any]:
         brief = load(root)
         if brief.get("research_evidence_digest") != ledger_digest:
             raise BriefError("Research evidence is not bound to the current project brief")
-        if brief["status"] == "captured" and (
-            research_snapshot_digest(brief) != state["resulting_brief_digest"]
-        ):
-            raise BriefError("Captured project brief changed without updating research evidence")
+        if research_snapshot_digest(brief) != state["resulting_brief_digest"]:
+            raise BriefError("Project brief changed without updating research evidence")
     return state
 
 
@@ -291,11 +289,20 @@ def documents(brief: dict[str, Any], *, web: bool, mobile: bool = False) -> dict
             "responsive and reduced-motion behavior, a local preview route, and its actual UI source. "
             "The bundled examples are optional references, not the available design space."
         )
+        direction_next_step = (
+            "Register candidates with `./agentic design propose`, inspect them side by side, "
+            "and record reviewed evidence before approval."
+        )
     elif web and brief["design_mode"] == "reference":
         direction_guidance = (
             "Review the deliberately selected reference experience and replace its sample content with "
             "the product's real journey before approval. The reference remains an input, not proof that "
             "the product-specific design is complete."
+        )
+        direction_next_step = (
+            "Run the reference experience, replace its sample content with the product journey, "
+            "and record reviewed evidence before approval. Only create custom candidates if the "
+            "owner explicitly changes the design mode."
         )
     elif mobile:
         direction_guidance = (
@@ -303,10 +310,17 @@ def documents(brief: dict[str, Any], *, web: bool, mobile: bool = False) -> dict
             "offline/error/recovery states, motion, and shared-token implications. Do not claim a runnable "
             "preview until a native surface exists."
         )
+        direction_next_step = (
+            "Record native proposals and device evidence only after a runnable native surface exists. "
+            "Do not use the web candidate workflow for this planning scaffold."
+        )
     else:
         direction_guidance = (
             "No design surface is selected. Record product and engineering decisions here only if a future "
             "application profile is explicitly added."
+        )
+        direction_next_step = (
+            "Do not create or compare design candidates unless an application profile is explicitly added."
         )
     result = {
         "docs/00-vision/NORTH_STAR.md": f"# {name} — North star\n\n{heading}{context}{boundary}\n## Open decisions\n\nSuccess measures, non-goals, and immutable constraints need confirmation.\n",
@@ -321,7 +335,7 @@ def documents(brief: dict[str, Any], *, web: bool, mobile: bool = False) -> dict
         "docs/10-product/OPEN_QUESTIONS.md": f"# {name} — Open questions\n\n" + "\n".join(f"- {q}" for q in brief["open_questions"]) + "\n",
         "docs/20-design/COPY.md": f"# {name} — Product copy\n\n{heading}{context}\nAll interface copy remains draft. Do not invent customers, testimonials, metrics, credentials, or portfolio projects.\n",
         "docs/20-design/DESIGN_DECISIONS.md": f"# {name} — Design decisions\n\nNo product-specific design has been approved. Record rationale, alternatives, evidence, and direct approval here.\n",
-        "docs/20-design/DESIGN_DIRECTIONS.md": f"# {name} — Design directions\n\nStatus: Needs approval\n\nMode: {brief['design_mode']}\n\nPreferences: {brief['design_preferences'] or 'Discuss or delegate recommendations; no palette is assumed.'}\n\n{direction_guidance} Register candidates with `./agentic design propose`, inspect them side by side, and record reviewed evidence before approval.\n",
+        "docs/20-design/DESIGN_DIRECTIONS.md": f"# {name} — Design directions\n\nStatus: Needs approval\n\nMode: {brief['design_mode']}\n\nPreferences: {brief['design_preferences'] or 'Discuss or delegate recommendations; no palette is assumed.'}\n\n{direction_guidance} {direction_next_step}\n",
         "docs/40-execution/INITIAL_TASK_GRAPH.md": f"# {name} — Initial task graph\n\nNo implementation scope has been approved. After brief review, decompose FR-001 and AC-001 into bounded tasks with ownership and verification.\n",
     }
     if research_enabled:
