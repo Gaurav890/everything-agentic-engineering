@@ -33,7 +33,7 @@ Anthropic `frontend-design`; keep it secondary and opt-in.
 | Find a few missing purposeful motion opportunities | `find-animation-opportunities` |
 | Name or classify a motion pattern | `animation-vocabulary` |
 | Approved tactile, gesture, spring, material, or Apple-platform direction | `apple-design` |
-| Compare multiple live UI variants | `prototype` — explicit only; human chooses |
+| Compare multiple live UI variants | `prototype` — default in a fresh custom design sprint; human chooses |
 | Select a UI dependency | `pick-ui-library` — explicit only; inspect installed capabilities first |
 | Sonner setup or troubleshooting | `ask-sonner` — only when Sonner is relevant |
 

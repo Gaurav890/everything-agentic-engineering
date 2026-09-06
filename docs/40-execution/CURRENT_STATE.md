@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-09-01
+Last updated: 2026-09-06
 
 ## Product
 
@@ -23,7 +23,8 @@ outcome, design approach, optional preferences, and preferred coding client.
 Enterprise workflows ask four additional domain decisions only when selected.
 New projects persist `.agentic/project-brief.json` and their own product
 drafts; web reference metadata remains in `.agentic/experience.json`.
-`./agentic start` continues the saved brief; `next` exposes one action at a time.
+Fresh design-critical web projects route to `./agentic design sprint`; `start`
+continues non-design handoffs and `next` exposes one action at a time.
 Web and mobile application profiles always resolve the design-critical
 foundation.
 
@@ -42,7 +43,12 @@ structured handoff without gaining execution authority.
 
 Custom/existing-brand web projects show an honest setup workspace, not a
 finished product. Their catalog starts empty and supports arbitrary local
-preview routes. Bundled examples require an explicit reference choice.
+preview routes. The creative-direction sprint asks only unresolved
+consequential questions, then requires three live product-specific candidates
+by default. Candidates must diverge on named experiential axes and document
+real states, a signature idea, asset strategy, purposeful motion, responsive
+behavior, and reduced-motion behavior. Palette-only variants and starter demo
+surfaces fail closed. Bundled examples require an explicit reference choice.
 Approval binds completed intake, confirmed scope, screenshot evidence, selected
 candidate, and listed sources. Fingerprints detect drift, not design quality.
 `next` follows current profiles, prerequisites, approved design, dependencies,

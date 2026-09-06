@@ -51,7 +51,22 @@ test("missing current brief and symlinked context fail closed", () => fixture((w
 }));
 
 test("candidate views accept local previews without exposing sources", () => fixture(write => {
-  const candidate = {id: "one", name: "One", thesis: "Content first", composition: "Reading", interaction: "Compare", preview_path: "/concepts/one", source_files: ["private-path"]};
+  const candidate = {
+    id: "one",
+    name: "One",
+    thesis: "Content first",
+    axis: "progressive financial disclosure",
+    composition: "A decision workspace anchored by the monthly budget",
+    interaction: "Compare purchase scenarios without losing the safe baseline",
+    signature: "A budget horizon that bends as tradeoffs change",
+    asset_strategy: "Product photography supports the decision instead of decorating it",
+    motion_rationale: "Transitions preserve the relationship between price and monthly impact",
+    responsive_strategy: "The decision horizon becomes a compact sticky summary on small screens",
+    reduced_motion: "Replace interpolated horizon movement with immediate value changes",
+    states: ["ready", "comparison", "over-budget"],
+    preview_path: "/concepts/one",
+    source_files: ["private-path"],
+  };
   write("design-directions.json", {directions: []});
   assert.deepEqual(getProjectCandidates(), []);
   write("design-directions.json", {directions: [candidate]});

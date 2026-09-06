@@ -136,12 +136,23 @@ class DesignEngineTests(unittest.TestCase):
             source.parent.mkdir(parents=True)
             source.write_text("export default function Preview() { return null; }")
             candidate = dict(design_engine.load_catalog()["quiet-material"])
-            candidate.update(composition="Timeline", interaction="Compare two purchase dates", rationale="Expose tradeoffs", preview_path="/concepts", source_files=["apps/web/app/concepts/page.tsx"])
-            candidates = [{**candidate, "id": f"purchase-path-{n}"} for n in range(4)]
+            candidate.update(
+                composition="Timeline", interaction="Compare two purchase dates",
+                rationale="Expose tradeoffs", axis="temporal comparison",
+                signature="A budget horizon that bends around the selected purchase date",
+                asset_strategy="Purpose-built data visualization; no stock imagery",
+                motion_rationale="The horizon transition explains the changed date and affordability",
+                responsive_strategy="The horizon becomes a vertically stepped plan on narrow screens",
+                reduced_motion="The selected horizon updates instantly with persistent labels",
+                states=["ready", "over budget", "safe plan"], preview_path="/concepts",
+                preview_source="apps/web/app/concepts/page.tsx",
+                source_files=["apps/web/app/concepts/page.tsx"],
+            )
+            candidates = [{**candidate, "id": f"purchase-path-{n}", "axis": f"design axis {n}"} for n in range(4)]
             write(root, str(path.relative_to(root)), {"schema_version": 2, "mode": "custom", "directions": candidates})
             self.assertEqual(4, len(design_engine.load_catalog(path)))
             args = argparse.Namespace(file="candidate.json", yes=True)
-            write(root, args.file, {**candidate, "id": "fifth-option"})
+            write(root, args.file, {**candidate, "id": "fifth-option", "axis": "decision confidence"})
             with mock.patch.object(design_engine, "ROOT", root), mock.patch.object(design_engine, "CATALOG_PATH", path):
                 self.assertEqual(0, design_engine.run_propose(args))
             self.assertEqual(5, len(design_engine.load_catalog(path)))
@@ -173,6 +184,38 @@ class DesignEngineTests(unittest.TestCase):
                 write(root, ".agentic/design-directions.json", {"schema_version": 2, "mode": "custom", "directions": [candidate]})
                 with self.assertRaises(design_engine.DesignError):
                     design_engine.load_catalog(path)
+
+    def test_custom_candidates_require_distinct_axes_and_cannot_reuse_demo_surface(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "apps/web/app/concepts/page.tsx"
+            source.parent.mkdir(parents=True)
+            source.write_text("export default function Preview() { return null; }")
+            base = dict(design_engine.load_catalog()["quiet-material"])
+            base.update(
+                composition="A decision horizon", interaction="Select a date",
+                rationale="Make the tradeoff visible", axis="time horizon",
+                signature="A horizon that bends around the target",
+                asset_strategy="Product-owned data visualization",
+                motion_rationale="Motion links the changed input to its consequence",
+                responsive_strategy="The horizon stacks on narrow screens",
+                reduced_motion="Values update without interpolation",
+                states=["ready", "unsafe", "safe"], preview_path="/concepts",
+                preview_source="apps/web/app/concepts/page.tsx",
+                source_files=["apps/web/app/concepts/page.tsx"],
+            )
+            path = root / ".agentic/design-directions.json"
+            write(root, str(path.relative_to(root)), {
+                "schema_version": 2, "mode": "custom",
+                "directions": [{**base, "id": "one"}, {**base, "id": "two"}],
+            })
+            with self.assertRaisesRegex(design_engine.DesignError, "distinct named axes"):
+                design_engine.load_catalog(path)
+            demo = root / "apps/web/app/product-lab.tsx"
+            demo.write_text("export default function Demo() { return null; }")
+            base.update(preview_source="apps/web/app/product-lab.tsx", source_files=["apps/web/app/product-lab.tsx"])
+            with self.assertRaisesRegex(design_engine.DesignError, "starter demo"):
+                design_engine.validate_custom_candidate(base, root)
 
     def test_approval_output_cannot_be_its_own_source(self):
         with tempfile.TemporaryDirectory() as temporary:

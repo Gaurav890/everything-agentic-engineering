@@ -97,7 +97,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertIn("Continue now — copy and paste:", result.stdout)
             self.assertIn(
-                f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
+                f"cd {shlex.quote(str(destination.resolve()))} && ./agentic design sprint",
                 result.stdout,
             )
             self.assertIn("What happens next:", result.stdout)
@@ -252,14 +252,20 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertIn("FIRST_FEATURE.md", readme)
             self.assertIn("FIRST_PROJECT.md", readme)
             self.assertIn("printed one shell-safe command", readme)
-            self.assertIn("product-specific design previews", readme)
+            self.assertIn("three live product-specific directions", readme)
             self.assertIn("pnpm install --frozen-lockfile", readme)
             self.assertTrue((destination / "scripts/web_verification.py").is_file())
             self.assertTrue((destination / "scripts/project_checks.py").is_file())
             app_package = json.loads((destination / "apps/web/package.json").read_text())
             self.assertEqual("playwright test --grep-invert @visual", app_package["scripts"]["test:e2e"])
             self.assertIn("updateSnapshots: \"none\"", (destination / "apps/web/playwright.config.ts").read_text())
-            self.assertIn("./agentic start", (destination / "docs/40-execution/HANDOFF.md").read_text())
+            self.assertIn("./agentic design sprint", (destination / "docs/40-execution/HANDOFF.md").read_text())
+            assistant_handoff = (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text()
+            self.assertIn("./agentic design sprint", assistant_handoff)
+            self.assertIn("creative-direction-sprint", assistant_handoff)
+            direction_brief = (destination / "docs/20-design/DESIGN_DIRECTIONS.md").read_text()
+            self.assertIn("distinct experiential axes", direction_brief)
+            self.assertIn("actual UI source", direction_brief)
             environment = os.environ.copy()
             environment.pop("PYTHONPYCACHEPREFIX", None)
             environment.pop("PYTHONDONTWRITEBYTECODE", None)

@@ -33,13 +33,13 @@ what it will create, and asks once before writing a new project. It installs
 nothing, enables no external service, copies no secrets, and does not modify
 this starter. When creation succeeds, it prints one shell-safe command that
 enters the generated folder and continues the saved handoff. Copy and run that
-command. When returning later from inside the project, use:
+command. A custom web project continues directly into its creative sprint:
 
 ```bash
-./agentic start
+./agentic design sprint
 ```
 
-`start` carries your saved brief into your chosen **Claude Code, Codex, or
+The sprint carries your saved brief into your chosen **Claude Code, Codex, or
 editor/app workflow**. It shows the folder and asks before launching an installed
 terminal client; manual copy/paste is available. Sign in through the client's
 own interface—this starter collects no API keys or subscription tokens.
@@ -49,11 +49,13 @@ journey: resume the brief → confirm one useful journey → review product-spec
 design previews → implement approved scope → inspect and verify the running
 result. Nothing else is installed or launched by project creation.
 
-Your assistant then helps confirm one useful outcome, asks only unresolved
-questions, and creates working design previews for **your product**. Custom is
-the default; an existing brand or the bundled reference examples are optional.
-There is no preset-only shortlist. Your README and product documents start with
-your answers, not this starter's requirements.
+Your assistant then confirms one useful outcome, asks only unresolved questions
+that would change the experience, and creates three working design answers for
+**your product** by default. Each must explore a different composition or
+interaction axis, use realistic states, and include a signature idea, asset
+strategy, purposeful motion decision, responsive behavior, and reduced-motion
+behavior. Custom is the default; an existing brand or the bundled reference
+examples are optional. There is no preset-only shortlist.
 
 Use `./agentic next` whenever you return. It reads the current brief, design,
 and task state. [See exactly how the handoff works](docs/60-tooling/PROJECT_ONBOARDING.md).
@@ -76,19 +78,21 @@ setup → feature → review path and help when a check stops.
 1. Run `./agentic setup create`.
 2. Choose what you are building and who it serves.
 3. Review the concise creation plan.
-4. Copy the printed continuation command; it enters the generated directory and
-   runs `./agentic start` for you.
+4. Copy the printed continuation command; a custom web project enters the new
+   directory and starts `./agentic design sprint` for you.
 5. Use the prepared instruction in your existing app, or confirm launch of the
    selected installed terminal client.
-6. Confirm your first useful journey and discuss design preferences with your assistant.
-7. Compare real, product-specific previews; revise or reject them until the direction fits.
+6. Confirm your first useful journey and only the design decisions that remain consequential.
+7. Compare live product-specific previews side by side; combine, revise, or reject
+   them until one direction earns approval.
 8. Approve the design with reviewed evidence, then compile tokens.
 9. Implement the accepted feature, inspect the running result, and review its
    evidence. Return to `next` for the next improvement.
 
 Download times vary; this is a workflow, not a measured time-to-success claim.
 The initial custom workspace is a handoff and brief, not a finished product.
-Quality still depends on real content, good previews, critique, and iteration.
+The sprint makes quality reviewable; it does not claim that an automated score or
+the starter author can approve taste for you.
 
 No command archaeology. No deleting irrelevant starter folders. No giant prompt
 that asks one model to invent the product, design it, build it, and approve
@@ -187,7 +191,7 @@ references to adapt—not a guarantee of originality or a limit on custom design
 
 ---
 
-## Why the frontend does not start as generic generated UI
+## The product moat: a taste compiler, not a theme picker
 
 The design engine runs product thinking before visual production:
 
@@ -198,7 +202,7 @@ DISCOVERY
 → UX STRATEGY
 → INTERACTION MODEL
 → ADAPTIVE DESIGN INTAKE
-→ REALISTIC DESIGN DIRECTIONS
+→ LIVE PRODUCT-SPECIFIC DIRECTIONS
 → HUMAN SELECTION OR SYNTHESIS
 → DESIGN SYSTEM
 → DTCG-COMPATIBLE TOKENS
@@ -222,11 +226,23 @@ The non-negotiable rules are:
   separate gates.
 - The builder does not certify its own work.
 
-The design-direction lab makes aesthetic choices visible before implementation
-locks them in. Approve one direction—or request a synthesis—then build tokens:
+The differentiator is the conversion of taste into durable product behavior:
+
+```text
+INTENT → LIVE DIVERGENCE → HUMAN CHOICE → TOKENS + COMPONENTS + MOTION RULES
+       → VERIFIED FEATURE → DRIFT-PROTECTED ITERATION
+```
+
+A custom candidate fails if it is a palette swap, inherits a starter demo, uses
+generic content, has dead interactions, or cannot explain its asset, motion,
+responsive, and reduced-motion decisions. Registered candidates appear as live
+previews in the project workspace so the choice is visual, not a JSON exercise.
+
+Approve one reviewed product-specific direction—or request a synthesis—then
+build tokens:
 
 ```bash
-./agentic design approve editorial-signal --yes
+./agentic design approve <candidate-id> --evidence docs/50-evals/<screenshot>.png --yes
 ./agentic tokens build
 ```
 
@@ -234,10 +250,11 @@ The token system covers color, typography, spacing, radii, borders, elevation,
 motion, layout, density, themes, components, and agent states. Redesigns change
 approved semantic decisions instead of repainting every screen.
 
-Optional design skills remain precisely routed. The reviewed Emil Kowalski
-design-engineering suite is the preferred external craft pass for substantial
-web UI; other design skills and component libraries are used only for their
-appropriate phase. None becomes the product’s art director.
+Optional design skills remain precisely routed. When installed, the reviewed
+Emil Kowalski `prototype` workflow accelerates the initial live divergence and
+`emil-design-eng` is the preferred external craft pass for substantial web UI.
+The local sprint contract remains complete without them; no external skill or
+component library becomes the product’s art director or a hidden prerequisite.
 
 ```bash
 ./agentic setup skills
@@ -359,11 +376,12 @@ Read the [parallel work guide](docs/70-collaboration/PARALLEL_TERMINALS.md).
 |---|---|
 | Create a clean project | `./agentic setup create` |
 | Get one next action | `./agentic next` |
-| Continue with your chosen assistant | `./agentic start` |
+| Create live product directions | `./agentic design sprint` |
+| Continue a non-design handoff | `./agentic start` |
 | See active profiles | `./agentic profile resolve` |
 | Diagnose project setup | `./agentic profile doctor` |
 | Compare design directions | `./agentic design preview` |
-| Approve a direction | `./agentic design approve <direction> --yes` |
+| Approve reviewed direction evidence | `./agentic design approve <direction> --evidence <screenshot> --yes` |
 | Build design tokens | `./agentic tokens build` |
 | Plan a task safely | `./agentic task plan T-101` |
 | Preview isolated work | `./agentic task start T-101` |

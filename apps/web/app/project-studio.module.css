@@ -50,11 +50,17 @@
 .empty > span { font-size: 40px; }
 .empty h3 { font-size: 18px; font-weight: 500; margin: 6px 0; }
 .empty p { color: var(--muted); font-size: 14px; max-width: 600px; }
-.candidates { list-style: none; padding: 0; margin: 36px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); gap: 32px; }
+.candidates { list-style: none; padding: 0; margin: 36px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: clamp(32px, 4vw, 56px); }
 .candidates li { border-top: 2px solid var(--ink); padding: 22px 0; }
 .candidates h3 { font-weight: 500; font-size: 24px; margin: 20px 0 12px; }
 .candidates p, .candidates dd { font-size: 14px; }
 .candidates a { display: inline-block; padding: 12px 0; margin-top: 24px; text-underline-offset: 5px; }
+.previewFrame { position: relative; aspect-ratio: 16 / 10; margin: 0 0 24px; overflow: hidden; border: 1px solid var(--line); background: color-mix(in srgb, var(--ink) 5%, var(--paper)); }
+.previewFrame::after { content: "Live preview"; position: absolute; top: 10px; right: 10px; padding: 5px 8px; color: var(--paper); background: color-mix(in srgb, var(--ink) 88%, transparent); font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; pointer-events: none; }
+.previewFrame iframe { width: 160%; height: 160%; border: 0; transform: scale(.625); transform-origin: 0 0; background: white; }
+.candidates details { margin-top: 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.candidates summary { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.candidates details dl { padding: 0 0 18px; }
 .journey { list-style: none; padding: 28px 0 48px; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; border-top: 1px solid var(--line); }
 .journey span { color: var(--muted); font-size: 11px; }
 .journey h3 { font-weight: 500; margin: 8px 0; }

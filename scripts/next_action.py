@@ -123,6 +123,8 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         except project_brief.BriefError as error:
             raise NextActionError(str(error)) from error
         if not task_id and brief["status"] != "ready":
+            if brief["design_mode"] != "reference" and "design-critical" in profiles:
+                return "Turn the saved brief into live product directions", "./agentic design sprint"
             return "Continue your product conversation; your answers are saved", "./agentic start"
     if task_id and "web-next" not in profiles:
         return task_action(root, task_id)
@@ -136,7 +138,7 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
             raise NextActionError("Invalid design status; run ./agentic design check")
         if design.get("status") != "approved":
             if (root / project_brief.BRIEF_PATH).exists() and brief["design_mode"] != "reference":
-                return "Review product-specific previews with your coding assistant", "./agentic start"
+                return "Create or review live product-specific directions", "./agentic design sprint"
             return (
                 "Compare the live directions, then explicitly approve your choice",
                 "pnpm dev",
@@ -148,7 +150,7 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         try:
             design_engine.validate_project(root)
         except design_engine.DesignError as error:
-            return f"Re-review the direction: {error}", "./agentic start" if (root / project_brief.BRIEF_PATH).exists() else "./agentic design status"
+            return f"Re-review the direction: {error}", "./agentic design sprint" if (root / project_brief.BRIEF_PATH).exists() else "./agentic design status"
         compiled = direction_path.read_text() if direction_path.is_file() else ""
         if (
             not isinstance(approved_direction, str)

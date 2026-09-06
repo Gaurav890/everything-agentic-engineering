@@ -1032,9 +1032,20 @@ review, visual candidates, and continuation. Run `./agentic next` to resume.
 """
 
 
+def first_continuation_command(plan: GenerationPlan) -> str:
+    if (
+        "web-next" in plan.resolved_profiles
+        and "design-critical" in plan.resolved_profiles
+        and plan.design_mode != "reference"
+    ):
+        return "./agentic design sprint"
+    return "./agentic start"
+
+
 def generated_readme(plan: GenerationPlan) -> str:
     brief = project_brief.create(plan)
     web = "web-next" in plan.resolved_profiles
+    continuation = first_continuation_command(plan)
     return f"""# {plan.project_name}
 
 {brief["promise"]}
@@ -1047,7 +1058,7 @@ Project creation printed one shell-safe command that enters this folder and
 starts the guided handoff. If you are returning later, run:
 
 ```bash
-./agentic start
+{continuation}
 ```
 
 Choose your existing coding assistant or use the prepared instruction in your
@@ -1055,9 +1066,10 @@ desktop app/editor. The handoff carries your answers forward and asks for
 confirmation before starting a native interactive client. No API key is required
 by this starter; sign-in and billing stay with your chosen client.
 
-The handoff resumes this brief, confirms one useful journey, prepares
-product-specific design previews, and keeps scope/design approval separate from
-implementation and running-product verification.
+The creative sprint resumes this brief, confirms one useful journey, and builds
+three live product-specific directions on different design axes by default. It
+keeps scope, design approval, token compilation, implementation, and verification
+as separate decisions.
 
 Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
@@ -1079,8 +1091,10 @@ journey before claiming implementation. Existing user edits must be preserved.
 {"After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it." if web else "Follow the active profile's readiness guide before choosing an implementation."}
 
 Run `./agentic next` to resume. Custom directions and existing brands are not
-limited to the reference presets. Review real previews before approving a
-candidate; token compilation is not design generation.
+limited to the reference presets. A custom candidate must prove a different
+composition or interaction idea with realistic states, signature craft, an asset
+strategy, and responsive/reduced-motion behavior. Review the running previews
+before approval; token compilation is not design generation.
 
 Use `./agentic verify full` for the repository contract.
 {"Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines." if web else "Add platform-specific tests when an application is implemented."}
@@ -1261,7 +1275,7 @@ def write_generated_files(plan: GenerationPlan) -> None:
         "Product and design decisions require review. No production services are configured.\n"
     )
     (plan.destination / "docs/40-execution/HANDOFF.md").write_text(
-        f"# Continue {plan.project_name}\n\nRun `./agentic start` to resume with the saved project brief. "
+        f"# Continue {plan.project_name}\n\nRun `{first_continuation_command(plan)}` to resume with the saved project brief. "
         "Keep user edits; resolve open decisions before design approval or implementation.\n"
     )
 
@@ -1769,10 +1783,11 @@ def run(args: argparse.Namespace) -> int:
             print("\nNo project created. Re-run with --yes after reviewing this plan.")
         return 2
     report = materialize(plan)
+    first_command = first_continuation_command(plan)
     continuation = {
         "working_directory": str(plan.destination),
-        "command": "./agentic start",
-        "shell_command": f"cd {shlex.quote(str(plan.destination))} && ./agentic start",
+        "command": first_command,
+        "shell_command": f"cd {shlex.quote(str(plan.destination))} && {first_command}",
         "assistant": plan.assistant,
         "automatic_launch": False,
         "collects_api_keys": False,

@@ -1,0 +1,28 @@
+{
+  "task_id": "T-049",
+  "acceptance_ids": ["AC-001", "AC-004", "AC-005", "AC-006"],
+  "ui_change": true,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-design-review-pending",
+  "states": ["normal", "loading", "empty", "error", "copy success"],
+  "viewports": ["desktop", "mobile"],
+  "commands": [
+    "python3 -m unittest discover -s tests",
+    "pnpm --filter @everything-agentic/web typecheck",
+    "pnpm --filter @everything-agentic/web test",
+    "./agentic verify full",
+    "./agentic verify web",
+    "./agentic verify visual",
+    "generate a fresh custom design-critical web project",
+    "run ./agentic next and inspect the generated workspace"
+  ],
+  "artifacts": [
+    "README.md",
+    "normal-empty-desktop.png",
+    "normal-empty-mobile.png",
+    "loading-copy-desktop.png",
+    "error-copy-desktop.png",
+    "error-copy-mobile.png"
+  ],
+  "verdict": "PASS_WITH_REVIEW_PENDING — deterministic creative-sprint routing, candidate gates, generated-project handoff, browser interaction, responsive inspection, build, accessibility checks, and unchanged visual baselines pass; independent design judgment and real newcomer outcomes remain separate"
+}

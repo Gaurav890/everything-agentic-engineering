@@ -1,5 +1,37 @@
 # Progress log
 
+### 2026-09-06 — T-049
+
+**Requirements:** FR-003, FR-005, FR-006
+**Acceptance:** AC-001, AC-004, AC-005, AC-006
+**Outcome:** IMPLEMENTED — independent and human review pending
+
+Replaced the empty creative handoff for fresh design-critical web projects with
+one executable `./agentic design sprint` path. The sprint carries the saved
+brief into three live product-specific candidates by default, rejects starter
+demo surfaces and duplicate design axes, and requires realistic states,
+signature craft, assets, purposeful motion, responsive behavior, and a
+reduced-motion plan before a custom candidate can be registered.
+
+The generated project workspace now explains the sprint, exposes one primary
+copyable action, and renders registered candidates side by side for human
+comparison. A reviewed external prototype capability is routed only when it is
+already installed; no pack, client, credential, dependency, or service is
+installed automatically. The reference examples remain explicit reference
+material rather than a default identity.
+
+All 252 repository tests, nine web contract tests, the ten-stage full check,
+production web build, 25 interaction/accessibility browser checks, and 24
+unchanged visual comparisons pass. A fresh `Afford Sprint` project routed to the
+new command, rendered the saved product and first outcome, confirmed clipboard
+feedback, and had no horizontal overflow at 390px. Evidence and remaining
+limits are recorded under `docs/50-evals/evidence/T-049/`.
+
+This does not claim that a live assistant produced or a human approved a
+world-class direction, that a newcomer completed the flow unaided, or that
+native mobile design is certified. Those remain independent review and pilot
+outcomes, not assertions made by the builder.
+
 ### 2026-09-01 — T-048
 
 **Requirements:** FR-001, FR-004, FR-005, FR-006

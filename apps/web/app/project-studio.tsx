@@ -2,7 +2,7 @@ import {CopyAction} from "./copy-action";
 import type {ProjectBrief, ProjectCandidate} from "./project-brief.server";
 import styles from "./project-studio.module.css";
 
-const handoff = "Use the project-onboarding skill. Read .agentic/project-brief.json and the project instructions. Resume from the current brief, tasks, and evidence; do not repeat settled questions or assume a preset is the final design.";
+const handoff = "Use the project-onboarding and creative-direction-sprint skills. Read .agentic/project-brief.json and the project instructions. Resume from saved decisions, then build and register three materially different live product directions before implementation or token approval.";
 const clients = {choose: "your coding assistant", manual: "your app or editor", claude: "Claude Code", codex: "Codex"};
 
 export function ProjectStudio({brief, candidates}: {brief: ProjectBrief; candidates: ProjectCandidate[]}) {
@@ -17,8 +17,8 @@ export function ProjectStudio({brief, candidates}: {brief: ProjectBrief; candida
         <div>
           <p className={styles.eyebrow}>Your idea. Your direction.</p>
           <h1 id="project-heading">Let’s make<br /><em>{brief.name}</em><br />your own.</h1>
-          <p className={styles.lead}>The foundation is ready. Next, shape the first useful experience with {clients[brief.assistant]}.</p>
-          <a className={styles.primary} href="#continue">Continue from your brief <span aria-hidden="true">↓</span></a>
+          <p className={styles.lead}>The foundation is ready. Next, turn the first useful experience into live directions you can see, use, reject, and combine.</p>
+          <a className={styles.primary} href="#continue">Create live directions <span aria-hidden="true">↓</span></a>
           <p className={styles.note}>This is your setup workspace—not your finished product or an approved visual identity.</p>
         </div>
         <aside className={styles.brief} aria-labelledby="brief-heading">
@@ -35,12 +35,12 @@ export function ProjectStudio({brief, candidates}: {brief: ProjectBrief; candida
       </section>
 
       <section className={styles.continue} id="continue" aria-labelledby="continue-heading">
-        <div><p className={styles.eyebrow}>Your next step</p><h2 id="continue-heading">One conversation.<br />A clear way forward.</h2>
-          <p>Use the terminal inside this project. The handoff shows what will happen and asks before starting an installed client.</p>
+        <div><p className={styles.eyebrow}>Your next step</p><h2 id="continue-heading">One sprint.<br />Real choices.</h2>
+          <p>Use the terminal inside this project. The sprint resumes your brief and requires working product previews—not a mood board or renamed demo.</p>
         </div>
         <div className={styles.instructions}>
-          <div className={styles.command}><code>./agentic start</code><CopyAction text="./agentic start" label="Copy command" destination="terminal" /></div>
-          <p>Continue in {clients[brief.assistant]}. Sign in through the client’s own flow if needed. No API key is collected here, and no client is installed automatically.</p>
+          <div className={styles.command}><code>./agentic design sprint</code><CopyAction text="./agentic design sprint" label="Copy sprint command" destination="terminal" /></div>
+          <p>Continue in {clients[brief.assistant]}. It asks only unresolved consequential questions, then creates three distinct live candidates by default. No API key is collected here, and no client or design pack is installed automatically.</p>
           <details open={brief.assistant === "manual"}><summary>Already using an app or editor?</summary>
             <p>Open this generated project’s folder there. Copy this instruction into a new conversation:</p>
             <pre>{handoff}</pre><CopyAction text={handoff} label="Copy instruction" destination="assistant" />
@@ -54,11 +54,15 @@ export function ProjectStudio({brief, candidates}: {brief: ProjectBrief; candida
           <p>Compare working layouts and interactions. Mix ideas, request another direction, or reject them all. You choose what becomes the design system.</p>
         </div>
         {candidates.length ? <ul className={styles.candidates}>{candidates.map((candidate, index) => <li key={candidate.id}>
-          <span className={styles.eyebrow}>{String(index + 1).padStart(2, "0")} / Proposed preview</span>
+          <div className={styles.previewFrame}>
+            <iframe src={candidate.preview_path} title={`${candidate.name} live design preview`} loading="lazy" sandbox="allow-forms allow-scripts" tabIndex={-1} />
+          </div>
+          <span className={styles.eyebrow}>{String(index + 1).padStart(2, "0")} / {candidate.axis}</span>
           <h3>{candidate.name}</h3><p>{candidate.thesis}</p>
-          <dl><dt>Composition</dt><dd>{candidate.composition}</dd><dt>Interaction</dt><dd>{candidate.interaction}</dd></dl>
-          <a href={candidate.preview_path}>Open working preview <span aria-hidden="true">↗</span></a>
-        </li>)}</ul> : <div className={styles.empty}><span aria-hidden="true">↳</span><div><h3>No product-specific previews yet.</h3><p>Your assistant will use the brief to explore real screens and interactions. This page does not pretend that those designs already exist.</p></div></div>}
+          <dl><dt>Signature idea</dt><dd>{candidate.signature}</dd><dt>Composition</dt><dd>{candidate.composition}</dd><dt>Interaction</dt><dd>{candidate.interaction}</dd></dl>
+          <details><summary>Craft and resilience</summary><dl><dt>Assets</dt><dd>{candidate.asset_strategy}</dd><dt>Motion</dt><dd>{candidate.motion_rationale}</dd><dt>Responsive</dt><dd>{candidate.responsive_strategy}</dd><dt>Reduced motion</dt><dd>{candidate.reduced_motion}</dd><dt>States</dt><dd>{candidate.states.join(" · ")}</dd></dl></details>
+          <a href={candidate.preview_path}>Use the working preview <span aria-hidden="true">↗</span></a>
+        </li>)}</ul> : <div className={styles.empty}><span aria-hidden="true">↳</span><div><h3>Your product directions are ready to be made.</h3><p>Run the sprint above. It will use your saved outcome to build three working answers on different design axes, then return here for comparison. The starter’s sample styles cannot qualify as your custom direction.</p></div></div>}
       </section>
       <ol className={styles.journey} aria-label="The path to your first feature">
         <li><span>01</span><h3>Shape</h3><p>Confirm the user, content, and one useful outcome.</p></li>

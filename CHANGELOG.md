@@ -8,6 +8,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Fresh custom and existing-brand web projects now continue through one
+  product-specific creative-direction sprint instead of an empty design handoff
+  or a starter theme choice. Candidate registration rejects starter demo
+  surfaces and duplicate experiential axes, and the generated workspace compares
+  live previews with their states, signature, asset, motion, responsive, and
+  reduced-motion decisions before human approval.
+
 - Successful downstream creation now ends with one shell-safe continuation
   command, a concise preview of the remaining product/design/build/review
   journey, and explicit non-installation, non-launch, and credential boundaries;

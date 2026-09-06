@@ -13,11 +13,29 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 import project_brief
+import project_handoff
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / ".agentic/design.json"
 INTAKE_PATH = ROOT / ".agentic/design-intake.json"
 CATALOG_PATH = ROOT / ".agentic/design-directions.json"
+CUSTOM_TEXT_FIELDS = (
+    "composition",
+    "interaction",
+    "rationale",
+    "axis",
+    "signature",
+    "asset_strategy",
+    "motion_rationale",
+    "responsive_strategy",
+    "reduced_motion",
+)
+STARTER_DEMO_SOURCES = {
+    "apps/web/app/product-lab.tsx",
+    "apps/web/app/portfolio-lab.tsx",
+    "apps/web/app/enterprise-lab.tsx",
+    "apps/web/app/project-studio.tsx",
+}
 
 
 class DesignError(ValueError):
@@ -80,6 +98,10 @@ def load_catalog(path: Path | None = None) -> dict[str, dict[str, Any]]:
         if custom:
             validate_custom_candidate(direction, root)
         result[direction_id] = direction
+    if custom and len(result) > 1:
+        axes = [re.sub(r"\s+", " ", value["axis"].strip().lower()) for value in result.values()]
+        if len(axes) != len(set(axes)):
+            raise DesignError("Custom candidates must diverge on distinct named axes")
     return result
 
 
@@ -163,7 +185,7 @@ def candidate_source(root: Path, relative: str) -> Path:
     if any((root / Path(*path.parts[:index])).is_symlink() for index in range(1, len(path.parts) + 1)):
         raise DesignError("Candidate source cannot follow symlinks")
     target = root / path
-    if not target.is_file() or target.suffix not in {".tsx", ".ts", ".jsx", ".js", ".css", ".json", ".svg", ".png", ".jpg", ".webp", ".woff2"}:
+    if not target.is_file() or target.suffix not in {".tsx", ".ts", ".jsx", ".js", ".html", ".css", ".json", ".svg", ".png", ".jpg", ".webp", ".woff2"}:
         raise DesignError("Candidate source must reference existing preview code")
     approval_output = root / "packages/design-tokens/generated/direction.css"
     if approval_output.is_file() and target.samefile(approval_output):
@@ -175,14 +197,30 @@ def validate_custom_candidate(direction: dict, root: Path) -> None:
     preview = direction.get("preview_path")
     if not isinstance(preview, str) or not re.fullmatch(r"/(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-]+/?", preview):
         raise DesignError("A custom candidate needs a local preview_path, not a remote URL")
-    for field in ("composition", "interaction", "rationale"):
+    for field in CUSTOM_TEXT_FIELDS:
         if not isinstance(direction.get(field), str) or not direction[field].strip():
             raise DesignError(f"A custom candidate requires {field}")
+    states = direction.get("states")
+    if (
+        not isinstance(states, list)
+        or len(states) < 3
+        or not all(isinstance(state, str) and state.strip() for state in states)
+        or len({state.strip().lower() for state in states}) != len(states)
+    ):
+        raise DesignError("A custom candidate requires at least three distinct realistic states")
     sources = direction.get("source_files")
     if not isinstance(sources, list) or not sources:
         raise DesignError("Candidate requires source_files for its actual local preview and dependencies")
     for relative in sources:
         candidate_source(root, relative)
+    preview_source = direction.get("preview_source")
+    if not isinstance(preview_source, str) or preview_source not in sources:
+        raise DesignError("Candidate preview_source must name its actual UI entry in source_files")
+    if preview_source in STARTER_DEMO_SOURCES:
+        raise DesignError("A custom candidate cannot reuse a starter demo as its preview source")
+    preview_file = candidate_source(root, preview_source)
+    if preview_file.suffix not in {".tsx", ".jsx", ".html"}:
+        raise DesignError("Candidate preview_source must be an actual UI surface")
 
 
 def save_object(path: Path, payload: dict) -> None:
@@ -371,7 +409,7 @@ def run_propose(args: argparse.Namespace) -> int:
     validate_custom_candidate(direction, ROOT)
     if not isinstance(direction.get("preview_path"), str) or not re.fullmatch(r"/(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-]+/?", direction["preview_path"]):
         raise DesignError("A candidate needs a local preview_path, not a remote URL")
-    for field in ("composition", "interaction", "rationale"):
+    for field in CUSTOM_TEXT_FIELDS:
         if not isinstance(direction.get(field), str) or not direction[field].strip():
             raise DesignError(f"A custom candidate requires {field}")
     catalog = load_catalog()
@@ -380,6 +418,13 @@ def run_propose(args: argparse.Namespace) -> int:
         raise DesignError("Candidate id must be text")
     if identity in catalog:
         raise DesignError("Candidate id already exists; use a new revision id to preserve its history")
+    proposed_axis = re.sub(r"\s+", " ", direction["axis"].strip().lower())
+    existing_axes = {
+        re.sub(r"\s+", " ", value["axis"].strip().lower())
+        for value in catalog.values()
+    }
+    if proposed_axis in existing_axes:
+        raise DesignError("Candidate axis already exists; propose a materially different design question")
     payload = load_object(CATALOG_PATH)
     payload["directions"].append(direction)
     # Validate all fields before any write using the same serializer as compilation.
@@ -464,9 +509,19 @@ def run_check(_: argparse.Namespace) -> int:
     return 0
 
 
+def run_sprint(args: argparse.Namespace) -> int:
+    """Resume the saved brief directly into the live creative-direction sprint."""
+    return project_handoff.run(args, ROOT)
+
+
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(description=__doc__)
     commands = value.add_subparsers(dest="command", required=True)
+    sprint = commands.add_parser("sprint", help="Create live product-specific directions in the chosen client")
+    sprint.add_argument("--assistant", choices=project_brief.CLIENTS)
+    sprint.add_argument("--json", action="store_true")
+    sprint.add_argument("--launch", action="store_true")
+    sprint.add_argument("--yes", action="store_true")
     intake = commands.add_parser("intake", help="Record the short adaptive design intake")
     intake.add_argument("--answer", action="append")
     intake.add_argument("--non-interactive", action="store_true")
@@ -493,6 +548,7 @@ def main() -> int:
     try:
         args = parser().parse_args()
         return {
+            "sprint": run_sprint,
             "intake": run_intake,
             "preview": run_preview,
             "approve": run_approve,

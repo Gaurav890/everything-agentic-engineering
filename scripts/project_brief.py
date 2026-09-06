@@ -82,6 +82,37 @@ def documents(brief: dict[str, Any], *, web: bool) -> dict[Path, str]:
     heading = f"Project: {name}\n\nStatus: Draft — product-owner review required.\n"
     context = f"\n## Known intent\n\nAudience: {audience}\n\nPromise: {promise}\n\nFirst outcome: {outcome}\n"
     boundary = "\nThese are captured inputs, not evidence that a feature exists. Unknown facts remain open; do not substitute the starter's requirements.\n"
+    design_sprint = web and brief["design_mode"] != "reference"
+    continuation = "./agentic design sprint" if design_sprint else "./agentic start"
+    assistant_instruction = (
+        "Use the project-onboarding and creative-direction-sprint skills. Read "
+        ".agentic/project-brief.json and the project instructions. Resume saved "
+        "decisions, confirm one useful journey, then build and register three "
+        "materially different live product directions before implementation or "
+        "token approval."
+        if design_sprint else
+        "Use the project-onboarding skill. Read .agentic/project-brief.json and "
+        "the project instructions. Resume from the current brief, tasks, and "
+        "evidence; do not repeat settled questions or assume a preset is final."
+    )
+    if design_sprint:
+        direction_guidance = (
+            "Create three live product-specific alternatives on distinct experiential axes by default. "
+            "Each candidate needs realistic states, a signature idea, asset and motion rationale, "
+            "responsive and reduced-motion behavior, a local preview route, and its actual UI source. "
+            "The bundled examples are optional references, not the available design space."
+        )
+    elif brief["design_mode"] == "reference":
+        direction_guidance = (
+            "Review the deliberately selected reference experience and replace its sample content with "
+            "the product's real journey before approval. The reference remains an input, not proof that "
+            "the product-specific design is complete."
+        )
+    else:
+        direction_guidance = (
+            "Create product-specific alternatives for the selected platform and its native conventions. "
+            "Do not claim a runnable preview until that platform surface exists."
+        )
     result = {
         "docs/00-vision/NORTH_STAR.md": f"# {name} — North star\n\n{heading}{context}{boundary}\n## Open decisions\n\nSuccess measures, non-goals, and immutable constraints need confirmation.\n",
         "docs/00-vision/PRODUCT_CONTEXT.md": f"# Product context\n\n{heading}{context}{boundary}",
@@ -95,7 +126,7 @@ def documents(brief: dict[str, Any], *, web: bool) -> dict[Path, str]:
         "docs/10-product/OPEN_QUESTIONS.md": f"# {name} — Open questions\n\n" + "\n".join(f"- {q}" for q in brief["open_questions"]) + "\n",
         "docs/20-design/COPY.md": f"# {name} — Product copy\n\n{heading}{context}\nAll interface copy remains draft. Do not invent customers, testimonials, metrics, credentials, or portfolio projects.\n",
         "docs/20-design/DESIGN_DECISIONS.md": f"# {name} — Design decisions\n\nNo product-specific design has been approved. Record rationale, alternatives, evidence, and direct approval here.\n",
-        "docs/20-design/DESIGN_DIRECTIONS.md": f"# {name} — Design directions\n\nStatus: Needs approval\n\nMode: {brief['design_mode']}\n\nPreferences: {brief['design_preferences'] or 'Discuss or delegate recommendations; no palette is assumed.'}\n\nCreate product-specific alternatives with real local preview routes. The bundled examples are optional references, not the available design space. Register candidates with `./agentic design propose`, inspect them, and record reviewed evidence before approval.\n",
+        "docs/20-design/DESIGN_DIRECTIONS.md": f"# {name} — Design directions\n\nStatus: Needs approval\n\nMode: {brief['design_mode']}\n\nPreferences: {brief['design_preferences'] or 'Discuss or delegate recommendations; no palette is assumed.'}\n\n{direction_guidance} Register candidates with `./agentic design propose`, inspect them side by side, and record reviewed evidence before approval.\n",
         "docs/40-execution/INITIAL_TASK_GRAPH.md": f"# {name} — Initial task graph\n\nNo implementation scope has been approved. After brief review, decompose FR-001 and AC-001 into bounded tasks with ownership and verification.\n",
     }
     for filename, title in (
@@ -107,15 +138,13 @@ def documents(brief: dict[str, Any], *, web: bool) -> dict[Path, str]:
     result["docs/30-engineering/SECURITY_MODEL.md"] = f"# {name} — Security model\n\n{heading}\nNo production security review has been completed. Identify data sensitivity, trust boundaries, authorization, retention, and abuse cases for the agreed product.\n\nKeep secrets out of source and browser bundles. Existing permission, review, and verification safeguards remain in force. Development-assistant credentials never become application credentials.\n"
     result["docs/60-tooling/ASSISTANT_HANDOFF.md"] = f"""# Continue building {name}
 
-Run `./agentic start`. It shows the project folder, saved brief, and exact next
+Run `{continuation}`. It shows the project folder, saved brief, and exact next
 instruction, and can launch an installed interactive client after confirmation.
 No keys are collected, no client is installed, and no permissions are changed.
 If you already use a desktop app or editor, open this project there and paste:
 
 ```text
-Use the project-onboarding skill. Read .agentic/project-brief.json and the
-project instructions. Resume from the current brief, tasks, and evidence;
-do not repeat settled questions or assume a preset is the final design.
+{assistant_instruction}
 ```
 
 Native sign-in belongs to the client. Its subscription or API billing is separate
