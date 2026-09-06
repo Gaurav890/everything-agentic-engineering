@@ -74,8 +74,8 @@
           "name": "prototype",
           "source_url": "https://github.com/emilkowalski/skills/tree/main/skills/prototype",
           "phases": ["design-directions", "live-iteration"],
-          "activation": "explicit_only",
-          "trigger": "A human explicitly asks for multiple genuinely different live variants and will choose before production changes."
+          "activation": "routed_when_installed",
+          "trigger": "A fresh custom or existing-brand design-critical project needs materially different live candidates, or a human explicitly requests a redesign exploration. Human choice remains required before production changes."
         },
         {
           "name": "pick-ui-library",

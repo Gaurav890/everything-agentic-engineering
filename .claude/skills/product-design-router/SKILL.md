@@ -59,5 +59,6 @@ It is secondary and opt-in; `emil-design-eng` is the preferred first external
 design implementation skill for substantial `design-critical` web UI.
 Emil Kowalski's external collection is an optional design-engineering craft
 layer, not a replacement for discovery, strategy, approved directions, tokens,
-accessibility, Playwright evidence, or the independent evaluator. `prototype`,
+accessibility, Playwright evidence, or the independent evaluator. Outside a fresh
+custom or existing-brand creative-direction sprint, `prototype`,
 `pick-ui-library`, and `review-animations` require explicit human invocation.

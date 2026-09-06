@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import {readFileSync, writeFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {expect, test} from "@playwright/test";
@@ -5,13 +6,13 @@ import {expect, test} from "@playwright/test";
 test.skip(process.env.ONBOARDING_TEST_PROJECT !== "1", "Disposable onboarding fixture only");
 test.describe.configure({mode: "serial"});
 
-test("empty custom catalog explains how to create a direction", async ({page}, testInfo) => {
+test("empty custom catalog explains how to create live directions", async ({page}, testInfo) => {
   const path = resolve(process.cwd(), "../../.agentic/design-directions.json");
   const original = readFileSync(path, "utf8");
   try {
     writeFileSync(path, JSON.stringify({...JSON.parse(original), directions: []}));
-    await page.goto("/");
-    const empty = page.getByRole("heading", {name: "No product-specific previews yet."});
+    await page.goto(`/?catalog=empty-${testInfo.project.name}-${Date.now()}`);
+    const empty = page.getByRole("heading", {name: "Your product directions are ready to be made."});
     await expect(empty).toBeVisible();
     await empty.scrollIntoViewIfNeeded();
     await page.screenshot({path: testInfo.outputPath("empty-catalog.png")});
@@ -21,11 +22,12 @@ test("empty custom catalog explains how to create a direction", async ({page}, t
 });
 
 test("custom preview changes its explanation when the timing changes", async ({page}) => {
-  await page.goto("/");
-  await page.getByRole("link", {name: "Open working preview"}).click();
+  await page.goto("/concepts/purchase-path");
   await expect(page.getByRole("radio", {name: "Later", exact: true})).toBeChecked();
   await page.getByRole("radio", {name: "Sooner", exact: true}).check();
   await expect(page.getByRole("status")).toContainText("flexibility you would give up");
+  const results = await new AxeBuilder({page}).analyze();
+  expect(results.violations).toEqual([]);
 });
 
 test("invalid brief recovers after repair without losing answers", async ({page}, testInfo) => {

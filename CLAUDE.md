@@ -243,8 +243,9 @@ dependencies, production, approval, or merge behavior.
 
 For a generated project with `.agentic/project-brief.json`, use
 `project-onboarding` to resume its actual intent, unresolved design decisions,
-and first feature. `./agentic start` hands off to the user's chosen native client
-after consent; it collects no credentials. Custom and existing-brand modes are
+and first feature. `./agentic design sprint` hands a custom design-critical
+project to the user's chosen native client after consent; it collects no
+credentials. Custom and existing-brand modes are
 not restricted to bundled examples. Product docs and README must describe the
 owner's product, with unknowns explicit, not the starter's history.
 
@@ -253,7 +254,7 @@ experience work through `product-design-router` before implementation.
 
 Preferred sequence:
 
-`DISCOVERY → USER NEEDS → BENCHMARK → UX STRATEGY → INTERACTION DESIGN → DESIGN INTAKE → DESIGN DIRECTIONS → HUMAN APPROVAL → DESIGN SYSTEM → DESIGN TOKENS → COMPONENT/FIGMA TRANSLATION → IMPLEMENTATION → LIVE ITERATION → RESPONSIVE/ACCESSIBILITY/SYSTEM/TOKEN AUDITS → PERFORMANCE → INDEPENDENT CRITIQUE → POLISH → DESIGN OPS → SHIP`
+`DISCOVERY → USER NEEDS → BENCHMARK → UX STRATEGY → INTERACTION DESIGN → DESIGN INTAKE → LIVE CREATIVE-DIRECTION SPRINT → HUMAN APPROVAL → DESIGN SYSTEM → DESIGN TOKENS → COMPONENT/FIGMA TRANSLATION → IMPLEMENTATION → LIVE ITERATION → RESPONSIVE/ACCESSIBILITY/SYSTEM/TOKEN AUDITS → PERFORMANCE → INDEPENDENT CRITIQUE → POLISH → DESIGN OPS → SHIP`
 
 Run only phases whose outputs are missing, stale, or invalid for the current
 task. Never use a single model, company, skill, component library, or reference
@@ -273,14 +274,20 @@ as the default visual identity.
   one concise plan, ask for confirmation once, and expose one next action.
 - Compare rendered directions and obtain explicit human approval before
   canonical design-system or token changes.
+- For a fresh custom or existing-brand design-critical project, invoke
+  `creative-direction-sprint`. Build three live product-specific candidates by
+  default on distinct experiential axes. Require realistic states, a signature
+  idea, an asset strategy, purposeful motion, responsive behavior, and
+  reduced-motion behavior. A starter demo or theme-only swap is invalid.
 - The project design system wins when external guidance conflicts.
 - Anthropic `frontend-design` is optional supplementary design intelligence.
 - For substantial design-critical web UI, route `design-engineering-quality`.
   When Emil Kowalski's reviewed external suite is installed, use
   `emil-design-eng` as the first external design implementation/refinement
   skill—not Anthropic `frontend-design`—and
-  invoke only the motion, prototyping, library, or Sonner specialist whose exact
-  trigger is active. Never load the whole suite by default.
+  use `prototype` for that initial live divergence, and invoke only the motion,
+  library, or Sonner specialist whose exact trigger is active. Never load the
+  whole suite by default.
 - Build loading, empty, error, sparse, dense, disabled, success, and relevant
   agentic states.
 - Inspect the running product with Playwright at meaningful breakpoints.

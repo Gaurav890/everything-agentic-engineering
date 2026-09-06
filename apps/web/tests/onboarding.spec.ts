@@ -11,8 +11,8 @@ test("shows the saved project and one executable continuation", async ({page}) =
   await expect(page.getByRole("heading", {level: 1})).toContainText(brief!.name);
   await expect(page.locator("aside")).toContainText(brief!.promise);
   await expect(page.locator("aside")).toContainText(brief!.audience);
-  await expect(page.getByText("./agentic start", {exact: true})).toBeVisible();
-  await expect(page.getByText("No product-specific previews yet.")).toHaveCount(getProjectCandidates().length ? 0 : 1);
+  await expect(page.getByText("./agentic design sprint", {exact: true})).toBeVisible();
+  await expect(page.getByText("Your product directions are ready to be made.")).toHaveCount(getProjectCandidates().length ? 0 : 1);
   await expect(page.getByRole("button", {name: "Editorial Signal"})).toHaveCount(0);
   await expect(page.getByText("No API key is collected here", {exact: false})).toBeVisible();
 });
@@ -20,10 +20,11 @@ test("shows the saved project and one executable continuation", async ({page}) =
 test("copy succeeds or explains the manual fallback without launching anything", async ({page}) => {
   await page.goto("/");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async (value: string) => sessionStorage.setItem("copied", value)}}));
-  await page.getByRole("button", {name: "Copy command", exact: true}).click();
-  expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic start");
+  await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
+  expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic design sprint");
   await expect(page.getByRole("status").first()).toContainText("Copied");
-  if (!(await page.locator("details").getAttribute("open")) && !(await page.locator("pre").isVisible())) {
+  const manualHandoff = page.locator("details").filter({hasText: "Already using an app or editor?"});
+  if (!(await manualHandoff.getAttribute("open")) && !(await page.locator("pre").isVisible())) {
     await page.getByText("Already using an app or editor?").click();
   }
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async () => { throw new Error("unavailable"); }}}));
@@ -35,7 +36,7 @@ test("copy succeeds or explains the manual fallback without launching anything",
 test("copy shows a pending state and prevents duplicate actions", async ({page}, testInfo) => {
   await page.goto("/");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: () => new Promise<void>(() => {})}}));
-  await page.getByRole("button", {name: "Copy command", exact: true}).click();
+  await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
   await expect(page.getByRole("button", {name: "Copying…", exact: true})).toBeDisabled();
   await expect(page.getByRole("status").first()).toHaveText("Copying…");
   await page.screenshot({path: testInfo.outputPath("copy-pending.png")});
@@ -49,13 +50,14 @@ test("workspace supports keyboard, narrow screens, and automated accessibility",
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   await page.keyboard.press("Tab");
-  const primary = page.getByRole("link", {name: "Continue from your brief"});
+  const primary = page.getByRole("link", {name: "Create live directions"});
   await expect(primary).toBeFocused();
   await expect(primary).toHaveCSS("outline-width", "3px");
   await expect.poll(() => primary.evaluate(node => getComputedStyle(node).outlineColor !== getComputedStyle(node).color)).toBe(true);
   await page.screenshot({path: testInfo.outputPath("keyboard-focus.png")});
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  const results = await new AxeBuilder({page}).analyze();
+  // Candidate previews are separate interactive documents and receive their own audit.
+  const results = await new AxeBuilder({page}).exclude("iframe").analyze();
   expect(results.violations).toEqual([]);
 });
 

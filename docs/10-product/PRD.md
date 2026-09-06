@@ -11,10 +11,10 @@ boundaries.
 
 ## 2. Desired outcome
 
-A person can answer a small set of consequential questions and receive a clean,
-visually distinctive project with one complete, testable product journey,
-durable requirements, explicit authority boundaries, and exactly one next
-action.
+A person can answer a small set of consequential questions, see materially
+different live answers to the same product problem, and receive a visually
+distinctive project with one complete, testable journey, durable requirements,
+explicit authority boundaries, and exactly one next action.
 
 ## 3. Users/personas
 
@@ -45,8 +45,9 @@ audit event.
 
 ### UJ-003 — Design approval
 
-Compare product-specific desktop/mobile directions (without a fixed catalog limit),
-approve or synthesize one, compile tokens, and verify the running result.
+Start one creative-direction sprint, compare product-specific live directions
+(without a fixed catalog limit), approve or synthesize one, compile tokens, and
+verify the running result.
 
 ## 6. Non-goals
 
@@ -70,10 +71,14 @@ contracts; and supply a working local request-decision vertical slice.
 
 ### FR-003 — Product-specific visual system
 
-Web products must support materially different, responsive project-owned
-directions without a fixed shortlist. The three bundled examples are an
-explicit reference option. Require evidence-backed human approval before
-canonical token compilation.
+Web products must make a creative-direction sprint the default first design
+action and support materially different, responsive project-owned directions
+without a fixed shortlist. Candidates must diverge on named experiential axes,
+use realistic product content and states, and document their signature idea,
+asset strategy, purposeful motion, responsive behavior, and reduced-motion
+behavior. The three bundled examples are an explicit reference option and may
+not qualify as a custom project's answer. Require live evidence and human
+approval before canonical token compilation.
 
 ### FR-004 — Evidence-gated engineering workflow
 
@@ -128,6 +133,8 @@ idempotency, concurrency, observability, and threat-model review.
 - generated web, mobile, core, and enterprise projects validate independently;
 - enterprise interaction, domain-policy, build, and Playwright suites pass;
 - desktop/mobile evidence is human-reviewed across all three directions;
+- a fresh custom project reaches live product-specific candidates through one
+  obvious command, and theme-only or starter-demo candidates fail closed;
 - local-versus-production boundaries are visible in UI and documentation;
 - full repository verification and release smoke pass;
 - broad self-service claims remain blocked until five consented anonymous

@@ -128,7 +128,7 @@ original resource, invocation, timing, rationale, and assessment.
 | [`find-animation-opportunities`](https://github.com/emilkowalski/skills/tree/main/skills/find-animation-opportunities) | Find a few missing purposeful motion opportunities; reject decorative candidates |
 | [`animation-vocabulary`](https://github.com/emilkowalski/skills/tree/main/skills/animation-vocabulary) | Name or classify an effect for shared design/engineering language |
 | [`apple-design`](https://github.com/emilkowalski/skills/tree/main/skills/apple-design) | Approved gesture, spring, fluid-material, or Apple-platform direction only |
-| [`prototype`](https://github.com/emilkowalski/skills/tree/main/skills/prototype) | Explicit-only live variants; a human chooses before production changes |
+| [`prototype`](https://github.com/emilkowalski/skills/tree/main/skills/prototype) | Routed when already installed for the initial custom/existing-brand creative sprint; explicit-only later; a human chooses before production changes |
 | [`pick-ui-library`](https://github.com/emilkowalski/skills/tree/main/skills/pick-ui-library) | Explicit-only dependency choice after inspecting installed capabilities |
 | [`ask-sonner`](https://github.com/emilkowalski/skills/tree/main/skills/ask-sonner) | Sonner-specific setup or troubleshooting only |
 

@@ -1,8 +1,9 @@
 # From your idea to your first useful feature
 
 Create a project, then copy the one continuation command printed after
-verification. It safely enters the generated folder and runs **`./agentic
-start`**. You do not need to reconstruct a path, know skill names, or write a
+verification. For a custom design-critical web project it safely enters the
+generated folder and runs **`./agentic design sprint`**. You do not need to
+reconstruct a path, know skill names, or write a
 giant prompt. `./agentic next` helps you resume later.
 
 ## What happens
@@ -13,11 +14,12 @@ giant prompt. `./agentic next` helps you resume later.
    describe **your project**. Drafts are not fabricated research or built features.
 3. The creation receipt previews the remaining journey and confirms that
    nothing was installed or launched and no API key was collected.
-4. `start` prepares a specific instruction for the installed client you chose.
+4. `design sprint` prepares a specific instruction for the installed client you chose.
    It displays the folder and asks before launching. In an editor or desktop
    app, open that same folder and paste the supplied instruction instead.
-5. The assistant reads the saved brief and asks only unresolved questions. You
-   agree one useful journey, then compare real product-specific previews.
+5. The assistant reads the saved brief and asks only unresolved consequential
+   questions. You agree one useful journey, then compare three materially
+   different live product directions by default.
 6. Approve the scope and design separately. Approved design decisions become
    tokens; implementation follows the ordinary test, review, and PR workflow.
 
@@ -40,7 +42,7 @@ and [Codex authentication](https://developers.openai.com/codex/auth/).
 Their usage/billing is separate from any future model-powered feature inside
 your product. Never place development-assistant credentials in product code.
 
-`./agentic start --json` is read-only. `--assistant claude`, `--assistant codex`,
+`./agentic design sprint --json` is read-only. `--assistant claude`, `--assistant codex`,
 or `--assistant manual` overrides the saved choice for that handoff. A native
 session requires terminal input/output and confirmation; it receives a fixed
 instruction with the project as its working folder. User answers are read as
@@ -55,13 +57,16 @@ model, sandbox, network, or provider flags are added.
 | Existing brand | Interpret your supplied brand and product references, then propose compatible previews. |
 | Reference | Deliberately start with the bundled example lab. Its sample content and three styles are references, not your product's requirements. |
 
-There is no maximum of three candidates. Two or three *in a review round* can
-make comparison manageable; request another, combine ideas, or reject all.
+There is no maximum of three candidates. Three is the default first review;
+use two when the space is narrow and up to five only when every additional
+candidate tests a real question. Request another, combine ideas, or reject all.
 Palette is only part of a direction. Compare layout, hierarchy, typography,
 copy, density, interaction, focus, recovery, and purposeful motion. Advanced
 2D/3D is conditional on the product need, performance, and reduced-motion plan.
 
-Installed design skills are used at the appropriate phase. Missing skills are
+Installed design skills are used at the appropriate phase. For a fresh custom
+or existing-brand sprint, the reviewed `prototype` skill is routed when present;
+the local `creative-direction-sprint` contract remains the fallback. Missing skills are
 reported as missing, not claimed as executed. References and component sources
 remain inputs to the project design system, never automatic aesthetic authority.
 
@@ -71,8 +76,14 @@ First build a real local preview route. Keep experimental styling scoped to
 that preview. Save a project-local JSON proposal with these fields:
 
 - `id`: unique lowercase kebab-case, including a new revision ID for changes;
-- `name`, `thesis`, `composition`, `interaction`, `rationale`, `motion`: meaningful text;
+- `name`, `thesis`, and `axis`: the direction and the primary experiential
+  question it explores;
+- `composition`, `interaction`, `signature`, `rationale`, and `motion`: meaningful text;
+- `asset_strategy`, `motion_rationale`, `responsive_strategy`, and
+  `reduced_motion`: explicit craft and resilience decisions;
+- `states`: at least three distinct realistic states for the first journey;
 - `preview_path`: local route such as `/concepts/purchase-path`, not a URL;
+- `preview_source`: the actual UI entry included in `source_files`;
 - `source_files`: existing project-relative preview code **and every shared
   dependency/asset affecting its appearance**, under `apps/` or `packages/`;
 - `tokens`: flat semantic paths mapped to DTCG `$type` / `$value` objects.
@@ -90,7 +101,9 @@ DTCG sRGB color objects (0–1 components/alpha), font-family arrays, dimensions
 in px/rem, and durations in ms/s. References and other types belong in the
 canonical token package, not this small preview override format.
 
-Register the proposal with `./agentic design propose --file <local.json>` to
+The actual UI entry cannot be one of the starter demo surfaces, and candidates
+in the same catalog cannot reuse the same named axis. Register the proposal with
+`./agentic design propose --file <local.json>` to
 inspect it, then repeat with `--yes`. Registration never approves it. Do not
 merely rename an example or supply a screenshot without a functioning preview.
 

@@ -65,9 +65,12 @@ class ExternalDesignSkillsTests(unittest.TestCase):
                 self.assertIn(skill["activation"], allowed_activations)
                 self.assertTrue(skill["trigger"].strip())
 
-    def test_high_authority_actions_require_explicit_invocation(self) -> None:
+    def test_high_authority_actions_remain_explicit_with_one_scoped_sprint_exception(self) -> None:
         activation = {skill["name"]: skill["activation"] for skill in self.skills}
-        self.assertEqual(activation["prototype"], "explicit_only")
+        self.assertEqual(activation["prototype"], "routed_when_installed")
+        prototype = next(skill for skill in self.skills if skill["name"] == "prototype")
+        self.assertIn("fresh custom or existing-brand", prototype["trigger"])
+        self.assertIn("Human choice remains required", prototype["trigger"])
         self.assertEqual(activation["pick-ui-library"], "explicit_only")
         self.assertEqual(activation["review-animations"], "explicit_only")
 

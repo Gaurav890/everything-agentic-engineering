@@ -4,6 +4,10 @@
 - Start from product context, user needs, interaction logic, and an approved
   visual thesis—not component generation.
 - Run only phases whose durable outputs are missing, stale, or invalid.
+- For a fresh custom or existing-brand design-critical project, run
+  `creative-direction-sprint` before production implementation. Create three
+  live candidates by default on different experiential axes; reject starter
+  demos, theme-only swaps, generic content, and dead interactions.
 - Use `design-intake` when product-specific brand or visual constraints are
   missing. Ask only about active platforms.
 - Require explicit approval of a rendered direction before canonical
@@ -22,7 +26,8 @@
 - For substantial design-critical web UI, invoke `design-engineering-quality`.
   When Emil Kowalski's external suite is installed, use `emil-design-eng` for
   the first external implementation/craft pass and route at most the exact
-  specialist justified by the task. Do not start with Anthropic
+  specialist justified by the task. Use `prototype` for initial live divergence
+  when installed. Do not start with Anthropic
   `frontend-design`; it is secondary and opt-in.
 - Do not invoke the whole Emil suite, treat it as visual authority, or let it
   replace discovery, approved directions, tokens, audits, Playwright, or the

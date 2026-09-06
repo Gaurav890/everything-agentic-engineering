@@ -26,7 +26,8 @@ Enterprise workflows then ask
 only four additional decisions: the governed business object, tenant model,
 approval model, and data sensitivity. It shows the complete plan and asks once
 before writing. On success it prints a shell-safe, copy-and-paste command that
-enters the new directory and runs `./agentic start`. It also previews the next
+enters the new directory and runs `./agentic design sprint` for a custom
+design-critical web project. It also previews the next
 product, design, implementation, and verification stages. Creation itself does
 not launch a client. See [personalized onboarding](PROJECT_ONBOARDING.md).
 

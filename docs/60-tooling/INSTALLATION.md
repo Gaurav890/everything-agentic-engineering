@@ -38,7 +38,8 @@ The guide captures only the inputs that change the result, shows one plan, and
 asks once before writing. The destination must not exist. The generator copies
 no Git history or secrets, enables no MCP server, and installs nothing. On
 success it prints one shell-safe continuation command that enters the generated
-directory and runs `./agentic start`; copy and run it. See
+directory and runs `./agentic design sprint` for a custom design-critical web
+project; copy and run it. See
 [Downstream project generator](PROJECT_GENERATOR.md).
 
 The handoff opens a brief-aware conversation after consent, or gives you the
@@ -55,7 +56,8 @@ pnpm dev
 ```
 
 The brief captures your product intent. Custom and existing-brand modes start
-with no preselected designs; your assistant creates product-specific previews.
+with no preselected designs; the creative sprint creates three live,
+product-specific answers on different design axes by default.
 The three bundled styles appear only in deliberately selected reference mode.
 Complete the brief and design intake, inspect actual screenshots, and approve
 the chosen direction before compiling overrides. Open the port printed by the

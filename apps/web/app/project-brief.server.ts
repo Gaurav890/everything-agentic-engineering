@@ -16,8 +16,15 @@ export type ProjectCandidate = {
   id: string;
   name: string;
   thesis: string;
+  axis: string;
   composition: string;
   interaction: string;
+  signature: string;
+  asset_strategy: string;
+  motion_rationale: string;
+  responsive_strategy: string;
+  reduced_motion: string;
+  states: string[];
   preview_path: string;
 };
 
@@ -61,11 +68,16 @@ export function getProjectCandidates(): ProjectCandidate[] {
   if (!data || !Array.isArray(data.directions)) throw new Error("Invalid design catalog.");
   return data.directions.map(value => {
     const candidate = value as Record<string, unknown>;
-    const keys = ["id", "name", "thesis", "composition", "interaction", "preview_path"];
+    const keys = [
+      "id", "name", "thesis", "axis", "composition", "interaction", "signature",
+      "asset_strategy", "motion_rationale", "responsive_strategy", "reduced_motion", "preview_path",
+    ];
     if (!candidate || !keys.every(key => typeof candidate[key] === "string") ||
+      !Array.isArray(candidate.states) || candidate.states.length < 3 ||
+      !candidate.states.every(state => typeof state === "string" && state.trim()) ||
       !/^\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\/?$/.test(String(candidate.preview_path))) {
       throw new Error("A project candidate needs a safe local preview and its design rationale.");
     }
-    return Object.fromEntries(keys.map(key => [key, candidate[key]])) as ProjectCandidate;
+    return {...Object.fromEntries(keys.map(key => [key, candidate[key]])), states: candidate.states} as ProjectCandidate;
   });
 }

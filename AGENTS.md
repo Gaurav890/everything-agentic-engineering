@@ -174,8 +174,10 @@ For substantial design-critical web UI, route `design-engineering-quality`.
 Emil Kowalski's external suite may add implementation craft when installed, but
 the router selects only the minimum capability. It never replaces upstream
 product work, approved art direction, accessibility, Playwright evidence, or
-the independent evaluator. Prototyping, library selection, and strict animation
-review remain explicit human-invocation routes.
+the independent evaluator. A reviewed prototyping capability may be routed when
+already installed for the initial custom or existing-brand creative sprint;
+later prototyping, library selection, and strict animation review remain
+explicit human-invocation routes.
 
 ## Specialist capability routing
 

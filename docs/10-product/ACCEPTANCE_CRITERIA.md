@@ -80,8 +80,11 @@ installed, or session launched without confirmation. Manual handoff works
 without a supported terminal client.
 
 **Given** a custom candidate, **when** it is registered and reviewed, **then**
-arbitrary candidate counts and IDs work, a local preview and source list are
-required, and incomplete intake or changed evidence cannot retain valid approval.
+arbitrary candidate counts and IDs work; a local preview and actual UI entry are
+required; the candidate names a distinct experiential axis, realistic states,
+signature idea, asset strategy, purposeful motion, responsive behavior, and
+reduced-motion behavior; starter-demo surfaces and duplicate axes fail closed;
+and incomplete intake or changed evidence cannot retain valid approval.
 
 **Evidence required:** all-profile generation matrix, consent/argv tests,
 symlink regression, candidate/freshness tests, actual generated-project browser

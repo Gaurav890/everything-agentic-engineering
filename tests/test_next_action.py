@@ -22,8 +22,8 @@ class NextActionTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
         self.write(".agentic/generated-project.json", {"resolved_profiles": ["obsolete"]})
-        self.write(".agentic/project.json", {"profiles": ["web-next"]})
-        for name in ("core", "web-next", "mobile-expo"):
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical"]})
+        for name in ("core", "web-next", "mobile-expo", "design-critical"):
             self.write(f".agentic/profiles/{name}.json", {"id": name})
         self.write(".agentic/design.json", {"status": "needs_approval"})
         self.ledger()
@@ -81,7 +81,7 @@ class NextActionTests(unittest.TestCase):
             "first_outcome": None, "design_preferences": None, "design_mode": "custom",
             "assistant": "manual", "status": "captured", "confirmed_by": None, "open_questions": [],
         })
-        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
         self.prerequisite.assert_not_called()
         (self.root / ".agentic/project-brief.json").unlink()
         with self.assertRaises(next_action.NextActionError):

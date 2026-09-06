@@ -6,8 +6,8 @@ and repeat. The initial design lab is a reference, not your finished product.
 ## Start and resume
 
 From the starter, run `./agentic setup create`, then copy its final continuation
-command. That one command enters the generated directory and runs `./agentic
-start`. It prepares a brief-aware conversation in your chosen installed terminal
+command. For a custom web project that command enters the generated directory
+and runs `./agentic design sprint`. It prepares a brief-aware creative sprint in your chosen installed terminal
 client, or an instruction for your editor/app. Native sign-in stays in that
 client; no keys are collected here. Use `./agentic next` later to resume. See
 [the complete handoff](PROJECT_ONBOARDING.md).
@@ -25,8 +25,10 @@ one. Substitute the actual task ID; the guide prints the available choices.
 ## Make it yours
 
 Custom projects begin with no proposed directions. The assistant uses your
-saved product brief to confirm one outcome, discuss palette/type/motion intent,
-and build real previews. Existing-brand mode preserves your brand; reference
+saved product brief to confirm one outcome, asks only consequential questions,
+and builds three live directions on different experiential axes by default.
+Each must include realistic states, a signature idea, an asset strategy, and
+purposeful motion plus responsive and reduced-motion behavior. Existing-brand mode preserves your brand; reference
 mode explicitly opts into the three examples. Record evidence-backed approval before
 compiling canonical tokens. A new feature should preserve that approved system
 unless you explicitly request a redesign.
