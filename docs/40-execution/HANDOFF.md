@@ -4,12 +4,20 @@ Last updated: 2026-09-06
 
 ## Current goal
 
-Independently review the creative-direction sprint, then measure whether five
-newcomers can create, choose, implement, verify, and continue one useful web
-feature without maintainer intervention.
+Validate whether newcomers can understand the promise, create a project, and
+reach one useful verified product slice without maintainer intervention.
 
 ## Implemented
 
+- One outcome-first public promise and a visible research → product → design
+  → build → verify → review journey.
+- An optional Perplexity-first research decision during guided creation, with a
+  safe skip path, persisted profile state, and a generated research ledger.
+- A research-aware assistant handoff with official-source and manual fallbacks;
+  no credential collection, MCP installation or activation, or generator-time
+  network research.
+- A read-only `./agentic journey` view in text and JSON that distinguishes the
+  whole path from the single action returned by `./agentic next`.
 - Project-owned brief, README, product/design/engineering drafts and first feature.
 - One shell-safe post-generation continuation command with a plain-language
   preview of the saved brief → journey → design → implementation → verification
@@ -31,7 +39,8 @@ feature without maintainer intervention.
 
 ## Evidence and limits
 
-See `docs/50-evals/evidence/T-049/` for implementation checks and limits. The
+See `docs/50-evals/evidence/T-050/` for current implementation checks and
+limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
 deterministic evaluator has synthetic regression coverage; that coverage is not
 a participant result. The fresh-project page was inspected at desktop and 390px,
 but a live assistant-generated candidate set, independent product/design review,
@@ -43,9 +52,9 @@ deployment, human task approval or merge is implied.
 
 ## Exact next action
 
-Review the creative-sprint command routing, candidate contract, generated
-workspace, and evidence without relying on the builder's verdict. Once the
-reviewed change is on the default branch, run `./agentic pilot plan`, recruit
-five consenting people who did not build the repository, and give each only the
-public README. Use the aggregate result to choose the next small fix; do not
-claim measured self-service or design-quality success from tests alone.
+Run `./agentic pilot plan`, recruit five consenting people who did not build the
+repository, and give each only the public README. Their route should exercise
+the public promise, Perplexity choice or skip path, generated research contract,
+handoff, and `journey` output. Use the aggregate result to choose the next small
+fix; do not claim measured self-service or design-quality success from tests
+alone.

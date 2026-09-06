@@ -1,0 +1,17 @@
+{
+  "task_id": "T-050",
+  "acceptance_ids": ["AC-001", "AC-005", "AC-006", "AC-007"],
+  "ui_change": false,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-design-security-integration-review-pending",
+  "states": [],
+  "viewports": [],
+  "commands": [
+    "python3 -m unittest tests.test_project_generator tests.test_project_handoff tests.test_next_action tests.test_project_journey tests.test_agentic_cli",
+    "generate a fresh research-enabled product in a temporary directory",
+    "inspect the generated profiles, project brief, research ledger, MCP manifest, continuation, and journey output",
+    "./agentic verify full"
+  ],
+  "artifacts": ["README.md"],
+  "verdict": "PASS_WITH_REVIEW_PENDING — deterministic positioning, Perplexity decision, research persistence, handoff routing, journey reporting, generated-project safety, and full repository verification pass; independent reviews and newcomer outcomes remain separate"
+}

@@ -398,6 +398,7 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "Review one proposed automation action",
                         "1",
                         "Bold type, restrained motion; avoid neon",
+                        "1",
                         "3",
                         "y",
                         "",
@@ -415,12 +416,17 @@ class ProjectGeneratorTests(unittest.TestCase):
             brief = json.loads((destination / ".agentic/project-brief.json").read_text())
             self.assertEqual("manual", brief["assistant"])
             self.assertEqual("custom", brief["design_mode"])
+            self.assertTrue(brief["research_enabled"])
             self.assertIn("avoid neon", brief["design_preferences"])
             self.assertEqual(
                 "operations teams supervising high-stakes automation",
                 experience["audience"],
             )
             self.assertIn("./agentic next", (destination / "README.md").read_text())
+            self.assertIn("Perplexity-first research was selected", (destination / "README.md").read_text())
+            self.assertIn("Status: Not started", (destination / "docs/10-product/RESEARCH.md").read_text())
+            self.assertIn("Run `./agentic start`", (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text())
+            self.assertIn("research-enabled", json.loads((destination / ".agentic/project.json").read_text())["profiles"])
             self.assertEqual({"mcpServers": {}}, json.loads((destination / ".mcp.json").read_text()))
 
     def test_guided_enterprise_path_asks_only_relevant_authority_questions(self) -> None:
@@ -439,6 +445,7 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "Review one policy exception",
                         "1",
                         "",
+                        "1",
                         "3",
                         "policy exception",
                         "2",
@@ -467,15 +474,17 @@ class ProjectGeneratorTests(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "1", "", "3", "y", ""]),
+                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "1", "", "2", "3", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertIn("Who is it for?", result.stdout)
+            self.assertIn("Use Perplexity-first current research", result.stdout)
             self.assertNotIn("starting character", result.stdout.lower())
             self.assertFalse((destination / ".agentic/experience.json").exists())
+            self.assertNotIn("research-enabled", json.loads((destination / ".agentic/project.json").read_text())["profiles"])
 
     def test_all_profiles_get_their_own_brief_and_product_documents(self):
         with tempfile.TemporaryDirectory() as temporary:

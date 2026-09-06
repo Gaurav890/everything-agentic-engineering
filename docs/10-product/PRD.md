@@ -49,6 +49,13 @@ Start one creative-direction sprint, compare product-specific live directions
 (without a fixed catalog limit), approve or synthesize one, compile tokens, and
 verify the running result.
 
+### UJ-004 — Research-to-build journey
+
+Choose whether current evidence should shape the first pass, use Perplexity or
+a disclosed primary-source/manual fallback when selected, synthesize findings
+into the product brief, and see the full path from research through human review
+without learning internal commands.
+
 ## 6. Non-goals
 
 See `NON_GOALS.md`. Generation does not authenticate, install dependencies,
@@ -103,6 +110,17 @@ open-ended local candidate catalog. Approval is tied to the candidate, brief,
 intake, listed preview sources, and evidence. The user can reject all options,
 change direction, or resume without repeating settled questions.
 
+### FR-007 — Visible research-to-build journey
+
+Guided creation must explicitly offer Perplexity-first current research and a
+no-research fast path. Selection persists in the project brief and profile
+manifest. When selected, the generated project creates a bounded source-ledger
+contract and routes research before product/design decisions while supporting a
+disclosed primary-source/manual fallback. One read-only journey command must
+show research, product, design, build, verification, review, their current
+states, and the exact next action. Creation never collects credentials, installs
+or starts an MCP server, or performs network research.
+
 ## 8. Non-functional requirements
 
 ### NFR-001 — Safety
@@ -135,6 +153,8 @@ idempotency, concurrency, observability, and threat-model review.
 - desktop/mobile evidence is human-reviewed across all three directions;
 - a fresh custom project reaches live product-specific candidates through one
   obvious command, and theme-only or starter-demo candidates fail closed;
+- the first README screen communicates one outcome, one start command, visible
+  proof, and the research-to-review journey without requiring platform knowledge;
 - local-versus-production boundaries are visible in UI and documentation;
 - full repository verification and release smoke pass;
 - broad self-service claims remain blocked until five consented anonymous

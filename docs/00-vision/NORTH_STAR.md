@@ -2,9 +2,10 @@
 
 ## Product
 
-An opinionated product-design and engineering starter that turns a brief into
-distinctive live directions, one credible vertical slice, and a durable system
-teams can safely extend.
+An opinionated product-building system that turns an idea into a distinctive,
+researched, working vertical slice with evidence. Product research and design
+create the visible advantage; the engineering harness makes it credible,
+repeatable, and safe to extend.
 
 ## User
 
@@ -22,15 +23,18 @@ rewrites after the first feature.
 
 ## Desired outcome
 
-A newcomer can describe one outcome, see several genuinely different working
-answers, choose or combine a direction, and build the first useful journey
-without learning the harness first. The approved visual language becomes tokens,
-components, motion rules, evidence, and durable decisions that survive later
-features and different coding clients.
+A newcomer can describe one outcome, decide whether current research matters,
+see several genuinely different working answers, choose or combine a direction,
+and build the first useful journey without learning the harness first. The
+approved visual language becomes tokens, components, motion rules, evidence,
+and durable decisions that survive later features and different coding clients.
 
 ## Immutable constraints
 
 - Product-specific live output comes before framework education.
+- One visible journey connects research, product, design, implementation,
+  verification, and review; no capability is valuable merely because it exists
+  in a catalog.
 - Custom projects never inherit the starter's visual identity as their answer.
 - References are ingredients; copying another product is not differentiation.
 - A direction is not real until its content, interaction, responsive behavior,

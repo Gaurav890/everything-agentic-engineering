@@ -8,20 +8,43 @@ giant prompt. `./agentic next` helps you resume later.
 
 ## What happens
 
-1. Creation captures your product, audience, desired outcome, design approach,
-   optional preferences, and preferred coding client. Unknown answers can wait.
-2. Your new README, vision, PRD, acceptance draft, copy, and engineering context
+1. Creation captures your product, audience, desired outcome, whether
+   Perplexity-first current research should shape the first pass, design
+   approach, optional preferences, and preferred coding client. Unknown answers
+   can wait.
+2. When research is selected, the project creates a source-ledger contract and
+   routes current evidence before scope/design. Perplexity is preferred when
+   configured; primary-source/manual research is the explicit fallback.
+3. Your new README, vision, PRD, acceptance draft, copy, and engineering context
    describe **your project**. Drafts are not fabricated research or built features.
-3. The creation receipt previews the remaining journey and confirms that
+4. The creation receipt previews the remaining journey and confirms that
    nothing was installed or launched and no API key was collected.
-4. `design sprint` prepares a specific instruction for the installed client you chose.
+5. `design sprint` prepares a specific instruction for the installed client you chose.
    It displays the folder and asks before launching. In an editor or desktop
    app, open that same folder and paste the supplied instruction instead.
-5. The assistant reads the saved brief and asks only unresolved consequential
+6. The assistant reads the saved brief and asks only unresolved consequential
    questions. You agree one useful journey, then compare three materially
    different live product directions by default.
-6. Approve the scope and design separately. Approved design decisions become
+7. Approve the scope and design separately. Approved design decisions become
    tokens; implementation follows the ordinary test, review, and PR workflow.
+
+Run `./agentic journey` to see all six stages and their current status. Run
+`./agentic next` when you want only the exact next action. Neither command
+changes project state.
+
+## Current research is an explicit product decision
+
+Choosing Perplexity-first research activates the existing `research-enabled`
+profile and generates `docs/10-product/RESEARCH.md`. It does not configure the
+project's empty `.mcp.json`, install a server, start a network request, or ask
+for a credential. Configure Perplexity through the selected client's reviewed
+MCP path and keep `PERPLEXITY_API_KEY` in environment or user scope.
+
+If Perplexity is unavailable, use official/first-party sources manually and
+record the fallback. Firecrawl is for authorized extraction from known sites;
+Playwright is for interaction and behavior. Change the research document's
+status to `Complete` only after the source ledger is synthesized and the brief
+records what changed. Research is evidence, not scope or design approval.
 
 The initial custom-project page is a workspace showing your brief and handoff,
 not a claim that your product is finished. The next session must build real

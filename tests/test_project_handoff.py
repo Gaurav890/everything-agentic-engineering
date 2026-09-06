@@ -46,6 +46,29 @@ class ProjectHandoffTests(unittest.TestCase):
         self.assertEqual(before, self.path.read_bytes())
         run.assert_not_called()
 
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_research_selection_enters_handoff_without_a_credential(self, which):
+        self.brief["research_enabled"] = True
+        self.path.write_text(json.dumps(self.brief))
+        self.args.json = True
+        code, output = self.run_handoff()
+        self.assertEqual(0, code)
+        prompt = json.loads(output)["prompt"]
+        self.assertIn("Prefer Perplexity", prompt)
+        self.assertIn("manual fallback", prompt)
+        self.assertIn("docs/10-product/RESEARCH.md", prompt)
+        self.assertNotIn("PERPLEXITY_API_KEY", prompt)
+        self.assertTrue(json.loads(output)["research_enabled"])
+
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_manual_research_handoff_points_to_start_before_design(self, which):
+        self.brief.update(research_enabled=True, assistant="manual")
+        self.path.write_text(json.dumps(self.brief))
+        code, output = self.run_handoff()
+        self.assertEqual(0, code)
+        self.assertIn("For a terminal client: ./agentic start --assistant claude", output)
+        self.assertNotIn("For a terminal client: ./agentic design sprint", output)
+
     @mock.patch.object(project_handoff.subprocess, "run")
     @mock.patch.object(project_handoff.shutil, "which", return_value="/usr/local/bin/claude")
     def test_launch_requires_consent_and_uses_fixed_argv_and_cwd(self, which, run):

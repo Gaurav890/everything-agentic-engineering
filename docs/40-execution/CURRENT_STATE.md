@@ -4,6 +4,11 @@ Last updated: 2026-09-06
 
 ## Product
 
+The starter's public promise is: turn an idea into a distinctive, researched,
+working product slice with evidence. The visible journey is research → product
+→ design → build → verify → review. `./agentic journey` reports the whole
+path and `./agentic next` returns only the next executable action.
+
 Product-design work is routed through explicit discovery, strategy, interaction,
 system, implementation, audit, critique, polish, and delivery phases.
 
@@ -20,11 +25,17 @@ artifacts, required UI states, and responsive supervision.
 The guided project studio materializes a portfolio, product, agentic-product,
 enterprise-workflow, mobile, or core project after capturing its audience,
 outcome, design approach, optional preferences, and preferred coding client.
+For product profiles it also asks whether current research should precede
+product and design decisions. Choosing Perplexity activates the existing
+`research-enabled` profile and creates `docs/10-product/RESEARCH.md`; it does
+not collect a key, install or start an MCP server, or contact the network.
 Enterprise workflows ask four additional domain decisions only when selected.
 New projects persist `.agentic/project-brief.json` and their own product
 drafts; web reference metadata remains in `.agentic/experience.json`.
 Fresh design-critical web projects route to `./agentic design sprint`; `start`
 continues non-design handoffs and `next` exposes one action at a time.
+Research-enabled projects route through `start` until the research brief is
+explicitly complete, then resume the normal product-specific design path.
 Web and mobile application profiles always resolve the design-critical
 foundation.
 

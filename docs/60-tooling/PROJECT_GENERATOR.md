@@ -20,6 +20,7 @@ Use `setup create` when starting a new product in a separate directory:
 
 This is the default human flow. It progressively asks for the project name,
 destination, product surface, audience, promise, an optional first outcome,
+whether Perplexity-first current research should shape the first pass,
 custom/existing-brand/reference design approach, optional preferences, and a
 coding client. Blank optional answers are deferred to the guided conversation.
 Enterprise workflows then ask
@@ -46,6 +47,7 @@ Use explicit flags for automation or repeatable scaffolding:
   --archetype product \
   --audience "operations teams replacing fragmented handoffs" \
   --promise "Turn a complicated workflow into calm, measurable momentum." \
+  --research \
   --assistant manual \
   --design-mode custom \
   --design-preferences "Warm, clear typography; no decorative 3D" \
@@ -103,6 +105,8 @@ project state. They are excluded.
 The generated project receives:
 
 - a project-specific README and `.agentic/project-brief.json` shared by the handoff and onboarding page;
+- when research is selected, a project-specific `docs/10-product/RESEARCH.md`
+  source ledger and an explicit Perplexity-first/manual-fallback handoff;
 - fresh vision, PRD, acceptance, copy, and engineering drafts derived from the user's intent;
 - a web first-feature brief with the chosen audience, promise, and an editable
   outcome example; it does not invent approved requirements;

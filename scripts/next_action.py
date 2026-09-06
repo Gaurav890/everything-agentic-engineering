@@ -23,6 +23,16 @@ NextActionError = ProjectCheckError
 STATUSES = {"backlog", "ready", "in_progress", "review", "done", "blocked", "needs_human", "failed_safe"}
 
 
+def research_complete(root: Path) -> bool:
+    path = root / "docs/10-product/RESEARCH.md"
+    if path.is_symlink() or path.parent.is_symlink() or not path.is_file():
+        return False
+    try:
+        return re.search(r"(?mi)^Status:\s*Complete\s*$", path.read_text()) is not None
+    except OSError:
+        return False
+
+
 def git_branch(root: Path) -> str | None:
     # A parent repository is not this generated project's version history.
     try:
@@ -123,6 +133,11 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
         except project_brief.BriefError as error:
             raise NextActionError(str(error)) from error
         if not task_id and brief["status"] != "ready":
+            if "research-enabled" in profiles and not research_complete(root):
+                return (
+                    "Ground the product in current evidence before design",
+                    "./agentic start",
+                )
             if brief["design_mode"] != "reference" and "design-critical" in profiles:
                 return "Turn the saved brief into live product directions", "./agentic design sprint"
             return "Continue your product conversation; your answers are saved", "./agentic start"

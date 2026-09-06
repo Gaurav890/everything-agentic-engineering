@@ -79,6 +79,7 @@ MANDATORY_GENERATOR_FILES = {
     Path(".agentic/pilot/scorecard.schema.json"),
     Path("scripts/project_brief.py"),
     Path("scripts/project_handoff.py"),
+    Path("scripts/project_journey.py"),
     Path("scripts/newcomer-pilot.py"),
     Path(".claude/skills/project-onboarding/SKILL.md"),
     Path(".agentic/enterprise.json"),
@@ -122,6 +123,7 @@ GENERATED_WRITE_PATHS = {
     Path("CHANGELOG.md"),
     Path("docs/20-design/DESIGN_BRIEF.md"),
     Path("docs/10-product/PRD.md"),
+    Path("docs/10-product/RESEARCH.md"),
     Path("docs/10-product/ACCEPTANCE_CRITERIA.md"),
     Path("docs/10-product/USER_JOURNEYS.md"),
     Path("docs/30-engineering/ROLE_MATRIX.md"),
@@ -1033,6 +1035,8 @@ review, visual candidates, and continuation. Run `./agentic next` to resume.
 
 
 def first_continuation_command(plan: GenerationPlan) -> str:
+    if "research-enabled" in plan.resolved_profiles:
+        return "./agentic start"
     if (
         "web-next" in plan.resolved_profiles
         and "design-critical" in plan.resolved_profiles
@@ -1045,6 +1049,7 @@ def first_continuation_command(plan: GenerationPlan) -> str:
 def generated_readme(plan: GenerationPlan) -> str:
     brief = project_brief.create(plan)
     web = "web-next" in plan.resolved_profiles
+    research = "research-enabled" in plan.resolved_profiles
     continuation = first_continuation_command(plan)
     return f"""# {plan.project_name}
 
@@ -1066,10 +1071,21 @@ desktop app/editor. The handoff carries your answers forward and asks for
 confirmation before starting a native interactive client. No API key is required
 by this starter; sign-in and billing stay with your chosen client.
 
-The creative sprint resumes this brief, confirms one useful journey, and builds
-three live product-specific directions on different design axes by default. It
-keeps scope, design approval, token compilation, implementation, and verification
-as separate decisions.
+The complete journey is visible at any time:
+
+```bash
+./agentic journey
+```
+
+It shows research → product → design → build → verify → review, their current
+status, and one exact next action. The creative sprint resumes this brief,
+confirms one useful journey, and builds three live product-specific directions
+on different design axes by default. It keeps scope, design approval, token
+compilation, implementation, and verification as separate decisions.
+
+## Current research
+
+{"Perplexity-first research was selected. Start with docs/10-product/RESEARCH.md. Use Perplexity only when it is already configured in your chosen client; primary-source/manual research is the supported fallback. Firecrawl is for authorized extraction from known sites, and Playwright is for interactive behavior. Project creation did not collect a key, configure a server, or run network research." if research else "Live research was not selected. That is a valid fast path. If current category, competitor, user, or technical evidence would materially change the product, review the research profile before design rather than inventing facts."}
 
 Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
@@ -1630,7 +1646,12 @@ def print_plan(plan: GenerationPlan) -> None:
     print("\nResolved profiles:")
     for profile in plan.resolved_profiles:
         print(f"  + {profile}")
-    print(f"\nDesign: {plan.design_mode} | Continue with: {plan.assistant}")
+    research = "Perplexity-first current research" if "research-enabled" in set(plan.resolved_profiles) else "not selected"
+    print(f"\nResearch: {research}")
+    if "research-enabled" in set(plan.resolved_profiles):
+        print("  Perplexity is preferred for broad discovery; primary-source/manual fallback remains valid.")
+        print("  No key is collected and no MCP server is installed, configured, or started by creation.")
+    print(f"Design: {plan.design_mode} | Continue with: {plan.assistant}")
     print(f"Copy: {report['copy']['tracked_file_count']} tracked files; inactive profile paths excluded.")
     print("Use --dry-run --json for the complete file/profile/setup plan.")
     if plan.external_setup:
@@ -1695,6 +1716,14 @@ def interactive_answers() -> argparse.Namespace:
         "Any brand colors, references, styles to avoid, or motion preferences? Leave blank to explore together.",
         "", maximum=1000,
     ) or None) if web or kind == "mobile" else None
+    research = False
+    if kind != "core":
+        print("\nPerplexity can ground the first pass in current market, user, and competitor evidence.")
+        print("Choosing it creates a research contract only; no key is collected and no server is enabled.")
+        research = prompt_choice(
+            "Use Perplexity-first current research before product and design decisions?",
+            ("perplexity", "skip"), "perplexity",
+        ) == "perplexity"
     assistant = prompt_choice(
         "Where will you build? Use an existing account; this does not sign in or install anything.",
         ("claude", "codex", "manual", "choose"), "choose",
@@ -1706,7 +1735,7 @@ def interactive_answers() -> argparse.Namespace:
     data_sensitivity = prompt_choice("What is the highest data sensitivity?", DATA_SENSITIVITY_LEVELS, "confidential") if enterprise else None
     return argparse.Namespace(
         name=name, destination=destination, preset=None, web=web, mobile=kind == "mobile",
-        design=web or kind == "mobile", research=False, agentic=kind == "agentic-product",
+        design=web or kind == "mobile", research=research, agentic=kind == "agentic-product",
         backend="none", archetype=kind if web else None, audience=audience, promise=promise,
         visual_character="precise" if web else None, business_object=business_object,
         tenant_model=tenant_model, approval_model=approval_model, data_sensitivity=data_sensitivity,
@@ -1793,6 +1822,7 @@ def run(args: argparse.Namespace) -> int:
         "collects_api_keys": False,
         "stages": [
             "resume_saved_brief",
+            "research_current_evidence" if "research-enabled" in plan.resolved_profiles else "research_not_selected",
             "confirm_first_useful_journey",
             "review_product_specific_design",
             "implement_approved_scope",
@@ -1817,9 +1847,13 @@ def run(args: argparse.Namespace) -> int:
         print("\nContinue now — copy and paste:")
         print(f"  {continuation['shell_command']}")
         print("\nWhat happens next:")
-        print("  1. Resume the saved product brief in your selected client or manual handoff.")
+        if "research-enabled" in plan.resolved_profiles:
+            print("  1. Ground the brief in current evidence (Perplexity preferred; manual fallback supported).")
+        else:
+            print("  1. Resume the saved product brief; current research was not selected.")
         print("  2. Confirm one useful journey and review product-specific design previews.")
-        print("  3. Implement only approved scope, then inspect and verify the running result.")
+        print("  3. Implement only approved scope, then inspect, verify, and review the running result.")
+        print("  Run ./agentic journey at any time to see every stage and one next action.")
         print("\nNothing else was installed or launched. This starter does not collect API keys;")
         print("sign-in stays inside your chosen client, and native launch still asks first.")
     return 0

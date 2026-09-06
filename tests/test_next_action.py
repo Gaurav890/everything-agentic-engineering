@@ -87,6 +87,22 @@ class NextActionTests(unittest.TestCase):
         with self.assertRaises(next_action.NextActionError):
             next_action.next_action(self.root)
 
+    def test_selected_research_routes_before_design_and_completed_ledger_releases_it(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        self.write(".agentic/profiles/research-enabled.json", {"id": "research-enabled"})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "research_enabled": True, "assistant": "manual", "status": "captured",
+            "confirmed_by": None, "open_questions": [],
+        })
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+        path = self.root / "docs/10-product/RESEARCH.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("# Research\n\nStatus: Complete\n")
+        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
+
     def test_fake_css_comment_does_not_make_a_stale_design_current(self):
         self.approve()
         (self.root / "docs/50-evals/fixture.png").write_bytes(b"changed")
