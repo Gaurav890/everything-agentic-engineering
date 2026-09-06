@@ -227,7 +227,7 @@ class ProjectJourneyTests(unittest.TestCase):
         attacks = (
             {**valid, "verdict": "PASSPORT"},
             {key: value for key, value in valid.items() if key not in {"builder", "evaluator"}},
-            {**valid, "commands": ["not executed"]},
+            {**valid, "commands": ["tests not executed due to environment"]},
             {**valid, "artifacts": ["../../../40-execution/TASKS.jsonl"]},
         )
         for manifest in attacks:
@@ -239,6 +239,26 @@ class ProjectJourneyTests(unittest.TestCase):
         outside.write_text("external")
         (bundle / "linked.md").symlink_to(outside)
         (bundle / "evidence.json").write_text(json.dumps({**valid, "artifacts": ["linked.md"]}))
+        with self.assertRaisesRegex(project_journey.JourneyError, "cannot follow symlinks"):
+            project_journey.build(self.root)
+
+    def test_symlinked_evidence_ancestor_cannot_import_external_pass(self) -> None:
+        task = {"id": "T-101", "status": "review", "depends_on": [],
+                "requirement_ids": ["FR-001"], "acceptance_ids": ["AC-001"],
+                "tracking": {"mode": "not_required", "issues": [], "reason": "Reviewed local test."}}
+        (self.root / "docs/40-execution/TASKS.jsonl").write_text(json.dumps(task) + "\n")
+        external = self.root / "external-evidence/T-101"
+        external.mkdir(parents=True)
+        (external / "README.md").write_text("# External claim\n")
+        (external / "evidence.json").write_text(json.dumps({
+            "task_id": "T-101", "acceptance_ids": ["AC-001"], "ui_change": False,
+            "builder": "implementation-owner", "evaluator": "independent-reviewer",
+            "commands": ["./agentic verify full"], "artifacts": ["README.md"],
+            "verdict": "PASS",
+        }))
+        evidence_root = self.root / "docs/50-evals/evidence"
+        evidence_root.parent.mkdir(parents=True)
+        evidence_root.symlink_to(external.parent, target_is_directory=True)
         with self.assertRaisesRegex(project_journey.JourneyError, "cannot follow symlinks"):
             project_journey.build(self.root)
 

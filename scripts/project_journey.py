@@ -89,13 +89,18 @@ def research_status(root: Path, enabled: bool) -> tuple[str, str]:
 def has_bound_task_evidence(root: Path, task: dict[str, Any], index: dict[str, dict[str, Any]]) -> bool:
     if any(index[dependency]["status"] != "done" for dependency in task.get("depends_on", [])):
         return False
-    bundle = root / "docs/50-evals/evidence" / task["id"]
+    evidence_root = root / "docs/50-evals/evidence"
+    bundle = evidence_root / task["id"]
     manifest_path = bundle / "evidence.json"
     if not manifest_path.exists():
         return False
     if bundle.is_symlink() or manifest_path.is_symlink():
         raise JourneyError(f"Evidence for {task['id']} cannot follow symlinks")
-    errors = validate_evidence.validate(bundle)
+    errors = validate_evidence.validate(
+        bundle,
+        evidence_root=evidence_root,
+        trusted_root=root,
+    )
     if errors:
         raise JourneyError(f"Cannot trust evidence for {task['id']}: {'; '.join(errors)}")
     try:

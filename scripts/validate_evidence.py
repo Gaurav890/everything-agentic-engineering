@@ -19,7 +19,14 @@ VERDICT_STATUSES = {
     "NEEDS_HUMAN",
     "INSUFFICIENT_EVIDENCE",
 }
-PLACEHOLDER_COMMANDS = {"none", "n/a", "not applicable", "not executed", "skipped"}
+PLACEHOLDER_COMMAND_MARKERS = (
+    "not executed",
+    "not run",
+    "did not run",
+    "not applicable",
+    "skipped",
+    "n/a",
+)
 
 
 def verdict_status(value: object) -> str | None:
@@ -31,6 +38,21 @@ def verdict_status(value: object) -> str | None:
     if separator and not detail.strip():
         return None
     return status
+
+
+def symlink_component(base: Path, target: Path) -> Path | None:
+    try:
+        relative = target.relative_to(base)
+    except ValueError:
+        return target
+    current = base
+    if current.is_symlink():
+        return current
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            return current
+    return None
 
 
 def artifact_error(bundle: Path, relative: object) -> str | None:
@@ -57,11 +79,30 @@ def artifact_error(bundle: Path, relative: object) -> str | None:
     return None
 
 
-def validate(bundle: Path) -> list[str]:
+def validate(
+    bundle: Path,
+    *,
+    evidence_root: Path | None = None,
+    trusted_root: Path | None = None,
+) -> list[str]:
     errors: list[str] = []
+    evidence_root = evidence_root or bundle.parent
+    trusted_root = trusted_root or evidence_root
     manifest_path = bundle / "evidence.json"
-    if bundle.is_symlink() or manifest_path.is_symlink():
-        return [f"Evidence bundle and manifest cannot follow symlinks: {bundle}"]
+    unsafe = (
+        symlink_component(trusted_root, evidence_root)
+        or symlink_component(evidence_root, bundle)
+        or symlink_component(bundle, manifest_path)
+    )
+    if unsafe:
+        return [f"Evidence path cannot follow symlinks: {unsafe}"]
+    try:
+        resolved_root = evidence_root.resolve(strict=True)
+        resolved_bundle = bundle.resolve(strict=True)
+    except OSError as exc:
+        return [f"Invalid evidence path: {exc}"]
+    if not resolved_bundle.is_relative_to(resolved_root) or resolved_bundle.parent != resolved_root:
+        return [f"Evidence bundle must be a direct child of {evidence_root}: {bundle}"]
     if not manifest_path.exists():
         return [f"Missing {manifest_path}"]
     try:
@@ -83,8 +124,10 @@ def validate(bundle: Path) -> list[str]:
     commands = manifest.get("commands", [])
     if isinstance(commands, list):
         for command in commands:
-            if isinstance(command, str) and command.strip().lower() in PLACEHOLDER_COMMANDS:
-                errors.append(f"Command evidence cannot be a placeholder: {command}")
+            if isinstance(command, str):
+                normalized = " ".join(command.strip().lower().split())
+                if any(marker in normalized for marker in PLACEHOLDER_COMMAND_MARKERS):
+                    errors.append(f"Command evidence cannot contain a placeholder claim: {command}")
     builder = manifest.get("builder")
     evaluator = manifest.get("evaluator")
     if not isinstance(builder, str) or not builder.strip():
