@@ -23,6 +23,15 @@ NextActionError = ProjectCheckError
 STATUSES = {"backlog", "ready", "in_progress", "review", "done", "blocked", "needs_human", "failed_safe"}
 
 
+def research_complete(root: Path, profiles: set[str]) -> bool:
+    try:
+        selected = project_brief.research_selected(profiles)
+        state = project_brief.load_research_state(root, selected=selected)
+    except project_brief.BriefError as error:
+        raise NextActionError(str(error)) from error
+    return not selected or state["status"] == "complete"
+
+
 def git_branch(root: Path) -> str | None:
     # A parent repository is not this generated project's version history.
     try:
@@ -117,17 +126,27 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
 
     profiles = active_profiles(root)
     metadata = load_object(generated_path)
+    selected_task_action = task_action(root, task_id) if task_id else None
     if metadata.get("onboarding_version") == 1 or (root / project_brief.BRIEF_PATH).exists():
         try:
             brief = project_brief.load(root)
         except project_brief.BriefError as error:
             raise NextActionError(str(error)) from error
+        if not research_complete(root, profiles):
+            return (
+                "Ground the product in current evidence before design",
+                "./agentic start",
+            )
         if not task_id and brief["status"] != "ready":
-            if brief["design_mode"] != "reference" and "design-critical" in profiles:
+            if (
+                brief["design_mode"] != "reference"
+                and "design-critical" in profiles
+                and "web-next" in profiles
+            ):
                 return "Turn the saved brief into live product directions", "./agentic design sprint"
             return "Continue your product conversation; your answers are saved", "./agentic start"
     if task_id and "web-next" not in profiles:
-        return task_action(root, task_id)
+        return selected_task_action
     if "web-next" in profiles:
         prerequisite = web_prerequisite(root)
         if prerequisite:
@@ -161,13 +180,17 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
                 "Compile the approved direction into the canonical token outputs",
                 "./agentic tokens build",
             )
-        return task_action(root, task_id)
+        return selected_task_action or task_action(root)
 
     if "mobile-expo" in profiles:
+        if (root / "docs/40-execution/TASKS.jsonl").read_text().strip():
+            return task_action(root)
         return (
             "Mobile is a planning scaffold, not a runnable native starter",
             "Open docs/60-tooling/FIRST_PROJECT.md and follow the mobile readiness path.",
         )
+    if (root / "docs/40-execution/TASKS.jsonl").read_text().strip():
+        return task_action(root)
     return (
         "Define the product outcome before creating the first requirement",
         "Open docs/00-vision/NORTH_STAR.md",

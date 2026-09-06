@@ -2,25 +2,38 @@
 
 # Everything Agentic Engineering
 
-### Build software people trust—and interfaces they remember.
+## Turn an idea into a distinctive, researched, working product slice—with evidence.
 
-**A guided product, design, and engineering system for coding agents.**
+One guided path from product intent to live design, implementation, verification,
+and review. Built for Claude Code, Codex, and manual coding workflows.
 
-Discovery → Product contract → Original design directions → Architecture →
-Parallel implementation → Evidence → Pull request → Durable memory
+**Research → Product → Design → Build → Verify → Review**
 
-<br />
+[Start a project](#run-it) · [See the proof](#see-the-system-working) ·
+[Understand the journey](#one-journey-not-a-toolbox) · [Read the docs](#go-deeper-when-you-need-to)
 
 [![GitHub stars](https://img.shields.io/github/stars/Gaurav890/everything-agentic-engineering?style=for-the-badge&logo=github)](https://github.com/Gaurav890/everything-agentic-engineering/stargazers)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-111827?style=for-the-badge)](docs/releases/v0.1.0.md)
 
 </div>
 
----
+Most starters give you framework choices, a familiar dashboard, and a large
+prompt. You still have to discover the product, art-direct the interface, decide
+what is real, and reconstruct the reasoning later.
 
-## Start here
+This starter gives you a product-building loop:
+
+- current research when it will change the answer;
+- one explicit audience, promise, and useful journey;
+- multiple working design directions built from that product—not theme swaps;
+- approved design decisions compiled into reusable tokens;
+- a bounded vertical slice with tests and running-product evidence;
+- separate builder, evaluator, human review, and merge decisions;
+- durable context that survives a new session or a different coding client.
+
+## Run it
 
 ```bash
 git clone https://github.com/Gaurav890/everything-agentic-engineering.git
@@ -28,83 +41,32 @@ cd everything-agentic-engineering
 ./agentic setup create
 ```
 
-The guide asks only the decisions that materially change the result, previews
-what it will create, and asks once before writing a new project. It installs
-nothing, enables no external service, copies no secrets, and does not modify
-this starter. When creation succeeds, it prints one shell-safe command that
-enters the generated folder and continues the saved handoff. Copy and run that
-command. A custom web project continues directly into its creative sprint:
+The guide asks what you are building, who it serves, the first useful outcome,
+whether **Perplexity-first current research** should shape the first pass, how
+design should begin, and where you want to continue. It previews the plan and
+asks once before creating a new directory.
+
+When it finishes, copy the one command it prints. Inside the generated project:
 
 ```bash
-./agentic design sprint
+./agentic journey
 ```
 
-The sprint carries your saved brief into your chosen **Claude Code, Codex, or
-editor/app workflow**. It shows the folder and asks before launching an installed
-terminal client; manual copy/paste is available. Sign in through the client's
-own interface—this starter collects no API keys or subscription tokens.
+That command shows every stage, its current state, and one exact next action.
+Use `./agentic next` later when you want only the next action.
 
-Before you run the continuation command, the terminal also previews the actual
-journey: resume the brief → confirm one useful journey → review product-specific
-design previews → implement approved scope → inspect and verify the running
-result. Nothing else is installed or launched by project creation.
+Project creation does not install dependencies or external skills, collect API
+keys, start MCP servers, launch a client without confirmation, initialize Git,
+deploy, approve design, or merge code.
 
-Your assistant then confirms one useful outcome, asks only unresolved questions
-that would change the experience, and creates three working design answers for
-**your product** by default. Each must explore a different composition or
-interaction axis, use realistic states, and include a signature idea, asset
-strategy, purposeful motion decision, responsive behavior, and reduced-motion
-behavior. Custom is the default; an existing brand or the bundled reference
-examples are optional. There is no preset-only shortlist.
+## See the system working
 
-Use `./agentic next` whenever you return. It reads the current brief, design,
-and task state. [See exactly how the handoff works](docs/60-tooling/PROJECT_ONBOARDING.md).
+### One workflow, three reviewed visual systems
 
-Use Git and Python 3.11+ to create a project. The runnable web path also needs
-Node.js 20.9+ (22 LTS is tested) and the pnpm version declared in `package.json`.
-The local examples require no paid service or API key.
-See [your first useful feature](docs/60-tooling/FIRST_PROJECT.md) for the complete
-setup → feature → review path and help when a check stops.
-
-> **Important:** generate a project from this repository. Do not merely tell a
-> coding agent to “use this repo as inspiration.” The generated project is what
-> carries the selected profiles, product brief, design contract, verification,
-> and safe workflow into the new codebase.
-
-![Everything Agentic Engineering quick-start flow](docs/assets/quickstart-flow.svg)
-
-### Your first working session
-
-1. Run `./agentic setup create`.
-2. Choose what you are building and who it serves.
-3. Review the concise creation plan.
-4. Copy the printed continuation command; a custom web project enters the new
-   directory and starts `./agentic design sprint` for you.
-5. Use the prepared instruction in your existing app, or confirm launch of the
-   selected installed terminal client.
-6. Confirm your first useful journey and only the design decisions that remain consequential.
-7. Compare live product-specific previews side by side; combine, revise, or reject
-   them until one direction earns approval.
-8. Approve the design with reviewed evidence, then compile tokens.
-9. Implement the accepted feature, inspect the running result, and review its
-   evidence. Return to `next` for the next improvement.
-
-Download times vary; this is a workflow, not a measured time-to-success claim.
-The initial custom workspace is a handoff and brief, not a finished product.
-The sprint makes quality reviewable; it does not claim that an automated score or
-the starter author can approve taste for you.
-
-No command archaeology. No deleting irrelevant starter folders. No giant prompt
-that asks one model to invent the product, design it, build it, and approve
-itself.
-
----
-
-## Explore the reference examples
-
-The same enterprise request-and-decision product is rendered through three
-materially different design systems. These are screenshots from the running
-reference application on the same Ubuntu environment used by CI—not mockups.
+These running responsive examples intentionally share one enterprise request
+and decision architecture. They demonstrate system-level changes in type,
+color, density, geometry, and motion—not the product-specific compositional
+divergence required from a fresh custom creative sprint.
 
 <table>
   <tr>
@@ -112,43 +74,56 @@ reference application on the same Ubuntu environment used by CI—not mockups.
       <a href="apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-editorial-signal-desktop-linux.png">
         <img src="apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-editorial-signal-desktop-linux.png" alt="Editorial Signal enterprise workflow" width="100%" />
       </a>
-      <br /><strong>Editorial Signal</strong><br />Authored, typographic, decisive
+      <br /><strong>Editorial Signal</strong><br /><sub>Typographic and decisive</sub>
     </td>
     <td align="center" width="33%">
       <a href="apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-kinetic-index-desktop-linux.png">
         <img src="apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-kinetic-index-desktop-linux.png" alt="Kinetic Index enterprise workflow" width="100%" />
       </a>
-      <br /><strong>Kinetic Index</strong><br />High-contrast, energetic, unconventional
+      <br /><strong>Kinetic Index</strong><br /><sub>Energetic and unconventional</sub>
     </td>
     <td align="center" width="33%">
       <a href="apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-quiet-material-desktop-linux.png">
         <img src="apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-quiet-material-desktop-linux.png" alt="Quiet Material enterprise workflow" width="100%" />
       </a>
-      <br /><strong>Quiet Material</strong><br />Warm, tactile, deliberately calm
+      <br /><strong>Quiet Material</strong><br /><sub>Warm and deliberately calm</sub>
     </td>
   </tr>
 </table>
 
-Every direction also has a reviewed mobile-web composition:
+Mobile-web evidence:
 [Editorial Signal](apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-editorial-signal-mobile-linux.png) ·
 [Kinetic Index](apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-kinetic-index-mobile-linux.png) ·
 [Quiet Material](apps/web/tests/visual.spec.ts-snapshots/enterprise-workflow-quiet-material-mobile-linux.png)
 
-The visual language changes. The product contract does not. Each version still
-exposes the actor, tenant, request, evidence, rationale, allowed decisions,
-consequences, audit trail, recovery behavior, and production boundary.
+### A real interaction, including failure and recovery
 
-### A real interactive showcase
+Signalroom is the included operations-console showcase. It demonstrates a
+protected decision, interruption, recovery, and durable evidence—not a static
+landing-page mockup.
 
-`apps/showcase` contains **Signalroom**, an agent-operations console built
-through the same product-design and evidence workflow.
+<table>
+  <tr>
+    <td width="50%">
+      <a href="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-normal-desktop-linux.png">
+        <img src="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-normal-desktop-linux.png" alt="Signalroom decision queue in its normal state" width="100%" />
+      </a>
+      <br /><strong>Protected decision flow</strong><br /><sub>Consequences and evidence stay visible before approval.</sub>
+    </td>
+    <td width="50%">
+      <a href="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-error-desktop-linux.png">
+        <img src="apps/showcase/tests/visual.spec.ts-snapshots/signalroom-error-desktop-linux.png" alt="Signalroom recoverable error state" width="100%" />
+      </a>
+      <br /><strong>Failure and recovery</strong><br /><sub>Error state preserves context and a clear recovery action.</sub>
+    </td>
+  </tr>
+</table>
 
-![Signalroom protected approval, pause, and resume flow](docs/assets/demo/03-signalroom-approval.gif)
+[Watch the approval, pause, and resume flow](docs/assets/demo/03-signalroom-approval.gif) ·
+[Watch normal, loading, empty, and error states](docs/assets/demo/04-running-states.gif)
 
-Normal, loading, empty, and error are implemented states—not decorative
-screenshots:
-
-![Signalroom normal, loading, empty, and error states](docs/assets/demo/04-running-states.gif)
+The animated demonstrations are linked instead of autoplayed so readers can
+choose when motion begins. The product itself includes a reduced-motion path.
 
 Run it locally:
 
@@ -157,402 +132,191 @@ pnpm install --frozen-lockfile
 pnpm dev:showcase
 ```
 
----
-
-## Choose the product you are actually building
-
-| Starting point | Use it for | What stays out |
-|---|---|---|
-| `product` | SaaS, consumer products, high-end product narratives | Enterprise workflow ceremony unless needed |
-| `agentic-product` | Human-agent interfaces with plans, progress, tools, approvals, and recovery | Hidden or performative “agent” behavior |
-| `enterprise-workflow` | Multi-tenant operations, requests, evidence, decisions, and auditability | Fake production auth, storage, or compliance claims |
-| `portfolio` | Authored work, case studies, and personal positioning | SaaS dashboard conventions |
-| `mobile` | Native-app planning, guidance, and token contracts; no runnable app yet | Web-only agents and surfaces |
-| `core` | The engineering harness without an application shell | Frontend and mobile inventory |
-
-Web projects inherit the design-critical profile automatically. Mobile, backend,
-research, and optional external capabilities activate only when the selected
-project needs them.
-
-```bash
-./agentic profile resolve
-./agentic profile doctor
-./agentic capabilities plan
-```
-
-If you are not building a mobile application, mobile guidance remains inactive.
-If you do not need crawling, research MCPs remain inactive. Supabase and Convex
-are mutually exclusive backend choices by design.
-
-**Readiness:** web examples run locally; enterprise identity and storage are
-synthetic; native mobile is a placeholder. Passing web checks does not establish
-production readiness or native support. The three design directions are
-references to adapt—not a guarantee of originality or a limit on custom design.
-
----
-
-## The product moat: a taste compiler, not a theme picker
-
-The design engine runs product thinking before visual production:
-
-```text
-DISCOVERY
-→ USER NEEDS
-→ BENCHMARK
-→ UX STRATEGY
-→ INTERACTION MODEL
-→ ADAPTIVE DESIGN INTAKE
-→ LIVE PRODUCT-SPECIFIC DIRECTIONS
-→ HUMAN SELECTION OR SYNTHESIS
-→ DESIGN SYSTEM
-→ DTCG-COMPATIBLE TOKENS
-→ IMPLEMENTATION
-→ RUNNING-PRODUCT AUDITS
-→ INDEPENDENT CRITIQUE
-→ POLISH
-```
-
-The router runs only missing or stale phases. A small settings fix does not
-repeat discovery. A new product does not skip it.
-
-The non-negotiable rules are:
-
-- References are ingredients, not templates.
-- Components are structural donors, not product identity.
-- Tokens encode approved decisions; they do not invent the direction.
-- The project design system wins every conflict.
-- Motion must communicate causality, continuity, hierarchy, feedback, or state.
-- Responsive, accessibility, token, system, and performance audits remain
-  separate gates.
-- The builder does not certify its own work.
-
-The differentiator is the conversion of taste into durable product behavior:
-
-```text
-INTENT → LIVE DIVERGENCE → HUMAN CHOICE → TOKENS + COMPONENTS + MOTION RULES
-       → VERIFIED FEATURE → DRIFT-PROTECTED ITERATION
-```
-
-A custom candidate fails if it is a palette swap, inherits a starter demo, uses
-generic content, has dead interactions, or cannot explain its asset, motion,
-responsive, and reduced-motion decisions. Registered candidates appear as live
-previews in the project workspace so the choice is visual, not a JSON exercise.
-
-Approve one reviewed product-specific direction—or request a synthesis—then
-build tokens:
-
-```bash
-./agentic design approve <candidate-id> --evidence docs/50-evals/<screenshot>.png --yes
-./agentic tokens build
-```
-
-The token system covers color, typography, spacing, radii, borders, elevation,
-motion, layout, density, themes, components, and agent states. Redesigns change
-approved semantic decisions instead of repainting every screen.
-
-Optional design skills remain precisely routed. When installed, the reviewed
-Emil Kowalski `prototype` workflow accelerates the initial live divergence and
-`emil-design-eng` is the preferred external craft pass for substantial web UI.
-The local sprint contract remains complete without them; no external skill or
-component library becomes the product’s art director or a hidden prerequisite.
-
-```bash
-./agentic setup skills
-```
-
-Skill installation is explicit and profile-aware. The command never runs as a
-side effect of project creation.
-
----
-
-## The enterprise golden path
-
-Selecting `enterprise-workflow` adds four questions:
-
-1. What business object moves through the workflow?
-2. What is the tenant model?
-3. What approval model governs consequential transitions?
-4. What is the data sensitivity?
-
-The generated project then includes:
-
-- product requirements and stable acceptance IDs;
-- user journeys, alternative paths, failures, and recovery;
-- role and permission matrix;
-- tenant and authorization boundaries;
-- data model and API contract;
-- security model and audit-event vocabulary;
-- a runnable create → evidence checks → submit → review → decision → audit slice;
-- loading, empty, invalid, partial, failure, recovery, disabled, and terminal
-  states;
-- domain, repository, API, browser, accessibility, and visual tests;
-- explicit `local-demo` adapters and `production_ready: false` disclosure.
-
-This is a credible vertical slice, not a fake enterprise claim. Production
-identity, persistence, notifications, compliance evidence, and deployment must
-still be connected and reviewed for the real organization.
-
-The selected approval model is executable, not decorative: `single-review`
-permits an eligible same-tenant reviewer, `dual-control` restricts decisions to
-the assigned reviewer distinct from the owner, and `policy-gated` additionally
-requires the recorded policy check to pass.
-
-Read the [enterprise golden-path guide](docs/60-tooling/ENTERPRISE_GOLDEN_PATH.md).
-
----
-
-## From idea to reviewed change
+## One journey, not a toolbox
 
 ```text
 IDEA
   ↓
-PRODUCT BRIEF + PRD
+RESEARCH     Perplexity for broad current discovery when selected
+  ↓          Primary sources/manual research remain a valid fallback
+PRODUCT      Audience + promise + one useful journey + recovery
   ↓
-REQUIREMENT IDs + ACCEPTANCE CRITERIA
+DESIGN       Live, product-specific alternatives on different axes
   ↓
-ARCHITECTURE + TASK GRAPH
+SYSTEM       Human-approved direction → tokens + components + motion rules
   ↓
-SHORT-LIVED BRANCH OR ISOLATED WORKTREE
+BUILD        One bounded vertical slice
   ↓
-IMPLEMENTATION
+VERIFY       Behavior + responsive + accessibility + visual evidence
   ↓
-TESTS + RUNNING-PRODUCT EVIDENCE
-  ↓
-INDEPENDENT PRODUCT / SECURITY REVIEW
-  ↓
-PULL REQUEST
-  ↓
-HUMAN APPROVAL + PROTECTED MERGE
-  ↓
-DURABLE STATE
+REVIEW       Independent evaluator → human decision → protected merge
 ```
 
-The repository—not chat history—owns the truth:
+The headline value is not “many agents, skills, and MCPs.” It is a faster path
+to a product people can understand and remember, with enough engineering rigor
+for a team to keep building it safely.
 
-| Artifact | Owns |
+### 1. Research enters the product
+
+During creation, choose Perplexity-first research or skip it. If selected, the
+generated project activates the existing research profile and creates
+`docs/10-product/RESEARCH.md` with a source ledger plus
+`.agentic/research.json` as the validated machine state. The active profile is
+the routing authority; completion is bound to the source ledger and the
+changed/no-change brief decision, and copied text in a research note cannot
+advance the flow.
+
+Routing is explicit:
+
+| Need | Route |
 |---|---|
-| `CLAUDE.md` / `AGENTS.md` | Universal project operating contract |
-| `docs/10-product/` | Product requirements and acceptance |
-| `docs/20-design/` | Interaction, direction, system, and design decisions |
-| `docs/30-engineering/` | Architecture, data, API, and security boundaries |
-| `docs/40-execution/TASKS.jsonl` | Atomic work, dependencies, owners, and status |
-| `CURRENT_STATE.md`, `PROGRESS.md`, `HANDOFF.md` | Durable continuity between sessions |
-| `docs/50-evals/` | Rubrics, test matrices, and evidence |
-| Git and GitHub | Checkpoints, collaboration, review, and merge history |
+| Broad current discovery or multi-source synthesis | Perplexity |
+| Authoritative technical/product facts | Official and first-party sources |
+| Authorized extraction from a known site | Firecrawl |
+| Interactive browser behavior | Playwright |
+| External capability unavailable | Primary-source/manual fallback, disclosed |
 
-Traceability remains explicit:
+The starter never asks you to paste a Perplexity key. It leaves MCPs disabled
+until you configure them in your own client and keeps credentials in environment
+or user scope. A catalog entry never counts as evidence that a tool ran.
 
-```text
-Idea → Requirement → Acceptance criterion → Task → Code → Test → Evidence
-```
+[Research policy](docs/60-tooling/RESEARCH_POLICY.md) ·
+[MCP routing and setup](docs/60-tooling/MCP_STACK.md) ·
+[Compatibility boundaries](docs/60-tooling/MCP_COMPATIBILITY.md)
 
----
+### 2. Product decisions come before screens
 
-## Parallel work without merge chaos
+The generated brief captures the audience, promise, first outcome, open
+questions, design intent, and selected research path. The assistant confirms one
+useful journey—including failure and recovery—before implementation scope is
+accepted. Facts, assumptions, and unresolved questions stay distinct.
 
-Use one accountable owner and parallelize independent outputs—not shared state.
+### 3. Design is a first-class build phase
 
-```bash
-./agentic task plan T-101
-./agentic task start T-101 --yes
-./agentic workspace worktree T-102 frontend main
-./agentic workspace worktree T-103 backend main
-```
+Custom is the default. A fresh web project starts a creative-direction sprint
+that produces working product-specific previews, usually three in the first
+round. Each direction must differ in composition or interaction, not merely
+palette, and must show realistic states, signature craft, an asset strategy,
+purposeful motion, responsive behavior, and reduced-motion behavior.
 
-Before parallel writers begin, the task plan establishes dependencies, file
-ownership, integration contracts, verification gates, and merge order. Each
-writer receives an isolated branch/worktree. Researchers, architects, and
-critics may work in parallel without mutating shared implementation files.
+The project can reject every option, request another, or synthesize a new one.
+References are ingredients. Components are structural donors. The project's
+approved design system wins. Anthropic frontend-design remains secondary;
+Emil Kowalski's reviewed design-engineering suite is the preferred optional
+external craft layer when installed.
 
-![Actual task planner output](docs/assets/demo/02-task-plan.gif)
+[Product-design workflow](docs/60-tooling/PROJECT_ONBOARDING.md) ·
+[Design resources and exact links](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md) ·
+[Design system](docs/20-design/DESIGN_SYSTEM.md)
 
-Read the [parallel work guide](docs/70-collaboration/PARALLEL_TERMINALS.md).
+### 4. Approval creates a reusable system
 
----
+An approved direction is compiled into DTCG-compatible primitives, semantics,
+component roles, light/dark themes, typography, spacing, radii, border/elevation,
+motion, layout, density, and agentic states. Screens consume semantic decisions;
+they do not silently invent a new visual language.
+
+### 5. Engineering makes the result credible
+
+Requirements trace to acceptance criteria and bounded tasks. Parallel write
+work uses isolated branches/worktrees and explicit file ownership. Verification
+distinguishes scaffold checks, running behavior, visual evidence, native gaps,
+and production readiness. The builder does not certify its own work.
+
+## Choose only what the product needs
+
+| Starting point | Best for | What remains inactive |
+|---|---|---|
+| `product` | SaaS and consumer products | Enterprise ceremony, mobile, backend, and research unless selected |
+| `agentic-product` | Human-agent planning, progress, approval, and recovery | Hidden or performative agent behavior |
+| `enterprise-workflow` | Tenant-aware requests, evidence, decisions, and auditability | Fake production auth, storage, or compliance claims |
+| `portfolio` | Authored work and case studies | SaaS dashboard conventions |
+| `mobile` | Native planning, guidance, and shared token contracts | Web-only surfaces; runnable native app is not included yet |
+| `core` | The workflow without an application shell | Frontend, mobile, backend, and research inventories |
+
+Unselected capabilities stay in the starter catalog but are not copied, routed,
+installed, or treated as requirements. Supabase and Convex are mutually
+exclusive backend choices.
 
 ## The commands most people need
 
-| Goal | Command |
-|---|---|
-| Create a clean project | `./agentic setup create` |
-| Get one next action | `./agentic next` |
-| Create live product directions | `./agentic design sprint` |
-| Continue a non-design handoff | `./agentic start` |
-| See active profiles | `./agentic profile resolve` |
-| Diagnose project setup | `./agentic profile doctor` |
-| Compare design directions | `./agentic design preview` |
-| Approve reviewed direction evidence | `./agentic design approve <direction> --evidence <screenshot> --yes` |
-| Build design tokens | `./agentic tokens build` |
-| Plan a task safely | `./agentic task plan T-101` |
-| Preview isolated work | `./agentic task start T-101` |
-| Check optional capabilities | `./agentic capabilities plan --task T-101` |
-| Check repository contracts | `./agentic verify full` |
-| Check the running web product | `./agentic verify web` |
-| Compare reviewed screenshots | `./agentic verify visual` |
-| Measure the newcomer journey | `./agentic pilot plan` |
-| Discover every command | `./agentic commands` |
-
-The command interface is intentionally small. Internal scripts remain available
-for compatibility and CI, but users should begin with `./agentic`.
-
----
-
-## Verification is evidence, not confidence
-
-Use the check that matches the claim:
-
-| Check | Evidence |
-|---|---|
-| `full` | Repository contracts, tokens, syntax, deterministic policy tests, and available lint/type/unit checks. Missing package checks are reported, not passed. |
-| `web` | Requires local dependencies and Chromium; runs repository checks, a production build, browser interaction, keyboard, automated accessibility, overflow, and reduced-motion tests. |
-| `visual` | Builds and compares existing screenshots on the current platform. Missing or changed baselines fail; they are never silently accepted. |
-
 ```bash
-./agentic verify web
-./agentic verify visual
+./agentic setup create     # create a project from a guided brief
+./agentic journey          # see the complete path and current state
+./agentic next             # get exactly one next action
+./agentic design sprint    # build/review product-specific live directions
+./agentic tokens build     # compile an approved direction
+./agentic verify web       # run web behavior and quality checks
+./agentic verify full      # validate the full repository contract
 ```
 
-`full` and `quick` do **not** run production builds, browser tests, or visual
-comparisons. Generated projects use a smaller repository suite than this
-starter's maintenance suite. New features need their own acceptance tests;
-reference tests alone cannot prove them. Human design review, manual
-accessibility, security review, and live PR policy are separate gates.
+Run `./agentic --help` for the complete public command surface. Internal shell
+scripts are implementation details; you should not have to discover them.
 
-For browser setup, visual candidate review, and exact scopes, read
-[the first-project guide](docs/60-tooling/FIRST_PROJECT.md#build-prove-review-repeat).
+## Built for serious team workflows
 
-![Actual full repository verification](docs/assets/demo/05-verification.gif)
+- Durable product, design, architecture, task, decision, and evidence files.
+- A protected `main` branch and short-lived task branches.
+- Draft pull requests for early visibility.
+- Worktrees for parallel features, specifications, research, or reviews.
+- One owner per writable file/module and a planned merge order.
+- Explicit security, data, auth, migration, rollback, and production boundaries.
+- Deterministic checks plus independent product, design, security, QA, and
+  integration review where risk requires them.
 
-Visual redesigns generate candidates. CI never silently turns new screenshots
-into approved truth; a human reviews them before they become baselines.
+[Enterprise golden path](docs/60-tooling/ENTERPRISE_GOLDEN_PATH.md) ·
+[Parallel terminals](docs/70-collaboration/PARALLEL_TERMINALS.md) ·
+[GitHub workflow](docs/70-collaboration/GITHUB_WORKFLOW.md) ·
+[Code review](docs/70-collaboration/CODE_REVIEW.md)
 
-Maintainers can run the consent-based
-[five-session newcomer pilot](docs/50-evals/FIRST_PROJECT_PILOT.md). Its local
-scorecards exclude identity, recordings, transcripts, raw prompts, credentials,
-and secrets. The evaluator reports `INSUFFICIENT_EVIDENCE`, `FAIL`, or `PASS`
-against published thresholds; it never turns synthetic checks into a
-self-service claim.
+## Honest readiness
 
----
+- Web references and Signalroom run locally.
+- The generator creates a personalized workspace and an executable design
+  sprint; it does not claim to create a finished product unattended.
+- Enterprise identity, persistence, notification, and audit adapters are local
+  examples with `production_ready: false`.
+- Native mobile is still a planning scaffold, not a runnable Expo application.
+- Automated checks cannot prove originality, product-market fit, security, or
+  human delight. Those remain evidence and review decisions.
+- Five independent newcomer sessions remain the published self-service launch
+  gate; synthetic fixtures do not satisfy it.
 
-## Safe by default
+[Current limitations](docs/60-tooling/COMPATIBILITY.md) ·
+[Evaluation rubric](docs/50-evals/RUBRIC.md) ·
+[First-project pilot](docs/50-evals/FIRST_PROJECT_PILOT.md)
 
-Project creation and profile selection do **not**:
-
-- install dependencies, plugins, skills, or external agents;
-- enable MCP servers or network access;
-- copy secrets, `.env`, Git history, or starter execution history;
-- create production infrastructure or deploy anything;
-- grant approval, credential, sandbox, or merge authority;
-- remove unrelated files from an existing project.
-
-Deterministic hooks block obvious destructive commands and scan edits for likely
-secrets. External pages, issues, MCP results, and crawled content are treated as
-untrusted input.
-
-Optional MCP capabilities are documented and client-specific:
-
-- **Perplexity** for broad current research;
-- **Firecrawl** for authorized scrape/map/crawl/extract work;
-- **Playwright** for real browser interaction and inspection.
-
-```bash
-./agentic doctor mcp
-./agentic doctor plugin
-./agentic doctor codex
-```
-
-Doctors report drift. They do not install, upgrade, authenticate, or enable the
-capability they inspect.
-
-Read the [security model](docs/30-engineering/SECURITY_MODEL.md) and
-[compatibility boundaries](docs/60-tooling/COMPATIBILITY.md).
-
----
-
-## Repository map
-
-```text
-agentic                 One public command interface
-.agentic/               Profiles, resources, runtime policy, project contracts
-.claude/                Shared rules, skills, agents, and hooks
-.agents/skills          Shared skill discovery
-.codex/                 Codex project adapter and hooks
-apps/web/               Multi-archetype product/design reference lab
-apps/showcase/          Signalroom interactive engineering showcase
-apps/mobile/            Mobile surface when its profile is active
-packages/               Types, domain, API, data, UI, config, design tokens
-docs/                   Product, design, engineering, execution, evals, tooling
-scripts/                Implementations and compatibility adapters
-```
-
-Open `docs/` directly as an Obsidian vault if you want a human knowledge
-cockpit. Markdown and Git remain the durable source of truth.
-
----
-
-## Go deeper only when you need to
+## Go deeper when you need to
 
 | Need | Read |
 |---|---|
-| First-run and generated projects | [Project generator](docs/60-tooling/PROJECT_GENERATOR.md) |
-| Enterprise workflow products | [Enterprise golden path](docs/60-tooling/ENTERPRISE_GOLDEN_PATH.md) |
-| Portfolio products | [Portfolio golden path](docs/60-tooling/PORTFOLIO_GOLDEN_PATH.md) |
+| Complete first-project walkthrough | [First project](docs/60-tooling/FIRST_PROJECT.md) |
+| Generated-project behavior | [Project generator](docs/60-tooling/PROJECT_GENERATOR.md) |
+| Product and design onboarding | [Project onboarding](docs/60-tooling/PROJECT_ONBOARDING.md) |
+| Skills and external capabilities | [Skills](docs/60-tooling/SKILLS.md) · [Capabilities](docs/60-tooling/CAPABILITIES.md) |
 | Profiles and cleanup | [Profiles](docs/60-tooling/PROFILES.md) |
-| Product-design sources and routing | [Design resource catalog](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md) |
-| Skills and capability decisions | [Skills](docs/60-tooling/SKILLS.md) · [Capabilities](docs/60-tooling/CAPABILITIES.md) |
-| Collaboration and pull requests | [GitHub workflow](docs/70-collaboration/GITHUB_WORKFLOW.md) |
-| Parallel terminals/worktrees | [Parallel work](docs/70-collaboration/PARALLEL_TERMINALS.md) |
-| Review and task finalization | [PR finalization](docs/70-collaboration/PR_FINALIZATION.md) |
+| Design tokens and visual QA | [Token package](packages/design-tokens/README.md) · [Visual QA](docs/50-evals/VISUAL_QA.md) |
 | Security and trust boundaries | [Security model](docs/30-engineering/SECURITY_MODEL.md) |
-| Evaluation and visual QA | [Rubric](docs/50-evals/RUBRIC.md) · [Visual QA](docs/50-evals/VISUAL_QA.md) |
-| Current limitations | [Compatibility](docs/60-tooling/COMPATIBILITY.md) |
-| Contributing | [Contributing guide](CONTRIBUTING.md) |
+| Architecture and decisions | [Architecture](docs/30-engineering/ARCHITECTURE.md) · [ADRs](docs/30-engineering/ADR/) |
+| Current work and handoff | [Current state](docs/40-execution/CURRENT_STATE.md) · [Handoff](docs/40-execution/HANDOFF.md) |
+
+Open `docs/` as an Obsidian vault if you want a human knowledge cockpit. Git
+remains the durable history.
+
+## Help make the proof stronger
+
+Try the public start path without private guidance. If it stalls, report the
+exact stage, expected result, actual result, and environment. If it works, share
+the product, the direction you rejected, the direction you approved, and the
+evidence that changed your decision.
+
+[Open an issue](https://github.com/Gaurav890/everything-agentic-engineering/issues/new/choose) ·
+[Contribute](CONTRIBUTING.md) · [Security reporting](SECURITY.md)
 
 ---
-
-## What this is—and is not
-
-This is an opinionated system for making software development with coding
-agents more original, durable, collaborative, testable, and accountable.
-
-It is not a collection of hundreds of agents, a prompt dump, a replacement for
-engineering judgment, a guarantee of autonomous correctness, or permission to
-give a model production credentials.
-
-The core principles are simple:
-
-> **The conversation is disposable. The repository is durable memory.**
-
-> **Parallelize independent outputs, not shared state.**
-
-> **One agent builds. Another evaluates.**
-
-> **References are ingredients. The project design system wins.**
-
-> **Evidence beats confidence.**
-
-> **A task is not done until reality agrees.**
-
----
-
-## Contributing
-
-Contributions are welcome: real-world examples, profiles, accessibility and
-security improvements, evaluation patterns, focused skills, and documentation
-clarity are especially valuable.
-
-Please keep each pull request coherent and evidence-backed. Read
-[CONTRIBUTING.md](CONTRIBUTING.md) before starting.
-
-For maintainers, see the [release runbook](docs/70-collaboration/RELEASING.md).
 
 <div align="center">
 
-### Stop giving coding agents prompts. Give them an engineering system.
-
-[⭐ Star](https://github.com/Gaurav890/everything-agentic-engineering) ·
-[🐛 Issues](https://github.com/Gaurav890/everything-agentic-engineering/issues) ·
-[🔀 Contribute](CONTRIBUTING.md)
+**Build the product people remember. Keep the system teams can trust.**
 
 </div>

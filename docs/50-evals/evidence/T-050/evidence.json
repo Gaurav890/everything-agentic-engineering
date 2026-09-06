@@ -1,0 +1,16 @@
+{
+  "task_id": "T-050",
+  "acceptance_ids": ["AC-001", "AC-005", "AC-006", "AC-007"],
+  "ui_change": false,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-design-security-and-integration-review",
+  "states": [],
+  "viewports": [],
+  "commands": [
+    "python3 -m unittest tests.test_project_generator tests.test_project_handoff tests.test_next_action tests.test_project_journey tests.test_agentic_cli",
+    "python3 scripts/validate_evidence.py docs/50-evals/evidence/T-050",
+    "./agentic verify full"
+  ],
+  "artifacts": ["README.md", "independent-review.md"],
+  "verdict": "PASS — deterministic positioning, research persistence, profile-aware journey routing, project-contained evidence, full verification, and three independent reviews; newcomer outcomes remain separate"
+}

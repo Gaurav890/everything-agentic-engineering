@@ -90,3 +90,26 @@ and incomplete intake or changed evidence cannot retain valid approval.
 symlink regression, candidate/freshness tests, actual generated-project browser
 checks and screenshots, and independent review. A maintainer test is not a
 newcomer usability study or proof of every downstream design's quality.
+
+## AC-007 — Research and the full product journey are visible but bounded
+
+**Linked requirements:** FR-001, FR-005, FR-007, NFR-001
+
+**Given** a newcomer uses guided creation, **when** the project could benefit
+from current category, user, competitor, or technical evidence, **then** setup
+explicitly offers Perplexity-first research and a skip path; the selection is
+persisted; active profiles control routing; structured research state binds its
+ledger and changed/no-change brief decision and rejects unsupported completion
+claims; and the generated handoff routes research into the product brief before
+design while allowing a disclosed primary-source/manual fallback.
+
+**Given** any generated project, **when** the owner runs `./agentic journey`,
+**then** it reports research, product, design, build, verification, and review
+states plus one exact next action without mutation or unsupported completion
+claims.
+
+**Evidence required:** interactive and non-interactive generator regressions,
+research document/profile/state assertions, malformed-state and copied-text
+regressions, unbound-ledger/brief regressions, handoff prompt tests, text/JSON journey
+tests, secret and MCP non-activation checks, generated-project verification,
+and independent product/security review.

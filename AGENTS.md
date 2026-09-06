@@ -126,6 +126,10 @@ Use `./agentic` as the contributor-facing command surface and
 discover supported operations through `./agentic --help` or
 `./agentic commands --json` instead of guessing script filenames.
 
+Use `./agentic journey` when a person needs the complete research → product →
+design → build → verify → review path and its current states. Use
+`./agentic next` when they want only the next action. Both are read-only.
+
 Direct shell scripts remain compatibility targets and internal implementation
 details during the migration. Never expose internal policy helpers or runtime
 security hooks as ordinary contributor commands, and never route around a hook

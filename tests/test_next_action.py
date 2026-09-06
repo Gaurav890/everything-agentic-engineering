@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import io
 import json
 import subprocess
@@ -12,6 +13,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import next_action
+import project_brief
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_fixture import prepare
 
@@ -23,7 +25,7 @@ class NextActionTests(unittest.TestCase):
         self.root = Path(temporary.name)
         self.write(".agentic/generated-project.json", {"resolved_profiles": ["obsolete"]})
         self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical"]})
-        for name in ("core", "web-next", "mobile-expo", "design-critical"):
+        for name in ("core", "web-next", "mobile-expo", "design-critical", "research-enabled"):
             self.write(f".agentic/profiles/{name}.json", {"id": name})
         self.write(".agentic/design.json", {"status": "needs_approval"})
         self.ledger()
@@ -51,6 +53,24 @@ class NextActionTests(unittest.TestCase):
         path = self.root / "packages/design-tokens/generated/direction.css"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(f"/* Approved direction: editorial-signal. Fingerprint: {state['fingerprint']}. */\n")
+
+    def complete_research(self, brief):
+        ledger = self.root / "docs/10-product/RESEARCH.md"
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.write_text("# Research\n\nSource: https://docs.python.org/3/\n\nEvidence supports the captured first journey.\n")
+        ledger_digest = hashlib.sha256(ledger.read_bytes()).hexdigest()
+        brief["research_evidence_digest"] = ledger_digest
+        self.write(".agentic/project-brief.json", brief)
+        baseline = project_brief.research_snapshot_digest(brief)
+        self.write(".agentic/research.json", {
+            "schema_version": 1, "status": "complete", "route_preference": "perplexity",
+            "route_used": "primary_sources", "source_urls": ["https://docs.python.org/3/"],
+            "synthesis": "Current evidence supports the first journey without changing its product intent.",
+            "decision": "no_change",
+            "product_changes": ["No change; retain the captured journey and record the evidence."],
+            "uncertainties": [], "ledger_sha256": ledger_digest,
+            "baseline_brief_digest": baseline, "resulting_brief_digest": baseline,
+        })
 
     def test_source_checkout_routes_to_create(self):
         (self.root / ".agentic/generated-project.json").unlink()
@@ -87,6 +107,66 @@ class NextActionTests(unittest.TestCase):
         with self.assertRaises(next_action.NextActionError):
             next_action.next_action(self.root)
 
+    def test_selected_research_routes_before_design_and_completed_ledger_releases_it(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        self.write(".agentic/profiles/research-enabled.json", {"id": "research-enabled"})
+        brief = {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "research_enabled": True, "assistant": "manual", "status": "captured",
+            "confirmed_by": None, "open_questions": [],
+        }
+        self.write(".agentic/project-brief.json", brief)
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+        self.complete_research(brief)
+        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
+
+    def test_research_cannot_be_bypassed_by_ready_brief_or_copied_status_text(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": "Compare purchase dates", "design_preferences": None, "design_mode": "custom",
+            "research_enabled": False, "assistant": "manual", "status": "ready",
+            "confirmed_by": "Owner", "open_questions": [],
+        })
+        path = self.root / "docs/10-product/RESEARCH.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("# Research\n\nStatus: Not started\n\n## Retrieved source\nStatus: Complete\n")
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
+
+    def test_incomplete_structured_research_cannot_claim_complete(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        brief = {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "assistant": "manual", "status": "captured", "confirmed_by": None, "open_questions": [],
+        }
+        self.write(".agentic/project-brief.json", brief)
+        state = project_brief.initial_research_state(brief)
+        state["status"] = "complete"
+        self.write(".agentic/research.json", state)
+        with self.assertRaisesRegex(next_action.NextActionError, "Complete research needs"):
+            next_action.next_action(self.root)
+
+    def test_selected_task_is_validated_and_cannot_bypass_research(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["web-next", "design-critical", "research-enabled"]})
+        brief = {
+            "schema_version": 1, "name": "Afford", "audience": "households", "promise": "Plan a purchase",
+            "first_outcome": None, "design_preferences": None, "design_mode": "custom",
+            "research_enabled": True, "assistant": "manual", "status": "captured",
+            "confirmed_by": None, "open_questions": [],
+        }
+        self.write(".agentic/project-brief.json", brief)
+        self.write(".agentic/research.json", project_brief.initial_research_state(brief))
+        with self.assertRaisesRegex(next_action.NextActionError, "Task not found"):
+            next_action.next_action(self.root, "T-999")
+        self.ledger(self.task(identity="T-101"))
+        self.assertEqual("./agentic start", next_action.next_action(self.root, "T-101")[1])
+
     def test_fake_css_comment_does_not_make_a_stale_design_current(self):
         self.approve()
         (self.root / "docs/50-evals/fixture.png").write_bytes(b"changed")
@@ -95,6 +175,38 @@ class NextActionTests(unittest.TestCase):
     def test_mobile_is_honest_and_never_routes_web(self):
         self.write(".agentic/project.json", {"profiles": ["mobile-expo"]})
         self.assertIn("not a runnable", next_action.next_action(self.root)[0])
+        self.prerequisite.assert_not_called()
+
+    def test_captured_mobile_brief_never_routes_to_the_web_design_sprint(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        self.write(".agentic/project.json", {"profiles": ["mobile-expo", "design-critical"]})
+        self.write(".agentic/project-brief.json", {
+            "schema_version": 1, "name": "Pocket", "audience": "field teams",
+            "promise": "Capture a decision", "first_outcome": None,
+            "design_preferences": None, "design_mode": "custom", "assistant": "manual",
+            "status": "captured", "confirmed_by": None, "open_questions": [],
+        })
+        title, action = next_action.next_action(self.root)
+        self.assertEqual("./agentic start", action)
+        self.assertNotIn("live product directions", title)
+        self.prerequisite.assert_not_called()
+
+    def test_ready_mobile_and_core_projects_advance_to_the_only_task(self):
+        self.write(".agentic/generated-project.json", {"onboarding_version": 1})
+        brief = {
+            "schema_version": 1, "name": "Afford", "audience": "households",
+            "promise": "Plan a purchase", "first_outcome": "Compare purchase dates",
+            "design_preferences": None, "design_mode": "custom", "assistant": "manual",
+            "status": "ready", "confirmed_by": "Owner", "open_questions": [],
+        }
+        self.write(".agentic/project-brief.json", brief)
+        self.ledger(self.task(identity="T-101"))
+        for profile in ("mobile-expo", "core"):
+            with self.subTest(profile=profile):
+                self.write(".agentic/project.json", {"profiles": [profile]})
+                title, action = next_action.next_action(self.root)
+                self.assertIn("T-101", title)
+                self.assertEqual("./agentic task start T-101", action)
         self.prerequisite.assert_not_called()
 
     def test_malformed_unknown_and_conflicting_profiles_fail_closed(self):

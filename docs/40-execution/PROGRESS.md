@@ -1272,7 +1272,8 @@ production, approval, or merge authority; or change managed settings.
 
 **Requirements:** FR-001, FR-002, FR-003, FR-004
 **Acceptance:** AC-001, AC-002, AC-003, AC-004
-**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT AND HUMAN REVIEW PENDING
+**Outcome:** IMPLEMENTED AND INDEPENDENTLY REVIEWED; HUMAN TASK REVIEW APPROVED;
+MERGE PENDING
 
 **Change**
 
@@ -1337,6 +1338,32 @@ test discovery, malformed-state handling, changed-profile task routing,
 feature-specific baseline paths, and post-merge guidance. No application UI or
 approved design changed. Human approval, merge, deployment, public hosting,
 production readiness, and real-user pilot results are not implied.
+
+### 2026-09-06 — T-050
+
+**Requirements:** FR-001, FR-003, FR-005, FR-006, FR-007
+
+**Acceptance:** AC-001, AC-005, AC-006, AC-007
+**Outcome:** IMPLEMENTED LOCALLY; INDEPENDENT AND HUMAN REVIEW PENDING
+
+Reframed the first encounter around one promise—turn an idea into a distinctive,
+researched, working product slice with evidence—and one visible research →
+product → design → build → verify → review journey. Guided creation now
+offers an explicit Perplexity-first research decision and safe skip path,
+persists the choice, creates a bounded research ledger, and routes the assistant
+through research before design when selected. `./agentic journey` exposes the
+whole path without changing state; `./agentic next` remains the one-action view.
+
+Eighty-six focused tests, fresh custom/reference/mobile/core generations, and
+the ten-stage full repository verification pass. The generated project retained
+an empty MCP manifest, collected no key, and routed according to its selected
+profile. Research and task evidence now fail closed on stale briefs, invalid
+verdicts, missing independent identities, placeholder commands, path traversal,
+or symlinks. Independent product/design, security, and integration reviews pass
+on exact implementation commit `f0b45f8a79e88868bb831df1cc46f18dddd9a8b8`,
+and the product owner approved T-050. No app UI or approved visual baseline
+changed. Merge and real newcomer outcomes remain separate. Evidence is recorded
+under `docs/50-evals/evidence/T-050/`.
 ### 2026-08-30 — T-047
 
 **Requirements:** FR-001, FR-004, FR-005, FR-006

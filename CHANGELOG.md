@@ -8,6 +8,21 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- The public entry point now explains one outcome-first promise and one visible
+  research → product → design → build → verify → review journey instead
+  of presenting the starter primarily as an engineering-tool catalog.
+- Guided creation now asks whether current research is needed, persists that
+  decision, and routes research-enabled projects through a bounded research
+  brief before product and design work. Selecting Perplexity does not collect
+  credentials, install or activate an MCP server, or perform network work.
+- Research routing now follows the active profile and completion uses a
+  validated structured record with sources, synthesis, product changes, and
+  uncertainty; copied Markdown and malformed task rows cannot advance the
+  journey. Handoffs are profile-aware across custom web, reference, mobile, and
+  core projects.
+- README interaction demos now use readable static states with opt-in animation
+  links, and the bundled enterprise examples are accurately described as three
+  visual systems over a shared workflow rather than three custom compositions.
 - Fresh custom and existing-brand web projects now continue through one
   product-specific creative-direction sprint instead of an empty design handoff
   or a starter theme choice. Candidate registration rejects starter demo
@@ -35,6 +50,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A read-only `./agentic journey` command that shows the complete project path,
+  current stage, and exact next action in human-readable or JSON form.
 - A consent-based local newcomer-pilot kit with anonymous P1–P5 session
   packets, closed privacy-preserving scorecards, deterministic launch gates,
   repeated-blocker detection, and aggregate reports that cannot pass with an

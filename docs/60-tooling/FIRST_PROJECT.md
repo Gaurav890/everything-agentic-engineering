@@ -6,8 +6,9 @@ and repeat. The initial design lab is a reference, not your finished product.
 ## Start and resume
 
 From the starter, run `./agentic setup create`, then copy its final continuation
-command. For a custom web project that command enters the generated directory
-and runs `./agentic design sprint`. It prepares a brief-aware creative sprint in your chosen installed terminal
+command. A research-enabled project starts with `./agentic start`; a custom web
+project that skips research starts with `./agentic design sprint`. It prepares a
+profile-aware handoff in your chosen installed terminal
 client, or an instruction for your editor/app. Native sign-in stays in that
 client; no keys are collected here. Use `./agentic next` later to resume. See
 [the complete handoff](PROJECT_ONBOARDING.md).

@@ -79,6 +79,7 @@ MANDATORY_GENERATOR_FILES = {
     Path(".agentic/pilot/scorecard.schema.json"),
     Path("scripts/project_brief.py"),
     Path("scripts/project_handoff.py"),
+    Path("scripts/project_journey.py"),
     Path("scripts/newcomer-pilot.py"),
     Path(".claude/skills/project-onboarding/SKILL.md"),
     Path(".agentic/enterprise.json"),
@@ -122,6 +123,8 @@ GENERATED_WRITE_PATHS = {
     Path("CHANGELOG.md"),
     Path("docs/20-design/DESIGN_BRIEF.md"),
     Path("docs/10-product/PRD.md"),
+    Path("docs/10-product/RESEARCH.md"),
+    Path(".agentic/research.json"),
     Path("docs/10-product/ACCEPTANCE_CRITERIA.md"),
     Path("docs/10-product/USER_JOURNEYS.md"),
     Path("docs/30-engineering/ROLE_MATRIX.md"),
@@ -1033,6 +1036,8 @@ review, visual candidates, and continuation. Run `./agentic next` to resume.
 
 
 def first_continuation_command(plan: GenerationPlan) -> str:
+    if "research-enabled" in plan.resolved_profiles:
+        return "./agentic start"
     if (
         "web-next" in plan.resolved_profiles
         and "design-critical" in plan.resolved_profiles
@@ -1045,7 +1050,59 @@ def first_continuation_command(plan: GenerationPlan) -> str:
 def generated_readme(plan: GenerationPlan) -> str:
     brief = project_brief.create(plan)
     web = "web-next" in plan.resolved_profiles
+    research = "research-enabled" in plan.resolved_profiles
+    mobile = "mobile-expo" in plan.resolved_profiles
+    custom_web = web and plan.design_mode != "reference"
     continuation = first_continuation_command(plan)
+    if custom_web:
+        journey_guidance = (
+            "The creative sprint resumes this brief, confirms one useful journey, and builds three live "
+            "product-specific directions on different design axes by default."
+        )
+        design_guidance = (
+            "Custom directions and existing brands are not limited to reference presets. A custom candidate "
+            "must prove a different composition or interaction idea with realistic states, signature craft, "
+            "an asset strategy, and responsive/reduced-motion behavior. Review running previews before approval."
+        )
+        exists_guidance = "A runnable local onboarding workspace and empty custom candidate catalog—not an implemented product."
+        preview_guidance = "After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it."
+        verification_guidance = "Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines."
+    elif web:
+        journey_guidance = (
+            "The handoff confirms one useful journey, replaces the deliberately selected reference's sample "
+            "content with this product's real states, and requires running-product review before approval."
+        )
+        design_guidance = (
+            "Reference mode is an intentional shortcut, not a custom three-direction sprint. Adapt the "
+            "reference to this product and review the running result before design or token approval."
+        )
+        exists_guidance = "A runnable deliberately selected reference and a project brief—not an implemented product."
+        preview_guidance = "After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Replace sample content and behavior before requesting product-specific approval."
+        verification_guidance = "Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines."
+    elif mobile:
+        journey_guidance = (
+            "The handoff confirms one native journey and plans platform behavior, recovery, accessibility, "
+            "motion, and tokens without claiming that a runnable native application already exists."
+        )
+        design_guidance = (
+            "Use native platform guidance and device evidence once an application is implemented. This "
+            "planning scaffold does not contain a web comparison board or approved mobile design."
+        )
+        exists_guidance = "A native product and design planning scaffold—not a runnable mobile application."
+        preview_guidance = "Follow the mobile readiness path before choosing a native implementation, dependencies, or device matrix."
+        verification_guidance = "Add native platform and device tests when an application is implemented; web checks do not prove mobile behavior."
+    else:
+        journey_guidance = (
+            "The handoff confirms the audience, promise, first useful journey, failure and recovery, acceptance "
+            "criteria, and one bounded task without inventing an application or design surface."
+        )
+        design_guidance = (
+            "No design surface is selected. Add an application profile through a separate reviewed decision "
+            "before creating visual directions or claiming runnable UI."
+        )
+        exists_guidance = "A product and engineering planning scaffold with no application or design surface."
+        preview_guidance = "Confirm the product outcome and first bounded task before selecting an application profile."
+        verification_guidance = "Use the repository contract check; add platform-specific checks only after an application surface is approved."
     return f"""# {plan.project_name}
 
 {brief["promise"]}
@@ -1066,10 +1123,20 @@ desktop app/editor. The handoff carries your answers forward and asks for
 confirmation before starting a native interactive client. No API key is required
 by this starter; sign-in and billing stay with your chosen client.
 
-The creative sprint resumes this brief, confirms one useful journey, and builds
-three live product-specific directions on different design axes by default. It
-keeps scope, design approval, token compilation, implementation, and verification
-as separate decisions.
+The complete journey is visible at any time:
+
+```bash
+./agentic journey
+```
+
+It shows research → product → design → build → verify → review, their current
+status, and one exact next action. {journey_guidance} It keeps scope, design
+approval, token compilation, implementation, and verification as separate
+decisions.
+
+## Current research
+
+{"Perplexity-first research was selected. Start with docs/10-product/RESEARCH.md; the coding assistant binds its source ledger and changed/no-change brief decision in .agentic/research.json. Use Perplexity only when it is already configured in your chosen client; primary-source/manual research is the supported fallback. Firecrawl is for authorized extraction from known sites, and Playwright is for interactive behavior. Project creation did not collect a key, configure a server, or run network research." if research else "Live research was not selected. That is a valid fast path. If current category, competitor, user, or technical evidence would materially change the product, review the research profile before design rather than inventing facts."}
 
 Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
@@ -1078,7 +1145,7 @@ Preferences: {plan.design_preferences or "Discuss or delegate recommendations; n
 
 ## What exists today
 
-{"A runnable local reference and a project brief—not an implemented product." if web else "A planning scaffold—not a runnable native application."}
+{exists_guidance}
 Product documents are drafts. No product-specific feature or design is approved.
 Production services, identity, persistence, and deployment are not configured.
 
@@ -1088,16 +1155,13 @@ journey before claiming implementation. Existing user edits must be preserved.
 
 ## Preview and verify
 
-{"After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it." if web else "Follow the active profile's readiness guide before choosing an implementation."}
+{preview_guidance}
 
-Run `./agentic next` to resume. Custom directions and existing brands are not
-limited to the reference presets. A custom candidate must prove a different
-composition or interaction idea with realistic states, signature craft, an asset
-strategy, and responsive/reduced-motion behavior. Review the running previews
-before approval; token compilation is not design generation.
+Run `./agentic next` to resume. {design_guidance} Token compilation is not design
+generation.
 
 Use `./agentic verify full` for the repository contract.
-{"Use `./agentic verify web` for build and browser checks and `./agentic verify visual` for comparison against separately reviewed baselines." if web else "Add platform-specific tests when an application is implemented."}
+{verification_guidance}
 Passing scaffold checks does not prove the product works.
 
 ## Working agreements
@@ -1244,7 +1308,11 @@ with reviewed evidence. Follow `docs/60-tooling/PROJECT_ONBOARDING.md`.
 def write_generated_files(plan: GenerationPlan) -> None:
     brief = project_brief.create(plan)
     write_json(plan.destination / project_brief.BRIEF_PATH, brief)
-    for relative, content in project_brief.documents(brief, web="web-next" in plan.resolved_profiles).items():
+    for relative, content in project_brief.documents(
+        brief,
+        web="web-next" in plan.resolved_profiles,
+        mobile="mobile-expo" in plan.resolved_profiles,
+    ).items():
         destination = plan.destination / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(content)
@@ -1328,9 +1396,10 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
     metadata = load_object(root / GENERATED_PATH, "generated-project metadata")
     project = load_object(root / PROJECT_PATH, "project manifest")
     package = load_object(root / "package.json", "package metadata")
+    brief = None
     if metadata.get("onboarding_version") == 1 or (root / project_brief.BRIEF_PATH).exists():
         try:
-            project_brief.load(root)
+            brief = project_brief.load(root)
         except project_brief.BriefError as error:
             raise GenerationError(str(error)) from error
     mcp = load_object(root / ".mcp.json", "MCP configuration")
@@ -1356,6 +1425,14 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
         raise GenerationError("Project profiles must remain a non-empty string array")
     current_resolution = resolve_generated_profiles(root, current_selected)
     current_resolved = current_resolution["resolved_profiles"]
+    if brief is not None:
+        selected_research = project_brief.research_selected(set(current_resolved))
+        try:
+            research_state = project_brief.load_research_state(root, selected=selected_research)
+        except project_brief.BriefError as error:
+            raise GenerationError(str(error)) from error
+        if pristine and selected_research and research_state.get("migration_required"):
+            raise GenerationError("Research-enabled generation is missing .agentic/research.json")
     if pristine and current_selected != selected:
         raise GenerationError("Generated project profiles do not match provenance")
     if pristine and current_resolved != resolved:
@@ -1630,7 +1707,12 @@ def print_plan(plan: GenerationPlan) -> None:
     print("\nResolved profiles:")
     for profile in plan.resolved_profiles:
         print(f"  + {profile}")
-    print(f"\nDesign: {plan.design_mode} | Continue with: {plan.assistant}")
+    research = "Perplexity-first current research" if "research-enabled" in set(plan.resolved_profiles) else "not selected"
+    print(f"\nResearch: {research}")
+    if "research-enabled" in set(plan.resolved_profiles):
+        print("  Perplexity is preferred for broad discovery; primary-source/manual fallback remains valid.")
+        print("  No key is collected and no MCP server is installed, configured, or started by creation.")
+    print(f"Design: {plan.design_mode} | Continue with: {plan.assistant}")
     print(f"Copy: {report['copy']['tracked_file_count']} tracked files; inactive profile paths excluded.")
     print("Use --dry-run --json for the complete file/profile/setup plan.")
     if plan.external_setup:
@@ -1687,6 +1769,14 @@ def interactive_answers() -> argparse.Namespace:
     audience = prompt_text("Who is it for?", "Discuss with me", maximum=120)
     promise = prompt_text("What should it help them achieve?", "Discuss with me", maximum=120)
     first_outcome = prompt_text("First useful action? Leave blank to decide together.", "", maximum=500) or None
+    research = False
+    if kind != "core":
+        print("\nPerplexity can ground the first pass in current market, user, and competitor evidence.")
+        print("Choosing it creates a research contract only; no key is collected and no server is enabled.")
+        research = prompt_choice(
+            "Use Perplexity-first current research before product and design decisions?",
+            ("perplexity", "skip"), "perplexity",
+        ) == "perplexity"
     mode = prompt_choice(
         "How should the design begin? Custom is tailored; reference is a deliberate shortcut.",
         project_brief.DESIGN_MODES, "custom",
@@ -1706,7 +1796,7 @@ def interactive_answers() -> argparse.Namespace:
     data_sensitivity = prompt_choice("What is the highest data sensitivity?", DATA_SENSITIVITY_LEVELS, "confidential") if enterprise else None
     return argparse.Namespace(
         name=name, destination=destination, preset=None, web=web, mobile=kind == "mobile",
-        design=web or kind == "mobile", research=False, agentic=kind == "agentic-product",
+        design=web or kind == "mobile", research=research, agentic=kind == "agentic-product",
         backend="none", archetype=kind if web else None, audience=audience, promise=promise,
         visual_character="precise" if web else None, business_object=business_object,
         tenant_model=tenant_model, approval_model=approval_model, data_sensitivity=data_sensitivity,
@@ -1784,6 +1874,16 @@ def run(args: argparse.Namespace) -> int:
         return 2
     report = materialize(plan)
     first_command = first_continuation_command(plan)
+    web = "web-next" in plan.resolved_profiles
+    mobile = "mobile-expo" in plan.resolved_profiles
+    if web and plan.design_mode != "reference":
+        design_stage = "review_product_specific_design"
+    elif web:
+        design_stage = "adapt_reference_experience"
+    elif mobile:
+        design_stage = "define_native_journey"
+    else:
+        design_stage = "define_product_scope"
     continuation = {
         "working_directory": str(plan.destination),
         "command": first_command,
@@ -1793,8 +1893,9 @@ def run(args: argparse.Namespace) -> int:
         "collects_api_keys": False,
         "stages": [
             "resume_saved_brief",
+            "research_current_evidence" if "research-enabled" in plan.resolved_profiles else "research_not_selected",
             "confirm_first_useful_journey",
-            "review_product_specific_design",
+            design_stage,
             "implement_approved_scope",
             "verify_running_result",
         ],
@@ -1817,9 +1918,13 @@ def run(args: argparse.Namespace) -> int:
         print("\nContinue now — copy and paste:")
         print(f"  {continuation['shell_command']}")
         print("\nWhat happens next:")
-        print("  1. Resume the saved product brief in your selected client or manual handoff.")
+        if "research-enabled" in plan.resolved_profiles:
+            print("  1. Ground the brief in current evidence (Perplexity preferred; manual fallback supported).")
+        else:
+            print("  1. Resume the saved product brief; current research was not selected.")
         print("  2. Confirm one useful journey and review product-specific design previews.")
-        print("  3. Implement only approved scope, then inspect and verify the running result.")
+        print("  3. Implement only approved scope, then inspect, verify, and review the running result.")
+        print("  Run ./agentic journey at any time to see every stage and one next action.")
         print("\nNothing else was installed or launched. This starter does not collect API keys;")
         print("sign-in stays inside your chosen client, and native launch still asks first.")
     return 0

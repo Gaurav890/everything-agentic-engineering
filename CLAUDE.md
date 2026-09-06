@@ -169,6 +169,11 @@ overlay an existing directory, copy Git state or secrets, install external
 capabilities, enable MCP servers, initialize Git, or mutate the source. See
 `docs/60-tooling/PROJECT_GENERATOR.md`.
 
+`./agentic journey` is the read-only map of research, product, design, build,
+verification, and review. `./agentic next` remains the read-only single-action
+resume surface. Do not make a newcomer learn internal commands before receiving
+one of those two forms of guidance.
+
 When `.agentic/experience.json` selects `enterprise-workflow`, also read
 `.agentic/enterprise.json`. Preserve its business object, tenant model,
 approval policy, sensitivity, roles, evidence, audit, and adapter boundary.
@@ -213,6 +218,15 @@ Use the MCP stack intentionally:
 - Exact URL extraction, site maps, crawl, structured extraction → Firecrawl
 - Interactive browser flows, JS-heavy behavior, auth state, UI validation → Playwright
 - Framework/library docs → prefer official docs; use Context7 only when installed and useful
+
+When guided creation selects current research, the active profile,
+`docs/10-product/RESEARCH.md`, and validated `.agentic/research.json` state make
+that phase explicit before product scope and design direction are settled. The
+profile controls routing; the brief records provenance; Markdown cannot declare
+completion. Perplexity is the preferred broad-discovery path,
+not a hidden prerequisite. If it is unavailable, use primary-source/manual
+research and disclose the fallback. Never claim a tool ran merely because its
+configuration or catalog entry exists.
 
 Before MCP configuration or packaging work, run `./agentic doctor mcp`. It is a
 read-only compatibility check, not permission to install, authenticate, enable,

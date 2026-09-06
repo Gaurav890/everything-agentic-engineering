@@ -75,6 +75,8 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual("choose", report["continuation"]["assistant"])
             self.assertFalse(report["continuation"]["automatic_launch"])
             self.assertFalse(report["continuation"]["collects_api_keys"])
+            self.assertIn("define_product_scope", report["continuation"]["stages"])
+            self.assertNotIn("review_product_specific_design", report["continuation"]["stages"])
             self.assertEqual(
                 f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
                 report["continuation"]["shell_command"],
@@ -332,6 +334,14 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse((destination / ".github/workflows/web-quality.yml").exists())
             self.assertTrue((destination / ".claude/agents/mobile.md").is_file())
             self.assertFalse((destination / ".claude/agents/frontend.md").exists())
+            for command in ("next", "journey"):
+                continuation = subprocess.run(
+                    [str(destination / "agentic"), command], cwd=destination,
+                    text=True, capture_output=True, check=False,
+                )
+                self.assertEqual(0, continuation.returncode, continuation.stderr)
+                self.assertIn("./agentic start", continuation.stdout)
+                self.assertNotIn("./agentic design sprint", continuation.stdout)
 
     def test_core_project_excludes_optional_surfaces_and_tokens(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -397,6 +407,7 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "Make every automated decision legible and reversible.",
                         "Review one proposed automation action",
                         "1",
+                        "1",
                         "Bold type, restrained motion; avoid neon",
                         "3",
                         "y",
@@ -415,12 +426,18 @@ class ProjectGeneratorTests(unittest.TestCase):
             brief = json.loads((destination / ".agentic/project-brief.json").read_text())
             self.assertEqual("manual", brief["assistant"])
             self.assertEqual("custom", brief["design_mode"])
+            self.assertTrue(brief["research_enabled"])
             self.assertIn("avoid neon", brief["design_preferences"])
             self.assertEqual(
                 "operations teams supervising high-stakes automation",
                 experience["audience"],
             )
             self.assertIn("./agentic next", (destination / "README.md").read_text())
+            self.assertIn("Perplexity-first research was selected", (destination / "README.md").read_text())
+            self.assertIn("Machine state: `.agentic/research.json`", (destination / "docs/10-product/RESEARCH.md").read_text())
+            self.assertEqual("not_started", json.loads((destination / ".agentic/research.json").read_text())["status"])
+            self.assertIn("Run `./agentic start`", (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text())
+            self.assertIn("research-enabled", json.loads((destination / ".agentic/project.json").read_text())["profiles"])
             self.assertEqual({"mcpServers": {}}, json.loads((destination / ".mcp.json").read_text()))
 
     def test_guided_enterprise_path_asks_only_relevant_authority_questions(self) -> None:
@@ -437,6 +454,7 @@ class ProjectGeneratorTests(unittest.TestCase):
                         "security operations reviewers",
                         "Move sensitive requests to accountable decisions.",
                         "Review one policy exception",
+                        "1",
                         "1",
                         "",
                         "3",
@@ -467,15 +485,17 @@ class ProjectGeneratorTests(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "1", "", "3", "y", ""]),
+                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "2", "1", "", "3", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertIn("Who is it for?", result.stdout)
+            self.assertIn("Use Perplexity-first current research", result.stdout)
             self.assertNotIn("starting character", result.stdout.lower())
             self.assertFalse((destination / ".agentic/experience.json").exists())
+            self.assertNotIn("research-enabled", json.loads((destination / ".agentic/project.json").read_text())["profiles"])
 
     def test_all_profiles_get_their_own_brief_and_product_documents(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -498,6 +518,9 @@ class ProjectGeneratorTests(unittest.TestCase):
                 self.assertEqual("manual", json.loads(result.stdout)["client"])
                 self.assertEqual(before, (destination / "README.md").read_bytes())
                 design_brief = (destination / "docs/20-design/DESIGN_BRIEF.md").read_text()
+                generated_readme = (destination / "README.md").read_text()
+                assistant_handoff = (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text()
+                direction_guidance = (destination / "docs/20-design/DESIGN_DIRECTIONS.md").read_text()
                 self.assertIn("Afford", design_brief)
                 self.assertIn("Warm, no neon", design_brief)
                 self.assertNotIn("Desired character: `precise`", design_brief)
@@ -506,9 +529,70 @@ class ProjectGeneratorTests(unittest.TestCase):
                     self.assertEqual([], catalog["directions"])
                     intake = json.loads((destination / ".agentic/design-intake.json").read_text())
                     self.assertIsNone(intake["answers"]["personality"])
+                    self.assertIn("three live product-specific directions", generated_readme)
+                    self.assertIn("creative-direction-sprint", assistant_handoff)
+                elif preset == "mobile":
+                    self.assertIn("does not contain a web comparison board", generated_readme)
+                    self.assertIn("native mobile design guidance", assistant_handoff)
+                    self.assertIn("Plan product-specific native alternatives", direction_guidance)
+                    self.assertNotIn("three live product-specific directions", generated_readme)
+                    self.assertNotIn("Register candidates", direction_guidance)
+                    self.assertIn("Do not use the web candidate workflow", direction_guidance)
+                else:
+                    self.assertIn("No design surface is selected", generated_readme)
+                    self.assertIn("no application or design surface", assistant_handoff)
+                    self.assertIn("No design surface is selected", direction_guidance)
+                    self.assertNotIn("selected platform", direction_guidance)
+                    self.assertNotIn("three live product-specific directions", generated_readme)
+                    self.assertNotIn("Register candidates", direction_guidance)
+                    self.assertIn("Do not create or compare design candidates", direction_guidance)
                 (destination / ".agentic/project-brief.json").unlink()
                 with self.assertRaises(project_generator.GenerationError):
                     project_generator.validate_generated_project(destination)
+
+    def test_reference_web_guidance_never_claims_a_custom_sprint(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "reference-web"
+            result = self.run_generator(
+                "--name", "Reference Web", "--destination", str(destination),
+                "--preset", "web", "--archetype", "product", "--audience", "Operators",
+                "--promise", "Review one decision", "--first-outcome", "Open a request",
+                "--assistant", "manual", "--design-mode", "reference", "--yes",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            readme = (destination / "README.md").read_text()
+            handoff = (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text()
+            directions = (destination / "docs/20-design/DESIGN_DIRECTIONS.md").read_text()
+            self.assertIn("not a custom three-direction sprint", readme)
+            self.assertIn("deliberately selected reference", handoff)
+            self.assertIn("deliberately selected reference experience", directions)
+            self.assertNotIn("creative-direction-sprint", handoff)
+            self.assertNotIn("builds three live product-specific directions", readme)
+            self.assertNotIn("Register candidates", directions)
+            self.assertIn("Only create custom candidates", directions)
+
+    def test_continuation_stages_match_each_generated_profile(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            cases = (
+                ("web", "custom", "review_product_specific_design"),
+                ("web", "reference", "adapt_reference_experience"),
+                ("mobile", "custom", "define_native_journey"),
+                ("core", "custom", "define_product_scope"),
+            )
+            for preset, design_mode, expected in cases:
+                with self.subTest(preset=preset, design_mode=design_mode):
+                    destination = Path(temporary) / f"{preset}-{design_mode}"
+                    result = self.run_generator(
+                        "--name", "Profile Journey", "--destination", str(destination),
+                        "--preset", preset, "--design-mode", design_mode, "--yes", "--json",
+                    )
+                    self.assertEqual(0, result.returncode, result.stderr)
+                    stages = json.loads(result.stdout)["continuation"]["stages"]
+                    self.assertIn(expected, stages)
+                    self.assertEqual(1, len(set(stages) & {
+                        "review_product_specific_design", "adapt_reference_experience",
+                        "define_native_journey", "define_product_scope",
+                    }))
 
     def test_generated_doc_leaf_symlink_cannot_overwrite_operating_agreement(self):
         with tempfile.TemporaryDirectory() as temporary:
