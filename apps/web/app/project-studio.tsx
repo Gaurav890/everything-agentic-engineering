@@ -40,9 +40,9 @@ const directionCopy = {
 };
 
 export function ProjectStudio({brief, candidates, context}: {brief: ProjectBrief; candidates: ProjectCandidate[]; context: ProjectStudioContext}) {
-  const activeStage = context.studio.stages.find(stage => stage.status === "active") ?? context.studio.stages.at(-1)!;
-  const next = {...stageCopy[activeStage.id], title: context.studio.next.title};
-  const directions = directionCopy[activeStage.id];
+  const nextStage = context.studio.next.stage;
+  const next = {...stageCopy[nextStage], title: context.studio.next.title};
+  const directions = directionCopy[nextStage];
   return <div className={styles.studio}>
     <a className="skip-link" href="#project-main">Skip to your project</a>
     <header className={styles.header}>
@@ -51,8 +51,8 @@ export function ProjectStudio({brief, candidates, context}: {brief: ProjectBrief
     </header>
     <main id="project-main" tabIndex={-1}>
       <ol className={styles.progress} aria-label="Project progress">
-        {context.studio.stages.map((stage, index) => <li key={stage.label} data-status={stage.status} aria-current={stage.status === "active" ? "step" : undefined}>
-          <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{stage.label}</strong><small>{details[stage.id]}</small></div>
+        {context.studio.stages.map((stage, index) => <li key={stage.label} data-status={stage.status} aria-label={`${stage.label}: ${stage.status}`} aria-current={stage.status === "active" ? "step" : undefined}>
+          <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{stage.label}</strong><small>{details[stage.id]}</small><span className="sr-only">Status: {stage.status}</span></div>
         </li>)}
       </ol>
       <section className={styles.hero} aria-labelledby="project-heading">

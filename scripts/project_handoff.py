@@ -83,6 +83,20 @@ def prompt_for(brief: dict, profiles: set[str]) -> str:
     return research + COMMON_PROMPT + route
 
 
+def studio_next_stage(journey: dict) -> str:
+    stages = {stage["id"]: stage["status"] for stage in journey["stages"]}
+    action = journey["next"]["action"].lower()
+    if any(stages[name] not in {"complete", "skipped"} for name in ("research", "product")):
+        return "product"
+    if stages["design"] not in {"complete", "skipped"} or any(
+        marker in action for marker in ("agentic design", "agentic tokens", "pnpm dev")
+    ):
+        return "direction"
+    if stages["build"] != "complete":
+        return "build"
+    return "proof"
+
+
 def studio_summary(journey: dict) -> list[dict[str, str]]:
     stages = {stage["id"]: stage["status"] for stage in journey["stages"]}
 
@@ -94,12 +108,20 @@ def studio_summary(journey: dict) -> list[dict[str, str]]:
             return "active"
         return "waiting"
 
-    return [
+    summary = [
         {"id": "product", "label": "Shape", "status": combined("research", "product")},
         {"id": "direction", "label": "Direction", "status": combined("design")},
         {"id": "build", "label": "Build", "status": combined("build")},
         {"id": "proof", "label": "Proof", "status": combined("verify", "review")},
     ]
+    next_stage = studio_next_stage(journey)
+    if not all(stage["status"] == "complete" for stage in summary):
+        for stage in summary:
+            if stage["id"] == next_stage:
+                stage["status"] = "active"
+            elif stage["status"] == "active":
+                stage["status"] = "waiting"
+    return summary
 
 
 def handoff(root: Path, client: str | None = None) -> dict:
@@ -127,6 +149,8 @@ def handoff(root: Path, client: str | None = None) -> dict:
             f"Use the local workflow action `{journey['next']['action']}` only when it remains applicable; "
             "do not confuse that action with human scope, design, review, or merge approval. "
         )
+    studio_stages = studio_summary(journey) if journey else []
+    studio_next = ({**journey["next"], "stage": studio_next_stage(journey)} if journey else None)
     return {
         "project": brief["name"], "directory": str(root.resolve()),
         "client": selected, "available": executable is not None,
@@ -135,8 +159,8 @@ def handoff(root: Path, client: str | None = None) -> dict:
         "profiles": sorted(profiles),
         "brief_status": brief["status"], "mutation_performed": False,
         "studio": {
-            "stages": studio_summary(journey) if journey else [],
-            "next": journey["next"] if journey else None,
+            "stages": studio_stages,
+            "next": studio_next,
         },
     }
 

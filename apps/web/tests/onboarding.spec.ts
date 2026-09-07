@@ -16,7 +16,10 @@ test("shows the saved project and one executable continuation", async ({page}) =
   const progress = page.getByRole("list", {name: "Project progress"});
   await expect(progress).toBeVisible();
   for (const [index, stage] of context!.studio.stages.entries()) {
-    await expect(progress.locator("li").nth(index)).toHaveAttribute("data-status", stage.status);
+    const step = progress.locator("li").nth(index);
+    await expect(step).toHaveAttribute("data-status", stage.status);
+    await expect(step).toHaveAttribute("aria-label", `${stage.label}: ${stage.status}`);
+    await expect(step.locator(".sr-only")).toHaveText(`Status: ${stage.status}`);
   }
   await expect(page.getByText(context!.studio.next.title, {exact: true})).toHaveCount(getProjectCandidates().length ? 0 : 1);
   await expect(page.getByRole("button", {name: "Editorial Signal"})).toHaveCount(0);

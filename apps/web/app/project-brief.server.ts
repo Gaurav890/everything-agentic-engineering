@@ -45,7 +45,7 @@ export type ProjectStudioContext = {
   mutation_performed: false;
   studio: {
     stages: ProjectStudioStage[];
-    next: {title: string; action: string};
+    next: {title: string; action: string; stage: ProjectStudioStage["id"]};
   };
 };
 
@@ -103,7 +103,8 @@ export function getProjectStudioContext(): ProjectStudioContext {
         ["complete", "active", "waiting"].includes(String(stage.status));
     }) ||
     typeof next?.title !== "string" || !next.title.trim() ||
-    typeof next?.action !== "string" || !next.action.trim()
+    typeof next?.action !== "string" || !next.action.trim() ||
+    !["product", "direction", "build", "proof"].includes(String(next?.stage))
   ) {
     throw new Error("The Project Studio journey is invalid. Run ./agentic start in the terminal for guidance.");
   }

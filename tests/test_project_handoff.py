@@ -15,16 +15,43 @@ import project_handoff
 
 class ProjectHandoffTests(unittest.TestCase):
     def test_studio_summary_collapses_engineering_stages_into_four_user_steps(self):
-        summary = project_handoff.studio_summary({"stages": [
+        journey = {"stages": [
             {"id": "research", "status": "skipped"},
             {"id": "product", "status": "complete"},
             {"id": "design", "status": "active"},
             {"id": "build", "status": "waiting"},
             {"id": "verify", "status": "waiting"},
             {"id": "review", "status": "waiting"},
-        ]})
+        ], "next": {"title": "Build directions", "action": "./agentic design sprint"}}
+        summary = project_handoff.studio_summary(journey)
         self.assertEqual(["Shape", "Direction", "Build", "Proof"], [stage["label"] for stage in summary])
         self.assertEqual(["complete", "active", "waiting", "waiting"], [stage["status"] for stage in summary])
+
+    def test_studio_next_stage_keeps_token_compilation_in_direction(self):
+        journey = {"stages": [
+            {"id": "research", "status": "skipped"},
+            {"id": "product", "status": "complete"},
+            {"id": "design", "status": "complete"},
+            {"id": "build", "status": "waiting"},
+            {"id": "verify", "status": "waiting"},
+            {"id": "review", "status": "waiting"},
+        ], "next": {"title": "Compile the approved direction", "action": "./agentic tokens build"}}
+        summary = project_handoff.studio_summary(journey)
+        self.assertEqual("direction", project_handoff.studio_next_stage(journey))
+        self.assertEqual(["complete", "active", "waiting", "waiting"], [stage["status"] for stage in summary])
+
+    def test_fully_complete_studio_retains_completion_and_points_to_proof(self):
+        journey = {"stages": [
+            {"id": "research", "status": "complete"},
+            {"id": "product", "status": "complete"},
+            {"id": "design", "status": "complete"},
+            {"id": "build", "status": "complete"},
+            {"id": "verify", "status": "complete"},
+            {"id": "review", "status": "complete"},
+        ], "next": {"title": "Start the next reviewed change", "action": "./agentic next"}}
+        summary = project_handoff.studio_summary(journey)
+        self.assertEqual("proof", project_handoff.studio_next_stage(journey))
+        self.assertEqual(["complete", "complete", "complete", "complete"], [stage["status"] for stage in summary])
 
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
