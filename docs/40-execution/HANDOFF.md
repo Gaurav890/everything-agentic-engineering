@@ -61,8 +61,7 @@ deployment, or merge is implied.
 
 ## Exact next action
 
-Validate the T-051 evidence bundle, move the task to review, and ask the product
-owner to inspect draft PR #82. Only an
-explicit `T-051 approved` message may finalize its task state; merge remains a
-separate owner action. The five-person newcomer pilot remains a separate
-human-run launch gate.
+The product owner inspects draft PR #82, its running-product evidence, and its
+independent reviews. Request changes when needed, or record explicit task
+approval after accepting the result. Approval does not authorize merge.
+The five-person newcomer pilot remains a separate human-run launch gate.
