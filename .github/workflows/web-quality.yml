@@ -75,10 +75,10 @@ jobs:
         run: |
           ONBOARDING_ROOT="$(mktemp -d "$RUNNER_TEMP/eae-onboarding.XXXXXX")"
           ./agentic setup create --name "First Project" \
-            --destination "$ONBOARDING_ROOT/project" --preset web \
+            --destination "$ONBOARDING_ROOT/project" --preset web-research \
             --archetype agentic-product --audience "People comparing purchase dates" \
             --promise "Understand the tradeoff before deciding." \
-            --first-outcome "Compare two purchase dates" --assistant manual --research --yes
+            --first-outcome "Compare two purchase dates" --assistant manual --yes
           mkdir -p "$ONBOARDING_ROOT/project/apps/web/app/concepts/purchase-path"
           cp tests/fixtures/onboarding/purchase-path.tsx "$ONBOARDING_ROOT/project/apps/web/app/concepts/purchase-path/page.tsx"
           cp tests/fixtures/onboarding/purchase-path.json "$ONBOARDING_ROOT/project/purchase-path.json"
