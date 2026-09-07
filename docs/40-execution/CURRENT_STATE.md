@@ -76,9 +76,17 @@ It does not install tools, alter task state, or infer approval or merge.
 
 The generated web Studio now presents four user-facing stages—Shape,
 Direction, Build, and Proof—plus the saved product idea, current decision, and
-one consistent start command. The underlying six-stage evidence model remains
-available through `journey`; the visual simplification does not weaken approval
-or verification boundaries.
+one consistent start command. Its visible state and copied handoff come from
+the canonical six-stage journey rather than UI-local inference. Token
+compilation remains Direction, implementation remains Build, and evidence or
+review remains Proof. Progress state is exposed visually and to assistive
+technology. The detailed model remains available through `journey`; the visual
+simplification does not weaken approval or verification boundaries.
+
+Opening the Studio performs bounded read-only inspection through a canonical,
+project-contained, non-symlinked script with pinned executables and a closed
+environment. Generator input containing terminal control characters fails
+before a plan is displayed.
 
 `verify full` checks repository contracts and available package checks;
 `verify web` additionally requires tools and runs build, interaction, and

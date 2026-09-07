@@ -45,14 +45,14 @@ or weakening design, evidence, review, and human approval boundaries.
 
 ## Evidence and limits
 
-T-051 focused Python tests and quick verification pass. Browser evidence,
-clean-checkout release smoke, full verification, and independent reviews are
-still pending. See `docs/50-evals/evidence/T-050/` for the prior journey checks
-and limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
-deterministic evaluator has synthetic regression coverage; that coverage is not
-a participant result. Product/design, security, and integration reviews pass on
-the same implementation commit, and human task approval is recorded. The
-fresh-project page was inspected at desktop and 390px, but a live
+T-051 has 95 focused Python tests, 11 web unit tests, clean-checkout release
+smoke, full repository verification, and a fresh research-enabled generated
+project production/browser/accessibility pass. Product/design, security, and
+integration reviews pass on reviewed implementation commits; the final
+cross-profile integration head is `9114f3f`. Results are recorded in
+`docs/50-evals/evidence/T-051/`. The deterministic evaluator has synthetic
+regression coverage; that coverage is not a participant result. The
+fresh-project page was checked across desktop and mobile, but a live
 assistant-generated candidate set, native sign-in, and newcomer sessions have
 still not been measured through the pilot.
 
@@ -61,8 +61,8 @@ deployment, or merge is implied.
 
 ## Exact next action
 
-Commit the T-051 implementation checkpoint, run clean-checkout release smoke,
-generate a fresh custom web project, inspect the Studio at desktop and mobile,
-run its browser/accessibility checks, then obtain independent product, design,
-security, and integration reviews before moving the task to human review. The
-five-person newcomer pilot remains a separate human-run launch gate.
+Validate the T-051 evidence bundle, move the task to review, and ask the product
+owner to inspect draft PR #82. Only an
+explicit `T-051 approved` message may finalize its task state; merge remains a
+separate owner action. The five-person newcomer pilot remains a separate
+human-run launch gate.

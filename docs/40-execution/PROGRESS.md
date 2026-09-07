@@ -1364,6 +1364,33 @@ feature-specific baseline paths, and post-merge guidance. No application UI or
 approved design changed. Human approval, merge, deployment, public hosting,
 production readiness, and real-user pilot results are not implied.
 
+### 2026-09-07 — T-051
+
+**Requirements:** FR-001, FR-003, FR-005, FR-006, FR-007, FR-008
+
+**Acceptance:** AC-001, AC-004, AC-005, AC-006, AC-007, AC-008
+**Outcome:** IMPLEMENTED; INDEPENDENT REVIEW PASSING; HUMAN REVIEW PENDING
+
+Made `./agentic start` the one public create-or-resume doorway. The guided
+Studio now asks for product intent and first outcome before route/destination
+mechanics, persists an editable inferred path, and gives every generated
+profile one resumable continuation. The web workspace presents Shape →
+Direction → Build → Proof from canonical journey state and copies the current
+research-aware handoff rather than a static instruction.
+
+The UI exposes progress status visually and accessibly, keeps token compilation
+in Direction, and gives review/proof precedence across web and mobile. Terminal
+control input fails before plan output. Read-only Studio inspection requires a
+canonical project-contained non-symlinked script, pinned executables, a closed
+environment, ignored stdin, and bounded execution.
+
+Ninety-five focused tests, 11 web unit tests, clean-checkout release smoke, all
+ten repository verification stages, and a fresh research-enabled generated
+project production/browser/accessibility pass are recorded under
+`docs/50-evals/evidence/T-051/`. Real newcomer outcomes, product-owner approval,
+merge, deployment, external activation, and production readiness remain
+separate.
+
 ### 2026-09-06 — T-050
 
 **Requirements:** FR-001, FR-003, FR-005, FR-006, FR-007
