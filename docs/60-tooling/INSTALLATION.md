@@ -31,7 +31,7 @@ To create a clean downstream project instead of adapting the starter in place,
 run the guided first-use path:
 
 ```bash
-./agentic setup create
+./agentic start
 ```
 
 The guide captures only the inputs that change the result, shows one plan, and

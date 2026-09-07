@@ -3,6 +3,7 @@ import {resolve} from "node:path";
 
 export type ProjectBrief = {
   name: string;
+  idea: string | null;
   audience: string;
   promise: string;
   first_outcome: string | null;
@@ -28,6 +29,8 @@ export type ProjectCandidate = {
   preview_path: string;
 };
 
+export type ProjectDesignStatus = "needs_approval" | "approved";
+
 function readProjectFile(filename: string): unknown {
   const directory = resolve(process.cwd(), "../../.agentic");
   const file = resolve(directory, filename);
@@ -47,7 +50,7 @@ export function getProjectBrief(): ProjectBrief | null {
   if (
     data.schema_version !== 1 ||
     !["name", "audience", "promise"].every(key => typeof data[key] === "string" && String(data[key]).trim()) ||
-    !["first_outcome", "design_preferences"].every(key => data[key] == null || typeof data[key] === "string") ||
+    !["idea", "first_outcome", "design_preferences"].every(key => data[key] == null || typeof data[key] === "string") ||
     !["design_mode", "assistant", "status"].every(key => typeof data[key] === "string") ||
     !["custom", "existing-brand", "reference"].includes(String(data.design_mode)) ||
     !["choose", "claude", "codex", "manual"].includes(String(data.assistant)) ||
@@ -58,7 +61,7 @@ export function getProjectBrief(): ProjectBrief | null {
   ) throw new Error("The project brief is invalid. Run ./agentic start for guidance.");
   // Only public product intent goes to the page, not client paths or credentials.
   return Object.fromEntries([
-    "name", "audience", "promise", "first_outcome", "design_preferences",
+    "name", "idea", "audience", "promise", "first_outcome", "design_preferences",
     "design_mode", "assistant", "status",
   ].map(key => [key, data[key]])) as ProjectBrief;
 }
@@ -80,4 +83,12 @@ export function getProjectCandidates(): ProjectCandidate[] {
     }
     return {...Object.fromEntries(keys.map(key => [key, candidate[key]])), states: candidate.states} as ProjectCandidate;
   });
+}
+
+export function getProjectDesignStatus(): ProjectDesignStatus {
+  const data = readProjectFile("design.json") as Record<string, unknown> | null;
+  if (!data || !["needs_approval", "approved"].includes(String(data.status))) {
+    throw new Error("The project design state is invalid. Run ./agentic design check.");
+  }
+  return data.status as ProjectDesignStatus;
 }

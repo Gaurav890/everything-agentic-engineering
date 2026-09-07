@@ -14,6 +14,18 @@ import project_handoff
 
 
 class ProjectHandoffTests(unittest.TestCase):
+    def test_studio_summary_collapses_engineering_stages_into_four_user_steps(self):
+        summary = project_handoff.studio_summary({"stages": [
+            {"id": "research", "status": "skipped"},
+            {"id": "product", "status": "complete"},
+            {"id": "design", "status": "active"},
+            {"id": "build", "status": "waiting"},
+            {"id": "verify", "status": "waiting"},
+            {"id": "review", "status": "waiting"},
+        ]})
+        self.assertEqual(["Shape", "Direction", "Build", "Proof"], [stage["label"] for stage in summary])
+        self.assertEqual(["complete", "active", "waiting", "waiting"], [stage["status"] for stage in summary])
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

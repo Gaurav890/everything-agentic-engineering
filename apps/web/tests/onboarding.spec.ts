@@ -11,7 +11,8 @@ test("shows the saved project and one executable continuation", async ({page}) =
   await expect(page.getByRole("heading", {level: 1})).toContainText(brief!.name);
   await expect(page.locator("aside")).toContainText(brief!.promise);
   await expect(page.locator("aside")).toContainText(brief!.audience);
-  await expect(page.getByText("./agentic design sprint", {exact: true})).toBeVisible();
+  await expect(page.getByText("./agentic start", {exact: true})).toBeVisible();
+  await expect(page.getByRole("list", {name: "Project progress"})).toBeVisible();
   await expect(page.getByText("Your product directions are ready to be made.")).toHaveCount(getProjectCandidates().length ? 0 : 1);
   await expect(page.getByRole("button", {name: "Editorial Signal"})).toHaveCount(0);
   await expect(page.getByText("No API key is collected here", {exact: false})).toBeVisible();
@@ -20,8 +21,8 @@ test("shows the saved project and one executable continuation", async ({page}) =
 test("copy succeeds or explains the manual fallback without launching anything", async ({page}) => {
   await page.goto("/");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async (value: string) => sessionStorage.setItem("copied", value)}}));
-  await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
-  expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic design sprint");
+  await page.getByRole("button", {name: "Copy start command", exact: true}).click();
+  expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic start");
   await expect(page.getByRole("status").first()).toContainText("Copied");
   const manualHandoff = page.locator("details").filter({hasText: "Already using an app or editor?"});
   if (!(await manualHandoff.getAttribute("open")) && !(await page.locator("pre").isVisible())) {
@@ -36,7 +37,7 @@ test("copy succeeds or explains the manual fallback without launching anything",
 test("copy shows a pending state and prevents duplicate actions", async ({page}, testInfo) => {
   await page.goto("/");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: () => new Promise<void>(() => {})}}));
-  await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
+  await page.getByRole("button", {name: "Copy start command", exact: true}).click();
   await expect(page.getByRole("button", {name: "Copying…", exact: true})).toBeDisabled();
   await expect(page.getByRole("status").first()).toHaveText("Copying…");
   await page.screenshot({path: testInfo.outputPath("copy-pending.png")});

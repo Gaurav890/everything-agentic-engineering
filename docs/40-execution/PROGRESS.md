@@ -1,5 +1,30 @@
 # Progress log
 
+### 2026-09-07 — T-051
+
+**Requirements:** FR-001, FR-003, FR-005, FR-006, FR-007, FR-008
+**Acceptance:** AC-001, AC-004, AC-005, AC-006, AC-007, AC-008
+**Outcome:** IMPLEMENTED — browser evidence and independent review pending
+
+Made `./agentic start` the public entry for both the starter and generated
+projects. The guided interview now captures the product idea, audience, and
+outcome before recommending an editable route with plain-language labels.
+Research is presented as an evidence/pace decision, original/existing/reference
+design choices use human language, “recommend for me” remains valid, client
+selection is deferred, and advanced route/file/capability details stay opt-in.
+
+Generated custom web projects persist the idea and show a four-stage
+Shape → Direction → Build → Proof Studio with the current decision and one
+consistent start command. The detailed research/product/design/build/verify/
+review model, specialist commands, evidence gates, human approvals, and safe
+manual client path remain intact.
+
+Focused Python tests and the ten-stage quick repository verification pass.
+Clean-checkout release smoke, generated-project browser evidence, full
+verification, and independent reviews remain to be recorded. No participant
+result, production readiness, runnable native app, external installation,
+credential flow, deployment, approval, or merge is claimed.
+
 ### 2026-09-06 — T-049
 
 **Requirements:** FR-003, FR-005, FR-006

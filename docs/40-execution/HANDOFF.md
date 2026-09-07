@@ -1,11 +1,12 @@
 # Handoff
 
-Last updated: 2026-09-06
+Last updated: 2026-09-07
 
 ## Current goal
 
-Validate whether newcomers can understand the promise, create a project, and
-reach one useful verified product slice without maintainer intervention.
+Complete T-051 by proving that one `./agentic start` doorway creates and resumes
+the Project Studio across supported profiles without hiding capability limits
+or weakening design, evidence, review, and human approval boundaries.
 
 ## Implemented
 
@@ -37,11 +38,17 @@ reach one useful verified product slice without maintainer intervention.
 - Consent-based local P1–P5 pilot packets, closed anonymous scorecards, strict
   privacy validation, aggregate thresholds, repeated-blocker detection, and
   read-only summary output unless a new report path is explicitly confirmed.
+- One public `start` doorway in the starter and generated projects, an
+  outcome-first interview, editable plain-language route recommendation,
+  provider/client progressive disclosure, persisted product idea, and a
+  Shape → Direction → Build → Proof web Studio.
 
 ## Evidence and limits
 
-See `docs/50-evals/evidence/T-050/` for current implementation checks and
-limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
+T-051 focused Python tests and quick verification pass. Browser evidence,
+clean-checkout release smoke, full verification, and independent reviews are
+still pending. See `docs/50-evals/evidence/T-050/` for the prior journey checks
+and limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
 deterministic evaluator has synthetic regression coverage; that coverage is not
 a participant result. Product/design, security, and integration reviews pass on
 the same implementation commit, and human task approval is recorded. The
@@ -54,9 +61,8 @@ deployment, or merge is implied.
 
 ## Exact next action
 
-Run `./agentic pilot plan`, recruit five consenting people who did not build the
-repository, and give each only the public README. Their route should exercise
-the public promise, Perplexity choice or skip path, generated research contract,
-handoff, and `journey` output. Use the aggregate result to choose the next small
-fix; do not claim measured self-service or design-quality success from tests
-alone.
+Commit the T-051 implementation checkpoint, run clean-checkout release smoke,
+generate a fresh custom web project, inspect the Studio at desktop and mobile,
+run its browser/accessibility checks, then obtain independent product, design,
+security, and integration reviews before moving the task to human review. The
+five-person newcomer pilot remains a separate human-run launch gate.

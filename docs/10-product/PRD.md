@@ -124,6 +124,18 @@ show research, product, design, build, verification, review, their current
 states, and the exact next action. Creation never collects credentials, installs
 or starts an MCP server, or performs network research.
 
+### FR-008 — One-command guided Project Studio
+
+`./agentic start` must be the public entry point for both creating a new project
+and resuming a generated one. The first interaction asks for the product,
+audience, and desired outcome in plain language, then presents an editable route
+recommendation. Internal profiles, task IDs, skills, providers, and evidence
+machinery stay behind progressive disclosure. The generated Studio must show a
+profile-relevant product → direction → build → proof journey, preserve settled
+answers, disclose unresolved decisions and capability limits, and expose one
+clear continuation without conflating research, design, token, implementation,
+evaluation, or human approval authority.
+
 ## 8. Non-functional requirements
 
 ### NFR-001 — Safety
@@ -163,6 +175,9 @@ idempotency, concurrency, observability, and threat-model review.
 - broad self-service claims remain blocked until five consented anonymous
   newcomer sessions satisfy the published pilot gate;
 - final evaluator is separate from the builder and a human approves merge.
+- the same `./agentic start` entry point creates or resumes a project, and its
+  default first interaction contains no internal profile, task, skill, MCP, or
+  evidence terminology;
 
 ## 11. Acceptance criteria
 

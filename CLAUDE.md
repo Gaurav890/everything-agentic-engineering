@@ -161,7 +161,8 @@ Never install, remove, or delete resources merely because a profile changed.
 Use `profile-doctor.sh` to detect drift and require explicit approval for
 external installation or destructive cleanup.
 
-For a new downstream product, prefer `./agentic setup create` over pruning the
+For a new downstream product, prefer the public `./agentic start` Studio over
+pruning the
 starter in place. The generator must write only to a previously absent
 destination outside the source checkout, copy reviewed tracked assets, reset
 starter-specific execution history, and validate the result. It must never

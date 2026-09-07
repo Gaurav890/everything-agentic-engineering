@@ -5,6 +5,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -141,6 +142,56 @@ class AgenticCliTests(unittest.TestCase):
         )
         self.assertEqual(0, completed.returncode, completed.stderr)
         self.assertIn("Everything Agentic Engineering", completed.stdout)
+
+    def test_start_is_the_outcome_first_starter_entrypoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "not-created"
+            completed = subprocess.run(
+                [str(ROOT / "agentic"), "start"],
+                cwd=ROOT,
+                input="\n".join([
+                    "Flow Test",
+                    str(destination),
+                    "A web product that helps teams prepare better proposals",
+                    "Independent design teams",
+                    "Turn rough requirements into a confident proposal",
+                    "",
+                    "",
+                    "2",
+                    "1",
+                    "recommend for me",
+                    "n",
+                    "",
+                ]),
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        self.assertIn("PROJECT STUDIO", completed.stdout)
+        self.assertIn("What are you creating? Describe it in one sentence.", completed.stdout)
+        self.assertIn("Recommended starting path", completed.stdout)
+        self.assertIn("A web product people use", completed.stdout)
+        self.assertIn("No project created.", completed.stdout)
+        self.assertNotIn("What are you building?", completed.stdout)
+        self.assertNotIn("Resolved profiles:", completed.stdout)
+        self.assertNotIn("Where will you build?", completed.stdout)
+
+    def test_starter_start_help_and_json_are_read_only(self) -> None:
+        help_result = subprocess.run(
+            [str(ROOT / "agentic"), "start", "--help"], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(0, help_result.returncode, help_result.stderr)
+        self.assertIn("guided Project Studio", help_result.stdout)
+        json_result = subprocess.run(
+            [str(ROOT / "agentic"), "start", "--json"], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(0, json_result.returncode, json_result.stderr)
+        payload = json.loads(json_result.stdout)
+        self.assertEqual("create", payload["mode"])
+        self.assertFalse(payload["mutation_performed"])
 
 
 if __name__ == "__main__":

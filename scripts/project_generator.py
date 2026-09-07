@@ -170,6 +170,7 @@ class GenerationPlan:
     source_commit: str
     source_dirty: bool
     archetype: str | None
+    idea: str | None
     audience: str | None
     promise: str | None
     visual_character: str | None
@@ -189,6 +190,7 @@ class GenerationPlan:
             "project": {"name": self.project_name, "slug": self.slug},
             "experience": {
                 "archetype": self.archetype,
+                "idea": self.idea,
                 "audience": self.audience,
                 "promise": self.promise,
                 "visual_character": self.visual_character,
@@ -430,6 +432,7 @@ def build_plan(
     destination: str,
     selected_profiles: list[str],
     archetype: str | None = None,
+    idea: str | None = None,
     audience: str | None = None,
     promise: str | None = None,
     visual_character: str | None = None,
@@ -451,6 +454,7 @@ def build_plan(
         raise GenerationError("Unknown coding client or design mode")
     design_preferences = clean_text(design_preferences, "design preferences", maximum=1000)
     first_outcome = clean_text(first_outcome, "first outcome", maximum=500)
+    idea = clean_text(idea, "product idea", maximum=500)
     target = resolve_destination(destination, source_root, cwd)
     config = load_config(source_root)
     resolution = profile_engine.resolve(selected_profiles)
@@ -533,6 +537,7 @@ def build_plan(
         source_commit=commit,
         source_dirty=dirty,
         archetype=resolved_archetype,
+        idea=idea,
         audience=resolved_audience,
         promise=resolved_promise,
         visual_character=resolved_character,
@@ -656,6 +661,7 @@ def generated_experience(plan: GenerationPlan) -> dict[str, Any]:
         "schema_version": 1,
         "name": plan.project_name,
         "archetype": plan.archetype,
+        "idea": plan.idea,
         "audience": plan.audience,
         "promise": plan.promise,
         "visual_character": plan.visual_character,
@@ -1036,14 +1042,6 @@ review, visual candidates, and continuation. Run `./agentic next` to resume.
 
 
 def first_continuation_command(plan: GenerationPlan) -> str:
-    if "research-enabled" in plan.resolved_profiles:
-        return "./agentic start"
-    if (
-        "web-next" in plan.resolved_profiles
-        and "design-critical" in plan.resolved_profiles
-        and plan.design_mode != "reference"
-    ):
-        return "./agentic design sprint"
     return "./agentic start"
 
 
@@ -1103,9 +1101,16 @@ def generated_readme(plan: GenerationPlan) -> str:
         exists_guidance = "A product and engineering planning scaffold with no application or design surface."
         preview_guidance = "Confirm the product outcome and first bounded task before selecting an application profile."
         verification_guidance = "Use the repository contract check; add platform-specific checks only after an application surface is approved."
+    design_path_label = {
+        "custom": "explore original directions",
+        "existing-brand": "use the existing brand",
+        "reference": "start from a chosen reference",
+    }[plan.design_mode]
     return f"""# {plan.project_name}
 
 {brief["promise"]}
+
+Idea: {brief["idea"] or "Confirm the product concept during the guided continuation."}
 
 For: {brief["audience"]}
 
@@ -1140,7 +1145,7 @@ decisions.
 
 Your first outcome: {brief["first_outcome"] or "Choose this with your assistant."}
 
-Design path: **{plan.design_mode}**.
+Design path: **{design_path_label}**.
 Preferences: {plan.design_preferences or "Discuss or delegate recommendations; no preset is assumed."}
 
 ## What exists today
@@ -1684,7 +1689,6 @@ def materialize(plan: GenerationPlan) -> dict[str, Any]:
 
 
 def print_plan(plan: GenerationPlan) -> None:
-    report = plan.public_report()
     print("Downstream project generation plan")
     print(f"  Project:     {plan.project_name} ({plan.slug})")
     print(f"  Destination: {plan.destination}")
@@ -1692,31 +1696,46 @@ def print_plan(plan: GenerationPlan) -> None:
     if plan.source_dirty:
         print("  Warning:     source working tree has local changes")
     if plan.archetype:
-        print("\nExperience brief:")
-        print(f"  Archetype:   {plan.archetype}")
+        print("\nYour starting plan:")
+        path_label = {
+            "product": "Web product",
+            "agentic-product": "Human-guided automated product",
+            "enterprise-workflow": "Team workflow with roles and approvals",
+            "portfolio": "Portfolio or authored site",
+        }[plan.archetype]
+        print(f"  Path:        {path_label}")
+        if plan.idea:
+            print(f"  Idea:        {plan.idea}")
         print(f"  Audience:    {plan.audience}")
-        print(f"  Promise:     {plan.promise}")
+        print(f"  Outcome:     {plan.promise}")
         if plan.design_mode == "reference":
             print(f"  Reference character: {plan.visual_character}")
+    elif "mobile-expo" in plan.resolved_profiles:
+        print("\nYour starting plan:")
+        print("  Path:        Native mobile planning and design")
+        if plan.idea:
+            print(f"  Idea:        {plan.idea}")
+        print(f"  Audience:    {plan.audience}")
+        print(f"  Outcome:     {plan.promise}")
+        print("  Boundary:    Native implementation is not included yet")
+    else:
+        print("\nYour starting plan:")
+        print("  Path:        Product and engineering foundations")
+        if plan.idea:
+            print(f"  Idea:        {plan.idea}")
     if plan.archetype == "enterprise-workflow":
         print("\nEnterprise boundary:")
         print(f"  Object:      {plan.business_object}")
         print(f"  Tenancy:     {plan.tenant_model}")
         print(f"  Approval:    {plan.approval_model}")
         print(f"  Sensitivity: {plan.data_sensitivity}")
-    print("\nResolved profiles:")
-    for profile in plan.resolved_profiles:
-        print(f"  + {profile}")
     research = "Perplexity-first current research" if "research-enabled" in set(plan.resolved_profiles) else "not selected"
-    print(f"\nResearch: {research}")
+    print(f"\nResearch: {'shape the first pass' if research != 'not selected' else research}")
     if "research-enabled" in set(plan.resolved_profiles):
-        print("  Perplexity is preferred for broad discovery; primary-source/manual fallback remains valid.")
-        print("  No key is collected and no MCP server is installed, configured, or started by creation.")
-    print(f"Design: {plan.design_mode} | Continue with: {plan.assistant}")
-    print(f"Copy: {report['copy']['tracked_file_count']} tracked files; inactive profile paths excluded.")
-    print("Use --dry-run --json for the complete file/profile/setup plan.")
-    if plan.external_setup:
-        print("Optional capabilities remain unconfigured: " + ", ".join(plan.external_setup))
+        print("  An available reviewed route or disclosed manual fallback will be used later.")
+    design_label = {"custom": "Explore original directions", "existing-brand": "Use the existing brand", "reference": "Start from a chosen reference"}[plan.design_mode]
+    print(f"Design: {design_label}")
+    print("Advanced route, file, and capability details are available with --dry-run --json.")
     print("\nSafety contract:")
     print("  - The source checkout is not modified or pruned.")
     print("  - The destination must not already exist and must be outside the source.")
@@ -1755,40 +1774,84 @@ def prompt_confirm(question: str) -> bool:
     return input(f"{question} [y/N] ").strip().lower() in {"y", "yes"}
 
 
+FRIENDLY_ROUTES = (
+    ("web-product", "A web product people use"),
+    ("agentic-product", "A product where people direct or review automated work"),
+    ("enterprise-workflow", "A company workflow with roles and approvals"),
+    ("portfolio", "A portfolio, publication, or authored site"),
+    ("mobile", "A native mobile app"),
+    ("core", "Planning and engineering foundations only"),
+)
+
+
+def recommend_kind(description: str) -> str:
+    """Recommend a route from product language without making it authoritative."""
+    value = description.lower()
+    if any(term in value for term in ("ios", "android", "mobile app", "react native", "expo")):
+        return "mobile"
+    if any(term in value for term in ("portfolio", "case study", "personal site", "publication")):
+        return "portfolio"
+    if any(term in value for term in ("approval", "compliance", "tenant", "internal workflow", "enterprise")):
+        return "enterprise-workflow"
+    if any(term in value for term in ("agent", "copilot", "automation", "autonomous", "assistant")):
+        return "agentic-product"
+    if any(term in value for term in ("library", "harness", "sdk", "framework", "planning only")):
+        return "core"
+    return "web-product"
+
+
+def prompt_route(recommended: str) -> str:
+    labels = dict(FRIENDLY_ROUTES)
+    ordered = (recommended, *(route for route, _ in FRIENDLY_ROUTES if route != recommended))
+    print("\nRecommended starting path")
+    print(f"  {labels[recommended]}")
+    print("Press Enter to use it, or choose a different path:")
+    for index, route in enumerate(ordered, start=1):
+        marker = " (recommended)" if route == recommended else ""
+        print(f"  {index}. {labels[route]}{marker}")
+    while True:
+        answer = input("> ").strip().lower()
+        if not answer:
+            return recommended
+        if answer.isdigit() and 1 <= int(answer) <= len(ordered):
+            return ordered[int(answer) - 1]
+        if answer in labels:
+            return answer
+        print(f"Choose 1-{len(ordered)}, press Enter, or type one of: {', '.join(labels)}")
+
+
 def interactive_answers() -> argparse.Namespace:
-    print("\nStart with your product, not a preset.")
-    print("Capture the essentials here; continue with your chosen assistant.\n")
+    print("\nPROJECT STUDIO")
+    print("Describe the outcome first. The engineering route stays editable and out of your way.\n")
     name = prompt_text("What is the project called?", "My Product", maximum=80)
     destination = prompt_text("Where should it live?", str(ROOT.parent / slugify(name)), maximum=500)
-    kind = prompt_choice(
-        "What are you building?",
-        ("product", "agentic-product", "enterprise-workflow", "portfolio", "mobile", "core"),
-        "product",
-    )
-    web = kind in WEB_ARCHETYPES
+    idea = prompt_text("What are you creating? Describe it in one sentence.", "A useful digital product", maximum=500)
     audience = prompt_text("Who is it for?", "Discuss with me", maximum=120)
     promise = prompt_text("What should it help them achieve?", "Discuss with me", maximum=120)
-    first_outcome = prompt_text("First useful action? Leave blank to decide together.", "", maximum=500) or None
+    route = prompt_route(recommend_kind(" ".join((idea, audience, promise))))
+    kind = "product" if route == "web-product" else route
+    web = kind in WEB_ARCHETYPES
+    first_outcome = prompt_text("What is the first useful result they should reach? Leave blank to decide together.", "", maximum=500) or None
     research = False
     if kind != "core":
-        print("\nPerplexity can ground the first pass in current market, user, and competitor evidence.")
-        print("Choosing it creates a research contract only; no key is collected and no server is enabled.")
-        research = prompt_choice(
-            "Use Perplexity-first current research before product and design decisions?",
-            ("perplexity", "skip"), "perplexity",
-        ) == "perplexity"
-    mode = prompt_choice(
-        "How should the design begin? Custom is tailored; reference is a deliberate shortcut.",
-        project_brief.DESIGN_MODES, "custom",
-    ) if web or kind == "mobile" else "custom"
+        print("\nShould current market, user, and competitor evidence shape the first pass?")
+        print("Research uses an available reviewed route or a disclosed manual fallback; no key is collected here.")
+        research = prompt_choice("Choose a pace:", ("research first", "move fast"), "research first") == "research first"
+    design_answer = prompt_choice(
+        "How should we find the visual direction?",
+        ("explore original directions", "use my existing brand", "start from a reference I choose"),
+        "explore original directions",
+    ) if web or kind == "mobile" else "explore original directions"
+    mode = {
+        "explore original directions": "custom",
+        "use my existing brand": "existing-brand",
+        "start from a reference I choose": "reference",
+    }[design_answer]
     preferences = (prompt_text(
-        "Any brand colors, references, styles to avoid, or motion preferences? Leave blank to explore together.",
+        "Any brand, color, reference, accessibility, or motion constraints? Say 'recommend for me' or leave blank.",
         "", maximum=1000,
     ) or None) if web or kind == "mobile" else None
-    assistant = prompt_choice(
-        "Where will you build? Use an existing account; this does not sign in or install anything.",
-        ("claude", "codex", "manual", "choose"), "choose",
-    )
+    assistant = "choose"
     enterprise = kind == "enterprise-workflow"
     business_object = prompt_text("What is the business object?", "access request", maximum=80) if enterprise else None
     tenant_model = prompt_choice("How is data separated?", TENANT_MODELS, "multi-tenant") if enterprise else None
@@ -1797,7 +1860,7 @@ def interactive_answers() -> argparse.Namespace:
     return argparse.Namespace(
         name=name, destination=destination, preset=None, web=web, mobile=kind == "mobile",
         design=web or kind == "mobile", research=research, agentic=kind == "agentic-product",
-        backend="none", archetype=kind if web else None, audience=audience, promise=promise,
+        backend="none", archetype=kind if web else None, idea=idea, audience=audience, promise=promise,
         visual_character="precise" if web else None, business_object=business_object,
         tenant_model=tenant_model, approval_model=approval_model, data_sensitivity=data_sensitivity,
         assistant=assistant, design_mode=mode, design_preferences=preferences, first_outcome=first_outcome,
@@ -1817,6 +1880,7 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--agentic", action=argparse.BooleanOptionalAction, default=False)
     value.add_argument("--backend", default="none")
     value.add_argument("--archetype", choices=WEB_ARCHETYPES)
+    value.add_argument("--idea")
     value.add_argument("--audience")
     value.add_argument("--promise")
     value.add_argument("--visual-character", choices=VISUAL_CHARACTERS)
@@ -1844,6 +1908,7 @@ def run(args: argparse.Namespace) -> int:
         destination=args.destination,
         selected_profiles=selected,
         archetype=args.archetype,
+        idea=args.idea,
         audience=args.audience,
         promise=args.promise,
         visual_character=args.visual_character,

@@ -44,13 +44,14 @@ ENTERPRISE_PROJECT="$TEMP_ROOT/smoke-enterprise"
 printf '%s\n' \
   "Guided Signal" \
   "$GUIDED_PROJECT" \
-  "2" \
+  "A product where teams review consequential automated choices" \
   "people comparing choices" \
   "Make a confident decision." \
+  "" \
   "Compare the first two choices." \
   "" \
   "" \
-  "manual" \
+  "recommend for me" \
   "y" | ./agentic setup create >/dev/null
 test -f "$GUIDED_PROJECT/.agentic/experience.json"
 GUIDED_NEXT="$("$GUIDED_PROJECT/agentic" next)"

@@ -15,6 +15,16 @@
 .header a { text-underline-offset: 6px; padding: 12px 0; }
 .wordmark { font-weight: 700; }
 .wordmark span { color: var(--muted); font-weight: 400; }
+.progress { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 26px 0 0; list-style: none; }
+.progress li { position: relative; display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 16px 18px 18px 0; border-top: 1px solid var(--line); color: var(--muted); }
+.progress li::before { position: absolute; top: -2px; left: 0; width: 0; height: 3px; background: var(--ink); content: ""; transition: width 240ms ease; }
+.progress li[data-status="complete"]::before, .progress li[data-status="active"]::before { width: 100%; }
+.progress li[data-status="active"] { color: var(--ink); }
+.progress li[data-status="active"]::before { background: var(--eae-color-action-primary-default, var(--ink)); }
+.progress li > span { padding-top: 2px; font: 700 10px ui-monospace, monospace; }
+.progress strong, .progress small { display: block; }
+.progress strong { color: inherit; font-size: 13px; }
+.progress small { margin-top: 3px; font-size: 10px; line-height: 1.35; }
 .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 100px); padding: clamp(40px, 6vw, 88px) 0; align-items: start; }
 .eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .13em; margin: 0 0 22px; }
 .hero h1 { margin: 0; font-size: clamp(46px, 6.2vw, 100px); line-height: 1; letter-spacing: -.06em; font-weight: 500; }
@@ -67,6 +77,8 @@
 .journey p { font-size: 13px; color: var(--muted); max-width: 260px; }
 .footer { border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); }
 @media (max-width: 760px) {
+  .progress { grid-template-columns: repeat(2, 1fr); }
+  .progress li { min-height: 76px; }
   .hero, .continue, .sectionHeading { grid-template-columns: 1fr; gap: 36px; }
   .header { align-items: start; font-size: 12px; }
   .wordmark span { display: block; }
@@ -78,4 +90,7 @@
   .journey li p { grid-column: 2; margin-top: 0; max-width: none; }
   .footer { flex-direction: column; align-items: start; gap: 8px; }
 }
-@media (prefers-reduced-motion: reduce) { .studio { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .studio { scroll-behavior: auto; }
+  .progress li::before { transition: none; }
+}

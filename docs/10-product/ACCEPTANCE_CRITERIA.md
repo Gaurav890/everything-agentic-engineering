@@ -113,3 +113,28 @@ research document/profile/state assertions, malformed-state and copied-text
 regressions, unbound-ledger/brief regressions, handoff prompt tests, text/JSON journey
 tests, secret and MCP non-activation checks, generated-project verification,
 and independent product/security review.
+
+## AC-008 — The Project Studio is one guided, resumable experience
+
+**Linked requirements:** FR-001, FR-003, FR-005, FR-006, FR-008, NFR-001
+
+**Given** a newcomer starts in the starter checkout, **when** they run
+`./agentic start`, **then** the first questions are the product, audience, and
+desired outcome; a plain-language route is recommended and can be changed; and
+creation retains one explicit confirmation without exposing internal profile,
+task, skill, MCP, or evidence terminology by default.
+
+**Given** a generated project at any supported stage, **when** its owner runs
+the same command or opens the local Studio, **then** settled answers remain
+settled, only relevant product → direction → build → proof stages are shown,
+the current decision and one next action are prominent, and mobile/core/web/
+enterprise capability limits are stated truthfully. Existing non-interactive
+generation remains compatible. No installation, credential collection,
+external activation, production mutation, approval, deployment, or merge is
+performed implicitly.
+
+**Evidence required:** starter/generated start-routing tests, interactive-intake
+transcript assertions, all-profile generation tests, Studio component and
+Playwright accessibility/responsive evidence, release smoke, independent
+product/design/security/integration review, and full verification. Synthetic
+tests do not replace the five-person newcomer pilot.

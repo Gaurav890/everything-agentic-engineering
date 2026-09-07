@@ -122,7 +122,7 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
     if not generated_path.is_file():
         if task_id:
             return task_action(root, task_id)
-        return "Create your first project", "./agentic setup create"
+        return "Describe the product you want to create", "./agentic start"
 
     profiles = active_profiles(root)
     metadata = load_object(generated_path)
@@ -143,7 +143,7 @@ def next_action(root: Path = ROOT, task_id: str | None = None) -> tuple[str, str
                 and "design-critical" in profiles
                 and "web-next" in profiles
             ):
-                return "Turn the saved brief into live product directions", "./agentic design sprint"
+                return "Continue from the saved brief into live product directions", "./agentic start"
             return "Continue your product conversation; your answers are saved", "./agentic start"
     if task_id and "web-next" not in profiles:
         return selected_task_action
