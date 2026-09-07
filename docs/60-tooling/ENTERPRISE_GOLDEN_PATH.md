@@ -6,7 +6,7 @@ dashboard and not a production deployment.
 ## Start
 
 ```bash
-./agentic setup create
+./agentic start
 ```
 
 Choose `enterprise-workflow`. After the five core setup decisions, answer only:
@@ -76,7 +76,8 @@ production authorization.
 
 ## Build sequence
 
-Run `./agentic next` and follow one action at a time:
+Return through `./agentic start` and follow one action at a time. Use
+`./agentic next` only when you want the advanced task-level view:
 
 1. restore dependencies;
 2. compare the three directions in the running product;

@@ -87,6 +87,15 @@ class ProjectHandoffTests(unittest.TestCase):
         self.assertIn("For a terminal client: ./agentic start --assistant claude", output)
         self.assertNotIn("For a terminal client: ./agentic design sprint", output)
 
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_manual_custom_web_handoff_keeps_the_same_start_doorway(self, which):
+        self.brief.update(assistant="manual")
+        self.path.write_text(json.dumps(self.brief))
+        code, output = self.run_handoff()
+        self.assertEqual(0, code)
+        self.assertIn("For a terminal client: ./agentic start --assistant claude", output)
+        self.assertNotIn("For a terminal client: ./agentic design sprint", output)
+
     @mock.patch.object(project_handoff.subprocess, "run")
     @mock.patch.object(project_handoff.shutil, "which", return_value="/usr/local/bin/claude")
     def test_launch_requires_consent_and_uses_fixed_argv_and_cwd(self, which, run):

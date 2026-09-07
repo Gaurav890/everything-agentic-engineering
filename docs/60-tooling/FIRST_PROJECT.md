@@ -5,12 +5,14 @@ and repeat. The initial design lab is a reference, not your finished product.
 
 ## Start and resume
 
-From the starter, run `./agentic setup create`, then copy its final continuation
-command. A research-enabled project starts with `./agentic start`; a custom web
-project that skips research starts with `./agentic design sprint`. It prepares a
-profile-aware handoff in your chosen installed terminal
-client, or an instruction for your editor/app. Native sign-in stays in that
-client; no keys are collected here. Use `./agentic next` later to resume. See
+From the starter, run `./agentic start`, then copy its final continuation
+command. In the generated project, run `./agentic start` again. The same command
+reads the saved state and routes the next consequential stage—research,
+direction, build, or proof—without asking the newcomer to know the internal
+commands. It prepares a profile-aware handoff for the coding app or editor the
+user already chose to open. Native sign-in stays in that client; no keys are
+collected here. Use `./agentic start` to resume the guided Studio and
+`./agentic next` as an advanced task-level control. See
 [the complete handoff](PROJECT_ONBOARDING.md).
 
 Web prerequisites are Python 3.11+, Node.js 20.9+ (22 LTS is the tested baseline),

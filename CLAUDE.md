@@ -384,6 +384,7 @@ Agent confidence is not evidence.
 Use the registry-backed `./agentic` interface. Start with:
 
 - `./agentic --help`
+- `./agentic start` — create a project or resume its guided Project Studio
 - `./agentic commands` or `./agentic commands --json`
 - `./agentic verify quick`
 - `./agentic verify full`

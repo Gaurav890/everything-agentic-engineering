@@ -1037,7 +1037,8 @@ new feature. Obtain an independent critique.
 Neither a passing command nor this brief grants human approval or merge authority.
 
 See [the first-project guide](../60-tooling/FIRST_PROJECT.md) for version control,
-review, visual candidates, and continuation. Run `./agentic next` to resume.
+review, visual candidates, and continuation. Run `./agentic start` to resume the
+guided Studio; `./agentic next` remains the advanced task-level view.
 """
 
 

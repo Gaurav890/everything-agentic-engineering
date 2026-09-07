@@ -151,10 +151,8 @@ def run(args: argparse.Namespace, root: Path = ROOT) -> int:
         print(json.dumps(result, indent=2))
         return 0
     first_goal = (
-        "Research and shape the first product journey"
-        if result["research_enabled"]
-        else "Create the first live directions"
-        if "three live product-specific" in result["prompt"]
+        result["studio"]["next"]["title"]
+        if result["studio"]["next"]
         else "Shape the first product journey"
     )
     print(f"PROJECT STUDIO — {result['project']}")
@@ -170,15 +168,7 @@ def run(args: argparse.Namespace, root: Path = ROOT) -> int:
         result = handoff(root, selected)
     if result["client"] in {"manual", "choose"}:
         print("\nOpen this exact folder in your coding app or editor, then paste:\n\n" + result["prompt"])
-        terminal_command = (
-            "./agentic design sprint"
-            if not result["research_enabled"]
-            and "web-next" in result["profiles"]
-            and "design-critical" in result["profiles"]
-            and "three live product-specific" in result["prompt"]
-            else "./agentic start"
-        )
-        print(f"\nFor a terminal client: {terminal_command} --assistant claude (or codex).")
+        print("\nFor a terminal client: ./agentic start --assistant claude (or codex).")
         return 0
     if not result["available"]:
         print(f"\nThe {result['client']} terminal client is not on PATH. Nothing was installed.")

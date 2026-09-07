@@ -11,7 +11,7 @@ test("shows the saved project and one executable continuation", async ({page}) =
   await expect(page.getByRole("heading", {level: 1})).toContainText(brief!.name);
   await expect(page.locator("aside")).toContainText(brief!.promise);
   await expect(page.locator("aside")).toContainText(brief!.audience);
-  await expect(page.getByText("./agentic start", {exact: true})).toBeVisible();
+  await expect(page.locator("#continue").getByText("./agentic start", {exact: true})).toBeVisible();
   await expect(page.getByRole("list", {name: "Project progress"})).toBeVisible();
   await expect(page.getByText("Your product directions are ready to be made.")).toHaveCount(getProjectCandidates().length ? 0 : 1);
   await expect(page.getByRole("button", {name: "Editorial Signal"})).toHaveCount(0);
@@ -51,7 +51,7 @@ test("workspace supports keyboard, narrow screens, and automated accessibility",
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   await page.keyboard.press("Tab");
-  const primary = page.getByRole("link", {name: "Create live directions"});
+  const primary = page.getByRole("link", {name: "Continue from here"});
   await expect(primary).toBeFocused();
   await expect(primary).toHaveCSS("outline-width", "3px");
   await expect.poll(() => primary.evaluate(node => getComputedStyle(node).outlineColor !== getComputedStyle(node).color)).toBe(true);
