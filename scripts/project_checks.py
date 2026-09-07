@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -53,9 +54,14 @@ def active_profiles(root: Path) -> set[str]:
 
 
 def web_prerequisite(root: Path) -> tuple[str, str] | None:
-    node = shutil.which("node")
+    inspection = os.environ.get("AGENTIC_STUDIO_INSPECTION") == "1"
+    node = os.environ.get("AGENTIC_NODE_EXECUTABLE") if inspection else shutil.which("node")
     if node is None:
         return "Node.js is required for this web project", "Install Node.js 22 LTS, then run ./agentic next again."
+    if inspection:
+        candidate = Path(node)
+        if not candidate.is_absolute() or not candidate.is_file() or candidate.is_symlink():
+            return "Node.js is required for this web project", "Install Node.js 22 LTS, then run ./agentic next again."
     try:
         result = subprocess.run([node, "--version"], capture_output=True, text=True, timeout=10, check=False)
     except (OSError, subprocess.TimeoutExpired):
@@ -63,7 +69,7 @@ def web_prerequisite(root: Path) -> tuple[str, str] | None:
     match = re.fullmatch(r"v?(\d+)\.(\d+)\.(\d+)\s*", result.stdout) if result and result.returncode == 0 else None
     if not match or tuple(map(int, match.groups())) < (20, 9, 0):
         return "The web runtime needs Node.js 20.9 or newer", "Use the tested Node.js 22 LTS baseline, then run ./agentic next again."
-    if shutil.which("pnpm") is None:
+    if not inspection and shutil.which("pnpm") is None:
         manager = load_object(root / "package.json").get("packageManager", "pnpm")
         return "The project package manager is missing", f"Install the package manager declared in package.json ({manager}), then run ./agentic next again."
     if not (root / "node_modules/.pnpm").is_dir() or not (root / "node_modules/.modules.yaml").is_file():

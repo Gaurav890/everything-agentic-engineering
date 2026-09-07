@@ -92,6 +92,10 @@ def studio_next_stage(journey: dict) -> str:
         marker in action for marker in ("agentic design", "agentic tokens", "pnpm dev")
     ):
         return "direction"
+    if any(stages[name] in {"active", "ready_for_human"} for name in ("verify", "review")) or any(
+        marker in action for marker in ("review ", "closeout", "prepare-merge", "finalize-pr")
+    ):
+        return "proof"
     if stages["build"] != "complete":
         return "build"
     return "proof"

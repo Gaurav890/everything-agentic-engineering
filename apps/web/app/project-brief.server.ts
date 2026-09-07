@@ -1,6 +1,6 @@
-import {existsSync, lstatSync, readFileSync} from "node:fs";
+import {existsSync, lstatSync, readFileSync, realpathSync, statSync} from "node:fs";
 import {execFileSync} from "node:child_process";
-import {resolve} from "node:path";
+import {isAbsolute, join, relative, resolve, sep} from "node:path";
 
 export type ProjectBrief = {
   name: string;
@@ -53,6 +53,22 @@ function projectRoot(): string {
   return resolve(process.cwd(), "../..");
 }
 
+function trustedProjectFile(root: string, candidate: string): string {
+  const canonicalRoot = realpathSync(root);
+  const requested = resolve(candidate);
+  const canonical = realpathSync(requested);
+  const contained = relative(canonicalRoot, canonical);
+  if (!contained || contained.startsWith(`..${sep}`) || contained === ".." || isAbsolute(contained) || !statSync(canonical).isFile()) {
+    throw new Error("Project context must stay inside the project.");
+  }
+  let current = canonicalRoot;
+  for (const part of relative(canonicalRoot, requested).split(sep)) {
+    current = join(current, part);
+    if (lstatSync(current).isSymbolicLink()) throw new Error("Project context must not follow symlinks.");
+  }
+  return canonical;
+}
+
 function readProjectFile(filename: string): unknown {
   const directory = resolve(projectRoot(), ".agentic");
   const file = resolve(directory, filename);
@@ -63,15 +79,31 @@ function readProjectFile(filename: string): unknown {
 }
 
 export function getProjectStudioContext(): ProjectStudioContext {
-  const root = projectRoot();
-  const script = resolve(root, "scripts/project_handoff.py");
-  if (!existsSync(script) || lstatSync(script).isSymbolicLink()) {
+  const root = realpathSync(projectRoot());
+  let script: string;
+  let node: string;
+  try {
+    script = trustedProjectFile(root, resolve(root, "scripts/project_handoff.py"));
+    node = realpathSync(process.execPath);
+    const nodeLocation = relative(realpathSync(root), node);
+    if (!nodeLocation || (!nodeLocation.startsWith(`..${sep}`) && nodeLocation !== ".." && !isAbsolute(nodeLocation))) {
+      throw new Error("The web runtime cannot come from the project.");
+    }
+  } catch {
     throw new Error("The Project Studio handoff is missing or unsafe.");
   }
   let parsed: unknown;
   try {
-    const output = execFileSync("python3", [script, "--json"], {
+    const output = execFileSync("/usr/bin/python3", [script, "--json"], {
       cwd: root,
+      env: {
+        AGENTIC_GIT_EXECUTABLE: "/usr/bin/git",
+        AGENTIC_NODE_EXECUTABLE: node,
+        AGENTIC_STUDIO_INSPECTION: "1",
+        NODE_ENV: process.env.NODE_ENV ?? "production",
+        PATH: "/usr/bin:/bin",
+        PYTHONDONTWRITEBYTECODE: "1",
+      },
       encoding: "utf8",
       timeout: 5_000,
       maxBuffer: 512 * 1024,

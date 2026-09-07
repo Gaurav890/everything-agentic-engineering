@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -34,14 +35,19 @@ def research_complete(root: Path, profiles: set[str]) -> bool:
 
 def git_branch(root: Path) -> str | None:
     # A parent repository is not this generated project's version history.
+    executable = os.environ.get("AGENTIC_GIT_EXECUTABLE", "git")
+    if os.environ.get("AGENTIC_STUDIO_INSPECTION") == "1":
+        candidate = Path(executable)
+        if not candidate.is_absolute() or not candidate.is_file() or candidate.is_symlink():
+            return None
     try:
-        top = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=root, capture_output=True, text=True, timeout=5)
+        top = subprocess.run([executable, "rev-parse", "--show-toplevel"], cwd=root, capture_output=True, text=True, timeout=5)
         if top.returncode or Path(top.stdout.strip()).resolve() != root.resolve():
             return None
-        checkpoint = subprocess.run(["git", "rev-parse", "--verify", "HEAD"], cwd=root, capture_output=True, text=True, timeout=5)
+        checkpoint = subprocess.run([executable, "rev-parse", "--verify", "HEAD"], cwd=root, capture_output=True, text=True, timeout=5)
         if checkpoint.returncode:
             return None
-        branch = subprocess.run(["git", "symbolic-ref", "--short", "HEAD"], cwd=root, capture_output=True, text=True, timeout=5)
+        branch = subprocess.run([executable, "symbolic-ref", "--short", "HEAD"], cwd=root, capture_output=True, text=True, timeout=5)
         return branch.stdout.strip() if branch.returncode == 0 else None
     except (OSError, subprocess.TimeoutExpired):
         return None

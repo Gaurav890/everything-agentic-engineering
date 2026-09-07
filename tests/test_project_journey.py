@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import project_journey
 import project_brief
+import project_handoff
 
 
 class ProjectJourneyTests(unittest.TestCase):
@@ -165,15 +166,27 @@ class ProjectJourneyTests(unittest.TestCase):
         self.assertIn("human approval", review["detail"])
 
     def test_review_status_without_bound_evidence_does_not_complete_verification(self) -> None:
+        self.brief.update(status="ready", first_outcome="Compare two purchase dates", confirmed_by="Owner")
+        (self.root / ".agentic/project-brief.json").write_text(json.dumps(self.brief))
+        self.complete_research()
+        (self.root / ".agentic/design.json").write_text(json.dumps({"status": "approved"}))
         task = {"id": "T-101", "status": "review", "depends_on": [],
                 "requirement_ids": ["FR-001"], "acceptance_ids": ["AC-001"],
                 "tracking": {"mode": "not_required", "issues": [], "reason": "Reviewed local test."}}
         (self.root / "docs/40-execution/TASKS.jsonl").write_text(json.dumps(task) + "\n")
-        result = project_journey.build(self.root)
+        with mock.patch.object(
+            project_journey.next_action,
+            "next_action",
+            return_value=("Review T-101's result", "Review the draft PR and its evidence."),
+        ):
+            result = project_journey.build(self.root)
         stages = {stage["id"]: stage["status"] for stage in result["stages"]}
         self.assertEqual("active", stages["build"])
         self.assertEqual("active", stages["verify"])
         self.assertEqual("waiting", stages["review"])
+        self.assertEqual("proof", project_handoff.studio_next_stage(result))
+        summary = project_handoff.studio_summary(result)
+        self.assertEqual(["waiting", "active"], [summary[2]["status"], summary[3]["status"]])
 
     def test_no_research_path_is_explicitly_skipped(self) -> None:
         self.brief["research_enabled"] = False
