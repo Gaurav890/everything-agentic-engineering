@@ -25,10 +25,11 @@ profile flags in a separate directory:
 ./agentic setup create
 ```
 
-The public Studio progressively asks for the project name and destination, then
-the product idea, audience, promise, an optional first outcome, whether current
-research should shape the first pass, and the design approach. It infers a
-recommended product route from the idea and lets the user change it. Provider,
+The public Studio asks for the project name, product idea, audience, promise,
+and optional first outcome before it asks where files should live. It infers a
+recommended product route from the intent and lets the user change it, then asks
+whether current research should shape the first pass and how design should
+begin. Provider,
 profile, client, and file-inventory decisions stay out of the newcomer path.
 Blank optional answers are deferred to the guided conversation.
 Enterprise workflows then ask
@@ -205,13 +206,14 @@ architecture.
 
 ## After generation
 
-Run:
+Return through the public Studio:
 
 ```bash
-./agentic next
+./agentic start
 ```
 
-It exposes exactly one project-appropriate action at a time. For a generated
+It exposes exactly one project-appropriate action at a time. `./agentic next`
+remains available as the advanced task-level inspection command. For a generated
 web project the path is dependency installation → live direction comparison →
 human approval → token compilation → first-feature planning → implementation →
 evidence → human review. It reads current profiles and task state; it does not

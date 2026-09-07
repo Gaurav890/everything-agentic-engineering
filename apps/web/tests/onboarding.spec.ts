@@ -1,8 +1,9 @@
 import AxeBuilder from "@axe-core/playwright";
 import {expect, test} from "@playwright/test";
-import {getProjectBrief, getProjectCandidates} from "../app/project-brief.server";
+import {getProjectBrief, getProjectCandidates, getProjectStudioContext} from "../app/project-brief.server";
 
 const brief = getProjectBrief();
+const context = brief ? getProjectStudioContext() : null;
 test.skip(!brief || brief.design_mode === "reference", "Generated custom/existing-brand workspace only");
 
 test("shows the saved project and one executable continuation", async ({page}) => {
@@ -12,8 +13,12 @@ test("shows the saved project and one executable continuation", async ({page}) =
   await expect(page.locator("aside")).toContainText(brief!.promise);
   await expect(page.locator("aside")).toContainText(brief!.audience);
   await expect(page.locator("#continue").getByText("./agentic start", {exact: true})).toBeVisible();
-  await expect(page.getByRole("list", {name: "Project progress"})).toBeVisible();
-  await expect(page.getByText("Your product directions are ready to be made.")).toHaveCount(getProjectCandidates().length ? 0 : 1);
+  const progress = page.getByRole("list", {name: "Project progress"});
+  await expect(progress).toBeVisible();
+  for (const [index, stage] of context!.studio.stages.entries()) {
+    await expect(progress.locator("li").nth(index)).toHaveAttribute("data-status", stage.status);
+  }
+  await expect(page.getByText(context!.studio.next.title, {exact: true})).toHaveCount(getProjectCandidates().length ? 0 : 1);
   await expect(page.getByRole("button", {name: "Editorial Signal"})).toHaveCount(0);
   await expect(page.getByText("No API key is collected here", {exact: false})).toBeVisible();
 });
@@ -31,7 +36,10 @@ test("copy succeeds or explains the manual fallback without launching anything",
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async () => { throw new Error("unavailable"); }}}));
   await page.getByRole("button", {name: "Copy instruction"}).click();
   await expect(page.getByRole("status").last()).toContainText("Select and copy");
-  await expect(page.locator("pre")).toContainText("project-onboarding");
+  await expect(page.locator("pre")).toHaveText(context!.prompt);
+  if (context!.research_enabled) {
+    await expect(page.locator("pre")).toContainText("docs/10-product/RESEARCH.md");
+  }
 });
 
 test("copy shows a pending state and prevents duplicate actions", async ({page}, testInfo) => {

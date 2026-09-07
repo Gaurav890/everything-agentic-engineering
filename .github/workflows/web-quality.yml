@@ -21,11 +21,15 @@ on:
       - "scripts/project_generator.py"
       - "scripts/project_brief.py"
       - "scripts/project_handoff.py"
+      - "scripts/project_journey.py"
       - "scripts/design_engine.py"
       - "tests/fixtures/onboarding/**"
       - "scripts/verify.sh"
       - "tests/test_web_verification.py"
       - "tests/test_next_action.py"
+      - "tests/test_project_generator.py"
+      - "tests/test_project_handoff.py"
+      - "tests/test_project_journey.py"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
@@ -74,7 +78,7 @@ jobs:
             --destination "$ONBOARDING_ROOT/project" --preset web \
             --archetype agentic-product --audience "People comparing purchase dates" \
             --promise "Understand the tradeoff before deciding." \
-            --first-outcome "Compare two purchase dates" --assistant manual --yes
+            --first-outcome "Compare two purchase dates" --assistant manual --research --yes
           mkdir -p "$ONBOARDING_ROOT/project/apps/web/app/concepts/purchase-path"
           cp tests/fixtures/onboarding/purchase-path.tsx "$ONBOARDING_ROOT/project/apps/web/app/concepts/purchase-path/page.tsx"
           cp tests/fixtures/onboarding/purchase-path.json "$ONBOARDING_ROOT/project/purchase-path.json"

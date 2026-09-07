@@ -282,12 +282,20 @@ def slugify(value: str) -> str:
 def clean_text(value: str | None, label: str, *, maximum: int = 180) -> str | None:
     if value is None:
         return None
+    reject_terminal_controls(value, label)
     cleaned = " ".join(value.split())
     if not cleaned:
         raise GenerationError(f"{label} cannot be empty")
     if len(cleaned) > maximum:
         raise GenerationError(f"{label} must be {maximum} characters or fewer")
     return cleaned
+
+
+def reject_terminal_controls(value: str, label: str) -> None:
+    if project_brief.UNSAFE_CONTROL_CHARACTERS.search(value) or any(
+        character in value for character in ("\t", "\r", "\n")
+    ):
+        raise GenerationError(f"{label} cannot contain terminal control characters")
 
 
 def experience_defaults(name: str, archetype: str) -> tuple[str, str]:
@@ -447,7 +455,8 @@ def build_plan(
     source_root: Path = ROOT,
     cwd: Path | None = None,
 ) -> GenerationPlan:
-    if not name.strip():
+    name = clean_text(name, "project name", maximum=80)
+    if name is None:
         raise GenerationError("Project name is required")
     slug = slugify(name)
     if assistant not in project_brief.CLIENTS or design_mode not in project_brief.DESIGN_MODES:
@@ -455,6 +464,7 @@ def build_plan(
     design_preferences = clean_text(design_preferences, "design preferences", maximum=1000)
     first_outcome = clean_text(first_outcome, "first outcome", maximum=500)
     idea = clean_text(idea, "product idea", maximum=500)
+    reject_terminal_controls(destination, "destination")
     target = resolve_destination(destination, source_root, cwd)
     config = load_config(source_root)
     resolution = profile_engine.resolve(selected_profiles)
@@ -1163,7 +1173,8 @@ journey before claiming implementation. Existing user edits must be preserved.
 
 {preview_guidance}
 
-Run `./agentic next` to resume. {design_guidance} Token compilation is not design
+Run `./agentic start` to resume the guided Studio. Use `./agentic next` only for
+the advanced task-level view. {design_guidance} Token compilation is not design
 generation.
 
 Use `./agentic verify full` for the repository contract.
@@ -1825,14 +1836,14 @@ def interactive_answers() -> argparse.Namespace:
     print("\nPROJECT STUDIO")
     print("Describe the outcome first. The engineering route stays editable and out of your way.\n")
     name = prompt_text("What is the project called?", "My Product", maximum=80)
-    destination = prompt_text("Where should it live?", str(ROOT.parent / slugify(name)), maximum=500)
     idea = prompt_text("What are you creating? Describe it in one sentence.", "A useful digital product", maximum=500)
     audience = prompt_text("Who is it for?", "Discuss with me", maximum=120)
     promise = prompt_text("What should it help them achieve?", "Discuss with me", maximum=120)
+    first_outcome = prompt_text("What is the first useful result they should reach? Leave blank to decide together.", "", maximum=500) or None
     route = prompt_route(recommend_kind(" ".join((idea, audience, promise))))
     kind = "product" if route == "web-product" else route
     web = kind in WEB_ARCHETYPES
-    first_outcome = prompt_text("What is the first useful result they should reach? Leave blank to decide together.", "", maximum=500) or None
+    destination = prompt_text("Where should the new project live?", str(ROOT.parent / slugify(name)), maximum=500)
     research = False
     if kind != "core":
         print("\nShould current market, user, and competitor evidence shape the first pass?")

@@ -31,6 +31,35 @@ class ProjectGeneratorTests(unittest.TestCase):
             check=False,
         )
 
+    def test_terminal_controls_are_rejected_before_human_plan_output(self) -> None:
+        unsafe = "Safe\x1b]0;PWN\x07"
+        with tempfile.TemporaryDirectory() as temporary:
+            safe_destination = str(Path(temporary) / "safe-project")
+            cases = (
+                ("--name", unsafe),
+                ("--destination", str(Path(temporary) / unsafe)),
+                ("--idea", unsafe),
+                ("--audience", unsafe),
+                ("--promise", unsafe),
+                ("--first-outcome", unsafe),
+                ("--design-preferences", unsafe),
+            )
+            for flag, value in cases:
+                with self.subTest(flag=flag):
+                    arguments = [
+                        "--name", "Safe", "--destination", safe_destination,
+                        "--preset", "web", "--dry-run",
+                    ]
+                    if flag in arguments:
+                        arguments[arguments.index(flag) + 1] = value
+                    else:
+                        arguments.extend([flag, value])
+                    result = self.run_generator(*arguments)
+                    self.assertNotEqual(0, result.returncode)
+                    self.assertNotIn("\x1b", result.stdout)
+                    self.assertNotIn("Downstream project generation plan", result.stdout)
+                    self.assertIn("terminal control characters", result.stderr)
+
     def test_dry_run_is_non_mutating_and_machine_readable(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             destination = Path(temporary) / "planned-project"
@@ -401,12 +430,12 @@ class ProjectGeneratorTests(unittest.TestCase):
                 input="\n".join(
                     [
                         "Signal Room",
-                        str(destination),
                         "A product for reviewing automated decisions",
                         "operations teams supervising high-stakes automation",
                         "Make every automated decision legible and reversible.",
-                        "",
                         "Review one proposed automation action",
+                        "",
+                        str(destination),
                         "1",
                         "1",
                         "Bold type, restrained motion; avoid neon",
@@ -452,12 +481,12 @@ class ProjectGeneratorTests(unittest.TestCase):
                 input="\n".join(
                     [
                         "Decision Desk",
-                        str(destination),
                         "An enterprise approval workflow for policy exceptions",
                         "security operations reviewers",
                         "Move sensitive requests to accountable decisions.",
-                        "",
                         "Review one policy exception",
+                        "",
+                        str(destination),
                         "1",
                         "1",
                         "",
@@ -488,7 +517,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "A native mobile app for field notes", "Field workers", "Capture a note", "", "", "2", "1", "", "y", ""]),
+                input="\n".join(["Pocket Field", "A native mobile app for field notes", "Field workers", "Capture a note", "", "", str(destination), "2", "1", "", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,

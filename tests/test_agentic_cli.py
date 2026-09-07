@@ -151,12 +151,12 @@ class AgenticCliTests(unittest.TestCase):
                 cwd=ROOT,
                 input="\n".join([
                     "Flow Test",
-                    str(destination),
                     "A web product that helps teams prepare better proposals",
                     "Independent design teams",
                     "Turn rough requirements into a confident proposal",
                     "",
                     "",
+                    str(destination),
                     "2",
                     "1",
                     "recommend for me",
@@ -172,6 +172,9 @@ class AgenticCliTests(unittest.TestCase):
         self.assertIn("What are you creating? Describe it in one sentence.", completed.stdout)
         self.assertIn("Recommended starting path", completed.stdout)
         self.assertIn("A web product people use", completed.stdout)
+        self.assertLess(completed.stdout.index("What are you creating?"), completed.stdout.index("Who is it for?"))
+        self.assertLess(completed.stdout.index("Who is it for?"), completed.stdout.index("What should it help them achieve?"))
+        self.assertLess(completed.stdout.index("What should it help them achieve?"), completed.stdout.index("Where should the new project live?"))
         self.assertIn("No project created.", completed.stdout)
         self.assertNotIn("What are you building?", completed.stdout)
         self.assertNotIn("Resolved profiles:", completed.stdout)
@@ -192,6 +195,20 @@ class AgenticCliTests(unittest.TestCase):
         payload = json.loads(json_result.stdout)
         self.assertEqual("create", payload["mode"])
         self.assertFalse(payload["mutation_performed"])
+
+    def test_start_rejects_terminal_controls_before_showing_a_plan(self) -> None:
+        completed = subprocess.run(
+            [str(ROOT / "agentic"), "start"],
+            cwd=ROOT,
+            input="\n".join(["Safe", "An unsafe\x1b]0;PWN\x07 idea"]),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(0, completed.returncode)
+        self.assertNotIn("\x1b", completed.stdout)
+        self.assertNotIn("Downstream project generation plan", completed.stdout)
+        self.assertIn("terminal control characters", completed.stdout)
 
 
 if __name__ == "__main__":
