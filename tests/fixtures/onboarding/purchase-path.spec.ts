@@ -2,9 +2,11 @@ import AxeBuilder from "@axe-core/playwright";
 import {readFileSync, writeFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {expect, test} from "@playwright/test";
+import {getProjectStudioContext} from "../app/project-brief.server";
 
 test.skip(process.env.ONBOARDING_TEST_PROJECT !== "1", "Disposable onboarding fixture only");
 test.describe.configure({mode: "serial"});
+const studio = getProjectStudioContext();
 
 test("empty custom catalog explains how to create live directions", async ({page}, testInfo) => {
   const path = resolve(process.cwd(), "../../.agentic/design-directions.json");
@@ -12,7 +14,7 @@ test("empty custom catalog explains how to create live directions", async ({page
   try {
     writeFileSync(path, JSON.stringify({...JSON.parse(original), directions: []}));
     await page.goto(`/?catalog=empty-${testInfo.project.name}-${Date.now()}`);
-    const empty = page.getByRole("heading", {name: "Your product directions are ready to be made."});
+    const empty = page.getByRole("heading", {name: studio.studio.next.title, exact: true});
     await expect(empty).toBeVisible();
     await empty.scrollIntoViewIfNeeded();
     await page.screenshot({path: testInfo.outputPath("empty-catalog.png")});
