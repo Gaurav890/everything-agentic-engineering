@@ -74,7 +74,7 @@ class NextActionTests(unittest.TestCase):
 
     def test_source_checkout_routes_to_create(self):
         (self.root / ".agentic/generated-project.json").unlink()
-        self.assertEqual("./agentic setup create", next_action.next_action(self.root)[1])
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
 
     def test_guidance_continues_past_tokens_into_feature_planning(self):
         self.prerequisite.return_value = ("Install", "pnpm install --frozen-lockfile")
@@ -101,7 +101,7 @@ class NextActionTests(unittest.TestCase):
             "first_outcome": None, "design_preferences": None, "design_mode": "custom",
             "assistant": "manual", "status": "captured", "confirmed_by": None, "open_questions": [],
         })
-        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
         self.prerequisite.assert_not_called()
         (self.root / ".agentic/project-brief.json").unlink()
         with self.assertRaises(next_action.NextActionError):
@@ -120,7 +120,7 @@ class NextActionTests(unittest.TestCase):
         self.write(".agentic/project-brief.json", brief)
         self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
         self.complete_research(brief)
-        self.assertEqual("./agentic design sprint", next_action.next_action(self.root)[1])
+        self.assertEqual("./agentic start", next_action.next_action(self.root)[1])
 
     def test_research_cannot_be_bypassed_by_ready_brief_or_copied_status_text(self):
         self.write(".agentic/generated-project.json", {"onboarding_version": 1})

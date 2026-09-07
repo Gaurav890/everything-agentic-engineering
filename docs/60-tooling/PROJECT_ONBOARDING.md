@@ -1,19 +1,18 @@
 # From your idea to your first useful feature
 
-Create a project, then copy the one continuation command printed after
-verification. When research is selected it safely enters the generated folder
-and runs **`./agentic start`** so evidence is handled first. A custom
-design-critical web project that skips research continues with
-**`./agentic design sprint`**. You do not need to reconstruct a path, know skill
-names, or write a giant prompt. `./agentic journey` explains the whole path;
-`./agentic next` returns only the next action.
+Run **`./agentic start`** in the starter to create a project, then run the same
+command in the generated folder whenever you resume. Research, custom design,
+reference, enterprise, mobile, and core routes remain different internally,
+but users do not need to select internal profiles or remember a different first
+command. `./agentic journey` explains the detailed path; `./agentic next`
+returns the current low-level action for advanced use.
 
 ## What happens
 
-1. Creation captures your product, audience, desired outcome, whether
-   Perplexity-first current research should shape the first pass, design
-   approach, optional preferences, and preferred coding client. Unknown answers
-   can wait.
+1. Creation captures the product idea, audience, and desired outcome before it
+   recommends an editable plain-language path. It then asks whether current
+   research should shape the first pass and how design should begin. Unknown
+   answers can wait; “recommend for me” is valid.
 2. When research is selected, the project creates a source-ledger contract and
    routes current evidence before scope/design. Perplexity is preferred when
    configured; primary-source/manual research is the explicit fallback.
@@ -21,8 +20,8 @@ names, or write a giant prompt. `./agentic journey` explains the whole path;
    describe **your project**. Drafts are not fabricated research or built features.
 4. The creation receipt previews the remaining journey and confirms that
    nothing was installed or launched and no API key was collected.
-5. The printed `start` or `design sprint` command prepares a specific,
-   profile-aware instruction for the installed client you chose.
+5. The printed `start` command prepares a specific, profile-aware instruction
+   and asks which existing coding client or manual editor should continue.
    It displays the folder and asks before launching. In an editor or desktop
    app, open that same folder and paste the supplied instruction instead.
 6. The assistant reads the saved brief and asks only unresolved consequential

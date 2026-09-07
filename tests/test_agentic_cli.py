@@ -5,6 +5,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -141,6 +142,73 @@ class AgenticCliTests(unittest.TestCase):
         )
         self.assertEqual(0, completed.returncode, completed.stderr)
         self.assertIn("Everything Agentic Engineering", completed.stdout)
+
+    def test_start_is_the_outcome_first_starter_entrypoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "not-created"
+            completed = subprocess.run(
+                [str(ROOT / "agentic"), "start"],
+                cwd=ROOT,
+                input="\n".join([
+                    "Flow Test",
+                    "A web product that helps teams prepare better proposals",
+                    "Independent design teams",
+                    "Turn rough requirements into a confident proposal",
+                    "",
+                    "",
+                    str(destination),
+                    "2",
+                    "1",
+                    "recommend for me",
+                    "n",
+                    "",
+                ]),
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        self.assertIn("PROJECT STUDIO", completed.stdout)
+        self.assertIn("What are you creating? Describe it in one sentence.", completed.stdout)
+        self.assertIn("Recommended starting path", completed.stdout)
+        self.assertIn("A web product people use", completed.stdout)
+        self.assertLess(completed.stdout.index("What are you creating?"), completed.stdout.index("Who is it for?"))
+        self.assertLess(completed.stdout.index("Who is it for?"), completed.stdout.index("What should it help them achieve?"))
+        self.assertLess(completed.stdout.index("What should it help them achieve?"), completed.stdout.index("Where should the new project live?"))
+        self.assertIn("No project created.", completed.stdout)
+        self.assertNotIn("What are you building?", completed.stdout)
+        self.assertNotIn("Resolved profiles:", completed.stdout)
+        self.assertNotIn("Where will you build?", completed.stdout)
+
+    def test_starter_start_help_and_json_are_read_only(self) -> None:
+        help_result = subprocess.run(
+            [str(ROOT / "agentic"), "start", "--help"], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(0, help_result.returncode, help_result.stderr)
+        self.assertIn("guided Project Studio", help_result.stdout)
+        json_result = subprocess.run(
+            [str(ROOT / "agentic"), "start", "--json"], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(0, json_result.returncode, json_result.stderr)
+        payload = json.loads(json_result.stdout)
+        self.assertEqual("create", payload["mode"])
+        self.assertFalse(payload["mutation_performed"])
+
+    def test_start_rejects_terminal_controls_before_showing_a_plan(self) -> None:
+        completed = subprocess.run(
+            [str(ROOT / "agentic"), "start"],
+            cwd=ROOT,
+            input="\n".join(["Safe", "An unsafe\x1b]0;PWN\x07 idea"]),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(0, completed.returncode)
+        self.assertNotIn("\x1b", completed.stdout)
+        self.assertNotIn("Downstream project generation plan", completed.stdout)
+        self.assertIn("terminal control characters", completed.stdout)
 
 
 if __name__ == "__main__":

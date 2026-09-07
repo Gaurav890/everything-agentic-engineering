@@ -31,6 +31,35 @@ class ProjectGeneratorTests(unittest.TestCase):
             check=False,
         )
 
+    def test_terminal_controls_are_rejected_before_human_plan_output(self) -> None:
+        unsafe = "Safe\x1b]0;PWN\x07"
+        with tempfile.TemporaryDirectory() as temporary:
+            safe_destination = str(Path(temporary) / "safe-project")
+            cases = (
+                ("--name", unsafe),
+                ("--destination", str(Path(temporary) / unsafe)),
+                ("--idea", unsafe),
+                ("--audience", unsafe),
+                ("--promise", unsafe),
+                ("--first-outcome", unsafe),
+                ("--design-preferences", unsafe),
+            )
+            for flag, value in cases:
+                with self.subTest(flag=flag):
+                    arguments = [
+                        "--name", "Safe", "--destination", safe_destination,
+                        "--preset", "web", "--dry-run",
+                    ]
+                    if flag in arguments:
+                        arguments[arguments.index(flag) + 1] = value
+                    else:
+                        arguments.extend([flag, value])
+                    result = self.run_generator(*arguments)
+                    self.assertNotEqual(0, result.returncode)
+                    self.assertNotIn("\x1b", result.stdout)
+                    self.assertNotIn("Downstream project generation plan", result.stdout)
+                    self.assertIn("terminal control characters", result.stderr)
+
     def test_dry_run_is_non_mutating_and_machine_readable(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             destination = Path(temporary) / "planned-project"
@@ -99,7 +128,7 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertIn("Continue now — copy and paste:", result.stdout)
             self.assertIn(
-                f"cd {shlex.quote(str(destination.resolve()))} && ./agentic design sprint",
+                f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
                 result.stdout,
             )
             self.assertIn("What happens next:", result.stdout)
@@ -261,9 +290,9 @@ class ProjectGeneratorTests(unittest.TestCase):
             app_package = json.loads((destination / "apps/web/package.json").read_text())
             self.assertEqual("playwright test --grep-invert @visual", app_package["scripts"]["test:e2e"])
             self.assertIn("updateSnapshots: \"none\"", (destination / "apps/web/playwright.config.ts").read_text())
-            self.assertIn("./agentic design sprint", (destination / "docs/40-execution/HANDOFF.md").read_text())
+            self.assertIn("./agentic start", (destination / "docs/40-execution/HANDOFF.md").read_text())
             assistant_handoff = (destination / "docs/60-tooling/ASSISTANT_HANDOFF.md").read_text()
-            self.assertIn("./agentic design sprint", assistant_handoff)
+            self.assertIn("./agentic start", assistant_handoff)
             self.assertIn("creative-direction-sprint", assistant_handoff)
             direction_brief = (destination / "docs/20-design/DESIGN_DIRECTIONS.md").read_text()
             self.assertIn("distinct experiential axes", direction_brief)
@@ -401,15 +430,15 @@ class ProjectGeneratorTests(unittest.TestCase):
                 input="\n".join(
                     [
                         "Signal Room",
-                        str(destination),
-                        "2",
+                        "A product for reviewing automated decisions",
                         "operations teams supervising high-stakes automation",
                         "Make every automated decision legible and reversible.",
                         "Review one proposed automation action",
+                        "",
+                        str(destination),
                         "1",
                         "1",
                         "Bold type, restrained motion; avoid neon",
-                        "3",
                         "y",
                         "",
                     ]
@@ -419,12 +448,15 @@ class ProjectGeneratorTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            self.assertIn("Start with your product", result.stdout)
+            self.assertIn("PROJECT STUDIO", result.stdout)
+            self.assertNotIn("What are you building?", result.stdout)
+            self.assertIn("Recommended starting path", result.stdout)
             experience = json.loads((destination / ".agentic/experience.json").read_text())
             self.assertEqual("agentic-product", experience["archetype"])
             self.assertEqual("precise", experience["visual_character"])
             brief = json.loads((destination / ".agentic/project-brief.json").read_text())
-            self.assertEqual("manual", brief["assistant"])
+            self.assertEqual("choose", brief["assistant"])
+            self.assertEqual("A product for reviewing automated decisions", brief["idea"])
             self.assertEqual("custom", brief["design_mode"])
             self.assertTrue(brief["research_enabled"])
             self.assertIn("avoid neon", brief["design_preferences"])
@@ -449,15 +481,15 @@ class ProjectGeneratorTests(unittest.TestCase):
                 input="\n".join(
                     [
                         "Decision Desk",
-                        str(destination),
-                        "3",
+                        "An enterprise approval workflow for policy exceptions",
                         "security operations reviewers",
                         "Move sensitive requests to accountable decisions.",
                         "Review one policy exception",
+                        "",
+                        str(destination),
                         "1",
                         "1",
                         "",
-                        "3",
                         "policy exception",
                         "2",
                         "2",
@@ -485,14 +517,14 @@ class ProjectGeneratorTests(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(SCRIPT)],
                 cwd=ROOT,
-                input="\n".join(["Pocket Field", str(destination), "5", "Field workers", "Capture a note", "", "2", "1", "", "3", "y", ""]),
+                input="\n".join(["Pocket Field", "A native mobile app for field notes", "Field workers", "Capture a note", "", "", str(destination), "2", "1", "", "y", ""]),
                 text=True,
                 capture_output=True,
                 check=False,
             )
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertIn("Who is it for?", result.stdout)
-            self.assertIn("Use Perplexity-first current research", result.stdout)
+            self.assertIn("Should current market, user, and competitor evidence shape the first pass?", result.stdout)
             self.assertNotIn("starting character", result.stdout.lower())
             self.assertFalse((destination / ".agentic/experience.json").exists())
             self.assertNotIn("research-enabled", json.loads((destination / ".agentic/project.json").read_text())["profiles"])

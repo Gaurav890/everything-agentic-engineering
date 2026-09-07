@@ -29,7 +29,7 @@ def validate(brief: dict[str, Any]) -> None:
     for field in ("name", "audience", "promise"):
         if not isinstance(brief.get(field), str) or not brief[field].strip():
             raise BriefError(f"Project brief requires {field}")
-    for field in ("first_outcome", "design_preferences"):
+    for field in ("idea", "first_outcome", "design_preferences"):
         if brief.get(field) is not None and not isinstance(brief[field], str):
             raise BriefError(f"Project brief {field} must be text or null")
     if "research_enabled" in brief and not isinstance(brief["research_enabled"], bool):
@@ -48,7 +48,7 @@ def validate(brief: dict[str, Any]) -> None:
     ):
         raise BriefError("Project brief open questions must be a text list")
     durable_text = [
-        brief.get("name"), brief.get("audience"), brief.get("promise"),
+        brief.get("name"), brief.get("idea"), brief.get("audience"), brief.get("promise"),
         brief.get("first_outcome"), brief.get("design_preferences"),
         brief.get("confirmed_by"), *brief["open_questions"],
     ]
@@ -82,6 +82,7 @@ def create(plan: Any) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "name": plan.project_name,
+        "idea": plan.idea,
         "audience": plan.audience or "To be discussed with the product owner",
         "promise": plan.promise or "To be discussed with the product owner",
         "first_outcome": plan.first_outcome,
@@ -109,7 +110,7 @@ def research_snapshot_digest(brief: dict[str, Any]) -> str:
     return digest({
         key: brief.get(key)
         for key in (
-            "name", "audience", "promise", "first_outcome", "design_mode",
+            "name", "idea", "audience", "promise", "first_outcome", "design_mode",
             "design_preferences", "open_questions",
         )
     })
@@ -232,17 +233,14 @@ def documents(brief: dict[str, Any], *, web: bool, mobile: bool = False) -> dict
     """Used only at creation. Later revisions belong to the user and their reviewer."""
     validate(brief)
     name, audience, promise = (brief[key] for key in ("name", "audience", "promise"))
+    idea = brief.get("idea") or "Not captured yet. Confirm the product concept before implementation."
     outcome = brief["first_outcome"] or "Not chosen yet. Agree one useful outcome before implementation."
     heading = f"Project: {name}\n\nStatus: Draft — product-owner review required.\n"
-    context = f"\n## Known intent\n\nAudience: {audience}\n\nPromise: {promise}\n\nFirst outcome: {outcome}\n"
+    context = f"\n## Known intent\n\nIdea: {idea}\n\nAudience: {audience}\n\nPromise: {promise}\n\nFirst outcome: {outcome}\n"
     boundary = "\nThese are captured inputs, not evidence that a feature exists. Unknown facts remain open; do not substitute the starter's requirements.\n"
     research_enabled = bool(brief.get("research_enabled", False))
     design_sprint = web and brief["design_mode"] != "reference"
-    continuation = (
-        "./agentic start"
-        if research_enabled
-        else "./agentic design sprint" if design_sprint else "./agentic start"
-    )
+    continuation = "./agentic start"
     research_instruction = (
         "Before settling product scope or visual direction, inspect current category, user, and "
         "competitor evidence. Prefer Perplexity for broad current discovery when it is already "

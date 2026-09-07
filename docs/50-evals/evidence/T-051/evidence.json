@@ -1,0 +1,22 @@
+{
+  "task_id": "T-051",
+  "acceptance_ids": ["AC-001", "AC-004", "AC-005", "AC-006", "AC-007", "AC-008"],
+  "ui_change": true,
+  "builder": "implementation-owner",
+  "evaluator": "independent-product-design-security-and-integration-review",
+  "states": ["normal", "loading", "empty", "error"],
+  "viewports": ["desktop", "mobile"],
+  "commands": [
+    "python3 -m unittest tests.test_project_handoff tests.test_project_journey tests.test_next_action tests.test_agentic_cli tests.test_project_generator",
+    "pnpm --filter @everything-agentic/web typecheck",
+    "pnpm --filter @everything-agentic/web test",
+    "./agentic release smoke",
+    "./agentic verify full",
+    "./agentic setup create --name Decision-Lens --destination /private/tmp/t051-secure.hLlcLC/decision-lens --preset web-research --archetype agentic-product --assistant manual --yes",
+    "pnpm install --offline --frozen-lockfile in the generated project",
+    "./agentic verify web in the generated project",
+    "python3 scripts/validate_evidence.py docs/50-evals/evidence/T-051"
+  ],
+  "artifacts": ["README.md", "independent-review.md"],
+  "verdict": "PASS — one public create-or-resume doorway, canonical stage and prompt routing, research-aware desktop/mobile Project Studio evidence, secure read-only inspection, and independent reviews; human task approval and newcomer pilot outcomes remain separate"
+}

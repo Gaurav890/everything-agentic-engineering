@@ -58,5 +58,5 @@
     <path d="M692 239h29"/><path d="m713 232 8 7-8 7"/>
     <path d="M911 239h29"/><path d="m932 232 8 7-8 7"/>
   </g>
-  <text x="64" y="374" fill="#a8b3c7" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14">setup create → start → custom previews → approval → implementation &amp; review</text>
+  <text x="64" y="374" fill="#a8b3c7" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14">start → shape → custom directions → build → proof</text>
 </svg>

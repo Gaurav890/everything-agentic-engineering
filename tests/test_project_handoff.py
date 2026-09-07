@@ -14,6 +14,45 @@ import project_handoff
 
 
 class ProjectHandoffTests(unittest.TestCase):
+    def test_studio_summary_collapses_engineering_stages_into_four_user_steps(self):
+        journey = {"stages": [
+            {"id": "research", "status": "skipped"},
+            {"id": "product", "status": "complete"},
+            {"id": "design", "status": "active"},
+            {"id": "build", "status": "waiting"},
+            {"id": "verify", "status": "waiting"},
+            {"id": "review", "status": "waiting"},
+        ], "next": {"title": "Build directions", "action": "./agentic design sprint"}}
+        summary = project_handoff.studio_summary(journey)
+        self.assertEqual(["Shape", "Direction", "Build", "Proof"], [stage["label"] for stage in summary])
+        self.assertEqual(["complete", "active", "waiting", "waiting"], [stage["status"] for stage in summary])
+
+    def test_studio_next_stage_keeps_token_compilation_in_direction(self):
+        journey = {"stages": [
+            {"id": "research", "status": "skipped"},
+            {"id": "product", "status": "complete"},
+            {"id": "design", "status": "complete"},
+            {"id": "build", "status": "waiting"},
+            {"id": "verify", "status": "waiting"},
+            {"id": "review", "status": "waiting"},
+        ], "next": {"title": "Compile the approved direction", "action": "./agentic tokens build"}}
+        summary = project_handoff.studio_summary(journey)
+        self.assertEqual("direction", project_handoff.studio_next_stage(journey))
+        self.assertEqual(["complete", "active", "waiting", "waiting"], [stage["status"] for stage in summary])
+
+    def test_fully_complete_studio_retains_completion_and_points_to_proof(self):
+        journey = {"stages": [
+            {"id": "research", "status": "complete"},
+            {"id": "product", "status": "complete"},
+            {"id": "design", "status": "complete"},
+            {"id": "build", "status": "complete"},
+            {"id": "verify", "status": "complete"},
+            {"id": "review", "status": "complete"},
+        ], "next": {"title": "Start the next reviewed change", "action": "./agentic next"}}
+        summary = project_handoff.studio_summary(journey)
+        self.assertEqual("proof", project_handoff.studio_next_stage(journey))
+        self.assertEqual(["complete", "complete", "complete", "complete"], [stage["status"] for stage in summary])
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
@@ -69,6 +108,15 @@ class ProjectHandoffTests(unittest.TestCase):
     def test_manual_research_handoff_points_to_start_before_design(self, which):
         (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": ["web-next", "design-critical", "research-enabled"]}))
         self.brief.update(research_enabled=False, assistant="manual")
+        self.path.write_text(json.dumps(self.brief))
+        code, output = self.run_handoff()
+        self.assertEqual(0, code)
+        self.assertIn("For a terminal client: ./agentic start --assistant claude", output)
+        self.assertNotIn("For a terminal client: ./agentic design sprint", output)
+
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_manual_custom_web_handoff_keeps_the_same_start_doorway(self, which):
+        self.brief.update(assistant="manual")
         self.path.write_text(json.dumps(self.brief))
         code, output = self.run_handoff()
         self.assertEqual(0, code)

@@ -1,13 +1,15 @@
 # Current state
 
-Last updated: 2026-09-06
+Last updated: 2026-09-07
 
 ## Product
 
 The starter's public promise is: turn an idea into a distinctive, researched,
 working product slice with evidence. The visible journey is research → product
 → design → build → verify → review. `./agentic journey` reports the whole
-path and `./agentic next` returns only the next executable action.
+path and `./agentic next` returns only the next executable action. The public
+create-or-resume doorway is now `./agentic start`; `setup create` remains the
+advanced and non-interactive interface.
 
 Product-design work is routed through explicit discovery, strategy, interaction,
 system, implementation, audit, critique, polish, and delivery phases.
@@ -22,9 +24,11 @@ Signalroom under `apps/showcase` is the reference AI-native product. It
 demonstrates agent runs, protected approvals, interruption, recovery, durable
 artifacts, required UI states, and responsive supervision.
 
-The guided project studio materializes a portfolio, product, agentic-product,
-enterprise-workflow, mobile, or core project after capturing its audience,
-outcome, design approach, optional preferences, and preferred coding client.
+The guided Project Studio asks for the product idea, audience, and desired
+outcome before it recommends an editable plain-language route. It materializes
+a portfolio, product, human-guided automated product, team approval workflow,
+mobile, or core project without exposing internal profile names in the default
+interview. Client selection is deferred until continuation.
 For product profiles it also asks whether current research should precede
 product and design decisions. Choosing Perplexity activates the existing
 `research-enabled` profile and creates `docs/10-product/RESEARCH.md`; it does
@@ -35,11 +39,11 @@ retains the creation answer as provenance, and validated
 Enterprise workflows ask four additional domain decisions only when selected.
 New projects persist `.agentic/project-brief.json` and their own product
 drafts; web reference metadata remains in `.agentic/experience.json`.
-Fresh design-critical web projects that skip research route to
-`./agentic design sprint`; `start` handles research-enabled, reference, mobile,
-and core handoffs, while `next` exposes one action at a time. Research-enabled
-projects stay on `start` until structured research is complete, then resume the
-normal product-specific design path.
+Every generated profile returns through `./agentic start`. The handoff still
+routes research, product shaping, custom direction work, reference adaptation,
+mobile planning, and core scope differently, while `next` exposes the low-level
+action for advanced inspection. Research-enabled projects remain blocked on
+structured research evidence before product/design completion.
 Web and mobile application profiles always resolve the design-critical
 foundation.
 
@@ -69,6 +73,20 @@ candidate, and listed sources. Fingerprints detect drift, not design quality.
 `next` follows current profiles, prerequisites, approved design, dependencies,
 workstreams, blockers, and review instead of stopping at setup verification.
 It does not install tools, alter task state, or infer approval or merge.
+
+The generated web Studio now presents four user-facing stages—Shape,
+Direction, Build, and Proof—plus the saved product idea, current decision, and
+one consistent start command. Its visible state and copied handoff come from
+the canonical six-stage journey rather than UI-local inference. Token
+compilation remains Direction, implementation remains Build, and evidence or
+review remains Proof. Progress state is exposed visually and to assistive
+technology. The detailed model remains available through `journey`; the visual
+simplification does not weaken approval or verification boundaries.
+
+Opening the Studio performs bounded read-only inspection through a canonical,
+project-contained, non-symlinked script with pinned executables and a closed
+environment. Generator input containing terminal control characters fails
+before a plan is displayed.
 
 `verify full` checks repository contracts and available package checks;
 `verify web` additionally requires tools and runs build, interaction, and

@@ -12,6 +12,8 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 import project_brief
+import project_generator
+import project_journey
 from project_brief import BriefError, CLIENTS, load
 from project_checks import ProjectCheckError, active_profiles
 
@@ -81,6 +83,51 @@ def prompt_for(brief: dict, profiles: set[str]) -> str:
     return research + COMMON_PROMPT + route
 
 
+def studio_next_stage(journey: dict) -> str:
+    stages = {stage["id"]: stage["status"] for stage in journey["stages"]}
+    action = journey["next"]["action"].lower()
+    if any(stages[name] not in {"complete", "skipped"} for name in ("research", "product")):
+        return "product"
+    if any(stages[name] in {"active", "ready_for_human"} for name in ("verify", "review")) or any(
+        marker in action for marker in ("review ", "closeout", "prepare-merge", "finalize-pr")
+    ):
+        return "proof"
+    if stages["design"] not in {"complete", "skipped"} or any(
+        marker in action for marker in ("agentic design", "agentic tokens", "pnpm dev")
+    ):
+        return "direction"
+    if stages["build"] != "complete":
+        return "build"
+    return "proof"
+
+
+def studio_summary(journey: dict) -> list[dict[str, str]]:
+    stages = {stage["id"]: stage["status"] for stage in journey["stages"]}
+
+    def combined(*names: str) -> str:
+        values = [stages[name] for name in names]
+        if all(value in {"complete", "skipped"} for value in values):
+            return "complete"
+        if any(value in {"active", "ready_for_human"} for value in values):
+            return "active"
+        return "waiting"
+
+    summary = [
+        {"id": "product", "label": "Shape", "status": combined("research", "product")},
+        {"id": "direction", "label": "Direction", "status": combined("design")},
+        {"id": "build", "label": "Build", "status": combined("build")},
+        {"id": "proof", "label": "Proof", "status": combined("verify", "review")},
+    ]
+    next_stage = studio_next_stage(journey)
+    if not all(stage["status"] == "complete" for stage in summary):
+        for stage in summary:
+            if stage["id"] == next_stage:
+                stage["status"] = "active"
+            elif stage["status"] == "active":
+                stage["status"] = "waiting"
+    return summary
+
+
 def handoff(root: Path, client: str | None = None) -> dict:
     brief = load(root)
     try:
@@ -98,13 +145,27 @@ def handoff(root: Path, client: str | None = None) -> dict:
         if candidate.is_relative_to(root.resolve()) or candidate.resolve().is_relative_to(root.resolve()):
             raise BriefError("Refusing a project-local executable masquerading as a coding client")
         executable = str(candidate)
+    journey = project_journey.build(root) if (root / ".agentic/generated-project.json").is_file() else None
+    prompt = prompt_for(brief, profiles)
+    if journey:
+        prompt += (
+            f"The current guided next step is '{journey['next']['title']}'. "
+            f"Use the local workflow action `{journey['next']['action']}` only when it remains applicable; "
+            "do not confuse that action with human scope, design, review, or merge approval. "
+        )
+    studio_stages = studio_summary(journey) if journey else []
+    studio_next = ({**journey["next"], "stage": studio_next_stage(journey)} if journey else None)
     return {
         "project": brief["name"], "directory": str(root.resolve()),
         "client": selected, "available": executable is not None,
-        "executable": executable, "prompt": prompt_for(brief, profiles),
+        "executable": executable, "prompt": prompt,
         "research_enabled": research_enabled,
         "profiles": sorted(profiles),
         "brief_status": brief["status"], "mutation_performed": False,
+        "studio": {
+            "stages": studio_stages,
+            "next": studio_next,
+        },
     }
 
 
@@ -118,13 +179,16 @@ def run(args: argparse.Namespace, root: Path = ROOT) -> int:
         print(json.dumps(result, indent=2))
         return 0
     first_goal = (
-        "Research and shape the first product journey"
-        if result["research_enabled"]
-        else "Create the first live directions"
-        if "three live product-specific" in result["prompt"]
+        result["studio"]["next"]["title"]
+        if result["studio"]["next"]
         else "Shape the first product journey"
     )
-    print(f"{first_goal} for {result['project']}\nProject folder: {result['directory']}")
+    print(f"PROJECT STUDIO — {result['project']}")
+    if result["studio"]["stages"]:
+        print("  " + "  →  ".join(
+            f"{stage['label']} [{stage['status']}]" for stage in result["studio"]["stages"]
+        ))
+    print(f"\nNow: {first_goal}\nProject folder: {result['directory']}")
     print("\nUse your existing coding-assistant account. Sign-in stays inside its native client.")
     print("No installation, keys, permission changes, or product implementation happen here.")
     if result["client"] == "choose" and sys.stdin.isatty():
@@ -132,15 +196,7 @@ def run(args: argparse.Namespace, root: Path = ROOT) -> int:
         result = handoff(root, selected)
     if result["client"] in {"manual", "choose"}:
         print("\nOpen this exact folder in your coding app or editor, then paste:\n\n" + result["prompt"])
-        terminal_command = (
-            "./agentic design sprint"
-            if not result["research_enabled"]
-            and "web-next" in result["profiles"]
-            and "design-critical" in result["profiles"]
-            and "three live product-specific" in result["prompt"]
-            else "./agentic start"
-        )
-        print(f"\nFor a terminal client: {terminal_command} --assistant claude (or codex).")
+        print("\nFor a terminal client: ./agentic start --assistant claude (or codex).")
         return 0
     if not result["available"]:
         print(f"\nThe {result['client']} terminal client is not on PATH. Nothing was installed.")
@@ -159,6 +215,27 @@ def run(args: argparse.Namespace, root: Path = ROOT) -> int:
 
 
 def main() -> int:
+    if not (ROOT / project_brief.BRIEF_PATH).is_file():
+        if sys.argv[1:] == ["--help"]:
+            print("Create a project through the guided Project Studio.\n\nUsage: ./agentic start\n       ./agentic start --json\n\nAdvanced and non-interactive creation: ./agentic setup create")
+            return 0
+        if sys.argv[1:] == ["--json"]:
+            print(json.dumps({
+                "schema_version": 1,
+                "mode": "create",
+                "project": None,
+                "next": {"title": "Describe the product you want to create", "action": "./agentic start"},
+                "mutation_performed": False,
+            }, indent=2))
+            return 0
+        if len(sys.argv) != 1:
+            print("Project Studio: run ./agentic start without options to create a project; advanced generation remains under ./agentic setup create.", file=sys.stderr)
+            return 2
+        try:
+            return project_generator.run(project_generator.interactive_answers())
+        except (project_generator.GenerationError, OSError, EOFError, KeyboardInterrupt) as error:
+            print(f"Project Studio: {error}", file=sys.stderr)
+            return 1
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--assistant", choices=CLIENTS)
     parser.add_argument("--json", action="store_true")

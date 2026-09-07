@@ -1,11 +1,12 @@
 # Handoff
 
-Last updated: 2026-09-06
+Last updated: 2026-09-07
 
 ## Current goal
 
-Validate whether newcomers can understand the promise, create a project, and
-reach one useful verified product slice without maintainer intervention.
+Complete T-051 by proving that one `./agentic start` doorway creates and resumes
+the Project Studio across supported profiles without hiding capability limits
+or weakening design, evidence, review, and human approval boundaries.
 
 ## Implemented
 
@@ -37,15 +38,21 @@ reach one useful verified product slice without maintainer intervention.
 - Consent-based local P1–P5 pilot packets, closed anonymous scorecards, strict
   privacy validation, aggregate thresholds, repeated-blocker detection, and
   read-only summary output unless a new report path is explicitly confirmed.
+- One public `start` doorway in the starter and generated projects, an
+  outcome-first interview, editable plain-language route recommendation,
+  provider/client progressive disclosure, persisted product idea, and a
+  Shape → Direction → Build → Proof web Studio.
 
 ## Evidence and limits
 
-See `docs/50-evals/evidence/T-050/` for current implementation checks and
-limits, and `docs/50-evals/evidence/T-049/` for the creative sprint. The
-deterministic evaluator has synthetic regression coverage; that coverage is not
-a participant result. Product/design, security, and integration reviews pass on
-the same implementation commit, and human task approval is recorded. The
-fresh-project page was inspected at desktop and 390px, but a live
+T-051 has 95 focused Python tests, 11 web unit tests, clean-checkout release
+smoke, full repository verification, and a fresh research-enabled generated
+project production/browser/accessibility pass. Product/design, security, and
+integration reviews pass on reviewed implementation commits; the final
+cross-profile integration head is `9114f3f`. Results are recorded in
+`docs/50-evals/evidence/T-051/`. The deterministic evaluator has synthetic
+regression coverage; that coverage is not a participant result. The
+fresh-project page was checked across desktop and mobile, but a live
 assistant-generated candidate set, native sign-in, and newcomer sessions have
 still not been measured through the pilot.
 
@@ -54,9 +61,7 @@ deployment, or merge is implied.
 
 ## Exact next action
 
-Run `./agentic pilot plan`, recruit five consenting people who did not build the
-repository, and give each only the public README. Their route should exercise
-the public promise, Perplexity choice or skip path, generated research contract,
-handoff, and `journey` output. Use the aggregate result to choose the next small
-fix; do not claim measured self-service or design-quality success from tests
-alone.
+The product owner inspects draft PR #82, its running-product evidence, and its
+independent reviews. Request changes when needed, or record explicit task
+approval after accepting the result. Approval does not authorize merge.
+The five-person newcomer pilot remains a separate human-run launch gate.

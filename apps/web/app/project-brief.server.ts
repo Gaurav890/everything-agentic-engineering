@@ -1,8 +1,10 @@
-import {existsSync, lstatSync, readFileSync} from "node:fs";
-import {resolve} from "node:path";
+import {existsSync, lstatSync, readFileSync, realpathSync, statSync} from "node:fs";
+import {execFileSync} from "node:child_process";
+import {isAbsolute, join, relative, resolve, sep} from "node:path";
 
 export type ProjectBrief = {
   name: string;
+  idea: string | null;
   audience: string;
   promise: string;
   first_outcome: string | null;
@@ -28,13 +30,117 @@ export type ProjectCandidate = {
   preview_path: string;
 };
 
+export type ProjectDesignStatus = "needs_approval" | "approved";
+
+export type ProjectStudioStage = {
+  id: "product" | "direction" | "build" | "proof";
+  label: "Shape" | "Direction" | "Build" | "Proof";
+  status: "complete" | "active" | "waiting";
+};
+
+export type ProjectStudioContext = {
+  client: "choose" | "claude" | "codex" | "manual";
+  prompt: string;
+  research_enabled: boolean;
+  mutation_performed: false;
+  studio: {
+    stages: ProjectStudioStage[];
+    next: {title: string; action: string; stage: ProjectStudioStage["id"]};
+  };
+};
+
+function projectRoot(): string {
+  return resolve(process.cwd(), "../..");
+}
+
+function trustedProjectFile(root: string, candidate: string): string {
+  const canonicalRoot = realpathSync(root);
+  const requested = resolve(candidate);
+  const canonical = realpathSync(requested);
+  const contained = relative(canonicalRoot, canonical);
+  if (!contained || contained.startsWith(`..${sep}`) || contained === ".." || isAbsolute(contained) || !statSync(canonical).isFile()) {
+    throw new Error("Project context must stay inside the project.");
+  }
+  let current = canonicalRoot;
+  for (const part of relative(canonicalRoot, requested).split(sep)) {
+    current = join(current, part);
+    if (lstatSync(current).isSymbolicLink()) throw new Error("Project context must not follow symlinks.");
+  }
+  return canonical;
+}
+
 function readProjectFile(filename: string): unknown {
-  const directory = resolve(process.cwd(), "../../.agentic");
+  const directory = resolve(projectRoot(), ".agentic");
   const file = resolve(directory, filename);
   if (lstatSync(directory).isSymbolicLink() || (existsSync(file) && lstatSync(file).isSymbolicLink())) {
     throw new Error("Project context must not follow symlinks.");
   }
   return existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : null;
+}
+
+export function getProjectStudioContext(): ProjectStudioContext {
+  const root = realpathSync(projectRoot());
+  let script: string;
+  let node: string;
+  try {
+    script = trustedProjectFile(root, resolve(root, "scripts/project_handoff.py"));
+    node = realpathSync(process.execPath);
+    const nodeLocation = relative(realpathSync(root), node);
+    if (!nodeLocation || (!nodeLocation.startsWith(`..${sep}`) && nodeLocation !== ".." && !isAbsolute(nodeLocation))) {
+      throw new Error("The web runtime cannot come from the project.");
+    }
+  } catch {
+    throw new Error("The Project Studio handoff is missing or unsafe.");
+  }
+  let parsed: unknown;
+  try {
+    const output = execFileSync("/usr/bin/python3", [script, "--json"], {
+      cwd: root,
+      env: {
+        AGENTIC_GIT_EXECUTABLE: "/usr/bin/git",
+        AGENTIC_NODE_EXECUTABLE: node,
+        AGENTIC_STUDIO_INSPECTION: "1",
+        NODE_ENV: process.env.NODE_ENV ?? "production",
+        PATH: "/usr/bin:/bin",
+        PYTHONDONTWRITEBYTECODE: "1",
+      },
+      encoding: "utf8",
+      timeout: 5_000,
+      maxBuffer: 512 * 1024,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    parsed = JSON.parse(output);
+  } catch {
+    throw new Error("The Project Studio could not read the current journey. Run ./agentic start in the terminal for guidance.");
+  }
+  const data = parsed as Record<string, unknown>;
+  const studio = data?.studio as Record<string, unknown> | undefined;
+  const stages = studio?.stages;
+  const next = studio?.next as Record<string, unknown> | undefined;
+  const expected = [
+    ["product", "Shape"],
+    ["direction", "Direction"],
+    ["build", "Build"],
+    ["proof", "Proof"],
+  ];
+  if (
+    data?.mutation_performed !== false ||
+    typeof data?.prompt !== "string" || !data.prompt.trim() || data.prompt.length > 100_000 ||
+    typeof data?.research_enabled !== "boolean" ||
+    !["choose", "claude", "codex", "manual"].includes(String(data?.client)) ||
+    !Array.isArray(stages) || stages.length !== expected.length ||
+    !stages.every((value, index) => {
+      const stage = value as Record<string, unknown>;
+      return stage.id === expected[index][0] && stage.label === expected[index][1] &&
+        ["complete", "active", "waiting"].includes(String(stage.status));
+    }) ||
+    typeof next?.title !== "string" || !next.title.trim() ||
+    typeof next?.action !== "string" || !next.action.trim() ||
+    !["product", "direction", "build", "proof"].includes(String(next?.stage))
+  ) {
+    throw new Error("The Project Studio journey is invalid. Run ./agentic start in the terminal for guidance.");
+  }
+  return data as ProjectStudioContext;
 }
 
 export function getProjectBrief(): ProjectBrief | null {
@@ -47,7 +153,7 @@ export function getProjectBrief(): ProjectBrief | null {
   if (
     data.schema_version !== 1 ||
     !["name", "audience", "promise"].every(key => typeof data[key] === "string" && String(data[key]).trim()) ||
-    !["first_outcome", "design_preferences"].every(key => data[key] == null || typeof data[key] === "string") ||
+    !["idea", "first_outcome", "design_preferences"].every(key => data[key] == null || typeof data[key] === "string") ||
     !["design_mode", "assistant", "status"].every(key => typeof data[key] === "string") ||
     !["custom", "existing-brand", "reference"].includes(String(data.design_mode)) ||
     !["choose", "claude", "codex", "manual"].includes(String(data.assistant)) ||
@@ -58,7 +164,7 @@ export function getProjectBrief(): ProjectBrief | null {
   ) throw new Error("The project brief is invalid. Run ./agentic start for guidance.");
   // Only public product intent goes to the page, not client paths or credentials.
   return Object.fromEntries([
-    "name", "audience", "promise", "first_outcome", "design_preferences",
+    "name", "idea", "audience", "promise", "first_outcome", "design_preferences",
     "design_mode", "assistant", "status",
   ].map(key => [key, data[key]])) as ProjectBrief;
 }
@@ -80,4 +186,12 @@ export function getProjectCandidates(): ProjectCandidate[] {
     }
     return {...Object.fromEntries(keys.map(key => [key, candidate[key]])), states: candidate.states} as ProjectCandidate;
   });
+}
+
+export function getProjectDesignStatus(): ProjectDesignStatus {
+  const data = readProjectFile("design.json") as Record<string, unknown> | null;
+  if (!data || !["needs_approval", "approved"].includes(String(data.status))) {
+    throw new Error("The project design state is invalid. Run ./agentic design check.");
+  }
+  return data.status as ProjectDesignStatus;
 }

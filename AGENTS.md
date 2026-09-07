@@ -135,7 +135,8 @@ details during the migration. Never expose internal policy helpers or runtime
 security hooks as ordinary contributor commands, and never route around a hook
 through the convenience layer.
 
-New downstream projects use `./agentic setup create`. Generation is copy-only
+Newcomers use `./agentic start`; advanced and non-interactive creation remains
+available through `./agentic setup create`. Generation is copy-only
 into a previously absent path outside the starter checkout. It must preserve
 the source, refuse overlays, exclude Git state/secrets/dependencies/caches,
 reset starter execution history, leave external integrations unconfigured, and

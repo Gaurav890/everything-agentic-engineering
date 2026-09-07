@@ -8,6 +8,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- `./agentic start` is now the single public create-or-resume doorway. Guided
+  creation asks for the product idea, audience, and outcome before recommending
+  an editable plain-language path; internal profiles, provider names, client
+  selection, and file/capability inventories stay behind progressive disclosure.
+- Generated custom web workspaces now present Shape → Direction → Build → Proof
+  progress and route continuation through the same start command while keeping
+  design approval, token compilation, implementation, evaluation, and merge as
+  separate authority boundaries.
 - The public entry point now explains one outcome-first promise and one visible
   research → product → design → build → verify → review journey instead
   of presenting the starter primarily as an engineering-tool catalog.

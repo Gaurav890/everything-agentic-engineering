@@ -124,7 +124,7 @@ def build(root: Path = ROOT, task_id: str | None = None) -> dict[str, Any]:
             "project": "New project",
             "promise": "Turn an idea into a distinctive, researched, working product slice with evidence.",
             "stages": [
-                {"id": "research", "status": "decision", "detail": "Choose Perplexity-first current research or the no-research fast path during creation."},
+                {"id": "research", "status": "decision", "detail": "Decide whether current evidence should shape the first pass; provider details stay optional."},
                 {"id": "product", "status": "waiting", "detail": "Capture the audience, promise, and first useful journey."},
                 {"id": "design", "status": "waiting", "detail": "Compare live product-specific directions before token approval."},
                 {"id": "build", "status": "waiting", "detail": "Implement one approved vertical slice."},

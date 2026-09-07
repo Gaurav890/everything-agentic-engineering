@@ -43,15 +43,16 @@ ENTERPRISE_PROJECT="$TEMP_ROOT/smoke-enterprise"
 
 printf '%s\n' \
   "Guided Signal" \
-  "$GUIDED_PROJECT" \
-  "2" \
+  "A product where teams review consequential automated choices" \
   "people comparing choices" \
   "Make a confident decision." \
   "Compare the first two choices." \
   "" \
+  "$GUIDED_PROJECT" \
   "" \
-  "manual" \
-  "y" | ./agentic setup create >/dev/null
+  "" \
+  "recommend for me" \
+  "y" | ./agentic start >/dev/null
 test -f "$GUIDED_PROJECT/.agentic/experience.json"
 GUIDED_NEXT="$("$GUIDED_PROJECT/agentic" next)"
 [[ "$GUIDED_NEXT" == *"./agentic start"* ]] || {

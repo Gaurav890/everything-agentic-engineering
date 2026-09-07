@@ -7,7 +7,7 @@ import ts from "typescript";
 
 const source = readFileSync(new URL("../app/project-brief.server.ts", import.meta.url), "utf8");
 const {outputText} = ts.transpileModule(source, {compilerOptions: {module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022}});
-const {getProjectBrief, getProjectCandidates} = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
+const {getProjectBrief, getProjectCandidates, getProjectStudioContext} = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 const captured = {schema_version: 1, name: "Sample", audience: "Readers", promise: "Read clearly.", first_outcome: null, design_preferences: null, assistant: "manual", design_mode: "custom", status: "captured", open_questions: []};
 
 function fixture(run) {
@@ -74,5 +74,41 @@ test("candidate views accept local previews without exposing sources", () => fix
   for (const preview_path of ["https://example.com", "//example.com", "/../secret", "javascript:alert(1)"]) {
     write("design-directions.json", {directions: [{...candidate, preview_path}]});
     assert.throws(getProjectCandidates, /safe local preview/);
+  }
+}));
+
+test("Studio inspection rejects a symlinked scripts ancestor", () => fixture((write, root) => {
+  const external = mkdtempSync(join(tmpdir(), "project-studio-external-"));
+  try {
+    writeFileSync(join(external, "project_handoff.py"), "print('untrusted')\n");
+    symlinkSync(external, join(root, "scripts"), "dir");
+    assert.throws(getProjectStudioContext, /missing or unsafe/);
+  } finally {
+    rmSync(external, {recursive: true, force: true});
+  }
+}));
+
+test("Studio inspection uses a contained script and a closed environment", () => fixture((write, root) => {
+  mkdirSync(join(root, "scripts"));
+  writeFileSync(join(root, "scripts/project_handoff.py"), [
+    "import json, os",
+    "print(json.dumps({",
+    "  'client': 'manual', 'prompt': os.environ.get('PROJECT_SECRET_SENTINEL', 'closed'),",
+    "  'research_enabled': True, 'mutation_performed': False,",
+    "  'studio': {'stages': [",
+    "    {'id': 'product', 'label': 'Shape', 'status': 'active'},",
+    "    {'id': 'direction', 'label': 'Direction', 'status': 'waiting'},",
+    "    {'id': 'build', 'label': 'Build', 'status': 'waiting'},",
+    "    {'id': 'proof', 'label': 'Proof', 'status': 'waiting'}],",
+    "    'next': {'title': 'Ground the product', 'action': './agentic start', 'stage': 'product'}}",
+    "}))",
+  ].join("\n"));
+  process.env.PROJECT_SECRET_SENTINEL = "inherited";
+  try {
+    const context = getProjectStudioContext();
+    assert.equal(context.prompt, "closed");
+    assert.equal(context.studio.next.stage, "product");
+  } finally {
+    delete process.env.PROJECT_SECRET_SENTINEL;
   }
 }));

@@ -1,8 +1,9 @@
 import AxeBuilder from "@axe-core/playwright";
 import {expect, test} from "@playwright/test";
-import {getProjectBrief, getProjectCandidates} from "../app/project-brief.server";
+import {getProjectBrief, getProjectCandidates, getProjectStudioContext} from "../app/project-brief.server";
 
 const brief = getProjectBrief();
+const context = brief ? getProjectStudioContext() : null;
 test.skip(!brief || brief.design_mode === "reference", "Generated custom/existing-brand workspace only");
 
 test("shows the saved project and one executable continuation", async ({page}) => {
@@ -11,8 +12,16 @@ test("shows the saved project and one executable continuation", async ({page}) =
   await expect(page.getByRole("heading", {level: 1})).toContainText(brief!.name);
   await expect(page.locator("aside")).toContainText(brief!.promise);
   await expect(page.locator("aside")).toContainText(brief!.audience);
-  await expect(page.getByText("./agentic design sprint", {exact: true})).toBeVisible();
-  await expect(page.getByText("Your product directions are ready to be made.")).toHaveCount(getProjectCandidates().length ? 0 : 1);
+  await expect(page.locator("#continue").getByText("./agentic start", {exact: true})).toBeVisible();
+  const progress = page.getByRole("list", {name: "Project progress"});
+  await expect(progress).toBeVisible();
+  for (const [index, stage] of context!.studio.stages.entries()) {
+    const step = progress.locator("li").nth(index);
+    await expect(step).toHaveAttribute("data-status", stage.status);
+    await expect(step).toHaveAttribute("aria-label", `${stage.label}: ${stage.status}`);
+    await expect(step.locator(".sr-only")).toHaveText(`Status: ${stage.status}`);
+  }
+  await expect(page.getByText(context!.studio.next.title, {exact: true})).toHaveCount(getProjectCandidates().length ? 0 : 1);
   await expect(page.getByRole("button", {name: "Editorial Signal"})).toHaveCount(0);
   await expect(page.getByText("No API key is collected here", {exact: false})).toBeVisible();
 });
@@ -20,8 +29,8 @@ test("shows the saved project and one executable continuation", async ({page}) =
 test("copy succeeds or explains the manual fallback without launching anything", async ({page}) => {
   await page.goto("/");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async (value: string) => sessionStorage.setItem("copied", value)}}));
-  await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
-  expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic design sprint");
+  await page.getByRole("button", {name: "Copy start command", exact: true}).click();
+  expect(await page.evaluate(() => sessionStorage.getItem("copied"))).toBe("./agentic start");
   await expect(page.getByRole("status").first()).toContainText("Copied");
   const manualHandoff = page.locator("details").filter({hasText: "Already using an app or editor?"});
   if (!(await manualHandoff.getAttribute("open")) && !(await page.locator("pre").isVisible())) {
@@ -30,13 +39,16 @@ test("copy succeeds or explains the manual fallback without launching anything",
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: async () => { throw new Error("unavailable"); }}}));
   await page.getByRole("button", {name: "Copy instruction"}).click();
   await expect(page.getByRole("status").last()).toContainText("Select and copy");
-  await expect(page.locator("pre")).toContainText("project-onboarding");
+  await expect(page.locator("pre")).toHaveText(context!.prompt);
+  if (context!.research_enabled) {
+    await expect(page.locator("pre")).toContainText("docs/10-product/RESEARCH.md");
+  }
 });
 
 test("copy shows a pending state and prevents duplicate actions", async ({page}, testInfo) => {
   await page.goto("/");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {configurable: true, value: {writeText: () => new Promise<void>(() => {})}}));
-  await page.getByRole("button", {name: "Copy sprint command", exact: true}).click();
+  await page.getByRole("button", {name: "Copy start command", exact: true}).click();
   await expect(page.getByRole("button", {name: "Copying…", exact: true})).toBeDisabled();
   await expect(page.getByRole("status").first()).toHaveText("Copying…");
   await page.screenshot({path: testInfo.outputPath("copy-pending.png")});
@@ -50,7 +62,7 @@ test("workspace supports keyboard, narrow screens, and automated accessibility",
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   await page.keyboard.press("Tab");
-  const primary = page.getByRole("link", {name: "Create live directions"});
+  const primary = page.getByRole("link", {name: "Continue from here"});
   await expect(primary).toBeFocused();
   await expect(primary).toHaveCSS("outline-width", "3px");
   await expect.poll(() => primary.evaluate(node => getComputedStyle(node).outlineColor !== getComputedStyle(node).color)).toBe(true);

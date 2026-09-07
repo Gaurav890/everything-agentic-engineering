@@ -38,22 +38,24 @@ This starter gives you a product-building loop:
 ```bash
 git clone https://github.com/Gaurav890/everything-agentic-engineering.git
 cd everything-agentic-engineering
-./agentic setup create
+./agentic start
 ```
 
-The guide asks what you are building, who it serves, the first useful outcome,
-whether **Perplexity-first current research** should shape the first pass, how
-design should begin, and where you want to continue. It previews the plan and
-asks once before creating a new directory.
+The Project Studio asks what you are creating, who it serves, and the outcome
+first. It recommends an editable starting path in plain language, then asks
+whether current evidence should shape the first pass and how design should
+begin. Provider, profile, skill, task, and evidence machinery stays behind the
+advanced path. It previews the plan and asks once before creating a directory.
 
-When it finishes, copy the one command it prints. Inside the generated project:
+When it finishes, enter the generated project and use the same doorway:
 
 ```bash
-./agentic journey
+./agentic start
 ```
 
-That command shows every stage, its current state, and one exact next action.
-Use `./agentic next` later when you want only the next action.
+It resumes settled answers and prepares the right continuation. Use
+`./agentic journey` when you want the detailed stage map, or `./agentic next`
+when you want only the next low-level action.
 
 Project creation does not install dependencies or external skills, collect API
 keys, start MCP servers, launch a client without confirmation, initialize Git,
@@ -241,9 +243,10 @@ exclusive backend choices.
 ## The commands most people need
 
 ```bash
-./agentic setup create     # create a project from a guided brief
+./agentic start            # create a project or resume its guided Studio
 ./agentic journey          # see the complete path and current state
 ./agentic next             # get exactly one next action
+./agentic setup create     # advanced/non-interactive project creation
 ./agentic design sprint    # build/review product-specific live directions
 ./agentic tokens build     # compile an approved direction
 ./agentic verify web       # run web behavior and quality checks
