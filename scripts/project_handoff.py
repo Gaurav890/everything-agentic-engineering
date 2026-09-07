@@ -88,14 +88,14 @@ def studio_next_stage(journey: dict) -> str:
     action = journey["next"]["action"].lower()
     if any(stages[name] not in {"complete", "skipped"} for name in ("research", "product")):
         return "product"
-    if stages["design"] not in {"complete", "skipped"} or any(
-        marker in action for marker in ("agentic design", "agentic tokens", "pnpm dev")
-    ):
-        return "direction"
     if any(stages[name] in {"active", "ready_for_human"} for name in ("verify", "review")) or any(
         marker in action for marker in ("review ", "closeout", "prepare-merge", "finalize-pr")
     ):
         return "proof"
+    if stages["design"] not in {"complete", "skipped"} or any(
+        marker in action for marker in ("agentic design", "agentic tokens", "pnpm dev")
+    ):
+        return "direction"
     if stages["build"] != "complete":
         return "build"
     return "proof"
