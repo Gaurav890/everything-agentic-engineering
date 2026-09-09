@@ -133,10 +133,24 @@ must be checked against the installed version.
   network, and rollback review.
 - Claude Code 2.1.239 prevents a request rejected by organization policy from
   being resent before the rejection is shown, preserves plan mode after cloud
-  worker restarts, and corrects WebFetch cache expiry. It is the repository's
-  recommended tested floor because it is the newest release with specific,
-  reviewable trust-boundary evidence; the generic 2.1.240–2.1.241 release notes
-  are not used to claim additional guarantees.
+  worker restarts, and corrects WebFetch cache expiry.
+- Claude Code 2.1.251 closes permission-check-to-use symlink swaps, plugin
+  marketplace path traversal, tracing-policy, workflow `scriptPath`, and
+  Grep/Glob symlink-deny gaps. Claude Code 2.1.257 adds containment escape,
+  outside-working-directory read, and provider credential/header isolation
+  hardening. These fixes do not authorize auto mode, tracing, workflow script
+  execution, plugin installation, or provider credentials.
+- Claude Code 2.1.259 is the repository's recommended tested floor. Its Bash
+  read-deny enforcement covers option values, Git operands, compound commands,
+  and recursive execution; concurrent sessions no longer revert shared state;
+  and invalid managed policy fails closed.
+- Managed MCP servers introduced at that floor remain disabled and require a
+  separate human-reviewed origin, credential, network, tool-authority, audit,
+  failure, and rollback decision.
+- Claude Code 2.1.261 adds `/skill-doctor`, which can report loaded-skill
+  context cost and apparently unused skills. Treat `/skill-doctor` as an
+  advisory operator diagnostic only: it does not authorize automatic skill
+  deletion, pruning, installation, or changes to repository routing.
 - This recommendation does not authorize adding credential paths, secrets,
   sandbox settings, network allowlists, runtime upgrades, or new execution
   surfaces to the repository. Inventory and approve those separately.
@@ -153,17 +167,29 @@ The repository contract remains authoritative regardless of runtime defaults.
 - Codex 0.147.0 introduced the repository's optional plugin, MCP 2026-07-28,
   and automatic-review capability records. Those remain disabled and
   human-gated.
-- Codex 0.148.0 or newer is the recommended tested baseline. It prevents model
+- Codex 0.148.0 prevents model
   or settings changes from leaving stale instructions or changing an active
   turn, restores persisted working directory and approval policy on resume,
   recovers MCP servers after OAuth reauthentication, and makes the sandbox fail
   closed for denied or unreadable paths across Linux and Windows.
-  `codex-doctor.sh --strict-runtime` enforces that floor on a
-  developer machine; normal CI validates the adapter without installing or
-  upgrading Codex.
+  Normal CI validates the adapter without installing or upgrading Codex.
 - Codex 0.148.0 can run hooks asynchronously and invoke MCP tools. That is an
   authority-expanding optional surface, not a baseline permission; the
   committed adapter does not enable it.
+- Codex 0.150.0 prevents untrusted projects from supplying project-level
+  instructions, preserves managed read-deny policy across permission changes,
+  and strengthens diagnostic credential redaction. Codex 0.150.1 preserves
+  retained-image accounting during compaction.
+- Codex 0.153.0 is the recommended tested floor. Guardian review history now
+  survives compaction, restarts, and forks while respecting rollback and
+  subagent isolation; remembered MCP approvals for the selected app account
+  stay account-scoped; and reconnect pauses uncertain submissions instead of silently
+  replaying them. `codex-doctor.sh --strict-runtime` enforces this floor on a
+  developer machine.
+- Remote plugin marketplaces and experimental context management are available
+  upstream at 0.153.0 but remain disabled and human-gated. The repository does
+  not configure a marketplace, install external code, enable experimental
+  context management, connect an MCP server, or change automatic-review policy.
 - Do not infer authorization from an automatic reviewer or model default.
   Project permission profiles, human approval, security review, and external
   action boundaries still apply.

@@ -21,6 +21,11 @@ This file is the cross-runtime contract and is loaded natively by Codex.
 - `.agentic/runtime-baselines.json` records reviewed Claude Code and Codex
   version floors and optional capability gates; `runtime-doctor.sh` reports
   them without installing or enabling anything.
+- Claude Code 2.1.259 and Codex 0.153.0 are the current tested floors. A newer
+  installed runtime does not activate optional capabilities or widen authority.
+- Claude Code `/skill-doctor` is a read-only operator diagnostic. Its unused-
+  skill and context-cost suggestions never authorize automatic pruning,
+  installation, or mutation of project skills.
 - Run `./agentic doctor codex` after Codex adapter changes.
 - Run `./agentic doctor plugin` after portable package or shared-skill changes.
 - Run `./agentic doctor mcp` after MCP policy or project configuration changes.

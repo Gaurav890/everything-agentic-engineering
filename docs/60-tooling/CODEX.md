@@ -22,7 +22,7 @@ on a developer machine can require the runtime floor:
 ./scripts/codex-doctor.sh --strict-runtime
 ```
 
-Codex 0.148.0 or newer is the recommended tested baseline. An
+Codex 0.153.0 or newer is the recommended tested baseline. An
 older runtime does not authorize an automatic upgrade; review and approve
 runtime changes separately.
 
@@ -79,6 +79,19 @@ Changed hooks require renewed trust in Codex.
 Codex 0.148.0 adds optional asynchronous hooks and MCP-tool invocation from
 hooks. The repository does not enable either surface. Adding them requires a
 separate command, credential, network, MCP, failure, and rollback review.
+
+Codex 0.150.0 prevents an untrusted project from supplying project-level
+instructions, preserves managed read-deny policy after permission changes,
+and improves diagnostic credential redaction. Codex 0.153.0 carries reviewer
+history across compaction, restarts, and forks while respecting rollback and
+subagent isolation, and scopes remembered MCP approvals to the selected app
+account. These are runtime hardening guarantees, not permission to enable an
+MCP server or automatic reviewer.
+
+Remote plugin marketplaces and experimental context management introduced in
+0.153.0 remain disabled and human-gated. The adapter does not install plugins,
+configure marketplaces, opt into experimental context management, or change
+model, provider, credential, network, sandbox, approval, or production policy.
 
 ## Parallel work
 

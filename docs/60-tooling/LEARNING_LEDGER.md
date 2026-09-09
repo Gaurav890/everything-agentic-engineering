@@ -555,3 +555,61 @@ this file.
   #62. It does not install or upgrade either runtime; enable helpers, hooks,
   plugins, MCP servers, credentials, network, sandbox, provider, model,
   production, approval, or merge authority; or change managed settings.
+
+### L-2026-09-08-01 — Runtime releases strengthen containment, project trust, review history, and account-scoped approvals
+
+- **State:** trial
+- **Event dates:** 2026-08-28–2026-09-04
+- **Discovered:** 2026-09-07
+- **Domains:** Claude Code, Codex, filesystem containment, project trust,
+  credentials, managed policy, review history, MCP approval scoping
+- **Sources:**
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.251`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.257`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.259`
+    (first-party release, high authority)
+  - `https://github.com/anthropics/claude-code/releases/tag/v2.1.261`
+    (first-party release, high authority)
+  - `https://github.com/openai/codex/releases/tag/rust-v0.150.0`
+    (first-party release, high authority)
+  - `https://github.com/openai/codex/releases/tag/rust-v0.150.1`
+    (first-party release, high authority)
+  - `https://github.com/openai/codex/releases/tag/rust-v0.153.0`
+    (first-party release, high authority)
+- **Change:** Claude Code 2.1.251–2.1.259 closes symlink/plugin path,
+  tracing/workflow read, containment, provider-credential, Bash deny,
+  concurrent-state, and managed-policy gaps. Codex 0.150.0–0.153.0 strengthens
+  untrusted-project instruction handling, managed deny persistence, credential
+  redaction, retained-image accounting, reviewer-history durability, and MCP
+  approval scoping to the selected app account. Claude Code 2.1.261 adds a
+  read-only `/skill-doctor` diagnostic for loaded-skill use and context cost.
+- **Repository relevance:** These behaviors sit directly on the starter's
+  filesystem, instruction, credential, review, plugin, and MCP trust boundaries.
+- **Existing coverage / duplicate status:** partial. The prior ledger covered
+  Claude Code through 2.1.239 and Codex through 0.148.0. This entry records only
+  later material changes; unchanged release-note items are deduplicated.
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 5 / risk 1 /
+  maintenance 1 / novelty 5
+- **Recommendation:** raise the tested read-only floors to Claude Code 2.1.259
+  and Codex 0.153.0. Keep managed MCP servers, remote plugin marketplaces, and
+  experimental context management disabled and human-gated. Treat
+  `/skill-doctor` as advisory; never auto-prune or install skills from its report.
+- **Affected artifacts:** `.agentic/runtime-baselines.json`, compatibility,
+  installation and adapter guidance, security model, tests, changelog, and
+  durable state
+- **Acceptance and verification:** strict simulation rejects Claude Code
+  2.1.258 and Codex 0.152.1, accepts 2.1.259 and 0.153.0, preserves read-only
+  advisory/JSON output, and leaves optional capability gates false and
+  human-controlled; focused and full repository verification must pass.
+- **Uncertainty:** Upstream release notes do not publish complete exploit
+  prerequisites, CVEs, or affected-version ranges. A documented fix supports a
+  conservative tested floor, not a claim that every earlier version is
+  exploitable. `/skill-doctor` heuristics may not capture repository routing or
+  intentionally dormant skills.
+- **Decision/PR:** T-052 is the bounded issue #74 compatibility-policy trial.
+  It does not install or upgrade runtimes; execute external code; enable
+  plugins, marketplaces, MCP servers, experimental context management, models,
+  credentials, network, sandbox, approval, deployment, production, or merge;
+  or automatically change the skill catalog.

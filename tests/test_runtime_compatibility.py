@@ -32,9 +32,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
                     self.assertTrue(capability["human_approval_required"])
 
     def test_stable_release_meets_equal_baseline_but_prerelease_does_not(self) -> None:
-        stable = parse_version("codex-cli 0.148.0")
-        prerelease = parse_version("codex-cli 0.148.0-alpha.4")
-        required = parse_version("0.148.0")
+        stable = parse_version("codex-cli 0.153.0")
+        prerelease = parse_version("codex-cli 0.153.0-alpha.4")
+        required = parse_version("0.153.0")
         assert stable and prerelease and required
         self.assertTrue(stable.meets(required))
         self.assertFalse(prerelease.meets(required))
@@ -54,9 +54,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.238",
+            "2.1.258",
             "--codex-version",
-            "0.147.0",
+            "0.152.1",
         )
         self.assertEqual(result.returncode, 1)
         self.assertIn("FAIL", result.stdout)
@@ -65,9 +65,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--strict",
             "--claude-version",
-            "2.1.239",
+            "2.1.259",
             "--codex-version",
-            "codex-cli 0.148.0",
+            "codex-cli 0.153.0",
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Runtime compatibility PASS", result.stdout)
@@ -76,9 +76,9 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         result = self.run_doctor(
             "--json",
             "--claude-version",
-            "2.1.239",
+            "2.1.259",
             "--codex-version",
-            "0.148.0",
+            "0.153.0",
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         report = json.loads(result.stdout)
@@ -89,8 +89,8 @@ class RuntimeCompatibilityTests(unittest.TestCase):
     def test_runtime_baselines_record_hardening_without_expanding_authority(self) -> None:
         manifest = load_manifest(MANIFEST)
         claude = manifest["runtimes"]["claude"]
-        self.assertEqual(claude["recommended_minimum"], "2.1.239")
-        self.assertTrue(claude["source"].endswith("/v2.1.239"))
+        self.assertEqual(claude["recommended_minimum"], "2.1.259")
+        self.assertTrue(claude["source"].endswith("/v2.1.259"))
 
         capabilities = {item["id"]: item for item in claude["capabilities"]}
         self.assertEqual(
@@ -145,13 +145,30 @@ class RuntimeCompatibilityTests(unittest.TestCase):
             capabilities["organization-policy-replay-and-plan-resume-hardening"]["minimum"],
             "2.1.239",
         )
+        self.assertEqual(
+            capabilities["symlink-plugin-tracing-and-workflow-read-hardening"]["minimum"],
+            "2.1.251",
+        )
+        self.assertEqual(
+            capabilities[
+                "containment-outside-read-and-provider-credential-hardening"
+            ]["minimum"],
+            "2.1.257",
+        )
+        self.assertEqual(
+            capabilities["deny-rule-concurrent-state-and-managed-policy-hardening"]["minimum"],
+            "2.1.259",
+        )
         headers_helper = capabilities["marketplace-and-mcp-headers-helper"]
         self.assertFalse(headers_helper["default_enabled"])
         self.assertTrue(headers_helper["human_approval_required"])
+        managed_mcp = capabilities["managed-mcp-servers"]
+        self.assertFalse(managed_mcp["default_enabled"])
+        self.assertTrue(managed_mcp["human_approval_required"])
 
         codex = manifest["runtimes"]["codex"]
-        self.assertEqual(codex["recommended_minimum"], "0.148.0")
-        self.assertTrue(codex["source"].endswith("/rust-v0.148.0"))
+        self.assertEqual(codex["recommended_minimum"], "0.153.0")
+        self.assertTrue(codex["source"].endswith("/rust-v0.153.0"))
         codex_capabilities = {item["id"]: item for item in codex["capabilities"]}
         self.assertEqual(
             codex_capabilities["resumed-policy-and-instruction-state-hardening"]["minimum"],
@@ -163,15 +180,42 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         self.assertTrue(
             codex_capabilities["mcp-oauth-reauthentication-recovery"]["default_enabled"]
         )
+        self.assertEqual(
+            codex_capabilities[
+                "untrusted-project-managed-deny-and-diagnostic-hardening"
+            ]["minimum"],
+            "0.150.0",
+        )
+        self.assertEqual(
+            codex_capabilities["retained-image-compaction-accounting"]["minimum"],
+            "0.150.1",
+        )
+        self.assertEqual(
+            codex_capabilities[
+                "guardian-history-and-mcp-account-approval-hardening"
+            ]["minimum"],
+            "0.153.0",
+        )
         mcp_hooks = codex_capabilities["asynchronous-and-mcp-invoking-hooks"]
         self.assertFalse(mcp_hooks["default_enabled"])
         self.assertTrue(mcp_hooks["human_approval_required"])
+        for capability_id in (
+            "remote-plugin-marketplaces",
+            "experimental-context-management",
+        ):
+            self.assertFalse(codex_capabilities[capability_id]["default_enabled"])
+            self.assertTrue(
+                codex_capabilities[capability_id]["human_approval_required"]
+            )
         compatibility = (ROOT / "docs/60-tooling/COMPATIBILITY.md").read_text()
         self.assertIn("reverts", compatibility)
         self.assertIn("Bash input redirection", compatibility)
         self.assertIn("MCP `headersHelper`", compatibility)
         self.assertIn("makes the sandbox fail", compatibility)
         self.assertIn("closed for denied or unreadable paths", compatibility)
+        self.assertIn("`/skill-doctor`", compatibility)
+        self.assertIn("selected app account", compatibility)
+        self.assertIn("experimental context management", compatibility)
         self.assertFalse(capabilities["cross-session-messaging"]["default_enabled"])
         self.assertTrue(
             capabilities["cross-session-messaging"]["human_approval_required"]

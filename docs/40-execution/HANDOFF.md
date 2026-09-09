@@ -1,14 +1,24 @@
 # Handoff
 
-Last updated: 2026-09-07
+Last updated: 2026-09-08
 
 ## Current goal
 
-Complete T-051 by proving that one `./agentic start` doorway creates and resumes
-the Project Studio across supported profiles without hiding capability limits
-or weakening design, evidence, review, and human approval boundaries.
+Complete T-052 by raising the tested, read-only runtime floors to Claude Code
+2.1.259 and Codex 0.153.0 using first-party release evidence while preserving
+every optional capability and human approval boundary.
 
 ## Implemented
+
+T-052 updates the machine-readable floors and cumulative trust-boundary records
+for filesystem containment, credentials, project trust, durable review history,
+and selected-account MCP approvals. Managed MCP servers, remote plugin
+marketplaces, and experimental context management remain disabled and
+human-gated. `/skill-doctor` is advisory and cannot automatically prune,
+install, or mutate project skills. Focused and full verification plus an
+independent security review remain required before task finalization.
+
+The most recent completed onboarding foundation includes:
 
 - One outcome-first public promise and a visible research → product → design
   → build → verify → review journey.
@@ -61,7 +71,7 @@ deployment, or merge is implied.
 
 ## Exact next action
 
-The product owner inspects draft PR #82, its running-product evidence, and its
-independent reviews. Request changes when needed, or record explicit task
-approval after accepting the result. Approval does not authorize merge.
-The five-person newcomer pilot remains a separate human-run launch gate.
+Run T-052 focused runtime-policy tests and strict boundary simulations,
+complete the independent security review, record the evidence bundle, and run
+full repository verification. Then open a draft pull request linked to issue
+#74 for human task review. Issue #83 remains a separate task and pull request.
