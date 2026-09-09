@@ -156,7 +156,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
             "2.1.257",
         )
         self.assertEqual(
-            capabilities["deny-rule-concurrent-state-and-managed-policy-hardening"]["minimum"],
+            capabilities["concurrent-state-and-managed-policy-hardening"]["minimum"],
             "2.1.259",
         )
         headers_helper = capabilities["marketplace-and-mcp-headers-helper"]
@@ -214,6 +214,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         self.assertIn("makes the sandbox fail", compatibility)
         self.assertIn("closed for denied or unreadable paths", compatibility)
         self.assertIn("`/skill-doctor`", compatibility)
+        self.assertIn("reverts the 2.1.259 Bash", compatibility)
         self.assertIn("selected app account", compatibility)
         self.assertIn("experimental context management", compatibility)
         self.assertFalse(capabilities["cross-session-messaging"]["default_enabled"])

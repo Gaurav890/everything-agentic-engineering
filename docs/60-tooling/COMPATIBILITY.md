@@ -140,10 +140,11 @@ must be checked against the installed version.
   outside-working-directory read, and provider credential/header isolation
   hardening. These fixes do not authorize auto mode, tracing, workflow script
   execution, plugin installation, or provider credentials.
-- Claude Code 2.1.259 is the repository's recommended tested floor. Its Bash
-  read-deny enforcement covers option values, Git operands, compound commands,
-  and recursive execution; concurrent sessions no longer revert shared state;
-  and invalid managed policy fails closed.
+- Claude Code 2.1.259 is the repository's recommended tested floor. Concurrent
+  sessions no longer revert shared state, and invalid managed policy fails
+  closed. Version 2.1.260 reverts the 2.1.259 Bash argument-level `Read()` deny
+  expansion because it caused false denials and prompts, so this repository
+  does not encode that reverted behavior as a continuing baseline guarantee.
 - Managed MCP servers introduced at that floor remain disabled and require a
   separate human-reviewed origin, credential, network, tool-authority, audit,
   failure, and rollback decision.

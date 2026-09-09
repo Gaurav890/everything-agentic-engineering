@@ -579,8 +579,10 @@ this file.
   - `https://github.com/openai/codex/releases/tag/rust-v0.153.0`
     (first-party release, high authority)
 - **Change:** Claude Code 2.1.251–2.1.259 closes symlink/plugin path,
-  tracing/workflow read, containment, provider-credential, Bash deny,
-  concurrent-state, and managed-policy gaps. Codex 0.150.0–0.153.0 strengthens
+  tracing/workflow read, containment, provider-credential, concurrent-state,
+  and managed-policy gaps. The Bash argument-level deny expansion from 2.1.259
+  was reviewed but is not claimed because 2.1.260 reverted it. Codex
+  0.150.0–0.153.0 strengthens
   untrusted-project instruction handling, managed deny persistence, credential
   redaction, retained-image accounting, reviewer-history durability, and MCP
   approval scoping to the selected app account. Claude Code 2.1.261 adds a

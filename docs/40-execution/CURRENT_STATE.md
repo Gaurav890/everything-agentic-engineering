@@ -301,8 +301,10 @@ Claude Code and Codex compatibility is defined in
 advisory, strict, or JSON form. The doctor is read-only and keeps version
 availability separate from optional capability approval. Claude Code 2.1.259
 is the recommended tested baseline. It adds reviewed symlink, marketplace,
-containment, outside-read, provider-credential, Bash deny, concurrent-state,
-and managed-policy hardening to the earlier cumulative fixes. Codex 0.153.0 is
+containment, outside-read, provider-credential, concurrent-state, and
+managed-policy hardening to the earlier cumulative fixes. The Bash argument-
+level deny expansion from 2.1.259 was reverted in 2.1.260 and is not claimed as
+a continuing guarantee. Codex 0.153.0 is
 the recommended tested baseline for project trust, managed-deny persistence,
 credential-safe diagnostics, retained review history, selected-account MCP
 approval scoping, and the earlier resume/filesystem guarantees. The

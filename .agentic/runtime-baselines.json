@@ -133,7 +133,7 @@
           "human_approval_required": false
         },
         {
-          "id": "deny-rule-concurrent-state-and-managed-policy-hardening",
+          "id": "concurrent-state-and-managed-policy-hardening",
           "minimum": "2.1.259",
           "default_enabled": true,
           "human_approval_required": false

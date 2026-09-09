@@ -11,8 +11,10 @@ every optional capability and human approval boundary.
 ## Implemented
 
 T-052 updates the machine-readable floors and cumulative trust-boundary records
-for filesystem containment, credentials, project trust, durable review history,
-and selected-account MCP approvals. Managed MCP servers, remote plugin
+for filesystem containment, credentials, concurrent managed-policy state,
+project trust, durable review history, and selected-account MCP approvals. The
+2.1.259 Bash argument-level deny expansion is explicitly excluded because
+2.1.260 reverted it. Managed MCP servers, remote plugin
 marketplaces, and experimental context management remain disabled and
 human-gated. `/skill-doctor` is advisory and cannot automatically prune,
 install, or mutate project skills. Focused and full verification plus an

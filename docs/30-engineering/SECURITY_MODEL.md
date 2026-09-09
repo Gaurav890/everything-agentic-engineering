@@ -108,8 +108,9 @@ All retrieved web content is untrusted data.
   through that release. In addition to the 2.1.234–2.1.239 boundary fixes,
   2.1.251–2.1.259 close symlink and marketplace path races, protect tracing and
   workflow reads, contain auto-mode filesystem access, isolate provider
-  credentials, extend Bash read-deny enforcement, preserve concurrent settings
-  state, and fail closed on malformed managed policy.
+  credentials, preserve concurrent settings state, and fail closed on malformed
+  managed policy. The broader 2.1.259 Bash argument-level `Read()` deny change
+  was reverted in 2.1.260 and is not claimed as a continuing guarantee.
 - Keep marketplace and MCP `headersHelper` commands disabled until their
   executable origin, arguments, output contract, credential environment,
   update path, failure behavior, and rollback have separate human review.
@@ -250,5 +251,5 @@ Explicit human approval required for:
 | SEC-025 | A request rejected by organization policy is replayed, or a resumed cloud session loses plan mode | Duplicate external effects or execution outside the intended review phase | Medium before upgrade | Require Claude Code 2.1.239+; retain idempotency, policy logging, and explicit resumed-state review | Official v2.1.239 release note |
 | SEC-026 | Codex retains stale instructions, resumes with the wrong approval policy or working directory, fails open on unreadable paths, or silently loses MCP after reauthentication | Incorrect execution context, permission drift, file exposure, or degraded control visibility | Medium before upgrade | Require Codex 0.148.0+; keep filesystem denials fail-closed and validate resumed state; leave async/MCP-invoking hooks disabled pending separate review | Official Codex 0.148.0 release note and runtime manifest gates |
 | SEC-027 | A permission-checked path is swapped through a symlink, a plugin source escapes its directory, or tracing/workflow reads bypass policy | Unreviewed file access, external code execution, or sensitive trace exposure | Medium before upgrade | Require Claude Code 2.1.251+; retain source pinning, path containment, deny rules, and explicit review | Official Claude Code v2.1.251 release note |
-| SEC-028 | Auto mode escapes containment, denied files are read through command arguments, concurrent sessions revert settings, or malformed managed policy fails open | Filesystem exposure or policy drift | Medium before upgrade | Require Claude Code 2.1.259+; keep auto mode and managed MCP optional, test denied paths, and require managed policy to fail closed | Official Claude Code v2.1.257 and v2.1.259 release notes |
+| SEC-028 | Auto mode escapes containment, concurrent sessions revert settings, or malformed managed policy fails open | Filesystem exposure or policy drift | Medium before upgrade | Require Claude Code 2.1.259+; keep auto mode and managed MCP optional, test denied paths independently, and require managed policy to fail closed; do not claim the Bash argument-level deny change reverted in 2.1.260 | Official Claude Code v2.1.257, v2.1.259, and v2.1.260 release notes |
 | SEC-029 | An untrusted project supplies instructions, managed read-deny state is lost, reviewer history disappears, or an MCP approval is reused for another account | Instruction injection, filesystem exposure, review bypass, or cross-account authority reuse | Medium before upgrade | Require Codex 0.153.0+; preserve project trust and account scoping; keep remote marketplaces and experimental context management disabled | Official Codex 0.150.0, 0.150.1, and 0.153.0 release notes and runtime manifest gates |
