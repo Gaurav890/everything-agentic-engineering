@@ -1,5 +1,27 @@
 # Progress log
 
+### 2026-09-10 — T-052
+
+**Requirements:** FR-004
+**Acceptance:** AC-005
+**Outcome:** IMPLEMENTED; INDEPENDENT SECURITY REVIEW PASSING; HUMAN REVIEW PENDING
+
+Raised the read-only tested runtime floors to Claude Code 2.1.259 and Codex
+0.153.0 with first-party provenance and cumulative trust-boundary records for
+containment, credentials, project trust, managed policy, retained review
+history, and selected-account MCP approvals. The doctor now distinguishes
+repository policy from uninspected user/managed runtime configuration.
+
+Eight focused tests, strict reject/accept boundary simulations, stable JSON
+with `mutation_performed: false`, all ten full-verification stages, and an
+independent security review pass. The Bash argument-level `Read()` behavior
+reverted in Claude Code 2.1.260 is explicitly excluded. Newer Claude Code
+2.1.265–2.1.267 and Codex 0.154.0 releases are observed but deferred to a
+separate stabilization cycle. No runtime installation, optional capability,
+credential, network, sandbox, production, approval, deployment, or merge
+authority is implied. Evidence is recorded under
+`docs/50-evals/evidence/T-052/`.
+
 ### 2026-09-07 — T-051
 
 **Requirements:** FR-001, FR-003, FR-005, FR-006, FR-007, FR-008

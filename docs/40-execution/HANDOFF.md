@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-09-08
+Last updated: 2026-09-10
 
 ## Current goal
 
@@ -17,8 +17,8 @@ project trust, durable review history, and selected-account MCP approvals. The
 2.1.260 reverted it. Managed MCP servers, remote plugin
 marketplaces, and experimental context management remain disabled and
 human-gated. `/skill-doctor` is advisory and cannot automatically prune,
-install, or mutate project skills. Focused and full verification plus an
-independent security review remain required before task finalization.
+install, or mutate project skills. Focused tests, strict boundary simulations,
+full verification, and independent security review now pass.
 
 The most recent completed onboarding foundation includes:
 
@@ -57,23 +57,19 @@ The most recent completed onboarding foundation includes:
 
 ## Evidence and limits
 
-T-051 has 95 focused Python tests, 11 web unit tests, clean-checkout release
-smoke, full repository verification, and a fresh research-enabled generated
-project production/browser/accessibility pass. Product/design, security, and
-integration reviews pass on reviewed implementation commits; the final
-cross-profile integration head is `9114f3f`. Results are recorded in
-`docs/50-evals/evidence/T-051/`. The deterministic evaluator has synthetic
-regression coverage; that coverage is not a participant result. The
-fresh-project page was checked across desktop and mobile, but a live
-assistant-generated candidate set, native sign-in, and newcomer sessions have
-still not been measured through the pilot.
+T-052 has eight focused runtime-policy tests, strict lower-bound and exact-floor
+simulations, stable read-only JSON evidence, full ten-stage verification, green
+GitHub checks, and an independent security-review PASS at implementation commit
+`202190e9512f0d27fa1ef77eea5f1db4d79aa50e`. Results are recorded under
+`docs/50-evals/evidence/T-052/`.
 
-No newcomer study, production readiness, native implementation, launch,
-deployment, or merge is implied.
+The doctor verifies repository policy and minimum-version comparison; it does
+not inspect actual user/managed runtime configuration or certify every later
+release. No installation, upgrade, optional capability activation, production
+readiness, deployment, approval, or merge is implied.
 
 ## Exact next action
 
-Run T-052 focused runtime-policy tests and strict boundary simulations,
-complete the independent security review, record the evidence bundle, and run
-full repository verification. Then open a draft pull request linked to issue
-#74 for human task review. Issue #83 remains a separate task and pull request.
+Inspect draft pull request #84 and its evidence bundle. After a direct owner
+decision, use the repository task workflow for the next lifecycle transition.
+Issue #83 remains separately scoped.
