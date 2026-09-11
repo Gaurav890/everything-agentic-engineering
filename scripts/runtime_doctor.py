@@ -195,7 +195,8 @@ def print_human(report: dict) -> None:
             if not capability["default_enabled"]:
                 print(
                     "      OPTIONAL "
-                    f"{capability['id']} (human approval required; not enabled)"
+                    f"{capability['id']} (human approval required; not enabled "
+                    "by repository policy; runtime configuration not inspected)"
                 )
     mode = "strict" if report["strict"] else "advisory"
     verdict = "PASS" if report["ok"] else "FAIL"

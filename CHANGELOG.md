@@ -8,6 +8,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Raised the read-only tested runtime floors to Claude Code 2.1.259 and Codex
+  0.153.0 for cumulative containment, filesystem-deny, credential,
+  project-trust, reviewer-history, and MCP account-approval hardening. Remote
+  marketplaces, managed MCP servers, experimental context management, and all
+  other authority-expanding capabilities remain disabled and human-gated.
+
 - `./agentic start` is now the single public create-or-resume doorway. Guided
   creation asks for the product idea, audience, and outcome before recommending
   an editable plain-language path; internal profiles, provider names, client

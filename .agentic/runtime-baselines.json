@@ -3,8 +3,8 @@
   "runtimes": {
     "claude": {
       "command": "claude",
-      "recommended_minimum": "2.1.239",
-      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.239",
+      "recommended_minimum": "2.1.259",
+      "source": "https://github.com/anthropics/claude-code/releases/tag/v2.1.259",
       "capabilities": [
         {
           "id": "worktree-and-background-hook-isolation",
@@ -121,8 +121,32 @@
           "human_approval_required": false
         },
         {
+          "id": "symlink-plugin-tracing-and-workflow-read-hardening",
+          "minimum": "2.1.251",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "containment-outside-read-and-provider-credential-hardening",
+          "minimum": "2.1.257",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "concurrent-state-and-managed-policy-hardening",
+          "minimum": "2.1.259",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
           "id": "marketplace-and-mcp-headers-helper",
           "minimum": "2.1.238",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "managed-mcp-servers",
+          "minimum": "2.1.259",
           "default_enabled": false,
           "human_approval_required": true
         }
@@ -130,8 +154,8 @@
     },
     "codex": {
       "command": "codex",
-      "recommended_minimum": "0.148.0",
-      "source": "https://github.com/openai/codex/releases/tag/rust-v0.148.0",
+      "recommended_minimum": "0.153.0",
+      "source": "https://github.com/openai/codex/releases/tag/rust-v0.153.0",
       "capabilities": [
         {
           "id": "portable-agent-plugins",
@@ -170,8 +194,38 @@
           "human_approval_required": false
         },
         {
+          "id": "untrusted-project-managed-deny-and-diagnostic-hardening",
+          "minimum": "0.150.0",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "retained-image-compaction-accounting",
+          "minimum": "0.150.1",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
+          "id": "guardian-history-and-mcp-account-approval-hardening",
+          "minimum": "0.153.0",
+          "default_enabled": true,
+          "human_approval_required": false
+        },
+        {
           "id": "asynchronous-and-mcp-invoking-hooks",
           "minimum": "0.148.0",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "remote-plugin-marketplaces",
+          "minimum": "0.153.0",
+          "default_enabled": false,
+          "human_approval_required": true
+        },
+        {
+          "id": "experimental-context-management",
+          "minimum": "0.153.0",
           "default_enabled": false,
           "human_approval_required": true
         }

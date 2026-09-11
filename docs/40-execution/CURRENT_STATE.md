@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-09-07
+Last updated: 2026-09-08
 
 ## Product
 
@@ -299,21 +299,27 @@ worktree.
 Claude Code and Codex compatibility is defined in
 `.agentic/runtime-baselines.json` and reported by `runtime-doctor.sh` in
 advisory, strict, or JSON form. The doctor is read-only and keeps version
-availability separate from optional capability approval. Claude Code 2.1.239
-is the recommended tested baseline. It includes the documented permission,
-Windows and macOS filesystem, marketplace-origin, MCP helper trust, credential
-isolation, organization-policy, and resumed-plan hardening through that
-release. Codex 0.148.0 is the recommended tested baseline for consistent
-instruction and approval state, fail-closed filesystem denials, and MCP OAuth
-recovery. The full-context fork and background-spawn defaults remain bounded by
+availability separate from optional capability approval. Claude Code 2.1.259
+is the recommended tested baseline. It adds reviewed symlink, marketplace,
+containment, outside-read, provider-credential, concurrent-state, and
+managed-policy hardening to the earlier cumulative fixes. The Bash argument-
+level deny expansion from 2.1.259 was reverted in 2.1.260 and is not claimed as
+a continuing guarantee. Codex 0.153.0 is
+the recommended tested baseline for project trust, managed-deny persistence,
+credential-safe diagnostics, retained review history, selected-account MCP
+approval scoping, and the earlier resume/filesystem guarantees. The
+full-context fork and background-spawn defaults remain bounded by
 the repository contract:
 in-session specialists are read-only, writers use isolated branches/worktrees,
 and delegated work requires observed evidence. Claude self-hosted and
 cross-session execution, Remote
-Control, archive and dynamic marketplace sources, marketplace or MCP
-`headersHelper` commands, Codex portable plugin installation, MCP 2026-07-28
-opt-in, asynchronous or MCP-invoking hooks, apps-gateway identity forwarding,
-and automatically reviewed approvals are not enabled by the committed policy.
+Control, archive and dynamic marketplace sources, managed MCP servers,
+marketplace or MCP `headersHelper` commands, Codex portable or remote plugin
+installation, experimental context management, MCP 2026-07-28 opt-in,
+asynchronous or MCP-invoking hooks, apps-gateway identity forwarding, and
+automatically reviewed approvals are not enabled by the committed policy.
+Claude Code `/skill-doctor` is documented only as a read-only operator
+diagnostic and cannot automatically prune or install project skills.
 
 GitHub `main` protection requires the `verify` and `policy` checks, an up-to-date
 branch, linear history, and resolved review conversations. It applies to

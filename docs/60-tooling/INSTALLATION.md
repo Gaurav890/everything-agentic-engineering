@@ -14,7 +14,7 @@ for new contributors and agents.
 - Mobile currently supplies guidance and a placeholder; choose and verify a
   native runtime separately when implementing it
 
-Claude Code 2.1.239+ and Codex 0.148.0+ are the recommended tested runtime
+Claude Code 2.1.259+ and Codex 0.153.0+ are the recommended tested runtime
 baselines. The read-only runtime doctor reports drift; it never installs or
 upgrades either runtime.
 The repository doctor reports an older or missing runtime without upgrading it
