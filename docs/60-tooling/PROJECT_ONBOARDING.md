@@ -94,6 +94,33 @@ Palette is only part of a direction. Compare layout, hierarchy, typography,
 copy, density, interaction, focus, recovery, and purposeful motion. Advanced
 2D/3D is conditional on the product need, performance, and reduced-motion plan.
 
+Use `./agentic design resources` when the next visual decision is unclear. The
+read-only plan inspects current design state and recommends only a relevant aid:
+
+- Realtime Colors for unresolved palette or typography comparison during intake;
+- Haikei for a candidate's purposeful generated SVG/PNG asset strategy;
+- Motion Primitives for approved web motion that needs one reviewed component.
+
+Pass `--need palette`, `--need typography`, `--need assets`, or `--need motion`
+to state the need explicitly; repeat `--need` when necessary. The command does
+not open a browser, submit project information, download assets, install code,
+change tokens, or approve a direction. Follow the displayed “bring back”
+contract so the result becomes project-owned evidence instead of an external
+experiment that future sessions cannot understand.
+
+An accepted Haikei export must add one record to
+`.agentic/design-assets.json`. The closed record requires an ID, canonical
+Haikei URL, review date, generator and scalar parameters, an existing project-
+local SVG/PNG, intrinsic pixel dimensions, the file's SHA-256 digest, canonical
+semantic token roles, placement, responsive and dark-mode behavior,
+decorative/meaningful semantics, the applicable license basis, and structured
+project-local running-evidence records containing `file` and `sha256`.
+Meaningful assets require alt text; decorative assets require `null`. Run
+`./agentic design check` after recording the asset. Unknown token roles,
+dimension mismatches, stale file/evidence digests, unknown fields, unsupported
+sources, unsafe paths, missing evidence, and terminal control characters fail
+closed.
+
 Installed design skills are used at the appropriate phase. For a fresh custom
 or existing-brand sprint, the reviewed `prototype` skill is routed when present;
 the local `creative-direction-sprint` contract remains the fallback. Missing skills are
@@ -109,8 +136,10 @@ that preview. Save a project-local JSON proposal with these fields:
 - `name`, `thesis`, and `axis`: the direction and the primary experiential
   question it explores;
 - `composition`, `interaction`, `signature`, `rationale`, and `motion`: meaningful text;
-- `asset_strategy`, `motion_rationale`, `responsive_strategy`, and
-  `reduced_motion`: explicit craft and resilience decisions;
+- `asset_strategy`, `asset_role`, `asset_alternatives`, `motion_rationale`,
+  `motion_interruption`, `motion_performance_budget`, `responsive_strategy`,
+  and `reduced_motion`: explicit asset, motion, interruption/reversal,
+  performance, and resilience decisions;
 - `states`: at least three distinct realistic states for the first journey;
 - `preview_path`: local route such as `/concepts/purchase-path`, not a URL;
 - `preview_source`: the actual UI entry included in `source_files`;

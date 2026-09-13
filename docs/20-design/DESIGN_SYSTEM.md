@@ -117,6 +117,15 @@ mode-independent semantic roles, never a specific light/dark namespace.
 Every approved color direction must include realistic previews and contrast
 evidence for primary/secondary text, interactive controls, and focus indicators.
 
+When palette or type decisions remain open, `./agentic design resources` may
+route a human to Realtime Colors for generic live comparison. Bring the chosen
+and rejected roles, type candidates, and provenance back into the design brief
+and product-specific candidates. Do not copy the tool's website source, map its
+five generic colors directly into components, or treat its contrast indicators
+as final WCAG evidence. Verify the license of every selected font independently.
+Canonical values enter DTCG semantic roles only after the project direction is
+approved.
+
 ## Typography
 
 Define display, heading, body, label, caption, numeric, and mono roles with
@@ -145,6 +154,25 @@ When Emil Kowalski's external design-engineering suite is installed, use the
 local `design-engineering-quality` contract to route one relevant craft or
 motion capability. The suite does not define this product's visual identity,
 tokens, or interaction model.
+
+Motion Primitives is an optional beta web component source, not a default
+dependency or motion language. Route it only after approval when one exact
+primitive fits the documented purpose better than a small local CSS transition.
+Review its immutable source, dependencies, token mapping, accessibility,
+interruption, responsive, reduced-motion, and performance behavior before use.
+
+## Generated asset contract
+
+Haikei may supply a manually generated SVG or PNG only when a direction already
+defines a product-specific asset role and alternatives considered. Record its
+generator, parameters,
+dimensions, source, creation date, license basis, token mapping, responsive and
+dark-mode behavior, and whether it is meaningful or decorative. Bind the
+project-local file and every running-product evidence record with SHA-256;
+token mappings must resolve to the canonical semantic-token catalog. Optimize
+the file, validate the record in `.agentic/design-assets.json`, and review it in
+the running product. A generic blob, wave, or gradient added merely for visual
+interest fails this contract.
 
 ## Interaction
 

@@ -23,7 +23,11 @@ export type ProjectCandidate = {
   interaction: string;
   signature: string;
   asset_strategy: string;
+  asset_role: string;
+  asset_alternatives: string;
   motion_rationale: string;
+  motion_interruption: string;
+  motion_performance_budget: string;
   responsive_strategy: string;
   reduced_motion: string;
   states: string[];
@@ -176,7 +180,9 @@ export function getProjectCandidates(): ProjectCandidate[] {
     const candidate = value as Record<string, unknown>;
     const keys = [
       "id", "name", "thesis", "axis", "composition", "interaction", "signature",
-      "asset_strategy", "motion_rationale", "responsive_strategy", "reduced_motion", "preview_path",
+      "asset_strategy", "asset_role", "asset_alternatives", "motion_rationale",
+      "motion_interruption", "motion_performance_budget", "responsive_strategy",
+      "reduced_motion", "preview_path",
     ];
     if (!candidate || !keys.every(key => typeof candidate[key] === "string") ||
       !Array.isArray(candidate.states) || candidate.states.length < 3 ||

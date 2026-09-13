@@ -172,6 +172,56 @@ implementation. “Do not animate” is a valid outcome.
 - **Assessment:** Use selectively; interaction structure may be borrowed, visual identity may not.
 - **Repository route:** External component/reference source.
 
+### Realtime Colors
+
+- **Sources:** [Realtime Colors](https://www.realtimecolors.com/) · [contrast documentation](https://www.realtimecolors.com/docs/contrast-checker) · [published source](https://github.com/juxtopposed/realtimecolors)
+- **What:** Human-operated live comparison of text, background, primary,
+  secondary, accent, heading/body fonts, and type scale on a generic website.
+- **When:** Design intake or direction exploration when palette or typography
+  remains open and the owner needs to compare choices in context.
+- **Why:** A rendered distribution is more useful than judging isolated swatches.
+- **Assessment:** Bring choices and rejected alternatives back into the design
+  brief, then validate them on the real product. The hosted tool permits use of
+  generated color choices, but every selected font needs its own license check.
+  Its published website source is CC BY-NC-ND and may not be copied or modified.
+  Its public repository is no longer maintained.
+- **Repository route:** `./agentic design resources --need palette --need typography`;
+  manual use only, before DTCG token approval.
+
+### Haikei
+
+- **Sources:** [Haikei](https://haikei.app/) · [generators](https://haikei.app/generators/) · [commercial-use guidance](https://haikei.app/pricing/) · [terms](https://haikei.app/terms/)
+- **What:** Human-operated generation and SVG/PNG export for waves, blobs,
+  gradients, patterns, polygon fields, and other abstract assets.
+- **When:** A candidate already defines a product-specific asset role and an
+  abstract generated asset is better than a plain surface, CSS, owned media,
+  illustration, or data visualization.
+- **Why:** It can provide fast, editable source material tied to approved colors.
+- **Assessment:** Commercial use of generated designs is allowed under the
+  official guidance, subject to its restriction against providing a similar
+  generator service. Record provenance and parameters, optimize the output,
+  preserve accessibility, and reject generic decoration.
+- **Repository route:** `./agentic design resources --need assets`; manual
+  generation and download only. Return every accepted output through the
+  validated `.agentic/design-assets.json` record and running-product evidence.
+
+### Motion Primitives
+
+- **Sources:** [Motion Primitives documentation](https://motion-primitives.com/docs) · [repository](https://github.com/ibelick/motion-primitives) · [MIT license](https://github.com/ibelick/motion-primitives/blob/main/LICENCE.md)
+- **Reviewed revision:** `40f59b61e567712aa8329c7dc8c2ced763054c34`
+  on 2026-09-12.
+- **What:** Copy-oriented animated React components built with Motion and Tailwind CSS.
+- **When:** An approved web direction needs one purposeful motion pattern and a
+  reviewed primitive is a better fit than a small local CSS transition.
+- **Why:** It can accelerate complex, reusable interaction behavior without
+  making motion a new aesthetic authority.
+- **Assessment:** Actively maintained, MIT-licensed, and explicitly beta.
+  Inspect the exact source and dependencies, restyle it through project tokens,
+  and verify interruption, accessibility, reduced motion, responsiveness, and
+  performance. Never invoke or copy the whole collection by default.
+- **Repository route:** `./agentic design resources --need motion`; optional,
+  web-only, approval-gated, and never auto-installed.
+
 ### MotionSites
 
 - **Source:** Canonical source was not included in the supplied material and remains unverified.

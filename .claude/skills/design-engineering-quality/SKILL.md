@@ -36,6 +36,7 @@ Anthropic `frontend-design`; keep it secondary and opt-in.
 | Compare multiple live UI variants | `prototype` — default in a fresh custom design sprint; human chooses |
 | Select a UI dependency | `pick-ui-library` — explicit only; inspect installed capabilities first |
 | Sonner setup or troubleshooting | `ask-sonner` — only when Sonner is relevant |
+| Approved web motion with a matching reviewed primitive | Motion Primitives — optional component source; inspect exact source and dependencies before a separately approved copy/install |
 
 If the external collection is unavailable, follow this repository's existing
 design-system, interaction, frontend-quality, motion, and critique contracts.
@@ -63,9 +64,19 @@ Before adding motion, answer:
 4. What happens when the interaction is interrupted or reversed?
 5. What is the reduced-motion behavior?
 
+Record the interruption/reversal answer and a concrete performance budget in
+the candidate contract before routing external motion source code.
+
 If the answers are weak, do not animate. Motion is never required merely to make
 an interface feel premium. Prefer transform and opacity, preserve input
 responsiveness, and verify the running behavior rather than reading code alone.
+
+Run `./agentic design resources --need motion` after the motion contract is
+approved. Motion Primitives may be recommended for web only when it is more
+appropriate than a small local CSS or native transition. Its upstream project
+is beta: select one exact primitive, keep a reviewed diff and immutable source
+revision, restyle through project tokens, and verify interruption, keyboard,
+screen-reader, reduced-motion, responsive, and performance behavior.
 
 ## Completion
 

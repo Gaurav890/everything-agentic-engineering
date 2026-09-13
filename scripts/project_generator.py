@@ -1071,7 +1071,8 @@ def generated_readme(plan: GenerationPlan) -> str:
         design_guidance = (
             "Custom directions and existing brands are not limited to reference presets. A custom candidate "
             "must prove a different composition or interaction idea with realistic states, signature craft, "
-            "an asset strategy, and responsive/reduced-motion behavior. Review running previews before approval."
+            "an asset strategy, and responsive/reduced-motion behavior. Use `./agentic design resources` only "
+            "when a current palette/type, asset, or motion need justifies it. Review running previews before approval."
         )
         exists_guidance = "A runnable local onboarding workspace and empty custom candidate catalog—not an implemented product."
         preview_guidance = "After reviewing the brief, install the locked dependencies with `pnpm install --frozen-lockfile`, then run `pnpm dev`. Open the local URL printed by the server (the port may vary). Keep that terminal running; use another terminal for work, or Ctrl+C to stop it."
@@ -1316,6 +1317,10 @@ Bundled examples are optional references, not the available design space.
 References are ingredients, components are
 structural donors, tokens encode approved decisions, and this project's design
 system wins every conflict.
+
+`./agentic design resources` can produce a read-only plan for unresolved
+palette/type, generated-asset, or web-motion needs. It never opens, downloads,
+installs, changes tokens, or approves anything.
 
 Canonical design-system and token changes still require explicit human approval
 with reviewed evidence. Follow `docs/60-tooling/PROJECT_ONBOARDING.md`.
@@ -1590,8 +1595,15 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
     if "mobile-expo" in current_resolved and not (root / "pnpm-lock.yaml").is_file():
         raise GenerationError("Generated mobile project is missing the reviewed dependency lockfile")
     if "design-critical" in current_resolved:
+        import design_engine
+
         design_state = load_object(root / ".agentic/design.json", "design state")
         intake_state = load_object(root / ".agentic/design-intake.json", "design intake")
+        try:
+            design_engine.load_resource_catalog(root / ".agentic/design-resources.json")
+            design_engine.load_asset_catalog(root)
+        except design_engine.DesignError as error:
+            raise GenerationError(str(error)) from error
         if design_state.get("schema_version") != 1:
             raise GenerationError("Unsupported design-state schema")
         direction_ids = {
@@ -1612,7 +1624,6 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
                 raise GenerationError("Approved design state must name a catalog direction")
             if design_status not in {"needs_approval", "approved"}:
                 raise GenerationError("Unsupported ongoing design status")
-            import design_engine
             try:
                 design_engine.validate_project(root)
             except design_engine.DesignError as error:
@@ -1628,6 +1639,11 @@ def validate_generated_project(root: Path, *, pristine: bool = False) -> dict[st
             "complete",
         }:
             raise GenerationError("Unsupported ongoing design-intake status")
+    elif any((root / path).exists() for path in (
+        ".agentic/design-resources.json",
+        ".agentic/design-assets.json",
+    )):
+        raise GenerationError("Non-design generated project contains design-resource state")
     if pristine and mcp != {"mcpServers": {}}:
         raise GenerationError("Generated projects must not enable MCP servers")
     if not isinstance(mcp.get("mcpServers"), dict):

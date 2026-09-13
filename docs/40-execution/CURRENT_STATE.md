@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-09-08
+Last updated: 2026-09-13
 
 ## Product
 
@@ -19,6 +19,20 @@ profiles. It records brand authority, experience intent, color constraints,
 typography, composition, motion, accessibility, and references, then presents
 comparable directions. Canonical design-system and token changes require an
 explicitly approved direction or synthesis.
+
+Design-critical projects also carry a reviewed, machine-readable visual-
+resource catalog. `./agentic design resources` reads the active platform,
+design phase, unresolved needs, and approval state before routing palette/type,
+generated-asset, or motion help. Realtime Colors is an intake aid, Haikei is a
+manual asset generator, and Motion Primitives is an optional beta web component
+source after motion approval. The route is advisory: it does not open a browser,
+submit project data, download assets, install code, approve a direction, or
+change canonical tokens.
+
+Accepted generated assets must record matching intrinsic dimensions, current
+file and evidence SHA-256 digests, and canonical semantic token roles. This
+proves identity and freshness; it does not replace human visual, accessibility,
+or source review.
 
 Signalroom under `apps/showcase` is the reference AI-native product. It
 demonstrates agent runs, protected approvals, interruption, recovery, durable

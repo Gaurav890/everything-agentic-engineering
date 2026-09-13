@@ -60,14 +60,17 @@ See [the guided handoff and candidate contract](PROJECT_ONBOARDING.md).
 | UX strategy | `strategize` | Owl Listener strategize |
 | Interaction | `interaction-design`, `agentic-ux` | cuellarfr interaction-design |
 | Design intake | `design-intake` | Existing brand/Figma inputs and user constraints |
+| Palette/type exploration | `design-intake`, `./agentic design resources` | Realtime Colors when current choices remain open |
 | Design directions | `creative-direction-sprint`, `design-system` | Emil `prototype` when installed; UI UX Pro Max; Refero; real products; optional Anthropic frontend-design |
 | System documentation | `design-system` | Impeccable Document; extract-design-system for existing products |
 | Tokens | `design-tokens` | tailwind-design-system when Tailwind is active |
 | Components | project design system | shadcn registry/MCP; 21st.dev; Aceternity |
+| Generated visual assets | `creative-direction-sprint`, `./agentic design resources` | Haikei when a candidate has a purposeful asset strategy |
 | Design-to-code | project design system | Figma MCP Implement Design; Code Connect |
 | Design engineering | `design-engineering-quality` | Emil Kowalski `emil-design-eng` plus one precisely routed specialist |
 | Live iteration | frontend agent, `design-engineering-quality` | Impeccable Live; Emil `prototype` in the fresh custom sprint or when explicitly requested later |
 | Motion | `design-engineering-quality` | Emil `animate`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `animation-vocabulary`, or `apple-design` according to the exact trigger |
+| Motion components | `design-engineering-quality`, `./agentic design resources` | Motion Primitives for an approved, compatible web motion need |
 | Audits | `responsive-audit`, `accessibility-audit`, `design-system-audit`, `token-audit` | relevant specialist audit skills; Emil strict animation review only when explicitly requested |
 | Engineering | framework rules | Vercel React/Next.js or React Native guidance |
 | Performance | `performance-ux` | Impeccable Optimize |

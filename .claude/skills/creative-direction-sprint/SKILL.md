@@ -50,6 +50,13 @@ Do not add 2D, 3D, shaders, parallax, or continuous motion as status decoration.
 Use them only when they explain the product, make manipulation clearer, or create
 a deliberate brand moment within a measured performance budget.
 
+When a candidate needs an original abstract asset, run
+`./agentic design resources --need assets`. Haikei may be recommended for a
+human-operated SVG/PNG exploration only when the candidate already names the
+asset's product-specific role. Use candidate token colors, record the generator,
+parameters, source, date, and license basis, then optimize and review the actual
+project-local asset. A generic blob, wave, or gradient is not signature craft.
+
 ## Build in isolation
 
 Create candidates under a clearly isolated preview surface, such as
@@ -69,7 +76,9 @@ For each candidate, create a project-local JSON proposal containing:
 
 - `id`, `name`, `thesis`, and `axis`;
 - `composition`, `interaction`, and `signature`;
-- `asset_strategy`, `motion`, `motion_rationale`, and `reduced_motion`;
+- `asset_strategy`, `asset_role`, `asset_alternatives`, `motion`,
+  `motion_rationale`, `motion_interruption`, `motion_performance_budget`, and
+  `reduced_motion`;
 - `responsive_strategy`, `states`, and `rationale`;
 - `preview_path`, actual `source_files`, and DTCG-compatible semantic tokens.
 

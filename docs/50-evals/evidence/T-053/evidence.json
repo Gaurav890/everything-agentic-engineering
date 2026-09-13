@@ -1,0 +1,18 @@
+{
+  "task_id": "T-053",
+  "acceptance_ids": ["AC-004", "AC-005", "AC-006"],
+  "ui_change": true,
+  "builder": "frontend",
+  "evaluator": "design-reviewer",
+  "states": ["normal", "loading", "empty", "error"],
+  "viewports": ["desktop", "mobile"],
+  "commands": [
+    "python3 -m unittest tests.test_design_engine tests.test_project_generator tests.test_project_handoff",
+    "./agentic design check",
+    "./agentic verify web",
+    "./agentic verify visual",
+    "git diff --check"
+  ],
+  "artifacts": ["review.md"],
+  "verdict": "PASS"
+}

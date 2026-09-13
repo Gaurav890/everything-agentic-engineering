@@ -51,6 +51,8 @@
     ".agentic/design.json": ["design-critical"],
     ".agentic/design-intake.json": ["design-critical"],
     ".agentic/design-directions.json": ["design-critical"],
+    ".agentic/design-resources.json": ["design-critical"],
+    ".agentic/design-assets.json": ["design-critical"],
     ".agentic/experience.json": ["web-next"],
     ".agentic/enterprise.json": ["web-next"],
     ".claude/agents/frontend.md": ["web-next"],

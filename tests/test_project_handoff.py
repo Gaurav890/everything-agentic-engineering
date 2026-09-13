@@ -90,6 +90,16 @@ class ProjectHandoffTests(unittest.TestCase):
         run.assert_not_called()
 
     @mock.patch.object(project_handoff.shutil, "which", return_value=None)
+    def test_custom_web_handoff_routes_design_resources_without_installing_them(self, which):
+        self.args.json = True
+        code, output = self.run_handoff()
+        self.assertEqual(0, code)
+        prompt = json.loads(output)["prompt"]
+        self.assertIn("read-only design-resource route", prompt)
+        self.assertIn("palette/type, generated-asset, or motion evidence", prompt)
+        self.assertIn("Do not install tools", prompt)
+
+    @mock.patch.object(project_handoff.shutil, "which", return_value=None)
     def test_research_selection_enters_handoff_without_a_credential(self, which):
         (self.root / ".agentic/project.json").write_text(json.dumps({"profiles": ["web-next", "design-critical", "research-enabled"]}))
         self.brief["research_enabled"] = False
