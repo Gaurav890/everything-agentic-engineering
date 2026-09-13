@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / ".agentic/design.json"
 INTAKE_PATH = ROOT / ".agentic/design-intake.json"
 CATALOG_PATH = ROOT / ".agentic/design-directions.json"
+RESOURCES_PATH = ROOT / ".agentic/design-resources.json"
+ASSETS_PATH = ROOT / ".agentic/design-assets.json"
 CUSTOM_TEXT_FIELDS = (
     "composition",
     "interaction",
@@ -26,7 +28,11 @@ CUSTOM_TEXT_FIELDS = (
     "axis",
     "signature",
     "asset_strategy",
+    "asset_role",
+    "asset_alternatives",
     "motion_rationale",
+    "motion_interruption",
+    "motion_performance_budget",
     "responsive_strategy",
     "reduced_motion",
 )
@@ -36,6 +42,21 @@ STARTER_DEMO_SOURCES = {
     "apps/web/app/enterprise-lab.tsx",
     "apps/web/app/project-studio.tsx",
 }
+RESOURCE_KINDS = {
+    "human_operated_decision_aid",
+    "human_operated_asset_generator",
+    "optional_component_source",
+}
+RESOURCE_PHASES = {
+    "design-intake",
+    "design-directions",
+    "component-translation",
+    "implementation",
+    "live-iteration",
+}
+RESOURCE_PLATFORMS = {"web", "mobile"}
+RESOURCE_NEEDS = {"palette", "typography", "assets", "motion"}
+TERMINAL_CONTROL_PATTERN = re.compile(r"[\x00-\x1f\x7f-\x9f]")
 
 
 class DesignError(ValueError):
@@ -52,6 +73,448 @@ def load_object(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise DesignError(f"Design data must be an object: {path}")
     return value
+
+
+def load_resource_catalog(path: Path | None = None) -> list[dict[str, Any]]:
+    """Load the reviewed external-design resource contract fail closed."""
+    location = path or RESOURCES_PATH
+    payload = load_object(location)
+    if payload.get("schema_version") != 1:
+        raise DesignError("Unsupported design-resource catalog schema")
+    policy = payload.get("policy")
+    required_policy = {
+        "automatic_browser_open": False,
+        "automatic_browser_submission": False,
+        "automatic_network_request": False,
+        "automatic_external_execution": False,
+        "automatic_external_copy": False,
+        "automatic_authentication": False,
+        "automatic_credential_access": False,
+        "automatic_project_write": False,
+        "automatic_install": False,
+        "automatic_download": False,
+        "external_sources_are_untrusted": True,
+        "project_design_system_wins": True,
+        "human_approval_before_canonical_tokens": True,
+    }
+    if (
+        not isinstance(policy, dict)
+        or set(policy) != set(required_policy)
+        or any(type(policy[key]) is not bool or policy[key] is not expected for key, expected in required_policy.items())
+    ):
+        raise DesignError("Design-resource policy weakens a required safety boundary")
+    resources = payload.get("resources")
+    if not isinstance(resources, list) or not resources:
+        raise DesignError("Design-resource catalog must contain reviewed resources")
+    seen: set[str] = set()
+    for resource in resources:
+        if not isinstance(resource, dict):
+            raise DesignError("Every design resource must be an object")
+        expected_fields = {
+            "id", "name", "kind", "phases", "platforms", "needs", "source",
+            "trigger", "prerequisites", "bring_back", "return_to", "forbidden",
+        }
+        if set(resource) != expected_fields:
+            raise DesignError("Design resource has missing or unknown fields")
+        _reject_terminal_controls(resource, "design resource")
+        resource_id = resource.get("id")
+        if not isinstance(resource_id, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", resource_id):
+            raise DesignError("Design resource ids must use lowercase kebab-case")
+        if resource_id in seen:
+            raise DesignError(f"Duplicate design resource: {resource_id}")
+        seen.add(resource_id)
+        if resource.get("kind") not in RESOURCE_KINDS:
+            raise DesignError(f"Unsupported design-resource kind: {resource_id}")
+        for field, allowed in (
+            ("phases", RESOURCE_PHASES),
+            ("platforms", RESOURCE_PLATFORMS),
+            ("needs", RESOURCE_NEEDS),
+        ):
+            values = resource.get(field)
+            if (not isinstance(values, list) or not values
+                    or not all(isinstance(item, str) and item in allowed for item in values)
+                    or len(values) != len(set(values))):
+                raise DesignError(f"Invalid {field} for design resource: {resource_id}")
+        source = resource.get("source")
+        if not isinstance(source, dict) or set(source) != {
+            "canonical_url", "repository_url", "reviewed_revision", "reviewed_at",
+            "maintenance", "license",
+        }:
+            raise DesignError(f"Invalid source record for design resource: {resource_id}")
+        for url_field in ("canonical_url", "repository_url"):
+            url = source.get(url_field)
+            if url is not None and (not isinstance(url, str) or not url.startswith("https://")):
+                raise DesignError(f"Design-resource URLs must use HTTPS: {resource_id}")
+        revision = source.get("reviewed_revision")
+        if revision is not None and (not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision)):
+            raise DesignError(f"Invalid reviewed revision for design resource: {resource_id}")
+        if not isinstance(source.get("reviewed_at"), str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", source["reviewed_at"]):
+            raise DesignError(f"Invalid reviewed date for design resource: {resource_id}")
+        for field in ("maintenance", "license"):
+            if not isinstance(source.get(field), str) or not source[field].strip():
+                raise DesignError(f"Design resource requires source {field}: {resource_id}")
+        for field in ("name", "trigger"):
+            if not isinstance(resource.get(field), str) or not resource[field].strip():
+                raise DesignError(f"Design resource requires {field}: {resource_id}")
+        for field in ("prerequisites", "bring_back", "return_to", "forbidden"):
+            values = resource.get(field)
+            if not isinstance(values, list) or not values or not all(isinstance(item, str) and item.strip() for item in values):
+                raise DesignError(f"Design resource requires {field}: {resource_id}")
+    return resources
+
+
+def _reject_terminal_controls(value: Any, label: str) -> None:
+    if isinstance(value, str) and TERMINAL_CONTROL_PATTERN.search(value):
+        raise DesignError(f"{label} contains terminal control characters")
+    if isinstance(value, list):
+        for item in value:
+            _reject_terminal_controls(item, label)
+    if isinstance(value, dict):
+        for key, item in value.items():
+            _reject_terminal_controls(key, label)
+            _reject_terminal_controls(item, label)
+
+
+def _meaningful_decision(value: Any) -> bool:
+    """Reject empty and placeholder prose used to spoof a design gate."""
+    if not isinstance(value, str) or not value.strip():
+        return False
+    normalized = re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
+    if normalized in {
+        "none", "no", "n a", "na", "not applicable", "unknown", "undecided",
+        "tbd", "todo", "placeholder", "later", "skip", "skipped",
+    }:
+        return False
+    return bool(normalized)
+
+
+def _dtcg_leaf_names(node: Any, path: tuple[str, ...] = ()) -> set[str]:
+    if not isinstance(node, dict):
+        return set()
+    if "$value" in node:
+        return {".".join(path)}
+    names: set[str] = set()
+    for key, child in node.items():
+        if not key.startswith("$"):
+            names.update(_dtcg_leaf_names(child, path + (key,)))
+    return names
+
+
+def _canonical_semantic_token_roles(root: Path) -> set[str]:
+    token_root = root / "packages/design-tokens/tokens/semantic"
+    paths = sorted(token_root.glob("*.json")) if token_root.is_dir() else []
+    if not paths:
+        raise DesignError("Canonical semantic token files are missing")
+    roles: set[str] = set()
+    for path in paths:
+        roles.update(_dtcg_leaf_names(load_object(path)))
+    if not roles:
+        raise DesignError("Canonical semantic token catalog is empty")
+    return roles
+
+
+def _asset_dimensions(path: Path) -> tuple[int, int]:
+    """Read intrinsic PNG dimensions or an SVG numeric viewport."""
+    data = path.read_bytes()
+    if path.suffix.lower() == ".png":
+        if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+            raise DesignError("Generated PNG has no valid IHDR dimensions")
+        return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+    header = data[:16384].decode("utf-8", errors="strict")
+    svg = re.search(r"<svg\b([^>]*)>", header, re.IGNORECASE)
+    if not svg:
+        raise DesignError("Generated SVG has no root svg element")
+    attributes = svg.group(1)
+    view_box = re.search(r"\bviewBox\s*=\s*['\"]\s*[-+0-9.eE]+\s+[-+0-9.eE]+\s+([-+0-9.eE]+)\s+([-+0-9.eE]+)\s*['\"]", attributes)
+    if view_box:
+        width, height = float(view_box.group(1)), float(view_box.group(2))
+    else:
+        width_match = re.search(r"\bwidth\s*=\s*['\"]([0-9]+(?:\.[0-9]+)?)(?:px)?['\"]", attributes)
+        height_match = re.search(r"\bheight\s*=\s*['\"]([0-9]+(?:\.[0-9]+)?)(?:px)?['\"]", attributes)
+        if not width_match or not height_match:
+            raise DesignError("Generated SVG requires numeric width/height or viewBox dimensions")
+        width, height = float(width_match.group(1)), float(height_match.group(1))
+    if not width.is_integer() or not height.is_integer() or width <= 0 or height <= 0:
+        raise DesignError("Generated asset dimensions must be positive whole pixels")
+    return int(width), int(height)
+
+
+def load_asset_catalog(root: Path, path: Path | None = None) -> list[dict[str, Any]]:
+    """Validate project-owned records for generated visual assets."""
+    location = path or root / ".agentic/design-assets.json"
+    payload = load_object(location)
+    if set(payload) != {"schema_version", "assets"} or payload.get("schema_version") != 1:
+        raise DesignError("Unsupported design-asset catalog schema")
+    assets = payload.get("assets")
+    if not isinstance(assets, list):
+        raise DesignError("Design-asset catalog must contain an asset list")
+    expected_fields = {
+        "id", "source_id", "source_url", "source_revision", "created_at",
+        "generator", "parameters", "file", "dimensions", "file_sha256", "token_roles", "placement",
+        "responsive_behavior", "dark_mode_behavior", "semantics", "alt_text",
+        "license_basis", "evidence",
+    }
+    seen: set[str] = set()
+    for asset in assets:
+        if not isinstance(asset, dict) or set(asset) != expected_fields:
+            raise DesignError("Every design asset must match the reviewed asset schema")
+        _reject_terminal_controls(asset, "design asset")
+        identity = asset.get("id")
+        if not isinstance(identity, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", identity):
+            raise DesignError("Design asset ids must use lowercase kebab-case")
+        if identity in seen:
+            raise DesignError(f"Duplicate design asset: {identity}")
+        seen.add(identity)
+        if asset.get("source_id") != "haikei":
+            raise DesignError(f"Unsupported generated-asset source: {identity}")
+        if not isinstance(asset.get("source_url"), str) or not asset["source_url"].startswith("https://haikei.app/"):
+            raise DesignError(f"Design asset requires the canonical Haikei source: {identity}")
+        revision = asset.get("source_revision")
+        if revision is not None and (not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision)):
+            raise DesignError(f"Invalid generated-asset source revision: {identity}")
+        if not isinstance(asset.get("created_at"), str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", asset["created_at"]):
+            raise DesignError(f"Invalid generated-asset date: {identity}")
+        for field in ("generator", "placement", "responsive_behavior", "dark_mode_behavior", "license_basis"):
+            if not isinstance(asset.get(field), str) or not asset[field].strip():
+                raise DesignError(f"Design asset requires {field}: {identity}")
+        parameters = asset.get("parameters")
+        if not isinstance(parameters, dict) or not parameters:
+            raise DesignError(f"Design asset requires generator parameters: {identity}")
+        if not all(isinstance(key, str) and key.strip() and type(value) in {str, int, float, bool}
+                   for key, value in parameters.items()):
+            raise DesignError(f"Design asset parameters must be scalar values: {identity}")
+        if any(type(value) is float and not math.isfinite(value) for value in parameters.values()):
+            raise DesignError(f"Design asset parameters must be finite: {identity}")
+        relative = asset.get("file")
+        if not isinstance(relative, str):
+            raise DesignError(f"Design asset requires a project-local file: {identity}")
+        relative_path = Path(relative)
+        if (
+            relative_path.is_absolute()
+            or ".." in relative_path.parts
+            or not relative.startswith(("apps/", "packages/", "docs/assets/"))
+            or any((root / Path(*relative_path.parts[:index])).is_symlink()
+                   for index in range(1, len(relative_path.parts) + 1))
+        ):
+            raise DesignError(f"Design asset file must stay in an approved project path: {identity}")
+        target = root / relative_path
+        if not target.is_file() or target.suffix.lower() not in {".svg", ".png"}:
+            raise DesignError(f"Design asset file must be an existing SVG or PNG: {identity}")
+        dimensions = asset.get("dimensions")
+        if (
+            not isinstance(dimensions, dict)
+            or set(dimensions) != {"width", "height", "unit"}
+            or type(dimensions.get("width")) is not int
+            or type(dimensions.get("height")) is not int
+            or dimensions["width"] <= 0
+            or dimensions["height"] <= 0
+            or dimensions.get("unit") != "px"
+        ):
+            raise DesignError(f"Design asset requires positive pixel dimensions: {identity}")
+        if (dimensions["width"], dimensions["height"]) != _asset_dimensions(target):
+            raise DesignError(f"Design asset dimensions do not match its file: {identity}")
+        file_sha256 = asset.get("file_sha256")
+        if not isinstance(file_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", file_sha256):
+            raise DesignError(f"Design asset requires a SHA-256 file digest: {identity}")
+        if hashlib.sha256(target.read_bytes()).hexdigest() != file_sha256:
+            raise DesignError(f"Design asset file digest is stale: {identity}")
+        token_roles = asset.get("token_roles")
+        if not isinstance(token_roles, list) or not token_roles or not all(
+            isinstance(role, str) and re.fullmatch(r"[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*", role)
+            for role in token_roles
+        ):
+            raise DesignError(f"Design asset requires semantic token roles: {identity}")
+        unknown_roles = sorted(set(token_roles) - _canonical_semantic_token_roles(root))
+        if unknown_roles:
+            raise DesignError(f"Design asset uses unknown semantic token roles: {identity}: {', '.join(unknown_roles)}")
+        if asset.get("semantics") not in {"decorative", "meaningful"}:
+            raise DesignError(f"Design asset semantics must be decorative or meaningful: {identity}")
+        alt_text = asset.get("alt_text")
+        if asset["semantics"] == "meaningful" and (not isinstance(alt_text, str) or not alt_text.strip()):
+            raise DesignError(f"Meaningful design asset requires alt text: {identity}")
+        if asset["semantics"] == "decorative" and alt_text is not None:
+            raise DesignError(f"Decorative design asset must use null alt text: {identity}")
+        evidence = asset.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            raise DesignError(f"Design asset requires running-product evidence: {identity}")
+        for record in evidence:
+            if not isinstance(record, dict) or set(record) != {"file", "sha256"}:
+                raise DesignError(f"Design asset evidence must contain file and sha256: {identity}")
+            evidence_path = record.get("file")
+            evidence_target = evidence_file(root, evidence_path)
+            evidence_sha256 = record.get("sha256")
+            if not isinstance(evidence_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", evidence_sha256):
+                raise DesignError(f"Design asset evidence requires a SHA-256 digest: {identity}")
+            if hashlib.sha256(evidence_target.read_bytes()).hexdigest() != evidence_sha256:
+                raise DesignError(f"Design asset evidence digest is stale: {identity}")
+    return assets
+
+
+def _active_platforms(root: Path) -> list[str]:
+    project = load_object(root / ".agentic/project.json")
+    profiles = project.get("profiles")
+    if not isinstance(profiles, list) or not all(isinstance(item, str) for item in profiles):
+        raise DesignError("Project profiles must be a string list")
+    platforms: list[str] = []
+    if "web-next" in profiles:
+        platforms.append("web")
+    if "mobile-expo" in profiles:
+        platforms.append("mobile")
+    return platforms
+
+
+def _text_has_meaningful_motion(value: Any) -> bool:
+    return _meaningful_decision(value) and re.sub(r"[^a-z]+", " ", value.lower()).strip() != "no motion"
+
+
+def _asset_route_is_relevant(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    return any(term in value.lower() for term in (
+        "svg", "generated", "abstract", "background", "texture", "pattern",
+        "wave", "blob", "gradient", "geometric",
+    ))
+
+
+def _decision_is_open(value: Any) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return True
+    normalized = re.sub(r"[^a-z]+", " ", value.lower()).strip()
+    return normalized in {"open", "undecided", "unknown", "not decided", "recommend for me"}
+
+
+def _asset_contract_is_ready(direction: dict[str, Any] | None) -> bool:
+    return bool(
+        direction
+        and _asset_route_is_relevant(direction.get("asset_strategy"))
+        and _meaningful_decision(direction.get("asset_role"))
+        and _meaningful_decision(direction.get("asset_alternatives"))
+    )
+
+
+def _design_resource_context(root: Path, explicit_phase: str | None, explicit_needs: list[str] | None) -> dict[str, Any]:
+    intake = load_object(root / ".agentic/design-intake.json")
+    state = load_object(root / ".agentic/design.json")
+    catalog = load_catalog(root / ".agentic/design-directions.json")
+    design_status = state.get("status")
+    approval_valid = False
+    try:
+        validate_state(state, catalog, root)
+        approval_valid = design_status == "approved"
+    except DesignError:
+        if design_status == "approved":
+            design_status = "stale_approval"
+    phase = explicit_phase
+    if phase is None:
+        if intake.get("status") != "complete":
+            phase = "design-intake"
+        elif not approval_valid:
+            phase = "design-directions"
+        else:
+            phase = "implementation"
+    needs = set(explicit_needs or [])
+    answers = intake.get("answers") if isinstance(intake.get("answers"), dict) else {}
+    selected = catalog.get(state.get("approved_direction")) if approval_valid else None
+    candidates = list(catalog.values())
+    palette_open = _decision_is_open(answers.get("color_intent"))
+    typography_open = _decision_is_open(answers.get("typography"))
+    relevant_directions = [selected] if selected else candidates
+    asset_contract_ready = any(_asset_contract_is_ready(item) for item in relevant_directions if item)
+    if not explicit_needs:
+        if phase == "design-intake":
+            if palette_open:
+                needs.add("palette")
+            if typography_open:
+                needs.add("typography")
+        if asset_contract_ready:
+            needs.add("assets")
+        if any(_text_has_meaningful_motion(item.get("motion")) and _meaningful_decision(item.get("motion_rationale"))
+               and _meaningful_decision(item.get("motion_interruption"))
+               and _meaningful_decision(item.get("motion_performance_budget"))
+               and _meaningful_decision(item.get("reduced_motion"))
+               for item in relevant_directions if item):
+            needs.add("motion")
+    motion_contract_ready = bool(selected and _text_has_meaningful_motion(selected.get("motion"))
+                                 and _meaningful_decision(selected.get("motion_rationale"))
+                                 and _meaningful_decision(selected.get("motion_interruption"))
+                                 and _meaningful_decision(selected.get("motion_performance_budget"))
+                                 and _meaningful_decision(selected.get("reduced_motion")))
+    return {
+        "phase": phase,
+        "needs": sorted(needs),
+        "platforms": _active_platforms(root),
+        "design_status": design_status,
+        "approved_direction": state.get("approved_direction") if approval_valid else None,
+        "palette_open": palette_open,
+        "typography_open": typography_open,
+        "asset_contract_ready": asset_contract_ready,
+        "motion_contract_ready": motion_contract_ready,
+    }
+
+
+def design_resource_plan(
+    root: Path,
+    *,
+    phase: str | None = None,
+    needs: list[str] | None = None,
+    catalog_path: Path | None = None,
+) -> dict[str, Any]:
+    context = _design_resource_context(root, phase, needs)
+    decisions: list[dict[str, Any]] = []
+    for resource in load_resource_catalog(catalog_path or root / ".agentic/design-resources.json"):
+        matching_needs = sorted(set(resource["needs"]).intersection(context["needs"]))
+        state = "optional"
+        reason = "Current project evidence does not justify this resource."
+        if matching_needs:
+            if not set(resource["platforms"]).intersection(context["platforms"]):
+                state = "not_applicable"
+                reason = "The active project platform is not supported by this resource."
+            elif context["phase"] not in resource["phases"]:
+                state = "deferred"
+                reason = f"The need is present, but this resource belongs in {', '.join(resource['phases'])}."
+            elif resource["id"] == "realtime-colors" and not any(
+                (need == "palette" and context["palette_open"])
+                or (need == "typography" and context["typography_open"])
+                for need in matching_needs
+            ):
+                state = "deferred"
+                reason = "Record palette or typography as unresolved in design intake before reopening exploration."
+            elif resource["id"] == "haikei" and not context["asset_contract_ready"]:
+                state = "deferred"
+                reason = "First register a candidate with a product-specific generated-asset role and the alternatives considered."
+            elif resource["id"] == "motion-primitives" and (
+                context["design_status"] != "approved" or not context["motion_contract_ready"]
+            ):
+                state = "deferred"
+                reason = "Approve a direction with purpose, interruption or reversal, performance budget, and reduced-motion behavior before selecting motion code."
+            else:
+                state = "recommended"
+                reason = resource["trigger"]
+        decisions.append({
+            "id": resource["id"],
+            "name": resource["name"],
+            "state": state,
+            "matching_needs": matching_needs,
+            "reason": reason,
+            "url": resource["source"]["canonical_url"],
+            "source": resource["source"],
+            "human_action_required": state in {"recommended", "deferred"},
+            "prerequisites": resource["prerequisites"] if state in {"recommended", "deferred"} else [],
+            "bring_back": resource["bring_back"] if state == "recommended" else [],
+            "return_to": resource["return_to"] if state in {"recommended", "deferred"} else [],
+            "forbidden": resource["forbidden"],
+        })
+    return {
+        "schema_version": 1,
+        "operation": "design-resource-plan",
+        "context": context,
+        "decisions": decisions,
+        "mutation_performed": False,
+        "browser_opened": False,
+        "network_request_performed": False,
+        "download_performed": False,
+        "installation_performed": False,
+    }
 
 
 def load_catalog(path: Path | None = None) -> dict[str, dict[str, Any]]:
@@ -198,8 +661,8 @@ def validate_custom_candidate(direction: dict, root: Path) -> None:
     if not isinstance(preview, str) or not re.fullmatch(r"/(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-]+/?", preview):
         raise DesignError("A custom candidate needs a local preview_path, not a remote URL")
     for field in CUSTOM_TEXT_FIELDS:
-        if not isinstance(direction.get(field), str) or not direction[field].strip():
-            raise DesignError(f"A custom candidate requires {field}")
+        if not _meaningful_decision(direction.get(field)):
+            raise DesignError(f"A custom candidate requires a meaningful {field}")
     states = direction.get("states")
     if (
         not isinstance(states, list)
@@ -233,6 +696,8 @@ def validate_project(root: Path) -> dict[str, Any]:
     catalog = load_catalog(root / ".agentic/design-directions.json")
     state = load_object(root / ".agentic/design.json")
     validate_state(state, catalog, root)
+    load_resource_catalog(root / ".agentic/design-resources.json")
+    load_asset_catalog(root)
     return state
 
 
@@ -410,8 +875,8 @@ def run_propose(args: argparse.Namespace) -> int:
     if not isinstance(direction.get("preview_path"), str) or not re.fullmatch(r"/(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-]+/?", direction["preview_path"]):
         raise DesignError("A candidate needs a local preview_path, not a remote URL")
     for field in CUSTOM_TEXT_FIELDS:
-        if not isinstance(direction.get(field), str) or not direction[field].strip():
-            raise DesignError(f"A custom candidate requires {field}")
+        if not _meaningful_decision(direction.get(field)):
+            raise DesignError(f"A custom candidate requires a meaningful {field}")
     catalog = load_catalog()
     identity = direction.get("id")
     if not isinstance(identity, str):
@@ -493,10 +958,51 @@ def run_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_resources(args: argparse.Namespace) -> int:
+    report = design_resource_plan(ROOT, phase=args.phase, needs=args.need)
+    if args.json:
+        print(json.dumps(report, indent=2))
+        return 0
+    context = report["context"]
+    print("Design resource plan (read only)")
+    print(f"Phase: {context['phase']}")
+    print(f"Platforms: {', '.join(context['platforms']) or 'none'}")
+    print(f"Needs: {', '.join(context['needs']) or 'none identified'}")
+    visible = [item for item in report["decisions"] if item["state"] != "optional" or args.all]
+    if not visible:
+        print("\nNo external design resource is justified by current evidence.")
+    for item in visible:
+        print(f"\n{item['state'].upper():<14} {item['name']}")
+        print(f"Why: {item['reason']}")
+        print(f"Reviewed: {item['source']['reviewed_at']}")
+        print(f"Maintenance: {item['source']['maintenance']}")
+        print(f"License/use boundary: {item['source']['license']}")
+        if item["prerequisites"]:
+            print("Before external use:")
+            for prerequisite in item["prerequisites"]:
+                print(f"  - {prerequisite}")
+        print("Boundaries:")
+        for boundary in item["forbidden"]:
+            print(f"  - {boundary}")
+        if item["state"] == "recommended":
+            print(f"Open manually after reviewing the boundaries above: {item['url']}")
+            print("Bring back:")
+            for deliverable in item["bring_back"]:
+                print(f"  - {deliverable}")
+        if item["return_to"]:
+            print("Return to:")
+            for destination in item["return_to"]:
+                print(f"  - {destination}")
+    print("\nNothing was opened, submitted, downloaded, installed, or changed.")
+    return 0
+
+
 def run_check(_: argparse.Namespace) -> int:
     catalog = load_catalog()
     state = load_object(STATE_PATH)
     intake = load_object(INTAKE_PATH)
+    load_resource_catalog()
+    assets = load_asset_catalog(ROOT)
     validate_state(state, catalog)
     if intake.get("schema_version") != 1 or intake.get("status") not in {
         "not_started",
@@ -505,7 +1011,7 @@ def run_check(_: argparse.Namespace) -> int:
     }:
         raise DesignError("Invalid design-intake state")
     render_direction_css(state)
-    print(f"Design workflow valid: {len(catalog)} directions, status={state['status']}")
+    print(f"Design workflow valid: {len(catalog)} directions, {len(assets)} generated assets, status={state['status']}")
     return 0
 
 
@@ -540,6 +1046,11 @@ def parser() -> argparse.ArgumentParser:
     reset.add_argument("--yes", action="store_true")
     status = commands.add_parser("status", help="Show intake and approval state")
     status.add_argument("--json", action="store_true")
+    resources = commands.add_parser("resources", help="Route reviewed palette, asset, and motion resources")
+    resources.add_argument("--need", action="append", choices=sorted(RESOURCE_NEEDS))
+    resources.add_argument("--phase", choices=sorted(RESOURCE_PHASES))
+    resources.add_argument("--all", action="store_true", help="Include optional resources")
+    resources.add_argument("--json", action="store_true")
     commands.add_parser("check", help="Validate the design workflow contract")
     return value
 
@@ -555,6 +1066,7 @@ def main() -> int:
             "propose": run_propose,
             "reset": run_reset,
             "status": run_status,
+            "resources": run_resources,
             "check": run_check,
         }[args.command](args)
     except (DesignError, OSError, EOFError, KeyboardInterrupt) as error:

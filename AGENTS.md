@@ -180,6 +180,14 @@ canonical design-system and token changes. External skills remain specialist
 inputs; the project brief, design system, and tokens remain authoritative. A
 separate evaluator owns final critique of the running experience.
 
+`./agentic design resources` is the read-only bridge from a current design need
+to a reviewed external aid. It may recommend Realtime Colors for unresolved
+palette/type exploration, Haikei for a candidate's purposeful generated-asset
+strategy, or Motion Primitives for approved web motion. It never opens a site,
+submits project data, downloads an asset, installs code, changes tokens, or
+records approval. Returned choices must re-enter the brief/candidate/system and
+pass the normal evidence gates.
+
 For substantial design-critical web UI, route `design-engineering-quality`.
 Emil Kowalski's external suite may add implementation craft when installed, but
 the router selects only the minimum capability. It never replaces upstream

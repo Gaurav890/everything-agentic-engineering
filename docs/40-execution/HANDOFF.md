@@ -1,24 +1,27 @@
 # Handoff
 
-Last updated: 2026-09-10
+Last updated: 2026-09-13
 
 ## Current goal
 
-Complete T-052 by raising the tested, read-only runtime floors to Claude Code
-2.1.259 and Codex 0.153.0 using first-party release evidence while preserving
-every optional capability and human approval boundary.
+Complete T-053 by reviewing and verifying the new phase-aware visual-resource
+route without turning external tools into default dependencies or aesthetic
+authority.
 
 ## Implemented
 
-T-052 updates the machine-readable floors and cumulative trust-boundary records
-for filesystem containment, credentials, concurrent managed-policy state,
-project trust, durable review history, and selected-account MCP approvals. The
-2.1.259 Bash argument-level deny expansion is explicitly excluded because
-2.1.260 reverted it. Managed MCP servers, remote plugin
-marketplaces, and experimental context management remain disabled and
-human-gated. `/skill-doctor` is advisory and cannot automatically prune,
-install, or mutate project skills. Focused tests, strict boundary simulations,
-full verification, and independent security review now pass.
+T-053 adds `.agentic/design-resources.json` and `./agentic design resources` as
+the active bridge between design evidence and three reviewed external resources:
+Realtime Colors for unresolved palette/type exploration, Haikei for justified
+generated assets, and Motion Primitives for approved web motion. The output
+identifies recommended, deferred, optional, and platform-inapplicable routes,
+then states exactly what a person must bring back into the project contract.
+
+The route is present in generated design-critical projects and in the project
+handoff, onboarding skills, frontend rules, design system, tooling catalog, and
+README. It fails closed if the catalog weakens no-install/no-download policy.
+It performs no browser open, external submission, network request, download,
+installation, approval, or token mutation.
 
 The most recent completed onboarding foundation includes:
 
@@ -57,19 +60,17 @@ The most recent completed onboarding foundation includes:
 
 ## Evidence and limits
 
-T-052 has eight focused runtime-policy tests, strict lower-bound and exact-floor
-simulations, stable read-only JSON evidence, full ten-stage verification, green
-GitHub checks, and an independent security-review PASS at implementation commit
-`202190e9512f0d27fa1ef77eea5f1db4d79aa50e`. Results are recorded under
-`docs/50-evals/evidence/T-052/`.
-
-The doctor verifies repository policy and minimum-version comparison; it does
-not inspect actual user/managed runtime configuration or certify every later
-release. No installation, upgrade, optional capability activation, production
-readiness, deployment, approval, or merge is implied.
+T-053 has passing focused design, generated-project, and handoff tests. Full
+repository verification, production build, 25 interaction/accessibility browser
+checks, 24 unchanged visual comparisons, and independent design and security
+reviews pass. Generated-asset dimensions, file/evidence digests, canonical
+semantic roles, and meaningful route decisions fail closed. The resource
+catalog does not certify the quality of a future palette, asset, animation, or
+finished product. Human design approval and running-product evidence remain
+mandatory.
 
 ## Exact next action
 
-Inspect draft pull request #84 and its evidence bundle. After a direct owner
-decision, use the repository task workflow for the next lifecycle transition.
-Issue #83 remains separately scoped.
+Complete the remaining verification and independent review for the active
+tracked change, resolve material findings, and follow the documented task
+workflow without self-approval or merge.

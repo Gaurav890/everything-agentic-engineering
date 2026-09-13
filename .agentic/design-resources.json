@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "automatic_browser_open": false,
+    "automatic_browser_submission": false,
+    "automatic_network_request": false,
+    "automatic_external_execution": false,
+    "automatic_external_copy": false,
+    "automatic_authentication": false,
+    "automatic_credential_access": false,
+    "automatic_project_write": false,
+    "automatic_install": false,
+    "automatic_download": false,
+    "external_sources_are_untrusted": true,
+    "project_design_system_wins": true,
+    "human_approval_before_canonical_tokens": true
+  },
+  "resources": [
+    {
+      "id": "realtime-colors",
+      "name": "Realtime Colors",
+      "kind": "human_operated_decision_aid",
+      "phases": ["design-intake", "design-directions"],
+      "platforms": ["web", "mobile"],
+      "needs": ["palette", "typography"],
+      "source": {
+        "canonical_url": "https://www.realtimecolors.com/",
+        "repository_url": "https://github.com/juxtopposed/realtimecolors",
+        "reviewed_revision": "4be24a05ba126f38d6946e8f0ba811c454cd209a",
+        "reviewed_at": "2026-09-12",
+        "maintenance": "The hosted tool is current; its public source repository states that it is no longer updated.",
+        "license": "Color selections are user decisions. Every chosen font requires independent license verification. The published website source is CC BY-NC-ND and must not be copied or modified."
+      },
+      "trigger": "Color roles or typography remain open and a person would benefit from comparing them on a realistic generic page before product-specific previews are built.",
+      "prerequisites": [
+        "Capture the product, audience, desired feeling, existing-brand constraints, and colors to avoid.",
+        "Use only non-confidential inputs in the external website.",
+        "Treat its contrast indicators as exploration, not final WCAG evidence."
+      ],
+      "bring_back": [
+        "Chosen light and dark color roles for canvas, surface, text, primary, secondary, accent, focus, and status.",
+        "Heading and body font candidates, type scale, and licensing constraints.",
+        "A share URL or screenshot as provenance plus accepted and rejected alternatives.",
+        "Product-specific preview and independent contrast evidence before approval."
+      ],
+      "return_to": [
+        "docs/20-design/DESIGN_BRIEF.md for accepted and rejected color/type decisions and font-license findings.",
+        ".agentic/design-directions.json for product-specific candidate token roles after exploration.",
+        "docs/50-evals/ for screenshots and independent contrast evidence."
+      ],
+      "forbidden": [
+        "Copying, vendoring, or modifying Realtime Colors website source or branded materials.",
+        "Treating its five generic roles as the final semantic token model.",
+        "Writing exported raw values directly into product components.",
+        "Claiming palette exploration is a product-specific design direction."
+      ]
+    },
+    {
+      "id": "haikei",
+      "name": "Haikei",
+      "kind": "human_operated_asset_generator",
+      "phases": ["design-directions", "component-translation", "implementation"],
+      "platforms": ["web", "mobile"],
+      "needs": ["assets"],
+      "source": {
+        "canonical_url": "https://haikei.app/",
+        "repository_url": null,
+        "reviewed_revision": null,
+        "reviewed_at": "2026-09-12",
+        "maintenance": "Official hosted generator with SVG and PNG export; no official source repository is claimed.",
+        "license": "Official pricing guidance permits personal and professional use of generated designs, with limitations on using them to provide a similar generator service."
+      },
+      "trigger": "A candidate asset strategy calls for an original abstract SVG or raster background, texture, pattern, wave, blob, gradient, or geometric scene.",
+      "prerequisites": [
+        "Name the product-specific role of the asset and why a plain surface, CSS, data visualization, illustration, or owned media is insufficient.",
+        "Choose colors from the candidate token direction rather than inventing a parallel palette.",
+        "Use only non-confidential inputs in the external website."
+      ],
+      "bring_back": [
+        "The exported project-local SVG or PNG plus generator type, dimensions, parameters, date, and canonical source URL.",
+        "Token-role mapping, placement rules, responsive crop or scaling behavior, and dark-mode treatment.",
+        "Optimized-file evidence, accessible alternative or decorative semantics, and visual/performance review."
+      ],
+      "return_to": [
+        ".agentic/design-assets.json for the validated generator, parameters, file, token, responsive, theme, semantics, license, and evidence record.",
+        ".agentic/design-directions.json for the candidate asset role and considered alternatives.",
+        "docs/50-evals/ for running-product visual, accessibility, and performance evidence."
+      ],
+      "forbidden": [
+        "Automatic browser interaction, download, or project write.",
+        "Generic blob, wave, or gradient decoration without a product-specific role.",
+        "Unreviewed inline SVG, inaccessible meaningful imagery, or assets that bypass approved tokens.",
+        "Using generated output to provide a competing design-generator service."
+      ]
+    },
+    {
+      "id": "motion-primitives",
+      "name": "Motion Primitives",
+      "kind": "optional_component_source",
+      "phases": ["component-translation", "implementation", "live-iteration"],
+      "platforms": ["web"],
+      "needs": ["motion"],
+      "source": {
+        "canonical_url": "https://motion-primitives.com/docs",
+        "repository_url": "https://github.com/ibelick/motion-primitives",
+        "reviewed_revision": "40f59b61e567712aa8329c7dc8c2ced763054c34",
+        "reviewed_at": "2026-09-12",
+        "maintenance": "Actively maintained and explicitly described upstream as beta.",
+        "license": "MIT"
+      },
+      "trigger": "A web interaction has an approved motion purpose and a reviewed component can communicate it more clearly than a small local CSS or platform-native transition.",
+      "prerequisites": [
+        "Approve the design direction and record motion purpose, interruption or reversal behavior, performance budget, and reduced-motion behavior.",
+        "Confirm web platform compatibility and inspect the exact component source and dependencies.",
+        "Prefer the least expensive implementation that communicates the change."
+      ],
+      "bring_back": [
+        "Exact selected component and immutable source revision with a reviewed local diff.",
+        "Mapping to project semantic tokens and component contracts rather than upstream styling.",
+        "Keyboard, screen-reader, reduced-motion, interruption, responsive, and performance evidence from the running product.",
+        "Attribution and license records required by project policy."
+      ],
+      "return_to": [
+        ".agentic/design-directions.json for motion purpose, interruption/reversal, performance budget, and reduced-motion behavior.",
+        "docs/50-evals/ for running-product interaction, accessibility, responsive, reduced-motion, and performance evidence."
+      ],
+      "forbidden": [
+        "Automatic installation, CLI execution, copying, or dependency changes.",
+        "Invoking an entire library or preserving its visual identity by default.",
+        "Decorative motion without a user or system-state purpose.",
+        "Using a web component route as native-mobile implementation guidance."
+      ]
+    }
+  ]
+}

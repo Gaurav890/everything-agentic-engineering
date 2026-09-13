@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
+import hashlib
+import io
 import json
 import os
 import sys
@@ -18,6 +21,276 @@ from design_fixture import prepare, write
 
 
 class DesignEngineTests(unittest.TestCase):
+    def prepare_resource_root(
+        self,
+        root: Path,
+        *,
+        approved: bool = False,
+        profiles: list[str] | None = None,
+    ) -> None:
+        prepare(root, approved=approved)
+        write(root, ".agentic/project.json", {
+            "schema_version": 1,
+            "project": {"name": "resource-test"},
+            "profiles": profiles or ["web-next", "design-critical"],
+            "specialists": [],
+            "policy": {"allow_automatic_install": False, "allow_automatic_removal": False},
+        })
+        write(
+            root,
+            ".agentic/design-resources.json",
+            json.loads(design_engine.RESOURCES_PATH.read_text()),
+        )
+        write(
+            root,
+            ".agentic/design-assets.json",
+            {"schema_version": 1, "assets": []},
+        )
+
+    def test_design_resource_catalog_has_reviewed_bounded_routes(self) -> None:
+        resources = design_engine.load_resource_catalog()
+        self.assertEqual(
+            {"realtime-colors", "haikei", "motion-primitives"},
+            {item["id"] for item in resources},
+        )
+        motion = next(item for item in resources if item["id"] == "motion-primitives")
+        self.assertEqual(["web"], motion["platforms"])
+        self.assertIn("beta", motion["source"]["maintenance"].lower())
+        for resource in resources:
+            self.assertTrue(resource["source"]["canonical_url"].startswith("https://"))
+            self.assertTrue(resource["forbidden"])
+
+    def test_resource_plan_routes_open_palette_and_type_without_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root)
+            intake = json.loads((root / ".agentic/design-intake.json").read_text())
+            intake.update(status="not_started")
+            intake["answers"]["color_intent"] = None
+            intake["answers"]["typography"] = None
+            write(root, ".agentic/design-intake.json", intake)
+            report = design_engine.design_resource_plan(root)
+        decisions = {item["id"]: item for item in report["decisions"]}
+        self.assertEqual("recommended", decisions["realtime-colors"]["state"])
+        self.assertEqual("optional", decisions["haikei"]["state"])
+        self.assertEqual("optional", decisions["motion-primitives"]["state"])
+        self.assertFalse(report["mutation_performed"])
+        self.assertFalse(report["browser_opened"])
+        self.assertFalse(report["download_performed"])
+        self.assertFalse(report["installation_performed"])
+
+    def test_resource_plan_requires_candidate_evidence_for_assets_and_approval_for_motion(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root)
+            without_evidence = design_engine.design_resource_plan(
+                root,
+                phase="design-directions",
+                needs=["assets", "motion"],
+            )
+            catalog = json.loads((root / ".agentic/design-directions.json").read_text())
+            catalog["directions"][0].update(
+                asset_strategy="A generated geometric SVG derived from approved candidate colors",
+                asset_role="Visualize the relationship between evidence and a human decision",
+                asset_alternatives="Considered CSS geometry and a data chart; neither carries the narrative role",
+            )
+            write(root, ".agentic/design-directions.json", catalog)
+            with_evidence = design_engine.design_resource_plan(
+                root,
+                phase="design-directions",
+                needs=["assets", "motion"],
+            )
+        without = {item["id"]: item for item in without_evidence["decisions"]}
+        with_contract = {item["id"]: item for item in with_evidence["decisions"]}
+        self.assertEqual("deferred", without["haikei"]["state"])
+        self.assertEqual("recommended", with_contract["haikei"]["state"])
+        self.assertEqual("deferred", with_contract["motion-primitives"]["state"])
+
+    def test_resource_plan_makes_no_recommendation_without_a_current_need(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root)
+            report = design_engine.design_resource_plan(root)
+        self.assertEqual([], report["context"]["needs"])
+        self.assertFalse(any(
+            item["state"] == "recommended" for item in report["decisions"]
+        ))
+
+    def test_resource_plan_allows_approved_web_motion_and_rejects_mobile_route(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root, approved=True)
+            catalog = json.loads((root / ".agentic/design-directions.json").read_text())
+            catalog["directions"][0].update(
+                motion_rationale="The transition preserves object continuity after selection.",
+                motion_interruption="A new selection reverses the transition immediately without queuing.",
+                motion_performance_budget="Transform and opacity only, completing within 180ms.",
+                reduced_motion="Update the selected state instantly with the same persistent label.",
+            )
+            write(root, ".agentic/design-directions.json", catalog)
+            state = json.loads((root / ".agentic/design.json").read_text())
+            state["fingerprint"] = design_engine.approval_fingerprint(
+                root,
+                catalog["directions"][0],
+                state["evidence"],
+            )
+            write(root, ".agentic/design.json", state)
+            web = design_engine.design_resource_plan(root, needs=["motion"])
+            project = json.loads((root / ".agentic/project.json").read_text())
+            project["profiles"] = ["mobile-expo", "design-critical"]
+            write(root, ".agentic/project.json", project)
+            mobile = design_engine.design_resource_plan(root, needs=["motion"])
+        web_decision = next(item for item in web["decisions"] if item["id"] == "motion-primitives")
+        mobile_decision = next(item for item in mobile["decisions"] if item["id"] == "motion-primitives")
+        self.assertEqual("recommended", web_decision["state"])
+        self.assertEqual("not_applicable", mobile_decision["state"])
+
+    def test_resource_catalog_rejects_weakened_automatic_install_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            payload = json.loads(design_engine.RESOURCES_PATH.read_text())
+            payload["policy"]["automatic_install"] = True
+            path = root / "design-resources.json"
+            write(root, "design-resources.json", payload)
+            with self.assertRaisesRegex(design_engine.DesignError, "safety boundary"):
+                design_engine.load_resource_catalog(path)
+
+    def test_resource_catalog_rejects_unknown_policy_and_terminal_controls(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            payload = json.loads(design_engine.RESOURCES_PATH.read_text())
+            payload["policy"]["automatic_network_override"] = True
+            write(root, "unknown.json", payload)
+            with self.assertRaisesRegex(design_engine.DesignError, "safety boundary"):
+                design_engine.load_resource_catalog(root / "unknown.json")
+            payload = json.loads(design_engine.RESOURCES_PATH.read_text())
+            payload["resources"][0]["name"] = "Palette\u001b]8;;https://evil.invalid\u0007spoof"
+            write(root, "control.json", payload)
+            with self.assertRaisesRegex(design_engine.DesignError, "terminal control"):
+                design_engine.load_resource_catalog(root / "control.json")
+
+    def test_human_resource_output_places_safety_and_return_contract_before_url(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root)
+            intake = json.loads((root / ".agentic/design-intake.json").read_text())
+            intake["answers"]["color_intent"] = "open"
+            write(root, ".agentic/design-intake.json", intake)
+            args = argparse.Namespace(phase="design-intake", need=["palette"], all=False, json=False)
+            with mock.patch.object(design_engine, "ROOT", root), contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(0, design_engine.run_resources(args))
+            rendered = output.getvalue()
+        self.assertIn("Use only non-confidential inputs", rendered)
+        self.assertIn("License/use boundary", rendered)
+        self.assertIn("Return to:", rendered)
+        self.assertLess(rendered.index("Before external use:"), rendered.index("Open manually after"))
+
+    def test_design_asset_catalog_validates_a_complete_haikei_record(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root)
+            asset = root / "apps/web/public/decision-field.svg"
+            asset.parent.mkdir(parents=True)
+            asset.write_text("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1600 900\"></svg>")
+            evidence = root / "docs/50-evals/fixture.png"
+            record = {
+                "id": "decision-field",
+                "source_id": "haikei",
+                "source_url": "https://haikei.app/generators/",
+                "source_revision": None,
+                "created_at": "2026-09-13",
+                "generator": "layered-waves",
+                "parameters": {"waves": 4, "direction": "up"},
+                "file": "apps/web/public/decision-field.svg",
+                "dimensions": {"width": 1600, "height": 900, "unit": "px"},
+                "file_sha256": hashlib.sha256(asset.read_bytes()).hexdigest(),
+                "token_roles": ["color.background.canvas", "color.action.primary.default"],
+                "placement": "Behind the evidence-to-decision transition only",
+                "responsive_behavior": "Crop the quiet edge while preserving the decision focal point",
+                "dark_mode_behavior": "Use the approved dark semantic roles",
+                "semantics": "decorative",
+                "alt_text": None,
+                "license_basis": "Generated under the reviewed Haikei professional-use terms",
+                "evidence": [{
+                    "file": "docs/50-evals/fixture.png",
+                    "sha256": hashlib.sha256(evidence.read_bytes()).hexdigest(),
+                }],
+            }
+            write(root, ".agentic/design-assets.json", {"schema_version": 1, "assets": [record]})
+            self.assertEqual([record], design_engine.load_asset_catalog(root))
+
+            invalid_cases = {
+                "missing-dimensions": lambda item: item.pop("dimensions"),
+                "unknown-token": lambda item: item.update(token_roles=["color.fake.role"]),
+                "stale-file": lambda item: item.update(file_sha256="0" * 64),
+                "stale-evidence": lambda item: item.update(evidence=[{
+                    "file": "docs/50-evals/fixture.png", "sha256": "0" * 64,
+                }]),
+            }
+            for label, mutate in invalid_cases.items():
+                with self.subTest(label=label):
+                    changed = json.loads(json.dumps(record))
+                    mutate(changed)
+                    write(root, ".agentic/design-assets.json", {"schema_version": 1, "assets": [changed]})
+                    with self.assertRaises(design_engine.DesignError):
+                        design_engine.load_asset_catalog(root)
+
+    def test_svg_dimensions_use_distinct_width_and_height_without_viewbox(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "asset.svg"
+            path.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"></svg>')
+            self.assertEqual((1600, 900), design_engine._asset_dimensions(path))
+
+    def test_motion_route_defers_when_interruption_or_performance_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root, approved=True)
+            for missing in ("motion_interruption", "motion_performance_budget"):
+                catalog = json.loads((root / ".agentic/design-directions.json").read_text())
+                catalog["directions"][0].update(
+                    motion_rationale="The transition preserves object continuity after selection.",
+                    motion_interruption="A new selection reverses immediately.",
+                    motion_performance_budget="Transform and opacity only within 180ms.",
+                    reduced_motion="Update the selected state instantly.",
+                )
+                catalog["directions"][0].pop(missing)
+                write(root, ".agentic/design-directions.json", catalog)
+                state = json.loads((root / ".agentic/design.json").read_text())
+                state["fingerprint"] = design_engine.approval_fingerprint(
+                    root, catalog["directions"][0], state["evidence"]
+                )
+                write(root, ".agentic/design.json", state)
+                decision = next(item for item in design_engine.design_resource_plan(
+                    root, needs=["motion"]
+                )["decisions"] if item["id"] == "motion-primitives")
+                self.assertEqual("deferred", decision["state"], missing)
+
+    def test_resource_routes_reject_placeholder_contracts(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.prepare_resource_root(root, approved=True)
+            catalog = json.loads((root / ".agentic/design-directions.json").read_text())
+            direction = catalog["directions"][0]
+            direction.update(
+                asset_strategy="Generated SVG background for the decision surface",
+                asset_role="n/a",
+                asset_alternatives="placeholder",
+                motion="Crossfade the selected consequence",
+                motion_rationale="TBD",
+                motion_interruption="none",
+                motion_performance_budget="n/a",
+                reduced_motion="later",
+            )
+            write(root, ".agentic/design-directions.json", catalog)
+            state = json.loads((root / ".agentic/design.json").read_text())
+            state["fingerprint"] = design_engine.approval_fingerprint(root, direction, state["evidence"])
+            write(root, ".agentic/design.json", state)
+            decisions = {item["id"]: item for item in design_engine.design_resource_plan(
+                root, needs=["assets", "motion"]
+            )["decisions"]}
+            self.assertEqual("deferred", decisions["haikei"]["state"])
+            self.assertEqual("deferred", decisions["motion-primitives"]["state"])
+
     def test_catalog_has_three_dtcg_compatible_directions(self) -> None:
         catalog = design_engine.load_catalog()
         self.assertEqual(
@@ -141,7 +414,11 @@ class DesignEngineTests(unittest.TestCase):
                 rationale="Expose tradeoffs", axis="temporal comparison",
                 signature="A budget horizon that bends around the selected purchase date",
                 asset_strategy="Purpose-built data visualization; no stock imagery",
+                asset_role="Make the timing consequence visible as the primary product graphic",
+                asset_alternatives="Considered stock imagery and a plain table; both hide the timing relationship",
                 motion_rationale="The horizon transition explains the changed date and affordability",
+                motion_interruption="A new date reverses the active transition without queuing",
+                motion_performance_budget="Transform and opacity only within 180ms",
                 responsive_strategy="The horizon becomes a vertically stepped plan on narrow screens",
                 reduced_motion="The selected horizon updates instantly with persistent labels",
                 states=["ready", "over budget", "safe plan"], preview_path="/concepts",
@@ -197,7 +474,11 @@ class DesignEngineTests(unittest.TestCase):
                 rationale="Make the tradeoff visible", axis="time horizon",
                 signature="A horizon that bends around the target",
                 asset_strategy="Product-owned data visualization",
+                asset_role="Make the target-date consequence visible",
+                asset_alternatives="Considered a plain table and stock imagery; neither communicates the change",
                 motion_rationale="Motion links the changed input to its consequence",
+                motion_interruption="A new selection reverses the transition without queuing",
+                motion_performance_budget="Transform and opacity only within 180ms",
                 responsive_strategy="The horizon stacks on narrow screens",
                 reduced_motion="Values update without interpolation",
                 states=["ready", "unsafe", "safe"], preview_path="/concepts",

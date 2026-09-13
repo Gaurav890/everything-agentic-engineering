@@ -46,6 +46,32 @@
       "description": "DTCG-compatible design-token source",
       "detect": [{"type": "path", "value": "packages/design-tokens"}]
     },
+    "design-resource-router": {
+      "kind": "local",
+      "description": "Phase-aware routing for reviewed palette, asset, and motion resources",
+      "detect": [
+        {"type": "path", "value": ".agentic/design-resources.json"},
+        {"type": "path", "value": ".agentic/design-assets.json"}
+      ]
+    },
+    "realtime-colors": {
+      "kind": "external-tool",
+      "description": "Human-operated live palette and typography comparison aid",
+      "catalog_only_when_inactive": true,
+      "detect": []
+    },
+    "haikei": {
+      "kind": "external-tool",
+      "description": "Human-operated SVG and PNG asset generator",
+      "catalog_only_when_inactive": true,
+      "detect": []
+    },
+    "motion-primitives": {
+      "kind": "external-component-source",
+      "description": "Optional beta motion components for compatible web implementations",
+      "catalog_only_when_inactive": true,
+      "detect": []
+    },
     "emil-design-engineering": {
       "kind": "external-skill",
       "description": "Emil Kowalski design-engineering, motion, prototyping, and UI-craft suite",

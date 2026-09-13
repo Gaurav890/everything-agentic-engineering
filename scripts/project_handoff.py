@@ -33,11 +33,14 @@ CUSTOM_WEB_PROMPT = (
     "Use the project-onboarding and creative-direction-sprint skills. Confirm one useful "
     "journey, then build three live product-specific "
     "directions on genuinely different named axes. Use realistic content and states, one "
-    "signature idea per direction, explicit asset and motion rationale, responsive behavior, "
-    "and reduced-motion behavior. Do not stop at a brief, mood board, token table, or renamed "
+    "signature idea per direction, explicit asset role and alternatives, motion rationale, "
+    "motion interruption or reversal, performance budget, responsive behavior, and reduced-"
+    "motion behavior. Do not stop at a brief, mood board, token table, or renamed "
     "starter demo. Register the working candidates and show the local comparison board. "
     "When the reviewed design-engineering pack is installed, route its prototype and craft "
-    "skills; otherwise follow the local sprint contract and disclose the gap. "
+    "skills; otherwise follow the local sprint contract and disclose the gap. Use the "
+    "read-only design-resource route only when palette/type, generated-asset, or motion "
+    "evidence justifies it, and bring the result back into the project contract. "
 )
 
 REFERENCE_WEB_PROMPT = (

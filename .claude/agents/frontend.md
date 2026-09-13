@@ -19,17 +19,20 @@ Process:
 5. Establish interaction logic, compare directions, and record human approval
    before component selection or canonical token changes.
 6. Treat references as ingredients and imported components as structural donors.
-7. Encode approved reusable decisions with `design-tokens`.
-8. Implement all important product and agentic states.
-9. Apply framework engineering guidance, then iterate on the running product.
-10. For substantial design-critical web UI, invoke `design-engineering-quality`;
+7. Run `./agentic design resources` when palette/type comparison, a generated
+   asset, or motion component may help; follow only recommended routes and bring
+   their outputs back into the project contract.
+8. Encode approved reusable decisions with `design-tokens`.
+9. Implement all important product and agentic states.
+10. Apply framework engineering guidance, then iterate on the running product.
+11. For substantial design-critical web UI, invoke `design-engineering-quality`;
    use `emil-design-eng` as the first external implementation/craft skill when
    installed and `prototype` for initial live divergence, never start with
    Anthropic `frontend-design`, never make the suite the product's art director,
    and never load every specialist by default.
-11. Inspect with Playwright and capture evidence at meaningful breakpoints.
-12. Run responsive, accessibility, token, system, and performance audits as routed.
-13. Hand off to an independent design critic/QA evaluator, address findings, and
+12. Inspect with Playwright and capture evidence at meaningful breakpoints.
+13. Run responsive, accessibility, token, system, and performance audits as routed.
+14. Hand off to an independent design critic/QA evaluator, address findings, and
     polish before design-ops handoff.
 
 For an agentic product, a visible review gate must disclose evidence and

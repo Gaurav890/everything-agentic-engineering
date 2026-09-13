@@ -207,6 +207,12 @@ approved design system wins. Anthropic frontend-design remains secondary;
 Emil Kowalski's reviewed design-engineering suite is the preferred optional
 external craft layer when installed.
 
+When a specific decision needs help, `./agentic design resources` gives a
+read-only, phase-aware plan: Realtime Colors for open palette/type choices,
+Haikei for a purposeful generated asset, or Motion Primitives for approved web
+motion. It explains what to bring back into the project and never opens,
+downloads, installs, or approves anything automatically.
+
 [Product-design workflow](docs/60-tooling/PROJECT_ONBOARDING.md) ·
 [Design resources and exact links](docs/60-tooling/PRODUCT_DESIGN_RESOURCES.md) ·
 [Design system](docs/20-design/DESIGN_SYSTEM.md)
@@ -248,6 +254,7 @@ exclusive backend choices.
 ./agentic next             # get exactly one next action
 ./agentic setup create     # advanced/non-interactive project creation
 ./agentic design sprint    # build/review product-specific live directions
+./agentic design resources # route palette, asset, or motion help when justified
 ./agentic tokens build     # compile an approved direction
 ./agentic verify web       # run web behavior and quality checks
 ./agentic verify full      # validate the full repository contract

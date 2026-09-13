@@ -20,6 +20,12 @@
   role, evidence, rationale, consequence, audit, and adapter status legible.
   Never flatten the journey into generic dashboard cards.
 - Treat references as ingredients and components as structural donors.
+- Use `./agentic design resources` to route reviewed palette/type, generated-
+  asset, and motion sources only when current evidence justifies them. The
+  command is read-only; external use and project writes remain human actions.
+- Realtime Colors is a pre-approval comparison aid, Haikei is a purpose-gated
+  asset generator, and Motion Primitives is an optional beta web component
+  source. None of them is a design direction or aesthetic authority.
 - Let tokens encode approved decisions; never use tokens to invent the design.
 - The project design system overrides external skills and library aesthetics.
 - Treat Anthropic `frontend-design` as optional supplementary intelligence.

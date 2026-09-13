@@ -29,6 +29,54 @@ this file.
 - Record rejection/deferment so it is not rediscovered as new.
 - Never store secrets, raw personal data, or untrusted executable content.
 
+### L-2026-09-12-01 — Visual craft resources need phase and evidence routing
+
+- **State:** trial
+- **Event date:** No discrete release event; sources reviewed 2026-09-12
+- **Discovered:** 2026-09-12 from a maintainer-supplied design-resource list
+- **Domains:** product design, palette, typography, generated assets, motion,
+  accessibility, supply-chain safety
+- **Sources:** `https://www.realtimecolors.com/` and
+  `https://www.realtimecolors.com/docs/contrast-checker` (official hosted tool
+  and documentation, high authority for product behavior),
+  `https://github.com/juxtopposed/realtimecolors` (published source and license,
+  high authority; repository states hosting moved and source is not current),
+  `https://haikei.app/`, `https://haikei.app/generators/`,
+  `https://haikei.app/pricing/`, and `https://haikei.app/terms/` (official
+  product, generator, commercial-use, and terms pages, high authority),
+  `https://motion-primitives.com/docs` and
+  `https://github.com/ibelick/motion-primitives` at revision
+  `40f59b61e567712aa8329c7dc8c2ced763054c34` (official documentation and
+  repository, high authority)
+- **Change:** No ecosystem change is claimed. The review verified that Realtime
+  Colors supports live palette/type exploration, Haikei exports generated SVG
+  and PNG assets, and Motion Primitives publishes copy-oriented React motion
+  components while explicitly labeling itself beta.
+- **Repository relevance:** These resources can improve visual decisions only
+  if the harness selects them at the right phase and requires their output to
+  re-enter the approved design, token, accessibility, and evidence contracts.
+- **Existing coverage:** partial; the catalog preserved many design links but
+  did not actively route these three resources from current project state.
+- **Scores:** relevance 5 / authority 5 / confidence 5 / impact 4 / risk 3 /
+  maintenance 3 / novelty 3
+- **Recommendation:** trial the local read-only resource router. Keep all three
+  external and human-operated; do not bulk-install, auto-open, auto-download,
+  or treat them as aesthetic authority.
+- **Affected artifacts:** `.agentic/design-resources.json`, design CLI and tests,
+  generated-project handoff, design skills/rules, `DESIGN_SYSTEM.md`, onboarding
+  and resource docs
+- **Acceptance and verification:** Route palette/type during unresolved intake,
+  generated assets only from a product-specific asset strategy, and web motion
+  only after approval and reduced-motion rationale. Require provenance and
+  product-specific running evidence. Reject weakened automatic-install policy.
+- **Uncertainty:** Realtime Colors' hosted implementation is not represented by
+  its older public source; Haikei exposes no official source repository in the
+  reviewed material; Motion Primitives is beta. Source, license, maintenance,
+  dependency, and accessibility assumptions must be rechecked before actual use.
+- **Decision/PR:** Issue #85 and T-053 track the reversible local route. Human
+  approval remains required for external use, canonical tokens, dependencies,
+  assets, design direction, and merge.
+
 ### L-2026-07-26-01 — Claude Code bounds subagents and changes nesting defaults
 
 - **State:** proposed

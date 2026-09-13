@@ -53,6 +53,8 @@ python3 -m json.tool plugin.json >/dev/null
 python3 -m json.tool .agentic/project.json >/dev/null
 python3 -m json.tool .agentic/resources.json >/dev/null
 python3 -m json.tool .agentic/external-skills.json >/dev/null
+python3 -m json.tool .agentic/design-resources.json >/dev/null
+python3 -m json.tool .agentic/design-assets.json >/dev/null
 python3 -m json.tool .agentic/external-agents.json >/dev/null
 python3 -m json.tool .agentic/runtime-baselines.json >/dev/null
 python3 -m json.tool .agentic/mcp-compatibility.json >/dev/null

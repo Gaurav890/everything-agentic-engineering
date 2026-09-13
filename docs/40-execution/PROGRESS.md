@@ -1,5 +1,33 @@
 # Progress log
 
+### 2026-09-13 — T-053
+
+**Requirements:** FR-003, FR-005, FR-006
+**Acceptance:** AC-004, AC-005, AC-006
+**Outcome:** IMPLEMENTED; INDEPENDENT DESIGN AND SECURITY REVIEWS PASSING; HUMAN REVIEW PENDING
+
+Converted three visual-craft references into a phase-aware, project-contained
+resource route. Realtime Colors is recommended only while palette or typography
+remains unresolved; Haikei only when an asset strategy calls for generated
+visual material; and Motion Primitives only for web after an approved direction
+records motion purpose and reduced-motion behavior. Each route defines the
+evidence to bring back, licensing and maintenance provenance, and explicit
+failure boundaries.
+
+The generated-project handoff, onboarding skills, frontend contract, design
+system, tooling catalog, README, and machine-readable resource inventory now
+point to `./agentic design resources`. The command is read-only and records that
+it performed no browser open, network request, download, installation, token
+change, or approval. Focused design, generator, and handoff tests pass.
+Generated-asset files, intrinsic dimensions, semantic roles, and running
+evidence are validated and bound by SHA-256; placeholder prose cannot unlock a
+route.
+
+Full repository verification, the production web build, 25
+interaction/accessibility checks, 24 unchanged visual comparisons, and
+independent design and security reviews pass. Evidence and residual human-
+review requirements are recorded under `docs/50-evals/evidence/T-053/`.
+
 ### 2026-09-10 — T-052
 
 **Requirements:** FR-004

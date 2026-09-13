@@ -71,6 +71,12 @@ reduced-motion behavior. Use advanced 2D/3D only when it serves the journey.
 Record complete answers through `./agentic design intake`; do not silently
 turn null answers into approval of default values.
 
+Run `./agentic design resources` when palette/type, generated-asset, or motion
+implementation help may be useful. Follow only the current phase's recommended
+route and bring its named outputs back into the brief, candidate, design system,
+tokens, and evidence. The router does not open a site, transmit project data,
+download assets, install components, or approve a decision.
+
 Use installed relevant craft skills, with `design-engineering-quality` and
 Emil's applicable suite first where available. State missing capabilities and
 offer a reviewed setup decision or an honest local fallback. Never claim an

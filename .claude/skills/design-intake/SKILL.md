@@ -49,6 +49,14 @@ Resolve, in this order:
 If the user has no exact color preference, do not force a hex choice. Generate
 coherent proposals from product intent and show them in context.
 
+When color roles or typography remain genuinely open, run
+`./agentic design resources --need palette --need typography`. If Realtime
+Colors is recommended, invite the owner to use it manually as a generic live
+comparison aid. Bring back the chosen/rejected roles, type candidates, share
+URL or screenshot, and contrast readings. Do not copy its website source,
+accept five generic colors as the final semantic system, or skip
+product-specific previews and independent WCAG verification.
+
 ## Create durable intake
 
 Write facts, constraints, preferences, assumptions, open questions, and approval

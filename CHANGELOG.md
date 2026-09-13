@@ -64,6 +64,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- A read-only, phase-aware visual-resource route for Realtime Colors palette
+  and typography exploration, Haikei generated assets, and Motion Primitives
+  web motion. Each route declares its trigger, provenance, output contract,
+  platform/approval gates, and forbidden actions without automatic browser use,
+  download, installation, token changes, or approval.
+
 - A read-only `./agentic journey` command that shows the complete project path,
   current stage, and exact next action in human-readable or JSON form.
 - A consent-based local newcomer-pilot kit with anonymous P1–P5 session

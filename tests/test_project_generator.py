@@ -106,6 +106,8 @@ class ProjectGeneratorTests(unittest.TestCase):
             self.assertFalse(report["continuation"]["collects_api_keys"])
             self.assertIn("define_product_scope", report["continuation"]["stages"])
             self.assertNotIn("review_product_specific_design", report["continuation"]["stages"])
+            self.assertFalse((destination / ".agentic/design-resources.json").exists())
+            self.assertFalse((destination / ".agentic/design-assets.json").exists())
             self.assertEqual(
                 f"cd {shlex.quote(str(destination.resolve()))} && ./agentic start",
                 report["continuation"]["shell_command"],
@@ -155,7 +157,69 @@ class ProjectGeneratorTests(unittest.TestCase):
             )
             self.assertIn("design-critical", metadata["resolved_profiles"])
             self.assertTrue((destination / ".agentic/design.json").is_file())
+            self.assertTrue((destination / ".agentic/design-resources.json").is_file())
+            self.assertTrue((destination / ".agentic/design-assets.json").is_file())
             self.assertTrue((destination / "packages/design-tokens").is_dir())
+            self.assertIn(
+                "./agentic design resources",
+                (destination / "README.md").read_text(),
+            )
+
+    def test_generated_web_project_executes_bounded_design_resource_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "resource-routing"
+            created = self.run_generator(
+                "--name", "Resource Routing", "--destination", str(destination),
+                "--web", "--yes",
+            )
+            self.assertEqual(0, created.returncode, created.stderr)
+            tracked = [
+                destination / ".agentic/design-resources.json",
+                destination / ".agentic/design-assets.json",
+                destination / ".agentic/design-intake.json",
+                destination / ".agentic/design-directions.json",
+                destination / ".agentic/design.json",
+            ]
+            before = {path: path.read_bytes() for path in tracked}
+            command = [str(destination / "agentic"), "design", "resources", "--json"]
+            matching = subprocess.run(command, cwd=destination, text=True, capture_output=True, check=False)
+            self.assertEqual(0, matching.returncode, matching.stderr)
+            matching_report = json.loads(matching.stdout)
+            realtime = next(item for item in matching_report["decisions"] if item["id"] == "realtime-colors")
+            self.assertEqual("recommended", realtime["state"])
+            self.assertFalse(matching_report["mutation_performed"])
+            self.assertEqual(before, {path: path.read_bytes() for path in tracked})
+
+            intake_path = destination / ".agentic/design-intake.json"
+            intake = json.loads(intake_path.read_text())
+            intake["status"] = "complete"
+            intake["answers"] = {key: "resolved" for key in intake["answers"]}
+            intake_path.write_text(json.dumps(intake))
+            no_match = subprocess.run(command, cwd=destination, text=True, capture_output=True, check=False)
+            self.assertEqual(0, no_match.returncode, no_match.stderr)
+            self.assertFalse(any(
+                item["state"] == "recommended" for item in json.loads(no_match.stdout)["decisions"]
+            ))
+
+            project_path = destination / ".agentic/project.json"
+            project = json.loads(project_path.read_text())
+            project["profiles"] = ["mobile-expo", "design-critical"]
+            project_path.write_text(json.dumps(project))
+            mobile = subprocess.run(
+                [*command[:-1], "--need", "motion", "--json"],
+                cwd=destination, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(0, mobile.returncode, mobile.stderr)
+            motion = next(item for item in json.loads(mobile.stdout)["decisions"] if item["id"] == "motion-primitives")
+            self.assertEqual("not_applicable", motion["state"])
+
+            resources_path = destination / ".agentic/design-resources.json"
+            malformed = json.loads(resources_path.read_text())
+            malformed["policy"]["automatic_network_override"] = True
+            resources_path.write_text(json.dumps(malformed))
+            rejected = subprocess.run(command, cwd=destination, text=True, capture_output=True, check=False)
+            self.assertNotEqual(0, rejected.returncode)
+            self.assertIn("safety boundary", rejected.stderr)
 
     def test_enterprise_workflow_generates_a_complete_local_vertical_slice(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

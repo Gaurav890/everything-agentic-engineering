@@ -40,6 +40,10 @@ direction or implement a renamed reference app on the owner's behalf.
 - Motion work: route the exact motion capability only after purpose,
   interruption, performance, and reduced-motion behavior are clear. “Do not
   animate” is a valid result.
+- When palette/type, generated-asset, or motion implementation needs are
+  unresolved, run `./agentic design resources` with the matching `--need`.
+  This read-only plan may route Realtime Colors, Haikei, or Motion Primitives;
+  it never opens, submits, downloads, installs, or approves anything.
 - Before release: route applicable audits, `performance-ux`, independent `design-critic`, `polish`, and `design-ops`.
 
 Never rerun a phase merely because a skill exists. State:

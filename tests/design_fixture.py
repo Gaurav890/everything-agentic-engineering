@@ -16,6 +16,10 @@ def prepare(root: Path, *, approved=True):
     catalog = design_engine.load_catalog()
     direction = catalog["editorial-signal"].copy()
     write(root, ".agentic/design-directions.json", {"schema_version": 1, "directions": list(catalog.values())})
+    write(root, ".agentic/design-resources.json", json.loads(design_engine.RESOURCES_PATH.read_text()))
+    write(root, ".agentic/design-assets.json", {"schema_version": 1, "assets": []})
+    for source in sorted((design_engine.ROOT / "packages/design-tokens/tokens/semantic").glob("*.json")):
+        write(root, f"packages/design-tokens/tokens/semantic/{source.name}", json.loads(source.read_text()))
     write(root, ".agentic/design-intake.json", {
         "schema_version": 1, "status": "complete",
         "answers": {key: default for key, _, default in design_engine.INTAKE_FIELDS},
