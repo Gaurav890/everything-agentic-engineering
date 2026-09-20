@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everything-agentic-engineering:schema:run-evidence:1.0.0",
+  "title": "Run evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_id", "run_id", "plan_sha256", "journal_head_sha256", "kind", "collected_at", "producer", "builder_id", "evaluator_id", "artifacts", "check", "verdict"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "evidence_id": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "run_id": {"type": "string", "pattern": "^run_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "journal_head_sha256": {"$ref": "#/$defs/sha256"},
+    "task_id": {"type": ["string", "null"], "pattern": "^T-[0-9]{3,}$"},
+    "kind": {"enum": ["test", "build", "visual", "accessibility", "performance", "security", "enterprise", "mobile", "integration", "independent_review"]},
+    "collected_at": {"type": "string", "format": "date-time"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "session_id", "commit"],
+      "properties": {
+        "kind": {"enum": ["worker", "check", "human"]},
+        "id": {"type": "string", "minLength": 1},
+        "session_id": {"type": ["string", "null"]},
+        "commit": {"type": "string", "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$"}
+      }
+    },
+    "builder_id": {"type": "string", "minLength": 1},
+    "evaluator_id": {"type": "string", "minLength": 1},
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "media_type"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$"},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "media_type": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "command_sha256", "exit_code", "started_at", "finished_at"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "command_sha256": {"$ref": "#/$defs/sha256"},
+        "exit_code": {"type": "integer"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "finished_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "verdict": {"enum": ["pass", "fail", "blocked", "needs_human", "insufficient_evidence"]}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}},
+  "x-semantic-rules": [
+    "builder_id differs from evaluator_id",
+    "artifact paths resolve inside the canonical project root without following an escaping symlink",
+    "artifact bytes match their digest and producer commit",
+    "a pass requires exit_code zero and all required artifacts"
+  ]
+}

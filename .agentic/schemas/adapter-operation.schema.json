@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everything-agentic-engineering:schema:adapter-operation:1.0.0",
+  "title": "Provider-neutral adapter operation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation_id", "run_id", "task_id", "worker_id", "operation", "request", "outcome"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "operation_id": {"type": "string", "pattern": "^op_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "run_id": {"type": "string", "pattern": "^run_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "task_id": {"type": "string", "pattern": "^T-[0-9]{3,}$"},
+    "worker_id": {"type": "string", "minLength": 1},
+    "operation": {"enum": ["doctor", "prepare", "launch", "stream", "interrupt", "resume", "reconcile", "collect"]},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "provider_version", "capabilities", "plan_sha256", "worktree", "branch", "writable_paths", "action_ids", "action_registry_sha256", "permission_policy_sha256", "invocation_sha256", "timeout_seconds", "target"],
+      "properties": {
+        "provider": {"enum": ["claude-code", "codex", "manual"]},
+        "provider_version": {"type": "string", "minLength": 1},
+        "capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability_id"}, "uniqueItems": true},
+        "plan_sha256": {"$ref": "#/$defs/sha256"},
+        "worktree": {"type": "string", "pattern": "^/(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$", "minLength": 2},
+        "branch": {"type": "string", "pattern": "^(?!refs/)(?!origin/)[A-Za-z0-9][A-Za-z0-9._/-]+$"},
+        "writable_paths": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "action_ids": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"}, "uniqueItems": true},
+        "action_registry_sha256": {"$ref": "#/$defs/sha256"},
+        "permission_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "invocation_sha256": {"$ref": "#/$defs/sha256"},
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["session_id", "process_id", "checkpoint_event_id", "journal_head_sha256", "resume_token_sha256"],
+          "properties": {
+            "session_id": {"type": ["string", "null"]},
+            "process_id": {"type": ["integer", "null"], "minimum": 1},
+            "checkpoint_event_id": {"type": ["string", "null"], "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"},
+            "journal_head_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+            "resume_token_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "session_id", "process_id", "resume_token_sha256", "events", "error"],
+      "properties": {
+        "status": {"enum": ["ok", "unsupported", "denied", "interrupted", "retryable_error", "fatal_error", "unknown"]},
+        "session_id": {"type": ["string", "null"]},
+        "process_id": {"type": ["integer", "null"], "minimum": 1},
+        "resume_token_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "events": {"type": "array", "items": {"type": "string", "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+        "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+        "error": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["code", "message", "retryable"],
+          "properties": {
+            "code": {"enum": ["authentication", "permission", "trust_preflight", "configuration", "timeout", "provider_unavailable", "process_exit", "protocol", "unknown"]},
+            "message": {"type": "string", "minLength": 1},
+            "retryable": {"type": "boolean"}
+          }
+        }
+      },
+      "required": ["status", "session_id", "process_id", "resume_token_sha256", "events", "evidence_ids", "error"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"operation": {"enum": ["stream", "interrupt", "resume", "reconcile", "collect"]}}},
+      "then": {
+        "properties": {
+          "request": {
+            "properties": {
+              "target": {
+                "anyOf": [
+                  {"properties": {"session_id": {"type": "string"}}},
+                  {"properties": {"process_id": {"type": "integer"}}},
+                  {"properties": {"checkpoint_event_id": {"type": "string"}, "journal_head_sha256": {"type": "string"}}}
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"operation": {"const": "resume"}}},
+      "then": {
+        "properties": {
+          "request": {"properties": {"target": {"anyOf": [{"properties": {"session_id": {"type": "string"}}}, {"properties": {"resume_token_sha256": {"type": "string"}}}, {"properties": {"checkpoint_event_id": {"type": "string"}, "journal_head_sha256": {"type": "string"}}}]}}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "capability_id": {"enum": ["structured_stream", "session_resume", "process_interrupt", "checkpoint_resume", "workspace_write", "network_disabled", "mcp_disabled", "manual_packet"]}
+  }
+}

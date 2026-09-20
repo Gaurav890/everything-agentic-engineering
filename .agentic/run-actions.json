@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "registry_core_checks",
+  "actions": [
+    {
+      "id": "git.diff-check",
+      "executable": "/usr/bin/git",
+      "argv": ["diff", "--check"],
+      "cwd": {"scope": "worktree", "relative": "."},
+      "environment": {"mode": "closed", "allow": ["CI", "TERM", "NO_COLOR"]},
+      "timeout_seconds": 120,
+      "shell": false,
+      "network": "disabled",
+      "authority": {"class": "read_only", "deploy": false, "merge": false, "approve": false, "release": false, "write_default_branch": false, "sandbox_bypass": false, "expand_network": false}
+    },
+    {
+      "id": "verify.full",
+      "executable": "./agentic",
+      "argv": ["verify", "full"],
+      "cwd": {"scope": "worktree", "relative": "."},
+      "environment": {"mode": "closed", "allow": ["CI", "TERM", "NO_COLOR"]},
+      "timeout_seconds": 3600,
+      "shell": false,
+      "network": "disabled",
+      "authority": {"class": "workspace_check", "deploy": false, "merge": false, "approve": false, "release": false, "write_default_branch": false, "sandbox_bypass": false, "expand_network": false}
+    },
+    {
+      "id": "verify.quick",
+      "executable": "./agentic",
+      "argv": ["verify", "quick"],
+      "cwd": {"scope": "worktree", "relative": "."},
+      "environment": {"mode": "closed", "allow": ["CI", "TERM", "NO_COLOR"]},
+      "timeout_seconds": 1800,
+      "shell": false,
+      "network": "disabled",
+      "authority": {"class": "workspace_check", "deploy": false, "merge": false, "approve": false, "release": false, "write_default_branch": false, "sandbox_bypass": false, "expand_network": false}
+    },
+    {
+      "id": "verify.visual",
+      "executable": "./agentic",
+      "argv": ["verify", "visual"],
+      "cwd": {"scope": "worktree", "relative": "."},
+      "environment": {"mode": "closed", "allow": ["CI", "TERM", "NO_COLOR"]},
+      "timeout_seconds": 3600,
+      "shell": false,
+      "network": "disabled",
+      "authority": {"class": "workspace_check", "deploy": false, "merge": false, "approve": false, "release": false, "write_default_branch": false, "sandbox_bypass": false, "expand_network": false}
+    },
+    {
+      "id": "verify.web",
+      "executable": "./agentic",
+      "argv": ["verify", "web"],
+      "cwd": {"scope": "worktree", "relative": "."},
+      "environment": {"mode": "closed", "allow": ["CI", "TERM", "NO_COLOR"]},
+      "timeout_seconds": 3600,
+      "shell": false,
+      "network": "disabled",
+      "authority": {"class": "workspace_check", "deploy": false, "merge": false, "approve": false, "release": false, "write_default_branch": false, "sandbox_bypass": false, "expand_network": false}
+    }
+  ]
+}

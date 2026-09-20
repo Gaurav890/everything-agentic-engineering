@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everything-agentic-engineering:schema:run-event:1.0.0",
+  "title": "Append-only supervised run event",
+  "description": "Canonical bytes use RFC 8785 JCS. Event digest is SHA-256 of the complete event object; previous_event_sha256 is null only for sequence 1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "sequence", "event_id", "run_id", "plan_sha256", "occurred_at", "type", "actor", "previous_event_sha256", "payload"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "run_id": {"type": "string", "pattern": "^run_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "type": {"enum": ["run.planned", "run.started", "wave.started", "worker.prepared", "worker.launched", "worker.streamed", "worker.interrupted", "worker.reconciled", "worker.completed", "check.completed", "evidence.collected", "decision.recorded", "wave.paused", "run.paused", "run.resumed", "run.cancelled", "run.completed", "run.failed_safe", "run.needs_human"]},
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {"enum": ["system", "human", "worker", "check", "provider"]},
+        "id": {"type": "string", "minLength": 1}
+      }
+    },
+    "task_id": {"type": "string", "pattern": "^T-[0-9]{3,}$"},
+    "worker_id": {"type": "string", "minLength": 1},
+    "wave": {"type": "integer", "minimum": 1},
+    "attempt": {"type": "integer", "minimum": 1, "maximum": 3},
+    "failure_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "previous_event_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "payload": {"type": "object"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"sequence": {"const": 1}}},
+      "then": {"properties": {"type": {"const": "run.planned"}, "previous_event_sha256": {"type": "null"}}},
+      "else": {"properties": {"previous_event_sha256": {"type": "string"}}}
+    },
+    {
+      "if": {"properties": {"type": {"enum": ["worker.prepared", "worker.launched", "worker.streamed", "worker.interrupted", "worker.reconciled", "worker.completed"]}}},
+      "then": {
+        "required": ["task_id", "worker_id", "wave", "attempt"],
+        "properties": {
+          "actor": {"properties": {"kind": {"enum": ["system", "worker", "provider"]}}},
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "provider", "branch", "worktree", "session_id", "process_id", "resume_token_sha256", "result_sha256", "event_ids", "evidence_ids"],
+            "properties": {
+              "status": {"enum": ["prepared", "running", "interrupted", "reconciling", "passed", "failed_safe", "cancelled", "needs_human"]},
+              "provider": {"enum": ["claude-code", "codex", "manual"]},
+              "branch": {"type": "string", "pattern": "^(?!refs/)(?!origin/)[A-Za-z0-9][A-Za-z0-9._/-]+$"},
+              "worktree": {"type": "string", "pattern": "^/", "minLength": 2},
+              "session_id": {"type": ["string", "null"]},
+              "process_id": {"type": ["integer", "null"], "minimum": 1},
+              "resume_token_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+              "result_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+              "event_ids": {"type": "array", "items": {"type": "string", "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+              "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"type": {"const": "worker.prepared"}}},
+      "then": {"properties": {"payload": {"properties": {"status": {"const": "prepared"}}}}}
+    },
+    {
+      "if": {"properties": {"type": {"enum": ["worker.launched", "worker.streamed"]}}},
+      "then": {"properties": {"payload": {"properties": {"status": {"const": "running"}}}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "worker.interrupted"}}},
+      "then": {"properties": {"payload": {"properties": {"status": {"const": "interrupted"}}}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "worker.reconciled"}}},
+      "then": {"properties": {"payload": {"properties": {"status": {"const": "reconciling"}}}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "worker.completed"}}},
+      "then": {"properties": {"payload": {"properties": {"status": {"enum": ["passed", "failed_safe", "cancelled", "needs_human"]}}}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "evidence.collected"}}},
+      "then": {"properties": {"payload": {"$ref": "urn:everything-agentic-engineering:schema:run-evidence:1.0.0"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "decision.recorded"}}},
+      "then": {"properties": {"actor": {"properties": {"kind": {"const": "human"}}}, "payload": {"$ref": "urn:everything-agentic-engineering:schema:human-decision:1.0.0"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.planned"}}},
+      "then": {"properties": {"actor": {"properties": {"kind": {"const": "system"}}}, "payload": {"$ref": "#/$defs/planned_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.started"}}},
+      "then": {"properties": {"actor": {"properties": {"kind": {"const": "human"}}}, "payload": {"$ref": "#/$defs/started_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "wave.started"}}},
+      "then": {"required": ["wave"], "properties": {"actor": {"properties": {"kind": {"const": "system"}}}, "payload": {"$ref": "#/$defs/wave_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "check.completed"}}},
+      "then": {"required": ["task_id"], "properties": {"actor": {"properties": {"kind": {"const": "check"}}}, "payload": {"$ref": "#/$defs/check_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "wave.paused"}}},
+      "then": {"required": ["wave"], "properties": {"actor": {"properties": {"kind": {"const": "system"}}}, "payload": {"$ref": "#/$defs/wave_pause_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.paused"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/run_pause_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.resumed"}}},
+      "then": {"properties": {"actor": {"properties": {"kind": {"const": "human"}}}, "payload": {"$ref": "#/$defs/resume_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.cancelled"}}},
+      "then": {"properties": {"actor": {"properties": {"kind": {"const": "human"}}}, "payload": {"$ref": "#/$defs/cancel_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.completed"}}},
+      "then": {"properties": {"actor": {"properties": {"kind": {"const": "system"}}}, "payload": {"$ref": "#/$defs/completed_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.failed_safe"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/failure_payload"}}}
+    },
+    {
+      "if": {"properties": {"type": {"const": "run.needs_human"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/needs_human_payload"}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "id_array": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "planned_payload": {"type": "object", "additionalProperties": false, "required": ["plan_sha256"], "properties": {"plan_sha256": {"$ref": "#/$defs/sha256"}}},
+    "started_payload": {"type": "object", "additionalProperties": false, "required": ["decision_id"], "properties": {"decision_id": {"type": "string", "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}}},
+    "wave_payload": {"type": "object", "additionalProperties": false, "required": ["task_ids"], "properties": {"task_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^T-[0-9]{3,}$"}, "uniqueItems": true}}},
+    "check_payload": {"type": "object", "additionalProperties": false, "required": ["check_id", "action_id", "action_sha256", "commit", "status", "exit_code", "result_sha256", "evidence_ids"], "properties": {"check_id": {"type": "string", "minLength": 1}, "action_id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"}, "action_sha256": {"$ref": "#/$defs/sha256"}, "commit": {"type": "string", "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$"}, "status": {"enum": ["passed", "failed", "cancelled"]}, "exit_code": {"type": "integer"}, "result_sha256": {"$ref": "#/$defs/sha256"}, "evidence_ids": {"$ref": "#/$defs/id_array"}}},
+    "wave_pause_payload": {"type": "object", "additionalProperties": false, "required": ["completed_task_ids", "failed_task_ids", "evidence_ids", "gate_kind"], "properties": {"completed_task_ids": {"$ref": "#/$defs/id_array"}, "failed_task_ids": {"$ref": "#/$defs/id_array"}, "evidence_ids": {"$ref": "#/$defs/id_array"}, "gate_kind": {"const": "wave_continue"}}},
+    "run_pause_payload": {"type": "object", "additionalProperties": false, "required": ["reason", "gate_kind"], "properties": {"reason": {"type": "string", "minLength": 1}, "gate_kind": {"enum": ["wave_continue", "integration", "diagnosis"]}}},
+    "resume_payload": {"type": "object", "additionalProperties": false, "required": ["decision_id", "checkpoint_event_id"], "properties": {"decision_id": {"type": "string", "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}, "checkpoint_event_id": {"type": "string", "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"}}},
+    "cancel_payload": {"type": "object", "additionalProperties": false, "required": ["decision_id", "reason"], "properties": {"decision_id": {"type": "string", "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}, "reason": {"type": "string", "minLength": 1}}},
+    "completed_payload": {"type": "object", "additionalProperties": false, "required": ["status", "final_wave", "worker_ids", "check_ids", "evidence_ids", "decision_ids", "reconciliation_sha256"], "properties": {"status": {"const": "passed"}, "final_wave": {"type": "integer", "minimum": 1}, "worker_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "check_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true}, "decision_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true}, "reconciliation_sha256": {"$ref": "#/$defs/sha256"}}},
+    "failure_payload": {"type": "object", "additionalProperties": false, "required": ["reason", "error_sha256"], "properties": {"reason": {"type": "string", "minLength": 1}, "error_sha256": {"$ref": "#/$defs/sha256"}}},
+    "needs_human_payload": {"type": "object", "additionalProperties": false, "required": ["reason", "gate_kind"], "properties": {"reason": {"type": "string", "minLength": 1}, "gate_kind": {"enum": ["wave_continue", "integration", "diagnosis"]}}}
+  },
+  "x-semantic-rules": [
+    "sequence values are contiguous and event ids are unique",
+    "all events bind the same run and plan",
+    "every non-genesis previous_event_sha256 equals SHA-256 of the previous RFC8785-JCS event bytes",
+    "event order follows the legal reducer transition table",
+    "decision actor matches the embedded authenticated human actor",
+    "evidence and decision references exist and are current"
+  ]
+}

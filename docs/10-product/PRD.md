@@ -56,6 +56,13 @@ a disclosed primary-source/manual fallback when selected, synthesize findings
 into the product brief, and see the full path from research through human review
 without learning internal commands.
 
+### UJ-005 — Supervised product-to-proof delivery
+
+Open one local Studio, understand the current Shape, Design, Build, or Prove
+decision, inspect the exact execution boundary, run collision-free tasks in a
+bounded wave, recover from interruption using observed state, and accept
+independent evidence before a human release or merge decision.
+
 ## 6. Non-goals
 
 See `NON_GOALS.md`. Generation does not authenticate, install dependencies,
@@ -136,6 +143,23 @@ answers, disclose unresolved decisions and capability limits, and expose one
 clear continuation without conflating research, design, token, implementation,
 evaluation, or human approval authority.
 
+### FR-009 — Product-to-Proof control and execution contract
+
+The local Studio must organize the journey as Shape, Design, Build, and Prove
+while using the existing detailed lifecycle as its durable model. Browser and
+terminal surfaces must read the same versioned state. Supervised execution must
+derive a deterministic DAG from the task ledger, reject cycles and writable
+ownership collisions, isolate writable tasks by branch/worktree, run bounded
+waves of at most three workers by default, and pause after every wave.
+
+Run plans are immutable and bound to the task-ledger hash; events are
+append-only; derived state is reconciled with Git, worktrees, processes,
+checks, and pull requests. The same failure twice requires diagnosis and a
+third unsuccessful attempt requires human intervention. Claude Code, Codex,
+and manual/editor work conform to one provider-neutral lifecycle without
+silent model/provider changes or expanded authority. No adapter may bypass its
+sandbox, write directly to `main`, deploy, self-approve, or merge.
+
 ## 8. Non-functional requirements
 
 ### NFR-001 — Safety
@@ -178,6 +202,9 @@ idempotency, concurrency, observability, and threat-model review.
 - the same `./agentic start` entry point creates or resumes a project, and its
   default first interaction contains no internal profile, task, skill, MCP, or
   evidence terminology;
+- versioned Product-to-Proof run contracts, Signalroom cross-platform journey,
+  and blind benchmark protocol are reviewed before the control plane or worker
+  engine is implemented;
 
 ## 11. Acceptance criteria
 

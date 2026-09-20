@@ -1,0 +1,22 @@
+{
+  "task_id": "T-054",
+  "acceptance_ids": ["AC-004", "AC-008", "AC-009"],
+  "ui_change": true,
+  "builder": "architect",
+  "evaluator": "integration-reviewer",
+  "states": ["normal", "loading", "empty", "error", "shape", "design-blocked", "design-ready", "build-boundary", "wave-paused", "recovery", "dependency", "prove"],
+  "viewports": ["desktop", "mobile", "200-percent-reflow"],
+  "commands": [
+    "python3 -m unittest tests.test_product_to_proof_contract -v",
+    "BROWSER_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' node scripts/verify_product_to_proof_prototype.mjs",
+    "./agentic verify full",
+    "git diff --check"
+  ],
+  "artifacts": [
+    "review.md",
+    "studio-build-boundary-dark.png",
+    "studio-recovery-mobile.png",
+    "studio-recovery-200-percent.png"
+  ],
+  "verdict": "PASS"
+}

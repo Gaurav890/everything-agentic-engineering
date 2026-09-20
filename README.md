@@ -2,12 +2,12 @@
 
 # Everything Agentic Engineering
 
-## Turn an idea into a distinctive, researched, working product slice—with evidence.
+## Turn an idea into a distinctive, production-credible product—with governed execution and evidence.
 
 One guided path from product intent to live design, implementation, verification,
 and review. Built for Claude Code, Codex, and manual coding workflows.
 
-**Research → Product → Design → Build → Verify → Review**
+**Shape → Design → Build → Prove**
 
 [Start a project](#run-it) · [See the proof](#see-the-system-working) ·
 [Understand the journey](#one-journey-not-a-toolbox) · [Read the docs](#go-deeper-when-you-need-to)
@@ -32,6 +32,20 @@ This starter gives you a product-building loop:
 - a bounded vertical slice with tests and running-product evidence;
 - separate builder, evaluator, human review, and merge decisions;
 - durable context that survives a new session or a different coding client.
+
+The product is becoming one local **Product-to-Proof Studio**. Shape owns the
+outcome. Design owns live direction and reusable decisions. Build owns bounded,
+isolated execution. Prove owns evidence and the human release decision. Coding
+clients are execution adapters behind that journey—not the product people must
+learn first.
+
+[Read the Studio contract under review](docs/10-product/PRODUCT_TO_PROOF_STUDIO.md) ·
+[Try the static flow prototype](docs/20-design/prototypes/product-to-proof-studio.html) ·
+[See the Signalroom cross-platform journey](docs/10-product/SIGNALROOM_CROSS_PLATFORM_JOURNEY.md)
+
+The shared contract is implemented for review; the unified control plane, supervised
+worker engine, final web/native proof, and measured launch evidence are the
+next gated tasks. The repository does not present those future stages as done.
 
 ## Run it
 
