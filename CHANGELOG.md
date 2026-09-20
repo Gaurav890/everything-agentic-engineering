@@ -8,6 +8,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Adopted Product-to-Proof Studio as the product contract: Shape, Design,
+  Build, and Prove now define the public information architecture while the
+  detailed lifecycle remains durable underneath. Versioned run-plan, event,
+  reconciled-state, and blind-benchmark schemas establish the safety and proof
+  boundary for the staged control-plane, wave-execution, web, native, and
+  launch work without claiming those later implementations already exist.
+
 - Raised the read-only tested runtime floors to Claude Code 2.1.259 and Codex
   0.153.0 for cumulative containment, filesystem-deny, credential,
   project-trust, reviewer-history, and MCP account-approval hardening. Remote

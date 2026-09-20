@@ -138,3 +138,33 @@ transcript assertions, all-profile generation tests, Studio component and
 Playwright accessibility/responsive evidence, release smoke, independent
 product/design/security/integration review, and full verification. Synthetic
 tests do not replace the five-person newcomer pilot.
+
+## AC-009 — Supervised execution is bounded, recoverable, and provable
+
+**Linked requirements:** FR-004, FR-009, NFR-001, NFR-003
+
+**Given** a reviewed task ledger, **when** a run plan is created, **then** it is
+bound to the ledger hash, rejects missing dependencies, cycles, and overlapping
+writable ownership, assigns at most three independent tasks to a default wave,
+and exposes the provider, capability tier, permissions, network/MCP state,
+worktree, writable paths, checks, retry budget, and stop conditions before any
+worker launches.
+
+**Given** a launched or interrupted run, **when** status or recovery is
+requested, **then** append-only events reconcile against Git, worktrees,
+processes, checks, and pull requests; stale `running` state never becomes
+success; the repeated failure policy pauses with `NEEDS_HUMAN`; and every wave
+requires explicit human continuation. No adapter bypasses a sandbox, writes to
+`main`, deploys, approves, or merges.
+
+**Given** a release-blocking benchmark or proof result, **when** it is reported,
+**then** builder and evaluator differ, inputs and setup are pinned, workflow
+identity is hidden during scoring, failures and violations remain visible, and
+missing cost, time, or evidence produces `insufficient_evidence` rather than a
+passing claim.
+
+**Evidence required:** schema contract tests, DAG/collision/recovery fixtures,
+provider adapter boundary tests, hostile-input and authority tests, independent
+architecture/security review, blind benchmark fixtures, and full repository
+verification. Real provider runs and benchmark outcomes are not implied by
+fixture conformance.

@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "category": "product-to-proof",
+  "promise": "Turn an idea into a distinctive, production-credible product with governed execution and evidence.",
+  "studio": {
+    "entrypoint": "./agentic start",
+    "launch_requires_confirmation": true,
+    "fallback_uses_same_state": true,
+    "stages": [
+      {
+        "id": "shape",
+        "label": "Shape",
+        "outcome": "A researched audience, promise, first journey, and measurable success contract.",
+        "human_gates": ["product_scope", "research_decision"]
+      },
+      {
+        "id": "design",
+        "label": "Design",
+        "outcome": "A reviewed product-specific direction expressed as tokens, interaction, motion, and platform rules.",
+        "human_gates": ["design_direction", "canonical_tokens"]
+      },
+      {
+        "id": "build",
+        "label": "Build",
+        "outcome": "A bounded task graph executed in isolated, supervised waves.",
+        "human_gates": ["wave_continue", "integration"]
+      },
+      {
+        "id": "prove",
+        "label": "Prove",
+        "outcome": "Behavior, visual, accessibility, security, enterprise, and release evidence with an independent verdict.",
+        "human_gates": ["evidence_acceptance", "release", "deployment", "merge"]
+      }
+    ],
+    "primary_action_policy": {
+      "maximum_visible_primary_actions": 1,
+      "unknown_state": "needs_human",
+      "never_infer_approval": true
+    }
+  },
+  "execution": {
+    "default_concurrency": 3,
+    "maximum_concurrency": 8,
+    "wave_gate": "pause",
+    "writable_task_isolation": "one_worktree_and_branch_per_task",
+    "plan_binding": "task_ledger_sha256",
+    "journal": "append_only",
+    "same_failure_diagnosis_attempt": 2,
+    "needs_human_attempt": 3,
+    "stale_running_is_success": false,
+    "canonical_serialization": "RFC8785-JCS-compatible fixed-key subset in T-054; full parity required by T-056",
+    "digest": "sha256",
+    "semantic_validator": "scripts/product_to_proof_contract.py"
+  },
+  "provider_contract": {
+    "operations": [
+      "doctor",
+      "prepare",
+      "launch",
+      "stream",
+      "interrupt",
+      "resume",
+      "reconcile",
+      "collect"
+    ],
+    "adapters": ["claude-code", "codex", "manual"],
+    "capability_tiers": ["fast", "standard", "deep"],
+    "model_mapping_owner": "user",
+    "silent_provider_switching": false,
+    "operation_contract": ".agentic/schemas/adapter-operation.schema.json"
+  },
+  "authority": {
+    "human_only": [
+      "product_approval",
+      "design_approval",
+      "wave_continuation",
+      "integration_approval",
+      "release_approval",
+      "deployment",
+      "pull_request_approval",
+      "merge"
+    ],
+    "forbidden_automatic_actions": [
+      "credential_collection",
+      "provider_installation",
+      "mcp_enablement",
+      "network_expansion",
+      "sandbox_bypass",
+      "direct_main_write",
+      "deployment",
+      "self_approval",
+      "merge"
+    ]
+  },
+  "proof": {
+    "canonical_case_study": "signalroom",
+    "surfaces": ["web", "enterprise", "mobile"],
+    "builder_evaluator_separation": true,
+    "unsupported_claims_fail_closed": true
+  },
+  "contracts": {
+    "run_plan": ".agentic/schemas/run-plan.schema.json",
+    "run_event": ".agentic/schemas/run-event.schema.json",
+    "run_state": ".agentic/schemas/run-state.schema.json",
+    "evidence": ".agentic/schemas/run-evidence.schema.json",
+    "decision": ".agentic/schemas/human-decision.schema.json",
+    "action_registry": ".agentic/schemas/action-registry.schema.json",
+    "adapter_operation": ".agentic/schemas/adapter-operation.schema.json",
+    "benchmark_result": ".agentic/schemas/benchmark-result.schema.json"
+  },
+  "action_registry": ".agentic/run-actions.json",
+  "delivery_sequence": ["T-054", "T-055", "T-056", "T-057", "T-058", "T-059"]
+}

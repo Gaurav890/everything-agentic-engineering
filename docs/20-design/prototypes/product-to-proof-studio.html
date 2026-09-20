@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product-to-Proof Studio flow contract</title>
+    <style>
+      :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, sans-serif; --ink: #132019; --paper: #f4f0e6; --panel: #fffdf6; --signal: #d7fb42; --line: #56645c; --focus: #174fd6; }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: auto; }
+      body { margin: 0; background: var(--paper); color: var(--ink); }
+      a { color: inherit; }
+      .skip { position: absolute; left: 1rem; top: -5rem; background: var(--ink); color: var(--paper); padding: .75rem 1rem; z-index: 2; }
+      .skip:focus { top: 1rem; }
+      header, main, footer { width: min(72rem, calc(100% - 2rem)); margin-inline: auto; }
+      header { padding: 3.5rem 0 1.5rem; }
+      h1 { max-width: 13ch; font-size: clamp(2.6rem, 8vw, 6.8rem); line-height: .9; letter-spacing: -.055em; margin: 0 0 1rem; }
+      .lede { max-width: 48rem; font-size: 1.2rem; line-height: 1.55; }
+      .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-weight: 780; }
+      nav { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+      nav a { padding: .65rem .8rem; border: 1px solid var(--line); text-decoration: none; font-weight: 700; }
+      nav a:hover { background: var(--signal); color: #132019; }
+      a:focus-visible, summary:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+      .studio { border-block: 1px solid var(--line); }
+      .state { display: none; min-height: 34rem; padding: clamp(2.5rem, 7vw, 6rem) 0; scroll-margin-top: 1rem; }
+      #shape { display: block; }
+      .studio:has(.state:target) #shape:not(:target) { display: none; }
+      .state:target { display: block; }
+      .state:target:focus { outline: none; }
+      h2 { max-width: 18ch; font-size: clamp(2rem, 5vw, 4.5rem); line-height: 1; margin: .3rem 0 2rem; }
+      .grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(16rem, .8fr); gap: 2rem; }
+      .panel { border: 1px solid var(--line); padding: 1.4rem; border-radius: .45rem; background: var(--panel); }
+      .status { display: inline-block; border: 1px solid currentColor; border-radius: 999px; padding: .3rem .7rem; font-weight: 750; }
+      .primary { display: inline-block; margin-top: 1rem; padding: .85rem 1rem; background: var(--ink); color: var(--paper); text-decoration: none; font-weight: 820; }
+      code { overflow-wrap: anywhere; }
+      details { border-top: 1px solid var(--line); padding-block: 1rem; }
+      summary { cursor: pointer; font-weight: 760; }
+      footer { padding: 2.5rem 0 5rem; line-height: 1.6; }
+      @media (max-width: 42rem) { .grid { grid-template-columns: 1fr; } .state { min-height: 0; } }
+      @media (prefers-color-scheme: dark) { :root { --ink: #eff5ec; --paper: #101612; --panel: #182119; --signal: #d9ff58; --line: #93a098; --focus: #8bb4ff; } nav a:hover { color: #132019; } }
+      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#studio">Skip to Studio state</a>
+    <header>
+      <p class="eyebrow">Clickable contract · no workers are launched</p>
+      <h1>One path from idea to proof.</h1>
+      <p class="lede">Signalroom needs a tenant-safe approval journey people can trust under pressure. Choose a scenario to inspect the exact next decision; each rendered state has one safe primary action.</p>
+      <nav aria-label="Prototype scenarios">
+        <a href="#shape">New product</a>
+        <a href="#design-blocked">Blocked design</a>
+        <a href="#recovery">Interrupted run</a>
+        <a href="#dependency">Missing dependency</a>
+      </nav>
+    </header>
+    <main id="studio" class="studio" tabindex="-1">
+      <section class="state" id="shape" aria-labelledby="shape-title">
+        <p class="eyebrow">Shape · current</p><h2 id="shape-title">Agree on the consequential outcome.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: 1 unresolved decision</span><h3>Should current evidence reshape the first journey?</h3><p>Audience, promise, tenant boundary, and success metric are saved. Research remains a human choice.</p><a class="primary" href="#design-ready">Confirm product scope</a></div><div><details open><summary>Settled</summary><p>Operations reviewer · reduce unsafe approval latency · preserve evidence and recovery.</p></details><details><summary>Unresolved</summary><p>Research depth and measurable launch threshold.</p></details></div></div>
+      </section>
+      <section class="state" id="design-blocked" aria-labelledby="design-blocked-title">
+        <p class="eyebrow">Design · blocked by Shape</p><h2 id="design-blocked-title">Direction cannot outrun product scope.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: blocked</span><h3>Audience and first consequence are unresolved.</h3><p>The Studio routes back to the owning decision instead of manufacturing a design brief.</p><a class="primary" href="#shape">Resolve product scope</a></div><div><details open><summary>Why blocked?</summary><p>Live directions need a stable audience, promise, first journey, and evidence decision.</p></details></div></div>
+      </section>
+      <section class="state" id="design-ready" aria-labelledby="design-title">
+        <p class="eyebrow">Design · ready for review</p><h2 id="design-title">Compare behavior, not palette swaps.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: no direction approved</span><h3>Three live candidates diverge in composition and interaction.</h3><p>Each carries realistic states, signature craft, purposeful motion, responsive behavior, and reduced motion.</p><a class="primary" href="#build-boundary">Approve the reviewed direction</a></div><div><details><summary>Canonical token gate</summary><p>Tokens compile only after an evidence-bound human direction decision.</p></details><details><summary>Platform divergence</summary><p>Web and native share semantics, not components or layout.</p></details></div></div>
+      </section>
+      <section class="state" id="build-boundary" aria-labelledby="build-title">
+        <p class="eyebrow">Build · boundary review</p><h2 id="build-title">See exactly what a worker may touch.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: plan awaiting human continue</span><h3>Wave 1 contains three collision-free tasks.</h3><p>Provider, worktree, branch, writable paths, tools, network/MCP state, checks, timeout, retry budget, and stop conditions are explicit.</p><a class="primary" href="#wave-paused">Preview the supervised wave checkpoint</a></div><div><details><summary>Authority</summary><p>No direct main write, sandbox bypass, deployment, approval, or merge.</p></details><details><summary>Recovery</summary><p>The journal is reconciled with Git, worktrees, processes, checks, and pull requests.</p></details></div></div>
+      </section>
+      <section class="state" id="wave-paused" aria-labelledby="wave-title">
+        <p class="eyebrow">Build · wave paused</p><h2 id="wave-title">Integration evidence comes before continuation.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: human gate required</span><h3>Two tasks passed; one needs diagnosis.</h3><p>The repeated failure fingerprint is preserved. Nothing advances while observed and recorded state disagree.</p><a class="primary" href="#recovery">Inspect reconciliation</a></div><div><details open><summary>Observed state</summary><p>Worker stopped · worktree retained · check failed twice · no integration commit.</p></details></div></div>
+      </section>
+      <section class="state" id="recovery" aria-labelledby="recovery-title">
+        <p class="eyebrow">Recovery · needs human</p><h2 id="recovery-title">Recorded “running” is not proof of life.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: reconciled, not resumed</span><h3>The provider process ended but the worktree and failed check remain.</h3><p>Git, worktree, process, check, and pull-request observations are attached to the diagnosis gate.</p><a class="primary" href="#prove">Record diagnosis and keep the run paused</a></div><div><details><summary>Safe alternatives</summary><p>A human may later resume from the verified checkpoint or cancel. This prototype performs neither action.</p></details></div></div>
+      </section>
+      <section class="state" id="dependency" aria-labelledby="dependency-title">
+        <p class="eyebrow">Start · frontend dependency missing</p><h2 id="dependency-title">One command, with the same state on both sides.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: Studio unavailable</span><h3>Install the locked frontend dependencies when you choose.</h3><p><code>pnpm install --frozen-lockfile</code></p><p>No package is installed automatically. The terminal fallback reads the same project state.</p><a class="primary" href="#shape">Continue in the terminal flow</a></div><div><details><summary>What remains saved?</summary><p>Product answers, unresolved decisions, design approval, tasks, and evidence state.</p></details></div></div>
+      </section>
+      <section class="state" id="prove" aria-labelledby="prove-title">
+        <p class="eyebrow">Prove · incomplete</p><h2 id="prove-title">Evidence earns the decision.</h2>
+        <div class="grid"><div class="panel"><span class="status">Status: 7 of 9 proof items</span><h3>Native interruption and independent security evidence remain open.</h3><p>A passing build is not a release verdict. Missing proof routes back to its owner and blocks release.</p><a class="primary" href="../../10-product/SIGNALROOM_CROSS_PLATFORM_JOURNEY.md#release-proof">Open the missing proof contract</a></div><div><details><summary>Required proof</summary><p>Behavior, visual, keyboard, accessibility, performance, recovery, enterprise policy, native device, and independent review.</p></details><details><summary>Human-only gates</summary><p>Evidence acceptance, release, deployment, pull-request approval, and merge.</p></details></div></div>
+      </section>
+    </main>
+    <footer><strong>Prototype boundary:</strong> this document changes no project state and performs no network, shell, provider, approval, deployment, or merge action.</footer>
+  </body>
+</html>

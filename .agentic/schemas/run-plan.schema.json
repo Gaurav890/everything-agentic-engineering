@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everything-agentic-engineering:schema:run-plan:1.0.0",
+  "title": "Supervised run plan",
+  "description": "Immutable execution snapshot. Cross-record DAG, wave, path, provider, and filesystem invariants are enforced by scripts/product_to_proof_contract.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "created_at", "project_root", "worktree_parent", "task_ledger_sha256", "default_branch", "base_ref", "base_commit", "concurrency", "gate_mode", "tasks", "waves", "runtime_policy", "authority"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "run_id": {"type": "string", "pattern": "^run_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "project_root": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_path", "canonical_path", "device", "inode"],
+      "properties": {
+        "display_path": {"type": "string", "minLength": 1},
+        "canonical_path": {"type": "string", "pattern": "^/", "minLength": 2},
+        "device": {"type": "integer", "minimum": 0},
+        "inode": {"type": "integer", "minimum": 1}
+      }
+    },
+    "worktree_parent": {"$ref": "#/$defs/filesystem_identity"},
+    "task_ledger_sha256": {"$ref": "#/$defs/sha256"},
+    "default_branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "ref", "commit"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[A-Za-z0-9._/-]+$", "minLength": 1},
+        "ref": {"type": "string", "pattern": "^refs/heads/[A-Za-z0-9._/-]+$"},
+        "commit": {"type": "string", "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$"}
+      }
+    },
+    "base_ref": {"type": "string", "minLength": 1},
+    "base_commit": {"type": "string", "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$"},
+    "concurrency": {"type": "integer", "minimum": 1, "maximum": 8, "default": 3},
+    "gate_mode": {"const": "pause_after_wave"},
+    "tasks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/task"}},
+    "waves": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/wave"}},
+    "runtime_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_providers", "network", "mcp", "permissions", "environment_sha256", "action_registry_sha256", "stop_conditions"],
+      "properties": {
+        "allowed_providers": {"type": "array", "minItems": 1, "items": {"enum": ["claude-code", "codex", "manual"]}, "uniqueItems": true},
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "allowlist", "policy_sha256", "reviewed_decision_id"],
+          "properties": {
+            "mode": {"enum": ["disabled", "reviewed_allowlist"]},
+            "allowlist": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "policy_sha256": {"$ref": "#/$defs/sha256"},
+            "reviewed_decision_id": {"type": ["string", "null"], "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}
+          },
+          "allOf": [
+            {"if": {"properties": {"mode": {"const": "disabled"}}}, "then": {"properties": {"allowlist": {"maxItems": 0}, "reviewed_decision_id": {"type": "null"}}}},
+            {"if": {"properties": {"mode": {"const": "reviewed_allowlist"}}}, "then": {"properties": {"allowlist": {"minItems": 1}, "reviewed_decision_id": {"type": "string"}}}}
+          ]
+        },
+        "mcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "server_ids", "tool_ids", "config_sha256", "reviewed_decision_id"],
+          "properties": {
+            "mode": {"enum": ["disabled", "reviewed_project_config"]},
+            "server_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "tool_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "config_sha256": {"$ref": "#/$defs/sha256"},
+            "reviewed_decision_id": {"type": ["string", "null"], "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}
+          },
+          "allOf": [
+            {"if": {"properties": {"mode": {"const": "disabled"}}}, "then": {"properties": {"server_ids": {"maxItems": 0}, "tool_ids": {"maxItems": 0}, "reviewed_decision_id": {"type": "null"}}}},
+            {"if": {"properties": {"mode": {"const": "reviewed_project_config"}}}, "then": {"properties": {"server_ids": {"minItems": 1}, "tool_ids": {"minItems": 1}, "reviewed_decision_id": {"type": "string"}}}}
+          ]
+        },
+        "permissions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["workspace_write", "sandbox_bypass", "direct_main_write", "policy_sha256"],
+          "properties": {
+            "workspace_write": {"type": "boolean"},
+            "sandbox_bypass": {"const": false},
+            "direct_main_write": {"const": false},
+            "policy_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "environment_sha256": {"$ref": "#/$defs/sha256"},
+        "action_registry_sha256": {"$ref": "#/$defs/sha256"},
+        "stop_conditions": {"type": "array", "minItems": 1, "items": {"enum": ["wave_complete", "permission_denied", "ownership_violation", "same_failure_third_attempt", "human_interrupt", "timeout", "cancelled"]}, "uniqueItems": true}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["may_deploy", "may_approve", "may_merge"],
+      "properties": {"may_deploy": {"const": false}, "may_approve": {"const": false}, "may_merge": {"const": false}}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "filesystem_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_path", "canonical_path", "device", "inode"],
+      "properties": {
+        "display_path": {"type": "string", "minLength": 1},
+        "canonical_path": {"type": "string", "pattern": "^/", "minLength": 2},
+        "device": {"type": "integer", "minimum": 0},
+        "inode": {"type": "integer", "minimum": 1}
+      }
+    },
+    "task_id": {"type": "string", "pattern": "^T-[0-9]{3,}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$"},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "title", "depends_on", "writable_paths", "check_action_ids", "provider", "provider_version", "capability_tier", "capability_ids", "model", "model_source", "invocation_sha256", "allowed_action_ids", "retry_budget", "timeout_seconds", "branch", "worktree"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/task_id"},
+        "title": {"type": "string", "minLength": 1},
+        "depends_on": {"type": "array", "items": {"$ref": "#/$defs/task_id"}, "uniqueItems": true},
+        "writable_paths": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/path"}, "uniqueItems": true},
+        "check_action_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/action_id"}, "uniqueItems": true},
+        "provider": {"enum": ["claude-code", "codex", "manual"]},
+        "provider_version": {"type": "string", "minLength": 1},
+        "capability_tier": {"enum": ["fast", "standard", "deep"]},
+        "capability_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/capability_id"}, "uniqueItems": true},
+        "model": {"type": "string", "minLength": 1},
+        "model_source": {"const": "user"},
+        "invocation_sha256": {"$ref": "#/$defs/sha256"},
+        "allowed_action_ids": {"type": "array", "items": {"$ref": "#/$defs/action_id"}, "uniqueItems": true},
+        "retry_budget": {"type": "integer", "minimum": 0, "maximum": 3},
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "branch": {"type": "string", "pattern": "^(?!refs/)(?!origin/)[A-Za-z0-9][A-Za-z0-9._/-]+$"},
+        "worktree": {"type": "string", "pattern": "^/(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$", "minLength": 2}
+      }
+    },
+    "action_id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"},
+    "capability_id": {"enum": ["structured_stream", "session_resume", "process_interrupt", "checkpoint_resume", "workspace_write", "network_disabled", "mcp_disabled", "manual_packet"]},
+    "wave": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wave", "task_ids", "requires_human_continue"],
+      "properties": {
+        "wave": {"type": "integer", "minimum": 1},
+        "task_ids": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"$ref": "#/$defs/task_id"}, "uniqueItems": true},
+        "requires_human_continue": {"const": true}
+      }
+    }
+  },
+  "x-semantic-rules": [
+    "task ids are unique and dependencies exist",
+    "dependency graph is acyclic",
+    "waves exactly equal maximally filled, task-id-sorted Kahn ready sets under configured concurrency",
+    "wave size does not exceed concurrency",
+    "writable ownership does not overlap after normalized static-prefix comparison",
+    "project root and reviewed worktree-parent identities match realpath, device, and inode",
+    "task branch names are unique and cannot alias the canonical default branch; worktree paths are unique children of the reviewed parent and are rechecked against git worktree registration before launch",
+    "checks and tools are closed action IDs resolved without a shell through the registry bound by action_registry_sha256",
+    "writable paths and every existing ancestor remain beneath the canonical project root with no symlink escape",
+    "every task provider is listed in runtime_policy.allowed_providers"
+  ]
+}

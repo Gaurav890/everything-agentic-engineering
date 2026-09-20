@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everything-agentic-engineering:schema:run-state:1.0.0",
+  "title": "Reconciled supervised run state",
+  "description": "Derived read model rebuilt by reducer_version from the immutable plan and verified event journal. It is never an authority source by itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "reducer_version", "run_id", "plan_sha256", "journal_head_sha256", "journal_head_event_id", "last_sequence", "status", "updated_at", "current_wave", "workers", "evidence", "decisions", "human_gate", "reconciliation", "reconciliation_sha256"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "reducer_version": {"const": "1.0.0"},
+    "run_id": {"type": "string", "pattern": "^run_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "journal_head_sha256": {"$ref": "#/$defs/sha256"},
+    "journal_head_event_id": {"type": "string", "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "last_sequence": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["planned", "running", "paused", "completed", "failed_safe", "cancelled", "needs_human"]},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "current_wave": {"type": "integer", "minimum": 0},
+    "workers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["worker_id", "task_id", "provider", "session_id", "process_id", "resume_token_sha256", "status", "branch", "worktree", "attempts"],
+        "properties": {
+          "worker_id": {"type": "string", "minLength": 1},
+          "task_id": {"type": "string", "pattern": "^T-[0-9]{3,}$"},
+          "provider": {"enum": ["claude-code", "codex", "manual"]},
+          "session_id": {"type": ["string", "null"]},
+          "process_id": {"type": ["integer", "null"], "minimum": 1},
+          "resume_token_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+          "status": {"enum": ["prepared", "running", "interrupted", "reconciling", "passed", "failed_safe", "cancelled", "needs_human"]},
+          "branch": {"type": "string", "pattern": "^(?!main$).+"},
+          "worktree": {"type": "string", "pattern": "^/", "minLength": 2},
+          "attempts": {"type": "integer", "minimum": 0, "maximum": 3}
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "collected", "complete"],
+      "properties": {
+        "required": {"type": "array", "items": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+        "collected": {"type": "array", "items": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+        "complete": {"type": "boolean"}
+      }
+    },
+    "decisions": {"type": "array", "items": {"type": "string", "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+    "human_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "kind", "decision_event_id"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "kind": {"enum": ["none", "wave_continue", "integration", "release", "deployment", "merge", "diagnosis"]},
+        "decision_event_id": {"type": ["string", "null"], "pattern": "^evt_[a-z0-9][a-z0-9_-]{7,63}$"}
+      },
+      "allOf": [
+        {"if": {"properties": {"required": {"const": false}}}, "then": {"properties": {"kind": {"const": "none"}, "decision_event_id": {"type": "null"}}}},
+        {"if": {"properties": {"required": {"const": true}}}, "then": {"properties": {"kind": {"not": {"const": "none"}}, "decision_event_id": {"type": "null"}}}}
+      ]
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checked_at", "git", "worktrees", "processes", "checks", "pull_requests", "stale_running_count"],
+      "properties": {
+        "checked_at": {"type": "string", "format": "date-time"},
+        "git": {"enum": ["consistent", "drifted", "unknown"]},
+        "worktrees": {"enum": ["consistent", "drifted", "unknown"]},
+        "processes": {"enum": ["consistent", "drifted", "unknown"]},
+        "checks": {"enum": ["consistent", "drifted", "unknown"]},
+        "pull_requests": {"enum": ["consistent", "drifted", "unknown"]},
+        "stale_running_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "reconciliation_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "completed"}}},
+      "then": {
+        "properties": {
+          "workers": {"items": {"properties": {"status": {"const": "passed"}}}},
+          "evidence": {"properties": {"complete": {"const": true}}},
+          "human_gate": {"properties": {"required": {"const": false}, "kind": {"const": "none"}, "decision_event_id": {"type": "null"}}},
+          "reconciliation": {
+            "properties": {
+              "git": {"const": "consistent"},
+              "worktrees": {"const": "consistent"},
+              "processes": {"const": "consistent"},
+              "checks": {"const": "consistent"},
+              "pull_requests": {"const": "consistent"},
+              "stale_running_count": {"const": 0}
+            }
+          },
+          "reconciliation_sha256": {"type": "string"}
+        }
+      }
+    }
+  ],
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}},
+  "x-reducer": {
+    "source": "immutable plan plus verified journal",
+    "checkpoint": "write temporary file, fsync file, atomic rename, fsync parent directory",
+    "legal_transitions": {
+      "planned": ["running", "cancelled", "failed_safe"],
+      "running": ["paused", "completed", "cancelled", "failed_safe", "needs_human"],
+      "paused": ["running", "cancelled", "failed_safe", "needs_human"],
+      "needs_human": ["running", "cancelled", "failed_safe"],
+      "completed": [],
+      "cancelled": [],
+      "failed_safe": []
+    },
+    "unknown_version": "fail_closed",
+    "migration": "a newer reducer writes a new derived checkpoint only after replaying and validating the original immutable plan and journal; plan and events are never rewritten"
+  },
+  "x-semantic-rules": [
+    "required evidence is a subset of collected evidence only when complete is true",
+    "all evidence and decision ids resolve to current records bound to this plan and journal",
+    "worker ids and task ids are unique",
+    "state equals deterministic replay of the verified journal",
+    "unknown schema or reducer versions fail closed"
+  ]
+}

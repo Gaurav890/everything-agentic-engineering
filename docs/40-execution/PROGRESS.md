@@ -1,5 +1,40 @@
 # Progress log
 
+### 2026-09-20 — T-054
+
+**Requirements:** FR-004, FR-008, FR-009
+**Acceptance:** AC-004, AC-008, AC-009
+**Outcome:** IMPLEMENTED LOCALLY; FULL VERIFICATION AND INDEPENDENT REVIEWS PASS; HUMAN REVIEW PENDING
+
+Locked Product-to-Proof Studio as the public category and Shape → Design →
+Build → Prove as its information architecture. Added eight closed, versioned schemas
+for immutable run plans, append-only events, reconciled run state, evidence,
+human decisions, a no-shell action registry, adapter operations, and blind benchmark results; a static
+clickable Studio prototype; the Signalroom
+cross-platform product journey; a provider-neutral adapter lifecycle; ADR-001;
+and a failure-inclusive benchmark protocol.
+
+Eighteen focused contract tests and the real-browser contract verifier pass.
+The authoritative validator runs schema checks before semantics, derives
+maximally filled Kahn waves, binds every event to the exact immutable plan and
+action-registry digest, enforces worker lifecycle and complete wave/task/check/
+evidence/decision coverage, replays state, verifies artifact digests, rejects
+default-branch aliases and unreviewed worktrees, and requires registered
+no-shell action IDs. The
+schemas deny automatic deployment, approval, merge, direct default-branch
+writes, and sandbox bypass; default waves are capped at three tasks and require
+human continuation. T-054 does not claim the local
+control plane, real worker execution, final Signalroom product, native app, or
+benchmark results. Those remain T-055 through T-059.
+
+All ten full repository verification stages pass. The real-browser flow check
+passes eight states, complete light/dark keyboard order, visible focus, AA
+body-text contrast, responsive and effective 200% reflow, dark mode, and
+reduced motion. Independent architecture, product/design, and security
+re-reviews pass after adversarial plan, replay, registry, gate, evidence,
+capability, and continuation-target findings were corrected. Human approval,
+merge, deployment, and future-task implementation remain separate.
+
 ### 2026-09-13 — T-053
 
 **Requirements:** FR-003, FR-005, FR-006

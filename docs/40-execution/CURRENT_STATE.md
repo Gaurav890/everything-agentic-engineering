@@ -1,8 +1,32 @@
 # Current state
 
-Last updated: 2026-09-13
+Last updated: 2026-09-20
 
 ## Product
+
+The next-generation category under implementation review is Product-to-Proof Studio: turn an idea
+into a distinctive, production-credible product with governed execution and
+evidence. The public information architecture is Shape → Design → Build →
+Prove. The existing research/product/design/system/build/verify/review model
+remains the durable detail behind those activities.
+
+T-054 defines the contract in `.agentic/product-to-proof.json`, eight closed
+JSON Schemas under `.agentic/schemas/`, a closed no-shell action registry, a schema-first semantic validator, a
+clickable static flow prototype, the Signalroom web/enterprise/native journey,
+ADR-001, and a blind benchmark protocol. Run plans bind to the task-ledger
+hash, immutable base/default branch, reviewed worktree parent, and exact action
+registry digest; events are append-only and replayed against the exact plan;
+derived state reconciles Git,
+worktrees, processes, checks, and pull requests; waves default to three isolated
+writable workers and always pause for a human. Runtime adapters share one
+lifecycle, target exact sessions/processes/checkpoints for continuation, and
+may not bypass sandboxes, write to the default branch, deploy, self-approve, or
+merge.
+
+This is a contract, not a completion claim. The loopback Studio control plane,
+supervised executor, final Signalroom web/enterprise proof, real Expo mobile
+application, benchmark results, newcomer sessions, and public launch remain
+T-055 through T-059.
 
 The starter's public promise is: turn an idea into a distinctive, researched,
 working product slice with evidence. The visible journey is research → product
@@ -88,7 +112,7 @@ candidate, and listed sources. Fingerprints detect drift, not design quality.
 workstreams, blockers, and review instead of stopping at setup verification.
 It does not install tools, alter task state, or infer approval or merge.
 
-The generated web Studio now presents four user-facing stages—Shape,
+The currently generated web Studio presents four user-facing stages—Shape,
 Direction, Build, and Proof—plus the saved product idea, current decision, and
 one consistent start command. Its visible state and copied handoff come from
 the canonical six-stage journey rather than UI-local inference. Token
@@ -164,7 +188,9 @@ approved directions, tokens, accessibility, Playwright, or the final evaluator.
 
 The same phase routing applies while preserving native platform conventions.
 The current native application directory is a placeholder, not a runnable Expo
-app. Responsive browser evidence does not certify native behavior.
+app. Responsive browser evidence does not certify native behavior. The accepted
+T-058 baseline is Expo SDK 57, React Native 0.86, React 19.2.3, Expo Router,
+and Node 22.13+, subject to revalidation when implementation begins.
 
 ## Backend
 

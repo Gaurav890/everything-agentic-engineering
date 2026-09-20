@@ -1,14 +1,27 @@
 # Handoff
 
-Last updated: 2026-09-13
+Last updated: 2026-09-20
 
 ## Current goal
 
-Complete T-053 by reviewing and verifying the new phase-aware visual-resource
-route without turning external tools into default dependencies or aesthetic
-authority.
+Complete T-054 by independently reviewing and fully verifying the shared
+Product-to-Proof Studio contract before any control-plane or worker-engine
+implementation begins.
 
 ## Implemented
+
+T-054 adds the category, Shape/Design/Build/Prove IA, static clickable flow,
+Signalroom cross-platform journey, ADR, blind benchmark protocol, and versioned
+machine contracts for plans, events, reconciled state, and benchmark results.
+Provider adapters share doctor → prepare → launch → stream → interrupt → resume
+→ reconcile → collect. Plans fail closed on expanded authority and every wave
+requires human continuation.
+
+The loopback server, provider processes, worktree executor,
+final Signalroom implementation, native Expo application, and public benchmark
+remain unimplemented by design. They are sequenced as T-055 through T-059.
+The reviewed closed action registry is now a contract artifact; executing its
+entries remains T-056 scope.
 
 T-053 adds `.agentic/design-resources.json` and `./agentic design resources` as
 the active bridge between design evidence and three reviewed external resources:
@@ -71,6 +84,6 @@ mandatory.
 
 ## Exact next action
 
-Complete the remaining verification and independent review for the active
-tracked change, resolve material findings, and follow the documented task
-workflow without self-approval or merge.
+Review the shared contract, prototype, evidence, and independent findings.
+Resolve any product-owner feedback before downstream control-plane
+implementation begins.
