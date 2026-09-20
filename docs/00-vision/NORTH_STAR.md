@@ -2,10 +2,10 @@
 
 ## Product
 
-An opinionated product-building system that turns an idea into a distinctive,
-researched, working vertical slice with evidence. Product research and design
-create the visible advantage; the engineering harness makes it credible,
-repeatable, and safe to extend.
+A local-first Product-to-Proof Studio that turns an idea into a distinctive,
+production-credible product with governed execution and evidence. Product
+research and design create the visible advantage; the engineering harness
+makes it credible, repeatable, recoverable, and safe to extend.
 
 ## User
 
@@ -41,6 +41,10 @@ and durable decisions that survive later features and different coding clients.
   accessibility, reduced-motion behavior, and tradeoffs can be reviewed live.
 - Human approval remains separate from generation, token compilation, code
   implementation, independent evaluation, deployment, and merge.
+- Shape, Design, Build, and Prove are one understandable product experience;
+  coding runtimes remain replaceable execution adapters behind it.
+- Parallel execution is supervised, isolated, journaled, recoverable, and
+  paused at consequential integration boundaries.
 - External tools and skills may improve the experience but cannot become hidden
   prerequisites or silently expand authority.
 

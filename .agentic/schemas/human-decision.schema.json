@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everything-agentic-engineering:schema:human-decision:1.0.0",
+  "title": "Evidence-bound human decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "run_id", "plan_sha256", "journal_head_sha256", "gate_kind", "subject", "actor", "disposition", "rationale", "evidence_ids", "occurred_at"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "decision_id": {"type": "string", "pattern": "^dec_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "run_id": {"type": "string", "pattern": "^run_[a-z0-9][a-z0-9_-]{7,63}$"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "journal_head_sha256": {"$ref": "#/$defs/sha256"},
+    "gate_kind": {"enum": ["run_start", "product_scope", "research_decision", "design_direction", "canonical_tokens", "wave_continue", "integration", "evidence_acceptance", "release", "deployment", "pull_request_approval", "merge", "diagnosis"]},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "sha256"],
+      "properties": {
+        "kind": {"enum": ["run", "product", "research", "design", "tokens", "wave", "integration", "evidence", "release", "deployment", "pull_request", "merge", "failure"]},
+        "id": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "session_id", "authenticated_at"],
+      "properties": {
+        "kind": {"const": "human"},
+        "id": {"type": "string", "minLength": 1},
+        "session_id": {"type": "string", "minLength": 1},
+        "authenticated_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "disposition": {"enum": ["approve", "reject", "continue", "pause", "cancel", "request_changes", "acknowledge"]},
+    "rationale": {"type": "string", "minLength": 1},
+    "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^evd_[a-z0-9][a-z0-9_-]{7,63}$"}, "uniqueItems": true},
+    "occurred_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}},
+  "x-semantic-rules": [
+    "direct authenticated Studio session provenance is verified outside client-supplied JSON",
+    "actor id matches the event actor",
+    "run, plan, journal head, subject, and evidence references exist and are current",
+    "disposition is allowed for the gate kind",
+    "the decision actor is independent when the gate requires dual control"
+  ]
+}
